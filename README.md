@@ -1,7 +1,7 @@
 # WIP GraknClient.jl
 A client interface to read from and write to the Grakn Knowledge Graph
 
-Let's idealy start with translating the files in: 
+Let's ideally start with translating the files in: 
 GraknClient.jl/src/service/Session/Concept/
 
 See Python reference files in dev branch:
