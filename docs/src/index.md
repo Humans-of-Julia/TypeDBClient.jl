@@ -6,13 +6,13 @@ CurrentModule = GraknClient
 
 ## About
 
-This is a community approach to translate a given client interface to the knowledge graph database **Grakn** made by [Grakn.ai] (https://grakn.ai/) into Julia Language.
+This is a community approach to translate a given client interface to the knowledge graph database **Grakn** made by [Grakn.ai](https://grakn.ai/) into Julia Language.
 
 Starting out as an educational project and to benefit the **Julia** ecosystem.
 
-Please review the [user guide] (http://0.0.0.0/guide.html) or if you'd like to help building this the [contribution guidlines] (http://0.0.0.0/contributing.html).
+Please review the [user guide](http://0.0.0.0/guide.html) or if you'd like to help building this the [contribution guidlines](http://0.0.0.0/contributing.html).
 
-Feel free to join the project channel on the [Discord server] (https://discord.gg/NSYrYZQRyv), and take over a part in translating the given client reference into Julia.
+Feel free to join the project channel on the [Discord server](https://discord.gg/NSYrYZQRyv), and take over a part in translating the given client reference into Julia.
 
 > **Grakn** is the knowledge graph engine to organise complex networks of data and making it queryable, by performing knowledge engineering. 
 > Rooted in Knowledge Representation and Automated Reasoning, **Grakn** provides the knowledge foundation for cognitive and intelligent (e.g. AI) systems, by providing an intelligent language for modelling,
@@ -48,18 +48,18 @@ Feel free to join the project channel on the [Discord server] (https://discord.g
 
 ## Credits
 
-Credits go to the [Humans of Julia] (https://github.com/Humans-of-Julia) organisation and the [Grakn team] (https://grakn.ai/). 
+Credits go to the [Humans of Julia](https://github.com/Humans-of-Julia) organisation and the [Grakn team](https://grakn.ai/). 
 
-If you like to have a chat, you can find the Humans of Julia on Discord [here] (https://discord.gg/NSYrYZQRyv).
+If you like to have a chat, you can find the Humans of Julia on Discord [here](https://discord.gg/NSYrYZQRyv).
 
-Also if you like to join the Grakn community, you can find them on Discord as well [here] (https://discord.gg/HBJXnzRgmx).
+Also if you like to join the Grakn community, you can find them on Discord as well [here](https://discord.gg/HBJXnzRgmx).
 
 ## Licence
 
 ```@index
 ```
 GraknClient.jl is licensed under the MIT. 
-For more details click [here] (https://github.com/Humans-of-Julia/GraknClient.jl/blob/dev/LICENSE)
+For more details click [here](https://github.com/Humans-of-Julia/GraknClient.jl/blob/dev/LICENSE)
 
 ```@autodocs
 Modules = [GraknClient]
