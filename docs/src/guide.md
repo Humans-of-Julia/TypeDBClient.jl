@@ -4,6 +4,8 @@ CurrentModule = GraknClient
 
 # User Guide
 
+**This is just a preview yet**
+
 ## Installation
 
 ```@index

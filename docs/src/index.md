@@ -50,7 +50,7 @@ Feel free to join the project channel on the [Discord server] (https://discord.g
 
 Credits go to the [Humans of Julia] (https://github.com/Humans-of-Julia) organisation and the [Grakn team] (https://grakn.ai/). 
 
-If you like to have a chat, you can find the Humans of Julia on Discord [here] (https://discord.gg/NSYrYZQRyv)
+If you like to have a chat, you can find the Humans of Julia on Discord [here] (https://discord.gg/NSYrYZQRyv).
 
 Also if you like to join the Grakn community, you can find them on Discord as well [here] (https://discord.gg/HBJXnzRgmx).
 
