@@ -1,6 +1,8 @@
 using GraknClient
 using Documenter
 
+
+@info "Makeing documentation..."
 makedocs(;
     modules=[GraknClient],
     authors="Humas-of-Julia",
@@ -9,10 +11,14 @@ makedocs(;
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://Humans-of-Julia.github.io/GraknClient.jl",
-        assets=String[],
+        assets = ["assets/favicon.ico"; "assets/github_buttons.js"; "assets/custom.css"],
     ),
     pages=[
         "Home" => "index.md",
+        "User Guide" => "guide.md",
+        "Contributing" => "contributing.md",
+        "Changelog" => "changelog.md",
+        "API Reference" => "api.md"
     ],
 )
 
