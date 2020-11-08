@@ -80,6 +80,7 @@ You can hopefully soon find open issues that need help as well.
 - [Protobuf] (https://github.com/protocolbuffers/protobuf)
 - [gRPC] (https://grpc.io/)
 - [gRPC implementation introduction] (https://scotch.io/tutorials/implementing-remote-procedure-calls-with-grpc-and-protocol-buffers)
+- [OOPMacro.jl] (https://github.com/ipod825/OOPMacro.jl)
 
 
 ```@autodocs
