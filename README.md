@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/Humans-of-Julia/GraknClient.jl/workflows/CI/badge.svg)](https://github.com/Humans-of-Julia/GraknClient.jl/actions)
 [![codecov](https://codecov.io/gh/Humans-of-Julia/GraknClient.jl/branch/main/graph/badge.svg?token=9SQ8WB8KVM)](https://codecov.io/gh/Humans-of-Julia/GraknClient.jl)
 
-This is a community approach to translate a given client interface to the knowledge graph database Grakn, made by Grakn.ai, into Julia Language.
+This is a community approach to translate a given client interface to the knowledge graph database Grakn, made by [Grakn.ai](https://grakn.ai/), into Julia Language.
 
 Starting out as an educational project and to benefit the Julia ecosystem.
 
