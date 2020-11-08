@@ -12,13 +12,13 @@ Please review the user guide or if you'd like to help building this check the co
 
 Feel free to join the project channel on the Discord server and take over a part in translating the given client reference into Julia.
 
-# What is Grakn at all?
+## What is Grakn at all?
 
 > Grakn is the knowledge graph engine to organise complex networks of data and making it queryable, by performing knowledge engineering. Rooted in Knowledge Representation and Automated Reasoning, Grakn provides the 
 > knowledge foundation for cognitive and intelligent (e.g. AI) systems, by providing an intelligent language for modelling, transactions and analytics. Being a distributed database, Grakn is designed to scale over a 
 > network of computers through partitioning and replication.
 
-# How to start
+## How to start
 
 It is suggested to start translating the Concept API.
 
@@ -33,7 +33,7 @@ Feel free to clone the repo, create branches, pull requests, issues and all that
 
 Please find open issues that look for help in order to contribute.
 
-# Project status
+## Project status
 
 The current project status can be seen on the [GitHub Project Kanban](https://github.com/Humans-of-Julia/GraknClient.jl/projects/1).
 
