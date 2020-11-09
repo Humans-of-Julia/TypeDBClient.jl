@@ -12,7 +12,9 @@ Please review the user guide or if you'd like to help building this check the co
 
 Feel free to join the project channel on the Discord server and take over a part in translating the given client reference into Julia.
 
-## What is Grakn at all?
+## What is Grakn about?
+
+Read up here: https://grakn.ai/
 
 > Grakn is the knowledge graph engine to organise complex networks of data and making it queryable, by performing knowledge engineering. Rooted in Knowledge Representation and Automated Reasoning, Grakn provides the 
 > knowledge foundation for cognitive and intelligent (e.g. AI) systems, by providing an intelligent language for modelling, transactions and analytics. Being a distributed database, Grakn is designed to scale over a 
@@ -28,6 +30,8 @@ You can read about it in the Grakn documentation [here](https://dev.grakn.ai/doc
 After we got that, it is adviced to wait for the Python Client 2.0 early December, so we can plan things.
 
 For further questions about how to start, find us on [Discord](https://discord.gg/GdjHCNW8c8).
+
+The Grakn community also has a Discord server [here](https://discord.gg/HBJXnzRgmx).
 
 Feel free to clone the repo, create branches, pull requests, issues and all that is required.
 
