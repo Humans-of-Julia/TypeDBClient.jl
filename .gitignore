@@ -24,3 +24,6 @@ docs/site/
 
 .git
 .vscode
+
+# ignore julia internal git files in the dev folder
+_git2_*
