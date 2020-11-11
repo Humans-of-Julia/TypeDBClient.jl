@@ -23,5 +23,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/Humans-of-Julia/GraknClient.jl",
+    repo="github.com/Humans-of-Julia/GraknClient.jl.git",
 )
