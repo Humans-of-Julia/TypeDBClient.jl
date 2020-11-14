@@ -1,4 +1,5 @@
 # WIP GraknClient.jl
+
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Humans-of-Julia.github.io/GraknClient.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Humans-of-Julia.github.io/GraknClient.jl/dev)
 [![Build Status](https://github.com/Humans-of-Julia/GraknClient.jl/workflows/CI/badge.svg)](https://github.com/Humans-of-Julia/GraknClient.jl/actions)
@@ -12,7 +13,7 @@ Please review the user guide or if you'd like to help building this check the co
 
 Feel free to join the project channel on the Discord server and take over a part in translating the given client reference into Julia.
 
-## What is Grakn about?
+## What is Grakn about
 
 Read up here: https://grakn.ai/
 
@@ -25,7 +26,6 @@ Read up here: https://grakn.ai/
 It is suggested to start translating the Concept API.
 
 You can read about it in the Grakn documentation [here](https://dev.grakn.ai/docs/concept-api/overview).
-
 
 After we got that, it is adviced to wait for the Python Client 2.0 early December, so we can plan things.
 
@@ -41,7 +41,4 @@ Please find open issues that look for help in order to contribute.
 
 The current project status can be seen on the [GitHub Project Kanban](https://github.com/Humans-of-Julia/GraknClient.jl/projects/1).
 
-
 Welcome everybody!
-
-
