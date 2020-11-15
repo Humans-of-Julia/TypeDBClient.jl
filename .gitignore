@@ -24,6 +24,7 @@ docs/site/
 
 .git
 .vscode
+Manifest.toml
 
 # ignore julia internal git files in the dev folder
 _git2_*
