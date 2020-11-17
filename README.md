@@ -41,4 +41,4 @@ Please find open issues that look for help in order to contribute.
 
 The current project status can be seen on the [GitHub Project Kanban](https://github.com/Humans-of-Julia/GraknClient.jl/projects/1).
 
-Welcome everybody!
+Welcome everybody! 
