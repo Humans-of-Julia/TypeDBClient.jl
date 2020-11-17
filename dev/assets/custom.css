@@ -8,3 +8,8 @@
     padding: 0.5rem 0;
     font-family: "Khmer MN";
 }
+
+#documenter .docs-sidebar .docs-logo>img {
+    max-height: 10rem;
+    margin: auto;
+}
