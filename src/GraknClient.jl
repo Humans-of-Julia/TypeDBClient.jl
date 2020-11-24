@@ -1,5 +1,5 @@
-module GraknClient
+using PyCall
 
+gracli = pyimport("grakn.client")
 
-
-end
+@pywith 
