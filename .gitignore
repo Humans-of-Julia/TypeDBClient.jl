@@ -28,7 +28,6 @@ docs/site/
 Manifest.toml
 test/Manifest.toml
 docs/Manifest.toml
-localblob.jl
 
 # ignore julia internal git files in the dev folder
 _git2_*
