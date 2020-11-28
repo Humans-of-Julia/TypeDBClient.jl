@@ -12,7 +12,7 @@ jobs:
         version:
           - '1.5'
           - 'nightly'
-        python-version: [3.8]
+        python-version: [3.7]
         os:
           - ubuntu-latest
           - macOS-latest
@@ -30,10 +30,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies 🔧
+      - name: Install Python dependencies 🔧
         run: |
           python -m pip install --upgrade pip
           python -m pip install grakn-client
+      - name: Setup Julia
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
