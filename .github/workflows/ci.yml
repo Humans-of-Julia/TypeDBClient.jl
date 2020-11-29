@@ -45,6 +45,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set up 🐍 ${{ matrix.python }}
         uses: gabrielfalcao/pyenv-action@v5
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
           default: "${{ matrix.python }}"
           command: |
