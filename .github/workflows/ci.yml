@@ -99,9 +99,9 @@ jobs:
 
       - uses: julia-actions/julia-buildpkg@v1
         env:
-          PYTHON : ${{ env.pythonLocation }}
-          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
-          PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}
+          PYTHON : echo $ENV["PYTHON"]
+          PYCALL_JL_RUNTIME_PYTHONHOME: echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
+          PYCALL_JL_RUNTIME: echo $ENV["PYCALL_JL_RUNTIME"]
       - run: |
           sudo julia --project=src
           using Pkg
