@@ -48,7 +48,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }} 
 
-      - name: Display Python version ${{ matrix.python }}
+      - name: Display Python version
         run: python -c "import sys; print(sys.version)"
           # architecture: ${{ matrix.arch }}
       
@@ -69,8 +69,7 @@ jobs:
           echo "::set-output name=dir::$(pip cache dir)"
 
       
-      - uses: actions/cache@v2
-      - name: Cache 🐍
+      - uses: actions/cache@v2      
         with:
           path: ${{ env.pythonLocation }}
           key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
@@ -80,11 +79,6 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-        env:
-          PYTHON : ${{ env.pythonLocation }}
-          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
-          PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}
-
 
       - uses: actions/cache@v2
         env:
@@ -109,7 +103,7 @@ jobs:
           PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
           PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}
       - run: |
-          julia --project=src -e '
+          sudo julia --project=src -e '
           using Pkg
           Pkg.build("PyCall")
               
