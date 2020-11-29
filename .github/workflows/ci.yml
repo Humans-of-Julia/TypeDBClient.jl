@@ -53,6 +53,7 @@ jobs:
       - name: Get ENV Variables for 🐍 📞
         run: |
           echo "python-path="RUNNER_TOOL_CACHE/Python/${{ matrix.python }}"" >> $GITHUB_ENV
+          print(${{ env.python-path }})
 
       - name: Set ENV Variables for 🐍 📞
         run: |
