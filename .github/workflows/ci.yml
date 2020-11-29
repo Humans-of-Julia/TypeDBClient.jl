@@ -62,9 +62,9 @@ jobs:
       
       - name: Set ENV Variables for 🐍 📞
         run: |
-          echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYTHON"] = "${{ env.pyenv_root }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pyenv_root }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pyenv_root }}" >> $GITHUB_ENV
 
       - name: Debug Python location
         run: |
@@ -85,8 +85,8 @@ jobs:
       
       - uses: actions/cache@v2      
         with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
+          path: ${{ env.pyenv_root }}
+          key: ${{ env.pyenv_root }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
       # Julia Tasks
       - uses: julia-actions/setup-julia@v1
@@ -119,9 +119,9 @@ jobs:
               
       - uses: julia-actions/julia-runtest@v1
         env:
-          PYTHON : ${{ env.pythonLocation }}
-          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
-          PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}
+          PYTHON : ${{ env.pyenv_root }}
+          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pyenv_root }}
+          PYCALL_JL_RUNTIME: ${{ env.pyenv_root }}
 
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
