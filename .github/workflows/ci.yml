@@ -1,4 +1,3 @@
-
 name: CI
 on:
   - push
@@ -30,10 +29,11 @@ jobs:
           - '1.5'
           - 'nightly'
         python: [3.7]
+        # python-path: [RUNNER_TOOL_CACHE/Python/*]
         os:
-          - ubuntu-latest
+         # - ubuntu-latest
           - macOS-latest
-          - windows-latest
+         # - windows-latest
         arch:
           - x64
         # - x86
@@ -41,32 +41,53 @@ jobs:
           # - os: macOS-latest
           # - os: windows-latest
           #    arch: x86
-    
     steps:
       - uses: actions/checkout@v2
       - name: Set up 🐍 ${{ matrix.python }}
-      - uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
-          python-version: ${{ matrix.python }}
+          python-version: ${{ matrix.python-version }}
       - name: Conda info
         shell: bash -l {0}
         run: conda info
       - name: Conda list
         shell: pwsh
-        run: conda list 
+        run: conda list
 
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
           # architecture: ${{ matrix.arch }}
-             
       
+
+
+      - name: Set ENV Variables for 🐍 📞
+        run: |
+          echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+      - name: Install dependencies 🔧
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+    
+      - uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
       # Julia Tasks
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+
 
       - uses: actions/cache@v2
         env:
@@ -78,25 +99,14 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-
-      
-
+      - name: Build Julia pkg
+        run: |
+          echo $ENV["PYTHON"]
+          echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
+          echo $ENV["PYCALL_JL_RUNTIME"]
       - uses: julia-actions/julia-buildpkg@v1
-        env:
-          PYTHON : echo $ENV["PYTHON"]
-          PYCALL_JL_RUNTIME_PYTHONHOME: echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
-          PYCALL_JL_RUNTIME: echo $ENV["PYCALL_JL_RUNTIME"]
-      - run: |
-          julia
-          using Pkg
-          Pkg.build("PyCall")
               
       - uses: julia-actions/julia-runtest@v1
-        env:
-          PYTHON : ${{ env.pyenv_root }}
-          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pyenv_root }}
-          PYCALL_JL_RUNTIME: ${{ env.pyenv_root }}
-
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
         with:
