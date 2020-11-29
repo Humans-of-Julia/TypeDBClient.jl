@@ -94,12 +94,8 @@ jobs:
           echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
           echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
           echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          
-      - name: Build Julia pkg
-        run: |
-          echo $ENV["PYTHON"]
-          echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
-          echo $ENV["PYCALL_JL_RUNTIME"]
+
+
       - uses: julia-actions/julia-buildpkg@v1
               
       - uses: julia-actions/julia-runtest@v1
