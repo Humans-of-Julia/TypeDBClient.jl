@@ -2,7 +2,24 @@ name: CI
 on:
   - push
   - pull_request
+
+
 jobs:
+
+  changelog:
+    name: CHANGELOG
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Check that CHANGELOG has been updated (deactivated for now)
+      run: |
+        # If this step fails, this means you haven't updated the CHANGELOG.md
+        # file with notes on your contribution.
+        # git diff --name-only $(git merge-base origin/master HEAD) | grep '^CHANGELOG.md$' && echo "Thanks for helping keep our CHANGELOG up-to-date!"
+
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
@@ -12,10 +29,12 @@ jobs:
         version:
           - '1.5'
           - 'nightly'
+        python: ['3.7']
+        # python-path: [RUNNER_TOOL_CACHE/Python/*]
         os:
-          - ubuntu-latest
+         # - ubuntu-latest
           - macOS-latest
-          - windows-latest
+         # - windows-latest
         arch:
           - x64
         # - x86
@@ -24,26 +43,79 @@ jobs:
           # - os: windows-latest
           #    arch: x86
     steps:
+
+      - name: Checkout Actions
       - uses: actions/checkout@v2
       - name: Set up Python 🐍
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
-          architecture: ${{ matrix.arch }}
-      - name: Install dependencies
+          python-version: ${{ matrix.python }}
+          # architecture: ${{ matrix.arch }}
+      
+      - name: Get ENV Variables for 🐍 📞
+        run: |
+          echo "python-path="RUNNER_TOOL_CACHE/Python/${{ matrix.python }}"" >> $GITHUB_ENV
+
+      - name: Set ENV Variables for 🐍 📞
+        run: |
+          echo ENV["PYTHON"] = "${{ env.python-path }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.python-path }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.python-path }}" >> $GITHUB_ENV
+          
+      - name: Install dependencies 🔧
         run: |
           python -m pip install --upgrade pip
-          python -m pip install grakn-client
-
-      - name: Install dependecies 
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: install -d # Install all dependencies, including development ones
+          
       
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+
+
+
+      # Python Caches
+#      - uses: actions/cache@v2
+#      - name: Caching Linux dependencies
+#        if: startsWith(runner.os, 'Linux')
+#        with:
+#          path: ~/.cache/pip
+#          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pip-
+
+#      - uses: actions/cache@v2
+#      - name: Caching macOS dependencies
+#        if: startsWith(runner.os, 'macOS')
+#        with:
+#          path: ~/Library/Caches/pip
+#          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pip-
+
+#      - uses: actions/cache@v2
+#        if: startsWith(runner.os, 'Windows')
+#        with:
+#          path: ~\AppData\Local\pip\Cache
+#          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pip-
+
+      
+      - uses: actions/cache@v2
+        with:
+          path: ${{ env.python-path }}
+          key: ${{ env.python-path }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
+
+
+
+      # Julia Tasks
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+
+
       - uses: actions/cache@v1
         env:
           cache-name: cache-artifacts
@@ -54,12 +126,15 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
+
+
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
         with:
           file: lcov.info
+
   docs:
     name: Documentation
     runs-on: ubuntu-latest
