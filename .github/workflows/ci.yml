@@ -1,3 +1,4 @@
+
 name: CI
 on:
   - push
@@ -19,7 +20,6 @@ jobs:
         # If this step fails, this means you haven't updated the CHANGELOG.md
         # file with notes on your contribution.
         # git diff --name-only $(git merge-base origin/master HEAD) | grep '^CHANGELOG.md$' && echo "Thanks for helping keep our CHANGELOG up-to-date!"
-
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
@@ -52,38 +52,37 @@ jobs:
         run: python -c "import sys; print(sys.version)"
           # architecture: ${{ matrix.arch }}
       
+
+
+      - name: Set ENV Variables for 🐍 📞
+        run: |
+          echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
       - name: Install dependencies 🔧
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-      - name: Set ENV variables for 🐍 📞
-        run: |
-          echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          
+      
       - name: Get pip cache dir
         id: pip-cache
         run: |
           echo "::set-output name=dir::$(pip cache dir)"
     
       - uses: actions/cache@v2
-      - name: Cache 🐍
         with:
           path: ${{ env.pythonLocation }}
           key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
       # Julia Tasks
       - uses: julia-actions/setup-julia@v1
-      - name: Setup Julia
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
 
 
       - uses: actions/cache@v2
-      - name: Cache Julia
         env:
           cache-name: cache-artifacts
         with:
@@ -93,18 +92,16 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-
-      
+      - name: Build Julia pkg
+        run: |
+          echo $ENV["PYTHON"]
+          echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
+          echo $ENV["PYCALL_JL_RUNTIME"]
       - uses: julia-actions/julia-buildpkg@v1
               
       - uses: julia-actions/julia-runtest@v1
-      - name: Test Julia
-
       - uses: julia-actions/julia-processcoverage@v1
-      - name: Julia Processcoverage
-
       - uses: codecov/codecov-action@v1
-      - name: Code Coverage
         with:
           file: lcov.info
 
@@ -129,4 +126,3 @@ jobs:
       - run: julia --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
