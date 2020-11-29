@@ -18,11 +18,11 @@ jobs:
           - windows-latest
         arch:
           - x64
-          - x86
-        exclude:
-          - os: macOS-latest
-          - os: windows-latest
-            arch: x86
+        # - x86
+        # exclude:
+          # - os: macOS-latest
+          # - os: windows-latest
+          #    arch: x86
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 🐍
@@ -35,6 +35,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install grakn-client
 
+      - name: Install dependecies 
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: install -d # Install all dependencies, including development ones
+      
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
