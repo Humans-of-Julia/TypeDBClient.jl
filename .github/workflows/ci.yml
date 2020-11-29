@@ -57,7 +57,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-      
+      - name: Set ENV variables for 🐍 📞
+        run: |
+          echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          
       - name: Get pip cache dir
         id: pip-cache
         run: |
@@ -89,13 +94,7 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
-      - name: Set ENV variables for 🐍 📞
-        run: |
-          echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
-
-
+      
       - uses: julia-actions/julia-buildpkg@v1
               
       - uses: julia-actions/julia-runtest@v1
