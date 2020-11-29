@@ -80,6 +80,10 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+        env:
+          PYTHON : ${{ env.pythonLocation }}
+          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
+          PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}
 
 
       - uses: actions/cache@v2
@@ -92,14 +96,24 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
+              
       - name: Build Julia pkg
         run: |
           echo $ENV["PYTHON"]
           echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
           echo $ENV["PYCALL_JL_RUNTIME"]
+
       - uses: julia-actions/julia-buildpkg@v1
+        env:
+          PYTHON : ${{ env.pythonLocation }}
+          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
+          PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}
               
       - uses: julia-actions/julia-runtest@v1
+        env:
+          PYTHON : ${{ env.pythonLocation }}
+          PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
+          PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}      
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
         with:
