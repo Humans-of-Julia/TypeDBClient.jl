@@ -29,12 +29,11 @@ jobs:
         version:
           - '1.5'
           - 'nightly'
-        python: [3.7]
-        # python-path: [RUNNER_TOOL_CACHE/Python/*]
+        python: [3.7, 3.8]
         os:
-         # - ubuntu-latest
+          - ubuntu-latest
           - macOS-latest
-         # - windows-latest
+          - windows-latest
         arch:
           - x64
         # - x86
@@ -47,29 +46,29 @@ jobs:
       - name: Set up 🐍 ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python }}
-      - name: Display Python version
+          python-version: ${{ matrix.python }} 
+
+      - name: Display Python version ${{ matrix.python }}
         run: python -c "import sys; print(sys.version)"
           # architecture: ${{ matrix.arch }}
       
-
-
       - name: Set ENV Variables for 🐍 📞
         run: |
           echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
           echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
           echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+
       - name: Install dependencies 🔧
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-      
       - name: Get pip cache dir
         id: pip-cache
         run: |
           echo "::set-output name=dir::$(pip cache dir)"
-    
+
+      - name: Cache 🐍
       - uses: actions/cache@v2
         with:
           path: ${{ env.pythonLocation }}
