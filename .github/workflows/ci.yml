@@ -29,7 +29,7 @@ jobs:
         version:
           - '1.5'
           - 'nightly'
-        python: ['3.7']
+        python: [3.7]
         # python-path: [RUNNER_TOOL_CACHE/Python/*]
         os:
          # - ubuntu-latest
@@ -44,10 +44,12 @@ jobs:
           #    arch: x86
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 🐍
+      - name: Set up 🐍 ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
           # architecture: ${{ matrix.arch }}
       
 
@@ -61,6 +63,7 @@ jobs:
       - name: Install dependencies 🔧
         run: |
           python -m pip install --upgrade pip
+          pip install -r requirements.txt
           
       
       - name: Get pip cache dir
@@ -80,7 +83,7 @@ jobs:
           arch: ${{ matrix.arch }}
 
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         env:
           cache-name: cache-artifacts
         with:
