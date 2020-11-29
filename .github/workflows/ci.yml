@@ -41,18 +41,20 @@ jobs:
           # - os: macOS-latest
           # - os: windows-latest
           #    arch: x86
+    name: Python ${{ matrix.python }} example
     steps:
       - uses: actions/checkout@v2
       - name: Set up 🐍 ${{ matrix.python }}
-        uses: gabrielfalcao/pyenv-action@v5
+      - uses: s-weigand/setup-conda@v1
+        with:
+          update-conda: true
+          python-version: ${{ matrix.python }}
+        run: |
+          conda --version
+          which python  
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-        with:
-          default: ${{ matrix.python }}
-          command: |
-            pip install -U pip
-            pip install -r requirements.txt
-            pyenv global ${{ matrix.python }} 
+        
       
       - name: Debug pyenv
         run: echo ${{ steps.pyenv_installation.outputs.pyenv_root }}
