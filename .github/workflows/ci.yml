@@ -52,7 +52,6 @@ jobs:
       
       - name: Get ENV Variables for 🐍 📞
         run: |
-          echo "python-path="${{ env.pythonLocation }}"" >> $GITHUB_ENV
           print(${{ env.python-path }})
 
       - name: Set ENV Variables for 🐍 📞
