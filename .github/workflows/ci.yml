@@ -103,7 +103,7 @@ jobs:
           PYCALL_JL_RUNTIME_PYTHONHOME: ${{ env.pythonLocation }}
           PYCALL_JL_RUNTIME: ${{ env.pythonLocation }}
       - run: |
-          sudo julia --project=src -e
+          sudo julia --project=src
           using Pkg
           Pkg.build("PyCall")
               
