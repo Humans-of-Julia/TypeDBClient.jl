@@ -48,6 +48,7 @@ jobs:
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python }}
+          activate-environment: grakn-env
       - name: Conda info
         shell: bash -l {0}
         run: conda info
