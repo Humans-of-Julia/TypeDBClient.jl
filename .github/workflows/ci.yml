@@ -44,9 +44,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up 🐍 ${{ matrix.python }}
-        uses: actions/setup-python@v2
+        uses: gabrielfalcao/pyenv-action@v5
         with:
-          python-version: ${{ matrix.python }} 
+          default: "${{ matrix.python }}"
+          command: |
+            pip install -U pip
+            pip install -r requirements.txt 
+      
+      - name: debug pyenv
+        run: echo ${{ steps.pyenv_installation.outputs.pyenv_root }}
 
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
@@ -57,6 +63,12 @@ jobs:
           echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
           echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
           echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+
+      - name: Debug Python location
+        run: |
+          echo $ENV["PYTHON"]
+          echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
+          echo $ENV["PYCALL_JL_RUNTIME"]
 
       - name: Install dependencies 🔧
         run: |
@@ -91,11 +103,7 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
-      - name: Build Julia pkg
-        run: |
-          echo $ENV["PYTHON"]
-          echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
-          echo $ENV["PYCALL_JL_RUNTIME"]
+      
 
       - uses: julia-actions/julia-buildpkg@v1
         env:
@@ -103,7 +111,7 @@ jobs:
           PYCALL_JL_RUNTIME_PYTHONHOME: echo $ENV["PYCALL_JL_RUNTIME_PYTHONHOME"]
           PYCALL_JL_RUNTIME: echo $ENV["PYCALL_JL_RUNTIME"]
       - run: |
-          sudo julia --project=src
+          julia
           using Pkg
           Pkg.build("PyCall")
               
