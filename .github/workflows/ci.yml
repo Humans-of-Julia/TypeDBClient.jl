@@ -41,23 +41,23 @@ jobs:
           # - os: macOS-latest
           # - os: windows-latest
           #    arch: x86
-    name: Python ${{ matrix.python }} example
+    
     steps:
       - uses: actions/checkout@v2
       - name: Set up 🐍 ${{ matrix.python }}
       - uses: s-weigand/setup-conda@v1
         with:
           update-conda: true
-          python-version: ${{ matrix.python }}
-        run: |
-          conda --version
-          which python  
+          python-version: ${{ matrix.python }}                 
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         
       
-      - name: Debug pyenv
-        run: echo ${{ steps.pyenv_installation.outputs.pyenv_root }}
+      - name: Debug conda
+        run: |
+          echo ${{ CONDA }}
+          conda --version
+          which python 
 
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
