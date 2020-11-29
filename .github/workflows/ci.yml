@@ -48,10 +48,11 @@ jobs:
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
-          default: "${{ matrix.python }}"
+          default: ${{ matrix.python }}
           command: |
             pip install -U pip
-            pip install -r requirements.txt 
+            pip install -r requirements.txt
+            pyenv global ${{ matrix.python }} 
       
       - name: Debug pyenv
         run: echo ${{ steps.pyenv_installation.outputs.pyenv_root }}
