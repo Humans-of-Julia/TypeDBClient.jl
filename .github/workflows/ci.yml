@@ -70,8 +70,8 @@ jobs:
     
       - uses: actions/cache@v2
         with:
-          path: ${{ env.python-path }}
-          key: ${{ env.python-path }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
       # Julia Tasks
       - uses: julia-actions/setup-julia@v1
