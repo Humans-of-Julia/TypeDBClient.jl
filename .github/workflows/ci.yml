@@ -54,9 +54,9 @@ jobs:
 
       - name: Set ENV Variables for 🐍 📞
         run: |
-          echo ENV["PYTHON"] = "${{ env.python-path }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.python-path }}" >> $GITHUB_ENV
-          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.python-path }}" >> $GITHUB_ENV
+          echo ENV["PYTHON"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME_PYTHONHOME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
+          echo ENV["PYCALL_JL_RUNTIME"] = "${{ env.pythonLocation }}" >> $GITHUB_ENV
 
       - name: Install dependencies 🔧
         run: |
