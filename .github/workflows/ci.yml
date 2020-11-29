@@ -50,9 +50,7 @@ jobs:
           python-version: ${{ matrix.python }}
           # architecture: ${{ matrix.arch }}
       
-      - name: Get ENV Variables for 🐍 📞
-        run: |
-          print(${{ env.python-path }})
+
 
       - name: Set ENV Variables for 🐍 📞
         run: |
