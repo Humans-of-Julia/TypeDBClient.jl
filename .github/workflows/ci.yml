@@ -111,6 +111,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set up 🐍 ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Set ENV Variables for 🐍 📞
+        run: |
+          echo ENV["PYTHON"] = "${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
+
+      
+
       - uses: julia-actions/setup-julia@v1
         env:
             PYTHON : "${{ env.pythonLocation }}/bin/python"
