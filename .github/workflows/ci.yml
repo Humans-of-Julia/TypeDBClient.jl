@@ -58,9 +58,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-      - name: Show Python path
-        run: |
-          echo $ENV["PYTHON"]
+#      - name: Show Python path
+#        run: |
+#          echo $ENV["PYTHON"]
 
       - name: Get pip cache dir
         id: pip-cache
@@ -78,7 +78,6 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
         
-
       - uses: actions/cache@v2
         env:
           cache-name: cache-artifacts
@@ -89,7 +88,6 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-
       
       - uses: julia-actions/julia-buildpkg@v1
         env:
