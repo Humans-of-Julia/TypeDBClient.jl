@@ -47,6 +47,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
           # architecture: ${{ matrix.arch }}
@@ -82,9 +83,6 @@ jobs:
           arch: ${{ matrix.arch }}
         env:
           PYTHON : "${{ env.pythonLocation }}/bin/python"
-          PYCALL_JL_RUNTIME_PYTHONHOME: "${{ env.pythonLocation }}/bin/python"
-          PYCALL_JL_RUNTIME: "${{ env.pythonLocation }}/bin/python"
-
 
       - uses: actions/cache@v2
         env:
@@ -101,8 +99,6 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
         env:
           PYTHON : "${{ env.pythonLocation }}/bin/python"
-          PYCALL_JL_RUNTIME_PYTHONHOME: "${{ env.pythonLocation }}/bin/python"
-          PYCALL_JL_RUNTIME: "${{ env.pythonLocation }}/bin/python"
               
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
@@ -116,6 +112,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
+        env:
+            PYTHON : "${{ env.pythonLocation }}/bin/python"
         with:
           version: '1'
       - run: |
