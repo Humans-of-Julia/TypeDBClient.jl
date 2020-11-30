@@ -120,8 +120,11 @@ jobs:
         run: |
           echo ENV["PYTHON"] = "${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
 
+      - name: Install dependencies 🔧
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       
-
       - uses: julia-actions/setup-julia@v1
         env:
             PYTHON : "${{ env.pythonLocation }}/bin/python"
