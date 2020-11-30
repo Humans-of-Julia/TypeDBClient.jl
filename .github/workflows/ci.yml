@@ -82,8 +82,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-        env:
-          PYTHON : "${{ env.pythonLocation }}/bin/python"
+        
 
       - uses: actions/cache@v2
         env:
@@ -98,6 +97,8 @@ jobs:
 
       
       - uses: julia-actions/julia-buildpkg@v1
+        env:
+          PYTHON : "${{ env.pythonLocation }}/bin/python"
             
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
