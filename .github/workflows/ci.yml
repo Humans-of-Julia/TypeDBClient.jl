@@ -37,10 +37,10 @@ jobs:
         arch:
           - x64
           - x86
-        exclude:
-          - os: macOS-latest
-          - os: windows-latest
-            arch: x86
+        #exclude:
+          #- os: macOS-latest
+          #- os: windows-latest
+            #arch: x86
     steps:
       - uses: actions/checkout@v2
       - name: Set up 🐍 ${{ matrix.python }}
