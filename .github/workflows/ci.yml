@@ -31,16 +31,16 @@ jobs:
         python: [3.7]
         # python-path: [RUNNER_TOOL_CACHE/Python/*]
         os:
-         # - ubuntu-latest
+          - ubuntu-latest
           - macOS-latest
-         # - windows-latest
+          - windows-latest
         arch:
           - x64
-        # - x86
-        # exclude:
-          # - os: macOS-latest
-          # - os: windows-latest
-          #    arch: x86
+          - x86
+        exclude:
+          - os: macOS-latest
+          - os: windows-latest
+            arch: x86
     steps:
       - uses: actions/checkout@v2
       - name: Set up 🐍 ${{ matrix.python }}
