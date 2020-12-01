@@ -91,8 +91,8 @@ jobs:
       
       - uses: julia-actions/julia-buildpkg@v1
         env:
-         # PYTHON : python
-         PYTHON : "${{ env.pythonLocation }}/bin/python"
+          PYTHON : python
+         #PYTHON : "${{ env.pythonLocation }}/bin/python"
             
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
