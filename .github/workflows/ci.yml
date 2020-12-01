@@ -60,7 +60,7 @@ jobs:
           
 #      - name: Show Python path
 #        run: |
-#          echo $ENV["PYTHON"]d
+#          echo $ENV["PYTHON"]
 
       - name: Get pip cache dir
         id: pip-cache
@@ -91,7 +91,8 @@ jobs:
       
       - uses: julia-actions/julia-buildpkg@v1
         env:
-          PYTHON : python
+         # PYTHON : python
+         PYTHON : "${{ env.pythonLocation }}/bin/python"
             
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
