@@ -90,10 +90,10 @@ jobs:
             ${{ runner.os }}-
       
       - uses: julia-actions/julia-buildpkg@v1
-        when:
-          condition: ${{ matrix.os }} != windows-latest
-          env:
-            PYTHON : "${{ env.pythonLocation }}/bin/python"
+        #if: ${{ matrix.os != windows-latest }}
+        env:
+          PYTHON : python
+         #PYTHON : "${{ env.pythonLocation }}/bin/python"
             
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
