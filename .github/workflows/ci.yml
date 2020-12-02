@@ -50,7 +50,7 @@ jobs:
             
       - name: Set ENV Variables for 🐍 📞
         run: |
-          echo ENV["PYTHON"] = "${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
+          echo ENV["PYTHON"] = python >> $GITHUB_ENV
 
       - name: Install dependencies 🔧
         run: |
