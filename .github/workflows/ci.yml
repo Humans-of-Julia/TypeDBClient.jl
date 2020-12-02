@@ -107,7 +107,8 @@ jobs:
 
       - name: Set ENV Variables for 🐍 📞
         run: |
-          echo ENV["PYTHON"] = "${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
+          echo ENV["PYTHON"] = python >> $GITHUB_ENV
+         
 
       - name: Install dependencies 🔧
         run: |
@@ -116,7 +117,7 @@ jobs:
       
       - uses: julia-actions/setup-julia@v1
         env:
-            PYTHON : "${{ env.pythonLocation }}/bin/python"
+            PYTHON : python
         with:
           version: '1'
       - run: |
