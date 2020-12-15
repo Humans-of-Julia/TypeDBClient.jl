@@ -1,1 +1,1 @@
--e git+https://github.com/graknlabs/client-python#egg=client-python
+grakn-client==2.0.0a0
