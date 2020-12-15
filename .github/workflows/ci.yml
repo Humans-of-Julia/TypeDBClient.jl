@@ -68,7 +68,7 @@ jobs:
           path: ${{ env.pythonLocation }}
           key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
-      # Julia Tasks
+      # Julia Tasks test
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
