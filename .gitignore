@@ -33,5 +33,6 @@ docs/Manifest.toml
 _git2_*
 
 # Ignore old protoc files
-**/protoc/
-**/ProtoBuf.jl/
+src/generated/protoc/
+src/generated/protobuf/
+src/generated/protobuf/ProtoBuf.jl/
