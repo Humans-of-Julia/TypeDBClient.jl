@@ -31,3 +31,6 @@ docs/Manifest.toml
 
 # ignore julia internal git files in the dev folder
 _git2_*
+
+# Ignore old protoc files
+**/protoc/
