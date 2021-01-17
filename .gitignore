@@ -34,3 +34,4 @@ _git2_*
 
 # Ignore old protoc files
 **/protoc/
+**/ProtoBuf.jl/
