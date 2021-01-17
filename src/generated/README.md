@@ -13,6 +13,7 @@ julia --project=protoc/ProtoBuf.jl/ -E 'import Pkg; Pkg.instantiate()'
 git clone https://github.com/JuliaIO/ProtoBuf.jl/ protoc/ProtoBuf.jl/
 echo 'PATH="$PATH:/some/path/to/GraknGlient.jl/src/generated/protoc/ProtoBuf.jl/plugin/"' >> $HOME/.bashrc && . $HOME/.bashrc # INSERT DIR PATH HERE
 for i in protoc/*; do
-    [[ -d $i ]] || protoc -I=protoc --julia_out=. $i
+    [[ -d $i ]] && continue
+    [[ $i == "BUILD" ]] || protoc -I=protoc --julia_out=. $i
 done
 ```
