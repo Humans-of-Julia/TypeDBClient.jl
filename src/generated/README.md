@@ -10,7 +10,7 @@ mkdir -p src/generated/protoc/
 git clone https://github.com/graknlabs/protocol.git/
 mv protocol/protobuf/* src/generated/protoc/ && rm -rf protocol
 cd src/generated/
-for i in protoc/*
-    protoc -I=proto --julia_out=. proto/$i
+for i in protoc/*; do
+    protoc -I=proto --julia_out=. $i
 done
 ```
