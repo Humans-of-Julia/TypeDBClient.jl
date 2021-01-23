@@ -34,7 +34,7 @@ _git2_*
 <<<<<<< HEAD
 Pipfile
 Pipfile.lock
-requirements.txt
+#requirements.txt
 =======
 
 # Ignore old protoc files
