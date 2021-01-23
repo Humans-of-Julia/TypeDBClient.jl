@@ -31,6 +31,14 @@ docs/Manifest.toml
 
 # ignore julia internal git files in the dev folder
 _git2_*
+<<<<<<< HEAD
 Pipfile
 Pipfile.lock
 requirements.txt
+=======
+
+# Ignore old protoc files
+src/generated/protoc/
+src/generated/protobuf/
+src/generated/protobuf/ProtoBuf.jl/
+>>>>>>> protoc-gen
