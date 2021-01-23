@@ -11,8 +11,6 @@ Starting out as an educational project and to benefit the Julia ecosystem.
 
 Please review the user guide or if you'd like to help building this check the contribution guidlines in the docs.
 
-Feel free to join the project channel on the Discord server and take over a part in translating the given client reference into Julia.
-
 ## What is Grakn about
 
 Read up here: https://grakn.ai/
@@ -23,22 +21,14 @@ Read up here: https://grakn.ai/
 
 ## How to start
 
-It is suggested to start translating the Concept API.
+Check the docs for install instructions and examples (WIP)
 
-You can read about it in the Grakn documentation [here](https://dev.grakn.ai/docs/concept-api/overview).
-
-After we got that, it is adviced to wait for the Python Client 2.0 early December, so we can plan things.
-
-For further questions about how to start, find us on [Discord](https://discord.gg/GdjHCNW8c8).
+For further questions about how to start, ideally find us on [Discord](https://discord.gg/GdjHCNW8c8).
 
 The Grakn community also has a Discord server [here](https://discord.gg/HBJXnzRgmx).
-
-Feel free to clone the repo, create branches, pull requests, issues and all that is required.
 
 Please find open issues that look for help in order to contribute.
 
 ## Project status
 
 The current project status can be seen on the [GitHub Project Kanban](https://github.com/Humans-of-Julia/GraknClient.jl/projects/1).
-
-Welcome everybody! 
