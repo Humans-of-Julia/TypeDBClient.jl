@@ -21,7 +21,7 @@ We are going to build the Julia client here.
 
 Our reference client is the [Python version](https://dev.grakn.ai/docs/client-api/python), which can be found also on [PyPi](https://pypi.org/project/grakn-client/#history).
 
-However, there are some design guidelines on how to roll an own client [here](https://dev.grakn.ai/docs/client-api/python) and an introductory blog on how to start [here](https://blog.grakn.ai/grakn-python-driver-how-to-roll-your-own-b010bbd73023).
+However, there are some design guidelines on how to roll a client [here](https://dev.grakn.ai/docs/client-api/python) and an introductory blog on how to start [here](https://blog.grakn.ai/grakn-python-driver-how-to-roll-your-own-b010bbd73023).
 
 The introductory blog is for Grakn 1.x iteration, so it can only serve as a general introduction. Requirements for Grakn 2.0 are likely a bit different.
 
