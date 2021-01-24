@@ -1,9 +1,29 @@
 ```@meta
 CurrentModule = GraknClient
 ```
+## Announcements
 
-# Documentation
+Grakn 2.0 alpha has been released, these are the highlights of the new version:
 
+    Replaced Cassandra with RocksDB
+    New Graph Storage Engine: replacing JanusGraph
+    New Grakn Type System: our Knowledge Representation
+    New Graql: even simpler and more powerful
+    New Traversal Engine: replacing TinkerPop/Gremlin
+    New Query Planner: an Integer Linear Program
+    New Reasoning Engine: based on Event Loop + Actor Model
+    New Query Engine: an Asynchronous Producer-Consumer
+    New Client-Server Protocol: a Reactive Stream
+    New Grakn Cluster: a Raft based distributed Grakn
+    New Grakn Console: powered by PicoCLI + JLine
+    New Benchmarking System: an Agent-based Simulation
+    New Grabl CI/CD: replacing CircleCI
+
+Read about it here in the [forum](https://discuss.grakn.ai/t/grakn-2-0-alpha-best-practices-in-distributed-systems-and-computer-science/2307).
+
+While in alpha, there are staged docs available here: [dev.docs.grakn.ai](https://dev.docs.grakn.ai/docs/general/quickstart).
+
+Current production docs can be found here: [docs.grakn.ai](https://docs.grakn.ai/docs/general/quickstart).
 ## About
 
 This is a community approach to translate a given client interface to the knowledge graph database **Grakn** made by [Grakn.ai](https://grakn.ai/) into Julia Language.
@@ -54,12 +74,23 @@ If you like to have a chat, you can find the Humans of Julia on Discord [here](h
 
 Also if you like to join the Grakn community, you can find them on Discord as well [here](https://discord.gg/HBJXnzRgmx).
 
-## Licence
+## License
 
 ```@index
 ```
-GraknClient.jl is licensed under the MIT. 
-For more details click [here](https://github.com/Humans-of-Julia/GraknClient.jl/blob/dev/LICENSE)
+GraknClient.jl is licensed under the MIT License.
+
+ The MIT License (MIT)
+
+Copyright © 2021 Humans of Julia
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Some more details [here](https://github.com/Humans-of-Julia/GraknClient.jl/blob/dev/LICENSE)
 
 ```@autodocs
 Modules = [GraknClient]

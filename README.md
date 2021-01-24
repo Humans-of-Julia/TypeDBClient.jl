@@ -19,6 +19,26 @@ Read up here: https://grakn.ai/
 > knowledge foundation for cognitive and intelligent (e.g. AI) systems, by providing an intelligent language for modelling, transactions and analytics. Being a distributed database, Grakn is designed to scale over a 
 > network of computers through partitioning and replication.
 
+## Announcements
+
+Grakn 2.0 alpha has been released, these are the highlights of the new version:
+
+    Replaced Cassandra with RocksDB
+    New Graph Storage Engine: replacing JanusGraph
+    New Grakn Type System: our Knowledge Representation
+    New Graql: even simpler and more powerful
+    New Traversal Engine: replacing TinkerPop/Gremlin
+    New Query Planner: an Integer Linear Program
+    New Reasoning Engine: based on Event Loop + Actor Model
+    New Query Engine: an Asynchronous Producer-Consumer
+    New Client-Server Protocol: a Reactive Stream
+    New Grakn Cluster: a Raft based distributed Grakn
+    New Grakn Console: powered by PicoCLI + JLine
+    New Benchmarking System: an Agent-based Simulation
+    New Grabl CI/CD: replacing CircleCI
+
+Read about it here in the [forum](https://discuss.grakn.ai/t/grakn-2-0-alpha-best-practices-in-distributed-systems-and-computer-science/2307).
+
 ## How to start
 
 Check the docs for install instructions and examples (WIP)
@@ -32,3 +52,5 @@ Please find open issues that look for help in order to contribute.
 ## Project status
 
 The current project status can be seen on the [GitHub Project Kanban](https://github.com/Humans-of-Julia/GraknClient.jl/projects/1).
+
+Contributions are welcome!
