@@ -29,4 +29,4 @@ for i in protobuf/*; do # generate files
 done
 ```
 
-You may also use
+You may also use the setup script which should do the same thing.
