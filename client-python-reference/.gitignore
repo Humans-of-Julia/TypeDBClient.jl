@@ -1,6 +1,0 @@
-.ijwb
-.idea
-bazel-*
-__pycache__
-**.pyc
-venv

@@ -1,7 +1,6 @@
 module GraknClient
 
 
+
 end
-
-
 
