@@ -19,10 +19,10 @@ mutable struct grakn_Client
     _is_open
 end
 
-grakn_Client() = grakn_Client(;adress=DEFAULT_URI,defaultChannel(),true)
+grakn_Client() = grakn_Client(;adress=DEFAULT_URI,_channel=defaultChannel(),_is_open=true)
 
 function defaultChannel()
-    gRPC.
+    GRPC.ClientChannel("localhost",1729)
 end
     # def __init__(self, address=DEFAULT_URI):
     #     self._channel = grpc.insecure_channel(address)
