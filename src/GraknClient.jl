@@ -1,6 +1,7 @@
 module GraknClient
 
 import GRPC
+using PyCall
 
 # from grakn.options import GraknOptions
 # from grakn.rpc.database_manager import DatabaseManager as _DatabaseManager
@@ -11,18 +12,27 @@ import GRPC
 # from grakn.concept.type.attribute_type import ValueType  # noqa # pylint: disable=unused-import
 # from grakn.rpc.transaction import TransactionType  # noqa # pylint: disable=unused-import
 
-DEFAULT_URI = "localhost:1729"
+grpc = pyimport("grpc")
 
-mutable struct grakn_Client 
+DEFAULT_HOST = "localhost"
+DEFAULT_PORT = 1729
+
+mutable struct Client 
     _channel
-    _databses
+    _databases
     _is_open
 end
 
-grakn_Client() = grakn_Client(;adress=DEFAULT_URI,_channel=defaultChannel(),_is_open=true)
+grakn_Client() = init_GraknClient(DEFAULT_HOST,DEFAULT_PORT)
 
-function defaultChannel()
-    GRPC.ClientChannel("localhost",1729)
+function init_Graknclient(host::String, port::Int)
+    channel = socket_channel(host,port)
+    resClient = Client(socket_channel(host,port) ,nothing, nothing)
+end
+
+function socket_channel(host,port)
+    url = host * ":" * string(port)
+    grpc.insecure_channel(url)
 end
     # def __init__(self, address=DEFAULT_URI):
     #     self._channel = grpc.insecure_channel(address)
