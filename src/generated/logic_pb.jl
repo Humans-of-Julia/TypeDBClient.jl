@@ -626,43 +626,6 @@ function Base.getproperty(obj::LogicManager_GetRule_Res, name::Symbol)
     end
 end
 
-mutable struct LogicManager_PutRule_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function LogicManager_PutRule_Res(; kwargs...)
-        obj = new(meta(LogicManager_PutRule_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct LogicManager_PutRule_Res
-const __meta_LogicManager_PutRule_Res = Ref{ProtoMeta}()
-function meta(::Type{LogicManager_PutRule_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_LogicManager_PutRule_Res)
-            __meta_LogicManager_PutRule_Res[] = target = ProtoMeta(LogicManager_PutRule_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:rule => Rule]
-            meta(target, LogicManager_PutRule_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_LogicManager_PutRule_Res[]
-    end
-end
-function Base.getproperty(obj::LogicManager_PutRule_Res, name::Symbol)
-    if name === :rule
-        return (obj.__protobuf_jl_internal_values[name])::Rule
-    else
-        getfield(obj, name)
-    end
-end
-
 mutable struct LogicManager_GetRules_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -695,6 +658,43 @@ end
 function Base.getproperty(obj::LogicManager_GetRules_Res, name::Symbol)
     if name === :rules
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Rule}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct LogicManager_PutRule_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function LogicManager_PutRule_Res(; kwargs...)
+        obj = new(meta(LogicManager_PutRule_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct LogicManager_PutRule_Res
+const __meta_LogicManager_PutRule_Res = Ref{ProtoMeta}()
+function meta(::Type{LogicManager_PutRule_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_LogicManager_PutRule_Res)
+            __meta_LogicManager_PutRule_Res[] = target = ProtoMeta(LogicManager_PutRule_Res)
+            allflds = Pair{Symbol,Union{Type,String}}[:rule => Rule]
+            meta(target, LogicManager_PutRule_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_LogicManager_PutRule_Res[]
+    end
+end
+function Base.getproperty(obj::LogicManager_PutRule_Res, name::Symbol)
+    if name === :rule
+        return (obj.__protobuf_jl_internal_values[name])::Rule
     else
         getfield(obj, name)
     end
