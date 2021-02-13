@@ -3,6 +3,9 @@ uuid = "7ffdda62-db04-4838-9798-febd00f3125c"
 authors = ["Humans of Julia"]
 version = "0.1.0"
 
+[deps]
+ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
+
 [compat]
 julia = "1"
 
