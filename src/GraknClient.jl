@@ -16,28 +16,35 @@ using Sockets
 
 import Base: show, close
 
-include(joinpath(@__DIR__,"src/generated/grakn.jl"))
-
-using ..grakn.protocol
+include("src/generated/grakn.jl")
+include("src/generated/grakn_pb.jl")
+using .grakn
 
 const DEFAULT_GRAKN_GRPC_PORT = 1729
 
 struct GraknBlockingClient
     controller::gRPCController
     client::gRPCClient
-    session::Session
+    grakn_stub::GraknBlockingStub
 
     GraknBlockingClient(port::Integer = DEFAULT_GRAKN_GRPC_PORT) = GraknBlockingClient(ip"127.0.0.1", port)
     function GraknBlockingClient(ip::IPv4, port::Integer)
         controller = gRPCController()
         client = gRPCClient(ip, port)
-        session = stub(client, Session)
-        new(controller, client, session)
+        grakn_blocking_stub = stub(client, GraknBlockingStub)
+        new(controller, client, grakn_blocking_stub)
     end
 end
 
 show(io::IO, grakn::GraknBlockingClient) = print("Grakn(", grakn.client.sock, ")")
 close(grakn::GraknBlockingClient) = close(grakn.client)
+
+for fn in (:CreateClient, :UpdateClient, :DeleteClient, :CreatePassword, :UpdatePassword, :DeletePassword, :ListPasswords, :GetVersion, :ListRefresh, :RevokeRefresh)
+    @eval begin
+        import .grakn: $fn
+        $fn(grakn::GraknBlockingClient, args...) = $fn(grakn.grakn_stub, grakn.controller, args...)
+    end
+end
 
 export GraknBlockingClient
 
