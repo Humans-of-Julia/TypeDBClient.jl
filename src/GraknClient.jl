@@ -16,8 +16,8 @@ using Sockets
 
 import Base: show, close
 
-include("src/generated/grakn.jl")
-using .grakn
+include(joinpath(@__DIR__,"generated/grakn.jl"))
+using .grakn.protocol
 
 const DEFAULT_GRAKN_GRPC_PORT = 1729
 
