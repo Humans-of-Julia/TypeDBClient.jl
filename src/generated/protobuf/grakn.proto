@@ -19,6 +19,7 @@ syntax = "proto3";
 
 option java_package = "grakn.protocol";
 option java_outer_classname = "GraknProto";
+option java_generic_services = true;
 
 import "database.proto";
 import "session.proto";
