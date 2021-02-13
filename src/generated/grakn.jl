@@ -8,5 +8,8 @@ module grakn
     include("answer_pb.jl")
     include("query_pb.jl")
     include("transaction_pb.jl")
+    include("session_pb.jl")
+    include("database_pb.jl")
+    include("grakn_pb.jl")
   end
 end
