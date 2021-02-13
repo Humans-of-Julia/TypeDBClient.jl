@@ -1,0 +1,92 @@
+//
+// Copyright (C) 2021 Grakn Labs
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+syntax = "proto3";
+
+option java_package = "grakn.protocol";
+option java_outer_classname = "TransactionProto";
+
+import "concept.proto";
+import "logic.proto";
+import "options.proto";
+import "query.proto";
+
+package grakn.protocol;
+
+message Transaction {
+
+    message Req {
+        string id = 1;
+        map<string, string> metadata = 2;
+        int32 latency_millis = 3;
+        oneof req {
+            bool continue = 4;
+            Open.Req open_req = 5;
+            Commit.Req commit_req = 6;
+            Rollback.Req rollback_req = 7;
+            Query.Req query_req = 8;
+            ConceptManager.Req concept_manager_req = 9;
+            Thing.Req thing_req = 10;
+            grakn.protocol.Type.Req type_req = 11;
+            LogicManager.Req logic_manager_req = 12;
+            Rule.Req rule_req = 13;
+        }
+    }
+
+    message Res {
+        string id = 1;
+        oneof res {
+            bool done = 2;
+            bool continue = 4;
+            Open.Res open_res = 5;
+            Commit.Res commit_res = 6;
+            Rollback.Res rollback_res = 7;
+            Query.Res query_res = 8;
+            ConceptManager.Res concept_manager_res = 9;
+            Thing.Res thing_res = 10;
+            grakn.protocol.Type.Res type_res = 11;
+            LogicManager.Res logic_manager_res = 12;
+            Rule.Res rule_res = 13;
+        }
+    }
+
+    enum Type {
+        READ = 0;
+        WRITE = 1;
+    }
+
+    message Open {
+        message Req {
+            bytes session_id = 1;
+            Type type = 2;
+            Options options = 3;
+        }
+        message Res {
+            int32 processing_time_millis = 1;
+        }
+    }
+
+    message Commit {
+        message Req {}
+        message Res {}
+    }
+
+    message Rollback {
+        message Req {}
+        message Res {}
+    }
+}
