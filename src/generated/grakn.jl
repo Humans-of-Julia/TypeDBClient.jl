@@ -10,6 +10,5 @@ module grakn
     include("transaction_pb.jl")
     include("session_pb.jl")
     include("database_pb.jl")
-    include("grakn_pb.jl")
   end
 end
