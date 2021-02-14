@@ -1,67 +1,54 @@
+#=
+In root folder run $ bash setup.sh to genrate the proto files
+
+then install the packages from GitHub
+
+(GraknClient) pkg> add https://github.com/tanmaykm/HPack.jl
+(GraknClient) pkg> add https://github.com/tanmaykm/HTTP2.jl
+(GraknClient) pkg> add https://github.com/tanmaykm/gRPC.jl
+
+=#
 module GraknClient
+# following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
 
-import GRPC
-using PyCall
+using gRPC
+using Sockets
 
-# from grakn.options import GraknOptions
-# from grakn.rpc.database_manager import DatabaseManager as _DatabaseManager
-# from grakn.rpc.session import Session as _Session, SessionType
+import Base: show, close
 
-# # Repackaging these symbols allows users to import everything they (most likely) need from "grakn.client"
-# from grakn.common.exception import GraknClientException  # noqa # pylint: disable=unused-import
-# from grakn.concept.type.attribute_type import ValueType  # noqa # pylint: disable=unused-import
-# from grakn.rpc.transaction import TransactionType  # noqa # pylint: disable=unused-import
+include("src/generated/grakn.jl")
+include("src/generated/grakn_pb.jl")
+using .grakn
 
-grpc = pyimport("grpc")
+const DEFAULT_GRAKN_GRPC_PORT = 1729
 
-DEFAULT_HOST = "localhost"
-DEFAULT_PORT = 1729
+struct GraknBlockingClient
+    controller::gRPCController
+    client::gRPCClient
+    grakn_stub::GraknBlockingStub
 
-mutable struct Client 
-    _channel
-    _databases
-    _is_open
+    GraknBlockingClient(port::Integer = DEFAULT_GRAKN_GRPC_PORT) = GraknBlockingClient(ip"127.0.0.1", port)
+    function GraknBlockingClient(ip::IPv4, port::Integer)
+        controller = gRPCController()
+        client = gRPCClient(ip, port)
+        grakn_blocking_stub = stub(client, GraknBlockingStub)
+        new(controller, client, grakn_blocking_stub)
+    end
 end
 
-grakn_Client() = init_GraknClient(DEFAULT_HOST,DEFAULT_PORT)
+show(io::IO, grakn::GraknBlockingClient) = print("Grakn(", grakn.client.sock, ")")
+close(grakn::GraknBlockingClient) = close(grakn.client)
 
-function init_Graknclient(host::String, port::Int)
-    channel = socket_channel(host,port)
-    resClient = Client(socket_channel(host,port) ,nothing, nothing)
+for fn in (:CreateClient, :UpdateClient, :DeleteClient, :CreatePassword, :UpdatePassword, :DeletePassword, :ListPasswords, :GetVersion, :ListRefresh, :RevokeRefresh)
+    @eval begin
+        import .grakn: $fn
+        $fn(grakn::GraknBlockingClient, args...) = $fn(grakn.grakn_stub, grakn.controller, args...)
+    end
 end
 
-function socket_channel(host,port)
-    url = host * ":" * string(port)
-    grpc.insecure_channel(url)
-end
-    # def __init__(self, address=DEFAULT_URI):
-    #     self._channel = grpc.insecure_channel(address)
-    #     self._databases = _DatabaseManager(self._channel)
-    #     self._is_open = True
+export GraknBlockingClient
 
-    # def session(self, database: str, session_type: SessionType, options=GraknOptions()):
-    #     return _Session(self, database, session_type, options)
-
-    # def databases(self):
-    #     return self._databases
-
-    # def close(self):
-    #     self._channel.close()
-    #     self._is_open = False
-
-    # def is_open(self):
-    #     return self._is_open
-
-    # def __enter__(self):
-    #     return self
-
-    # def __exit__(self, exc_type, exc_val, exc_tb):
-    #     self.close()
-    #     if exc_tb is None:
-    #         pass
-    #     else:
-    #         return False
-end
+end #module
 
 
 

@@ -1,0 +1,44 @@
+//
+// Copyright (C) 2021 Grakn Labs
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+syntax = "proto3";
+
+option java_package = "grakn.protocol.cluster";
+option java_outer_classname = "DatabaseProto";
+
+package grakn.protocol.cluster;
+
+message Database {
+
+    message Replica {
+        string address = 1;
+        string database = 2;
+        bool primary = 3;
+        bool preferred_secondary = 4;
+        int64 term = 5;
+    }
+
+    message Replicas {
+        message Req {
+            string database = 1;
+        }
+
+        message Res {
+            repeated Replica replicas = 1;
+        }
+    }
+}

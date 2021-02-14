@@ -1,0 +1,50 @@
+//
+// Copyright (C) 2021 Grakn Labs
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+syntax = "proto3";
+
+option java_package = "grakn.protocol";
+option java_outer_classname = "OptionsProto";
+
+package grakn.protocol;
+
+// TODO: Replace 'oneof' with 'optional' when upgraded to Protobuf 3.13 everywhere
+// https://github.com/protocolbuffers/protobuf/issues/1606#issuecomment-618687169
+
+message Options {
+    oneof infer_opt {
+        bool infer = 1;
+    }
+    oneof explain_opt {
+        bool explain = 2;
+    }
+    oneof batch_size_opt {
+        int32 batch_size = 3;
+    }
+    oneof prefetch_opt {
+        bool prefetch = 4;
+    }
+    oneof session_idle_timeout_opt {
+        int32 session_idle_timeout_millis = 5;
+    }
+    oneof schema_lock_acquire_timeout_opt {
+        int32 schema_lock_acquire_timeout_millis = 6;
+    }
+    oneof read_any_replica_opt {
+        bool read_any_replica = 7;
+    }
+}
