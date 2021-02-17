@@ -16,6 +16,8 @@ using Sockets
 
 import Base: show, close
 
+export GraknBlockingClient
+
 include("src/generated/grakn.jl")
 include("src/generated/grakn_pb.jl")
 using .grakn
@@ -45,8 +47,6 @@ for fn in (:CreateClient, :UpdateClient, :DeleteClient, :CreatePassword, :Update
         $fn(grakn::GraknBlockingClient, args...) = $fn(grakn.grakn_stub, grakn.controller, args...)
     end
 end
-
-export GraknBlockingClient
 
 end #module
 

@@ -7,6 +7,10 @@ include(joinpath(@__DIR__,"src/common/grakn_exception.jl"))
 using ProtoBuf
 using gRPC
 
+using .grakn.protocol
+
+export contains
+
 # from graknprotocol.protobuf.grakn_pb2_grpc import GraknStub
 # import graknprotocol.protobuf.database_pb2 as database_proto
 # from grpc import Channel, RpcError
@@ -18,17 +22,20 @@ mutable struct DatabaseManager
     _grpc_sub::AbstractProtoServiceStub
 end 
 
-function DatabaseManager(channel::gRPCChannel) begin
+function DatabaseManager(channel::gRPC.gRPCChannel)
         _grpc_stub = GraknStub(channel)
 end
 
-    # def contains(self, name: str):
-    #     request = database_proto.Database.Contains.Req()
-    #     request.name = name
-    #     try:
-    #         return self._grpc_stub.database_contains(request).contains
-    #     except RpcError as e:
-    #         raise GraknClientException(e)
+function contains(db_manager::Database_Manager, name::String)
+    stub_local = db_manager._grpc_stub
+    request = grakn.protocol.Database_Contains_Req(name=name)
+
+    # try
+    #     result = database_contains(stub_local, gRPCController(), inp::grakn.protocol.Database_Contains_Req, done::Function) 
+    # catch ex
+    #     throw(GraknClientException(ex))
+    # end
+end
 
     # def create(self, name: str):
     #     request = database_proto.Database.Create.Req()
