@@ -1,9 +1,13 @@
 module Database_Manager
 
+include(joinpath(@__DIR__,"../generated","grakn.jl"))
+include(joinpath(@__DIR__,"../generated","grakn_pb.jl"))
+include(joinpath(@__DIR__,"../common","grakn_exception.jl"))
+
 using ProtoBuf
 using gRPC
 
-using ..grakn.protocol
+using .grakn.protocol
 
 export contains, DatabaseManager
 
@@ -15,22 +19,24 @@ export contains, DatabaseManager
 
 
 mutable struct DatabaseManager
-    _grpc_sub::AbstractProtoServiceStub
+    _grpc_stub::AbstractProtoServiceStub
 end 
 
 function DatabaseManager(channel::gRPC.gRPCChannel)
-        _grpc_stub = GraknStub(channel)
+    grakn_stub = GraknBlockingStub(channel)
+    DatabaseManager(grakn_stub)
 end
 
 function contains(db_manager::DatabaseManager, name::String)
     stub_local = db_manager._grpc_stub
     request = grakn.protocol.Database_Contains_Req(name=name)
-
-    # try
-    #     result = database_contains(stub_local, gRPCController(), inp::grakn.protocol.Database_Contains_Req, done::Function) 
-    # catch ex
-    #     throw(GraknClientException(ex))
-    # end
+    f = x->x + 1
+    try
+        result = database_contains(stub_local, gRPCController(), request) 
+        result.__protobuf_jl_internal_values[:contains]
+    catch ex
+        throw(GraknClientException(ex))
+    end
 end
 
     # def create(self, name: str):
