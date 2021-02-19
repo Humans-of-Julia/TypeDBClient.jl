@@ -9,7 +9,8 @@ using gRPC
 
 using .grakn.protocol
 
-export contains, DatabaseManager
+export DatabaseManager
+export contains, create
 
 # from graknprotocol.protobuf.grakn_pb2_grpc import GraknStub
 # import graknprotocol.protobuf.database_pb2 as database_proto
@@ -30,7 +31,6 @@ end
 function contains(db_manager::DatabaseManager, name::String)
     stub_local = db_manager._grpc_stub
     request = grakn.protocol.Database_Contains_Req(name=name)
-    f = x->x + 1
     try
         result = database_contains(stub_local, gRPCController(), request) 
         result.__protobuf_jl_internal_values[:contains]
@@ -39,13 +39,18 @@ function contains(db_manager::DatabaseManager, name::String)
     end
 end
 
-    # def create(self, name: str):
-    #     request = database_proto.Database.Create.Req()
-    #     request.name = name
-    #     try:
-    #         self._grpc_stub.database_create(request)
-    #     except RpcError as e:
-    #         raise GraknClientException(e)
+
+
+function create(db_manager::DatabaseManager, name::String)
+    stub_local = db_manager._grpc_stub
+    request = grakn.protocol.Database_Create_Req()
+    request.name = name
+    try
+        result = database_create(stub_local, gRPCController(), request) 
+    catch ex
+        throw(GraknClientException(ex))
+    end
+end
 
     # def delete(self, name: str):
     #     request = database_proto.Database.Delete.Req()

@@ -24,6 +24,7 @@ include(joinpath(@__DIR__,"common","grakn_exception.jl"))
 include(joinpath(@__DIR__,"rpc","database_manager.jl"))
 
 using .grakn
+using .Database_Manager
 
 const DEFAULT_GRAKN_GRPC_PORT = 1729
 
@@ -31,13 +32,15 @@ struct GraknBlockingClient
     controller::gRPCController
     client::gRPCClient
     grakn_stub::GraknBlockingStub
+    databases::DatabaseManager
 
     GraknBlockingClient(port::Integer = DEFAULT_GRAKN_GRPC_PORT) = GraknBlockingClient(ip"127.0.0.1", port)
     function GraknBlockingClient(ip::IPv4, port::Integer)
         controller = gRPCController()
         client = gRPCClient(ip, port)
+        databases = DatabaseManager(client.channel)
         grakn_blocking_stub = stub(client, GraknBlockingStub)
-        new(controller, client, grakn_blocking_stub)
+        new(controller, client, grakn_blocking_stub,databases)
     end
 end
 
