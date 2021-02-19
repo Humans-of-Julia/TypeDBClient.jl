@@ -18,8 +18,11 @@ import Base: show, close
 
 export GraknBlockingClient
 
-include("src/generated/grakn.jl")
-include("src/generated/grakn_pb.jl")
+include(joinpath(@__DIR__,"generated","grakn.jl"))
+include(joinpath(@__DIR__,"generated","grakn_pb.jl"))
+include(joinpath(@__DIR__,"common","grakn_exception.jl"))
+include(joinpath(@__DIR__,"rpc","database_manager.jl"))
+
 using .grakn
 
 const DEFAULT_GRAKN_GRPC_PORT = 1729
@@ -43,7 +46,7 @@ close(grakn::GraknBlockingClient) = close(grakn.client)
 
 for fn in (:CreateClient, :UpdateClient, :DeleteClient, :CreatePassword, :UpdatePassword, :DeletePassword, :ListPasswords, :GetVersion, :ListRefresh, :RevokeRefresh)
     @eval begin
-        import .grakn: $fn
+        import .grakn.protocol: $fn
         $fn(grakn::GraknBlockingClient, args...) = $fn(grakn.grakn_stub, grakn.controller, args...)
     end
 end

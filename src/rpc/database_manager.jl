@@ -1,15 +1,11 @@
 module Database_Manager
-    
-include(joinpath(@__DIR__,"src/generated/grakn.jl"))
-include(joinpath(@__DIR__,"src/generated/grakn_pb.jl"))
-include(joinpath(@__DIR__,"src/common/grakn_exception.jl"))
 
 using ProtoBuf
 using gRPC
 
-using .grakn.protocol
+using ..grakn.protocol
 
-export contains
+export contains, DatabaseManager
 
 # from graknprotocol.protobuf.grakn_pb2_grpc import GraknStub
 # import graknprotocol.protobuf.database_pb2 as database_proto
@@ -26,7 +22,7 @@ function DatabaseManager(channel::gRPC.gRPCChannel)
         _grpc_stub = GraknStub(channel)
 end
 
-function contains(db_manager::Database_Manager, name::String)
+function contains(db_manager::DatabaseManager, name::String)
     stub_local = db_manager._grpc_stub
     request = grakn.protocol.Database_Contains_Req(name=name)
 
