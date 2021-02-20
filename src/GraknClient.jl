@@ -20,7 +20,7 @@ export GraknBlockingClient
 
 include(joinpath(@__DIR__,"generated","grakn.jl"))
 include(joinpath(@__DIR__,"generated","grakn_pb.jl"))
-include(joinpath(@__DIR__,"common","grakn_exception.jl"))
+include(joinpath(@__DIR__,"common","exception.jl"))
 include(joinpath(@__DIR__,"rpc","database_manager.jl"))
 
 using .grakn

@@ -4,3 +4,4 @@ mutable struct GraknClientException <: Exception
 end
 
 GraknClientException(ex::T) where {T<:Exception} = GraknClientException(ex,"") 
+GraknClientException(msg::String) = GraknClientException(nothing, msg)
