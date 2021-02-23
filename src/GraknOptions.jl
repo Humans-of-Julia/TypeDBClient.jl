@@ -1,4 +1,4 @@
-module GraknClient
+module GraknClient_Options
 
 
 

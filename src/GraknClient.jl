@@ -35,6 +35,7 @@ struct GraknBlockingClient
     databases::DatabaseManager
 
     GraknBlockingClient(port::Integer = DEFAULT_GRAKN_GRPC_PORT) = GraknBlockingClient(ip"127.0.0.1", port)
+    GraknBlockingClient(address::String, port::Integer) = GraknBlockingClient(@ip_str address, port)
     function GraknBlockingClient(ip::IPv4, port::Integer)
         controller = gRPCController()
         client = gRPCClient(ip, port)
