@@ -1,0 +1,105 @@
+//
+// Copyright (C) 2021 Grakn Labs
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+syntax = "proto3";
+
+option java_package = "grakn.protocol";
+option java_outer_classname = "LogicProto";
+
+package grakn.protocol;
+
+message LogicManager {
+
+    message Req {
+        oneof req {
+            GetRule.Req get_rule_req = 1;
+            PutRule.Req put_rule_req = 2;
+            GetRules.Req get_rules_req = 3;
+        }
+    }
+
+    message Res {
+        oneof res {
+            GetRule.Res get_rule_res = 1;
+            PutRule.Res put_rule_res = 2;
+            GetRules.Res get_rules_res = 3;
+        }
+    }
+
+    message GetRule {
+        message Req {
+            string label = 1;
+        }
+        message Res {
+            oneof res {
+                Rule rule = 1;
+            }
+        }
+    }
+
+    message PutRule {
+        message Req {
+            string label = 1;
+            string when = 2;
+            string then = 3;
+        }
+        message Res {
+            Rule rule = 1;
+        }
+    }
+
+    message GetRules {
+        message Req {}
+        message Res {
+            repeated Rule rules = 1;
+        }
+    }
+}
+
+
+message Rule {
+    string label = 1;
+    string when = 2;
+    string then = 3;
+
+    message Req {
+        string label = 1;
+        oneof req {
+            Rule.Delete.Req rule_delete_req = 100;
+            Rule.SetLabel.Req rule_set_label_req = 101;
+        }
+    }
+
+    message Res {
+        oneof res {
+            Rule.Delete.Res rule_delete_res = 100;
+            Rule.SetLabel.Res rule_set_label_res = 101;
+        }
+    }
+
+    message Delete {
+        message Req {}
+        message Res {}
+    }
+
+    message SetLabel {
+        message Req {
+            string label = 1;
+        }
+        message Res {}
+    }
+}

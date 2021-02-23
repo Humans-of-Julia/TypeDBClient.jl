@@ -9,6 +9,8 @@ HPack = "28024e5f-9f70-4280-80a2-4be20479eed3"
 HTTP2 = "0ee529b6-85a9-4020-94aa-d5b2735f286b"
 ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+Sockets = "6462fe0b-24de-5631-8697-dd941f90decc"
 gRPC = "afc8a647-7d08-4745-b7bc-49733df17e1a"
 
 [compat]

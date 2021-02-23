@@ -1,0 +1,48 @@
+//
+// Copyright (C) 2021 Grakn Labs
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+syntax = "proto3";
+
+option java_package = "grakn.protocol";
+option java_outer_classname = "GraknProto";
+option java_generic_services = true;
+
+import "database.proto";
+import "session.proto";
+import "transaction.proto";
+
+package grakn.protocol;
+
+service Grakn {
+
+    rpc database_contains (Database.Contains.Req) returns (Database.Contains.Res);
+    rpc database_create (Database.Create.Req) returns (Database.Create.Res);
+    rpc database_all (Database.All.Req) returns (Database.All.Res);
+    rpc database_delete (Database.Delete.Req) returns (Database.Delete.Res);
+
+    rpc session_open (Session.Open.Req) returns (Session.Open.Res);
+    rpc session_close (Session.Close.Req) returns (Session.Close.Res);
+
+    // Checks with the server that the session is still alive, and informs it that it should be kept alive.
+    rpc session_pulse (Session.Pulse.Req) returns (Session.Pulse.Res);
+
+    // Opens a bi-directional stream representing a stateful transaction, streaming
+    // requests and responses back-and-forth. The first request message must
+    // be {Transaction.Open.Req}. Closing the stream closes the transaction.
+    rpc transaction (stream Transaction.Req) returns (stream Transaction.Res);
+
+}
