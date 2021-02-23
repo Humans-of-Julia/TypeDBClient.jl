@@ -1,21 +1,21 @@
-# #
-# # Licensed to the Apache Software Foundation (ASF) under one
-# # or more contributor license agreements.  See the NOTICE file
-# # distributed with this work for additional information
-# # regarding copyright ownership.  The ASF licenses this file
-# # to you under the Apache License, Version 2.0 (the
-# # "License"); you may not use this file except in compliance
-# # with the License.  You may obtain a copy of the License at
-# # 
-# #   http://www.apache.org/licenses/LICENSE-2.0
-# # 
-# # Unless required by applicable law or agreed to in writing,
-# # software distributed under the License is distributed on an
-# # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# # KIND, either express or implied.  See the License for the
-# # specific language governing permissions and limitations
-# # under the License.
-# #
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+# 
+#   http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
 
 # import unittest
 # import uuid
@@ -25,18 +25,19 @@
 
 # from tests.integration.base import test_base, GraknServer
 
+module grakn_test
 
 # # TODO: we should ensure that all these tests are migrated to BDD
 # class test_client_PreDbSetup(test_base):
 #     """ Tests Database interactions *before* anything needs to be inserted/created """
 
-#     # --- Test grakn client instantiation for one URI ---
-#     def test_client_init_valid(self):
-#         """ Test valid URI """
-#         a_inst = GraknClient('localhost:48555')
-#         self.assertIsInstance(a_inst, GraknClient)
-#         a_inst.close()
-
+    # --- Test grakn client instantiation for one URI ---
+function test_client_init_valid()
+    """ Test valid URI """
+    a_inst = GraknClient('localhost:48555')
+    self.assertIsInstance(a_inst, GraknClient)
+    a_inst.close()
+end 
 #     def test_client_with_statement(self):
 #         """ Test that client is compatible with using `with` """
 #         with GraknClient("localhost:48555") as client:
@@ -438,3 +439,5 @@
 # if __name__ == "__main__":
 #     with GraknServer():
 #         unittest.main(verbosity=2)
+
+end #End module
