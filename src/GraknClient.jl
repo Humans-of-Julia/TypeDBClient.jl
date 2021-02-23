@@ -47,13 +47,6 @@ end
 show(io::IO, grakn::GraknBlockingClient) = print("Grakn(", grakn.client.sock, ")")
 close(grakn::GraknBlockingClient) = close(grakn.client)
 
-for fn in (:CreateClient, :UpdateClient, :DeleteClient, :CreatePassword, :UpdatePassword, :DeletePassword, :ListPasswords, :GetVersion, :ListRefresh, :RevokeRefresh)
-    @eval begin
-        import .grakn.protocol: $fn
-        $fn(grakn::GraknBlockingClient, args...) = $fn(grakn.grakn_stub, grakn.controller, args...)
-    end
-end
-
 end #module
 
 
