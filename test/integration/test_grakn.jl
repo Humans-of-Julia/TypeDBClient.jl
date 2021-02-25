@@ -44,28 +44,24 @@
         @test typeof(a_inst) == GraknBlockingClient
         close(a_inst)
     end 
-    #     def test_client_with_statement(self):
-    #         """ Test that client is compatible with using `with` """
-    #         with GraknClient("localhost:48555") as client:
-    #             with client.session("testing") as session:
-    #                 with session.transaction().read() as tx:
-    #                     tx.query("match $x sub thing; get;")
-    
-    
-    
-    #     def test_client_init_invalid_uri(self):
-    #         """ Test invalid URI """
-    #         with self.assertRaises(GraknError):
-    #             a_inst = GraknClient('localhost:1000')
-    #             a_session = a_inst.session('testkeyspace')
-    #             a_session.transaction().read()
-    
-    #         with self.assertRaises(GraknError):
-    #             a_inst = GraknClient('localhost:1000')
-    #             with a_inst.session("test") as s:
-    #                 with s.transaction().read() as tx:
-    #                     pass
-    #             a_inst.close()
+
+    @testset "test_client_init_invalid_uri" begin
+        try
+            a_inst = GraknBlockingClient(DefaultAdress,1000)
+        catch ex
+            @test typeof(ex) == GraknClientException
+        finally
+            close(a_inst)
+        end
+    end
+
+    @testset "test_client_with_statement" begin
+            """ Test that client is compatible with using `with` """
+            client =  GraknBlockingClient(DefaultAdress,DefaultPort)
+            client_session = Session(client, "testing")  
+            tx =  Transaction(client_session, TransactionType.READ)
+            query(tx, "match $x sub thing; get;")
+    end
     
     
     #     # --- Test client session for different keyspaces ---

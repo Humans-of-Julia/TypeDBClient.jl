@@ -54,13 +54,21 @@ end
 #         pass
 
 
-# class _SessionRPC(Session):
-#     _PULSE_FREQUENCY_SECONDS = 5
+struct _SessionRPC    
+    _PULSE_FREQUENCY_SECONDS::Number
+    options
+    _address
+    _channel
+    #_scheduler
+    _database
+    _session_type
+    _grpc_stub
+end
+_SessionRPC(client::GraknBlockingClient, database::String, opitions::GraknOptions, session_type::SessionType) = init_Session(client, database, opitions, session_type)
 
-#     def __init__(self, client, database: str, session_type: SessionType, options: GraknOptions = None):
-#         if not options:
-#             options = GraknOptions.core()
-#         self._address = client._address
+function init_Session(client::GraknBlockingClient, database::String, opitions::GraknOptions, session_type::SessionType)
+          options === nothing && options = graknOptions_core
+#         self._address = client._addresss
 #         self._channel = grpc.insecure_channel(client._address)
 #         self._scheduler = sched.scheduler(time.time, time.sleep)
 #         self._database = database
@@ -76,6 +84,7 @@ end
 #         self._is_open = True
 #         self._pulse = self._scheduler.enter(delay=self._PULSE_FREQUENCY_SECONDS, priority=1, action=self._transmit_pulse, argument=())
 #         Thread(target=self._scheduler.run, name="session_pulse_{}".format(self._session_id.hex()), daemon=True).start()
+end
 
 #     def transaction(self, transaction_type: TransactionType, options=None) -> Transaction:
 #         if not options:

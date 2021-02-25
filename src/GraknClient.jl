@@ -16,12 +16,12 @@ using Sockets
 
 import Base: show, close
 
-export GraknBlockingClient
-
 include(joinpath(@__DIR__,"generated","grakn.jl"))
 include(joinpath(@__DIR__,"generated","grakn_pb.jl"))
 include(joinpath(@__DIR__,"common","exception.jl"))
 include(joinpath(@__DIR__,"rpc","database_manager.jl"))
+
+export GraknBlockingClient, GraknClientException
 
 using .grakn
 using .Database_Manager
@@ -33,15 +33,22 @@ struct GraknBlockingClient
     client::gRPCClient
     grakn_stub::GraknBlockingStub
     databases::DatabaseManager
+end
 
-    GraknBlockingClient(port::Integer = DEFAULT_GRAKN_GRPC_PORT) = GraknBlockingClient(ip"127.0.0.1", port)
-    GraknBlockingClient(address::String, port::Integer) = GraknBlockingClient(Sockets.parse(IPAddr , address), port)
-    function GraknBlockingClient(ip::IPv4, port::Integer)
-        controller = gRPCController()
+GraknBlockingClient(port::Integer = DEFAULT_GRAKN_GRPC_PORT) = GraknBlockingClient(ip"127.0.0.1", port)
+GraknBlockingClient(address::String, port::Integer) = GraknBlockingClient(Sockets.parse(IPAddr , address), port)
+function GraknBlockingClient(ip::IPv4, port::Integer)
+    controller = gRPCController()
+    try 
         client = gRPCClient(ip, port)
         databases = DatabaseManager(client.channel)
         grakn_blocking_stub = stub(client, GraknBlockingStub)
-        new(controller, client, grakn_blocking_stub,databases)
+        GraknBlockingClient(controller, client, grakn_blocking_stub, databases)
+    catch ex
+        if typeof(ex) == Base.IOError
+            throw(GraknClientException("Connection could not established. Proof the address, port and the accessibility of the server \n 
+                                       for more Information refer to the stored exception in this exception"))
+        end
     end
 end
 
