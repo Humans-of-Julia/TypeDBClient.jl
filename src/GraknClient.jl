@@ -33,17 +33,19 @@ struct GraknBlockingClient
     client::gRPCClient
     grakn_stub::GraknBlockingStub
     databases::DatabaseManager
+    address::IPAddr
+    port::Int
 end
 
 GraknBlockingClient(port::Integer = DEFAULT_GRAKN_GRPC_PORT) = GraknBlockingClient(ip"127.0.0.1", port)
 GraknBlockingClient(address::String, port::Integer) = GraknBlockingClient(Sockets.parse(IPAddr , address), port)
-function GraknBlockingClient(ip::IPv4, port::Integer)
+function GraknBlockingClient(ip::IPAddr, port::Integer)
     controller = gRPCController()
     try 
         client = gRPCClient(ip, port)
         databases = DatabaseManager(client.channel)
         grakn_blocking_stub = stub(client, GraknBlockingStub)
-        GraknBlockingClient(controller, client, grakn_blocking_stub, databases)
+        GraknBlockingClient(controller, client, grakn_blocking_stub, databases, ip, port)
     catch ex
         if typeof(ex) == Base.IOError
             throw(GraknClientException("Connection could not established. Proof the address, port and the accessibility of the server \n 

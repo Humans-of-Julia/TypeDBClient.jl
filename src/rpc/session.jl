@@ -68,7 +68,7 @@ _SessionRPC(client::GraknBlockingClient, database::String, opitions::GraknOption
 
 function init_Session(client::GraknBlockingClient, database::String, opitions::GraknOptions, session_type::SessionType)
           options === nothing && options = graknOptions_core
-#         self._address = client._addresss
+          address = client._addresss
 #         self._channel = grpc.insecure_channel(client._address)
 #         self._scheduler = sched.scheduler(time.time, time.sleep)
 #         self._database = database
