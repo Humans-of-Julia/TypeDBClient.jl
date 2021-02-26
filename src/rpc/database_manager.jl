@@ -28,8 +28,7 @@ function contains(db_manager::DatabaseManager, name::String)
     stub_local = db_manager._grpc_stub
     request = grakn.protocol.Database_Contains_Req(name=name)
     try
-        result = database_contains(stub_local, gRPCController(), request) 
-        result.__protobuf_jl_internal_values[:contains]
+        result = database_contains(stub_local, gRPCController(), request).contains
     catch ex
         throw(GraknClientException(ex))
     end
@@ -76,8 +75,7 @@ function all(db_manager::DatabaseManager)
     stub_local = db_manager._grpc_stub
     request = grakn.protocol.Database_All_Req()
     try
-        result = database_all(stub_local, gRPCController(), request)
-        result.__protobuf_jl_internal_values[:names]
+        result = database_all(stub_local, gRPCController(), request).names
     catch ex
          throw(GraknClientException(e))
     finally
