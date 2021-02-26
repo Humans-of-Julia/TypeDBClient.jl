@@ -1,6 +1,6 @@
-module Grakn_Session
-    
-
+ 
+using gRPC
+using .grakn.protocol
 # import grakn_protocol.protobuf.session_pb2 as session_proto
 # import grpc
 # from grakn_protocol.protobuf.grakn_pb2_grpc import GraknStub
@@ -64,21 +64,22 @@ struct _SessionRPC
     _session_type
     _grpc_stub
 end
-_SessionRPC(client::GraknBlockingClient, database::String, opitions::GraknOptions, session_type::SessionType) = init_Session(client, database, opitions, session_type)
+_SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type::SessionType) = init_Session(client, database, options, session_type)
 
-function init_Session(client::GraknBlockingClient, database::String, opitions::GraknOptions, session_type::SessionType)
-          options === nothing && options = graknOptions_core
-          address = client._addresss
-#         self._channel = grpc.insecure_channel(client._address)
-#         self._scheduler = sched.scheduler(time.time, time.sleep)
-#         self._database = database
-#         self._session_type = session_type
-#         self._grpc_stub = GraknStub(self._channel)
+function init_Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type::SessionType)
+        options === nothing && _options = graknOptions_core()
+        _address = client.addresss
+        _port = client.port
+        _channel = grpc_channel(GraknBlockingClient(address,port))
+        # _scheduler = sched.scheduler(time.time, time.sleep)
+        _database = database
+        _session_type = session_type
+        _grpc_stub = GraknStub(_channel)
 
-#         open_req = session_proto.Session.Open.Req()
-#         open_req.database = database
-#         open_req.type = _session_type_proto(session_type)
-#         open_req.options.CopyFrom(grakn_proto_builder.options(options))
+        open_req = grakn.protocol.Session_Open_Req()
+        open_req.database = database
+        open_req.type = _session_type_proto(session_type)
+        open_req.options.CopyFrom(grakn.protocol.Options()(options))
 
 #         self._session_id = self._grpc_stub.session_open(open_req).session_id
 #         self._is_open = True
@@ -130,4 +131,3 @@ end
 #             pass
 #         else:
 #             return False
-end # End of module
