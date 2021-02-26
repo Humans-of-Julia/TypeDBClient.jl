@@ -22,6 +22,7 @@ include(joinpath(@__DIR__,"common","exception.jl"))
 include(joinpath(@__DIR__,"GraknOptions.jl"))
 include(joinpath(@__DIR__,"rpc","database_manager.jl"))
 include(joinpath(@__DIR__,"client.jl"))
+include(joinpath(@__DIR__,"rpc","session.jl"))
 
 export GraknBlockingClient, GraknClientException
 

@@ -67,21 +67,21 @@ end
 _SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type::SessionType) = init_Session(client, database, options, session_type)
 
 function init_Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type::SessionType)
-        options === nothing && _options = graknOptions_core()
+         options === nothing ? _options = graknOptions_core() : _options = options
         _address = client.addresss
         _port = client.port
         _channel = grpc_channel(GraknBlockingClient(address,port))
         # _scheduler = sched.scheduler(time.time, time.sleep)
         _database = database
         _session_type = session_type
-        _grpc_stub = GraknStub(_channel)
+        _grpc_stub = GraknBlockingStub(_channel)
 
-        open_req = grakn.protocol.Session_Open_Req()
-        open_req.database = database
+        open_req = grakn.protocol.Session_Open_Req(database = database)
         open_req.type = _session_type_proto(session_type)
-        open_req.options.CopyFrom(grakn.protocol.Options()(options))
+        open_req.options = copyFrom(options ,grakn.protocol.Options)
 
-#         self._session_id = self._grpc_stub.session_open(open_req).session_id
+        result = session_open(stub_local, gRPCController(), open_req)
+        _session_id = result.session_id
 #         self._is_open = True
 #         self._pulse = self._scheduler.enter(delay=self._PULSE_FREQUENCY_SECONDS, priority=1, action=self._transmit_pulse, argument=())
 #         Thread(target=self._scheduler.run, name="session_pulse_{}".format(self._session_id.hex()), daemon=True).start()
@@ -131,3 +131,14 @@ end
 #             pass
 #         else:
 #             return False
+
+#### helper functions  ############
+
+function copyFrom(fromOption::R, toOption::Type{T}) where {T<:Options} where {R<:AbstractGraknOptions}
+    result_option = toOption()
+    for fname in fieldnames(fromOption)
+        if isdefined(result_option, Symbol(fname))
+            setfield!(result_option,Symbol(fname),getfield(fromOption,Symbol(fname)))
+        end
+    end
+end
