@@ -5,8 +5,11 @@
 # from grakn.concept.type.entity_type import EntityType
 # from grakn.concept.type.relation_type import RelationType
 
-abstract type ConceptManager end
+mutable struct ConceptManager 
+    _transaction::Union{T,Nothing} where {T<:AbstractTransaction}
+end
 
+ConceptManager() = ConceptManager(nothing)
 #     def get_root_thing_type(self):
 #         return self.get_thing_type("thing")
 

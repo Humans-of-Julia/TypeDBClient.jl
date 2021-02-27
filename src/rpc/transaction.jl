@@ -24,12 +24,12 @@ mutable struct RequestIterator
         _request_queue
 end
 
-mutable struct Transaction
+mutable struct Transaction <: AbstractTransaction
         _options
         _transaction_type::Union{Any,Nothing}
-        _concept_manager::Union{ConceptManager,Nothing}
-        _query_manager::Union{QueryManager,Nothing}
-        _logic_manager::Union{LogicManager,Nothing} 
+        _concept_manager::Union{T,Nothing} where {T<:AbstractConceptManager}
+        _query_manager::Union{T,Nothing} where {T<:AbstractQueryManager}
+        _logic_manager::Union{T,Nothing} where {T<:AbstractLogicManager}
         _response_queues 
         _grpc_stub::Union{GraknStub,Nothing}
         _request_iterator::Union{RequestIterator,Nothing}
@@ -52,12 +52,12 @@ function Transaction(session, transaction_type, options= nothing)
         _response_iterator = _grpc_stub.transaction(_request_iterator)
         _transaction_was_closed = false
 
-#         open_req = transaction_proto.Transaction.Open.Req()
-#         open_req.session_id = session_id
-#         open_req.type = Transaction._transaction_type_proto(transaction_type)
-#         open_req.options.CopyFrom(grakn_proto_builder.options(options))
-#         req = transaction_proto.Transaction.Req()
-#         req.open_req.CopyFrom(open_req)
+        open_req = Transaction_Open_Req()
+        open_req.session_id = session._session_id
+        open_req.type = _transaction_type_proto(transaction_type)
+        open_req.options = copyFrom(options ,grakn.protocol.Options)
+        req = Transaction_Req()
+        req.open_req.CopyFrom(open_req)
 
 #         start_time = time.time() * 1000.0
 #         res = self._execute(req)

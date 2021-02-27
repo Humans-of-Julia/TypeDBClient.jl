@@ -57,7 +57,9 @@ struct _SessionRPC <: Session
     #_scheduler
     _database
     _session_type
+    _session_id
     _grpc_stub
+    _is_open
 end
 
 Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
@@ -83,7 +85,7 @@ function init_Session(client::GraknBlockingClient, database::String, options::Un
     _is_open = true
 #         self._pulse = self._scheduler.enter(delay=self._PULSE_FREQUENCY_SECONDS, priority=1, action=self._transmit_pulse, argument=())
 #         Thread(target=self._scheduler.run, name="session_pulse_{}".format(self._session_id.hex()), daemon=True).start()
-    _SessionRPC(_pulse_frequency_seconds, _options, _address, _port, _channel, _database , _session_type , _grpc_stub)
+    _SessionRPC(_pulse_frequency_seconds, _options, _address, _port, _channel, _database , _session_type , _session_id,_grpc_stub, _is_open)
 end
 
 function transaction(session::T, transaction_type, options=nothing) where {T<:Session}
@@ -91,9 +93,13 @@ function transaction(session::T, transaction_type, options=nothing) where {T<:Se
     return Transaction(session, transaction_type, options)
 end
 
-#     def session_type(self) -> SessionType: return self._session_type
+function session_type(session::T) where {T<:Session}
+    session._session_type
+end
 
-#     def is_open(self) -> bool: return self._is_open
+function is_open(session::T) where {T<:Session}
+    session._is_open
+end
 
 #     def close(self) -> None:
 #         if self._is_open:

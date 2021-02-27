@@ -23,7 +23,11 @@
 
 # from grakn.logic.rule import Rule
 
-abstract type LogicManager end
+mutable struct LogicManager <:AbstractLogicManager
+    _transation::Union{T,Nothing} where {T<:AbstractTransaction}
+end
+
+LogicManager() = LogicManager(nothing)
 
 #     def put_rule(self, label: str, when: str, then: str):
 #         req = logic_proto.LogicManager.Req()

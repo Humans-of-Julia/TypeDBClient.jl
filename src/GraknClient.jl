@@ -16,6 +16,19 @@ using Sockets
 
 import Base: show, close
 
+###### abstract types ##################
+#                                      # 
+########################################
+
+abstract type AbstractTransaction end
+abstract type AbstractConceptManager end
+abstract type AbstractLogicManager end
+abstract type AbstractQueryManager end
+
+###### inlcudes ########################
+#                                      # 
+########################################
+
 include(joinpath(@__DIR__,"generated","grakn.jl"))
 include(joinpath(@__DIR__,"generated","grakn_pb.jl"))
 include(joinpath(@__DIR__,"common","exception.jl"))

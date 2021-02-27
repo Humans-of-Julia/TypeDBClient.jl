@@ -31,7 +31,11 @@
 # changed the implementation against the python client 
 # usage of Transaction only in one function is needed so 
 #
-abstract type QueryManager end
+struct QueryManager <: AbstractQueryManager
+    _transaction::Union{T,Nothing} where {T<:AbstractTransaction}
+end
+
+QueryManager() = QueryManager(nothing)
 
 #     def match(self, query: str, options: GraknOptions = None):
 #         if not options:
