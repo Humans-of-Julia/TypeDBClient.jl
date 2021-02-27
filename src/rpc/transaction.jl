@@ -24,6 +24,8 @@ mutable struct RequestIterator
         _request_queue
 end
 
+RequestIterator() = RequestIterator(nothing)
+
 mutable struct Transaction <: AbstractTransaction
         _options
         _transaction_type::Union{Any,Nothing}
@@ -40,8 +42,7 @@ end
 Base.show(io::IO, transaction::T) where {T<:AbstractTransaction} = print(io,"Transaction - session-id: $(transaction._session_id)")
 
 
-function Transaction(session, transaction_type, options= nothing) 
-    
+function Transaction(session::T, transaction_type::R, options= nothing) where {T<:Session, R<:Number}
         _options = options === nothing ? core() : options
         _transaction_type = transaction_type
         _concept_manager = ConceptManager()
@@ -51,8 +52,8 @@ function Transaction(session, transaction_type, options= nothing)
 
         _channel = grpc_channel(GraknBlockingClient(session._address,session._port))
         _grpc_stub = GraknBlockingStub(_channel)
-        _request_iterator = RequestIterator()
-        _response_iterator = _grpc_stub.transaction(_request_iterator)
+        _request_iterator = Channel{Transaction_Req}(4)
+        _response_iterator = transaction(_grpc_stub, gRPCController(), _request_iterator)
         _transaction_was_closed = false
 
         # open_req = Transaction_Open_Req()
@@ -67,7 +68,7 @@ function Transaction(session, transaction_type, options= nothing)
 #         end_time = time.time() * 1000.0
 #         self._network_latency_millis = end_time - start_time - res.open_res.processing_time_millis
 
-        Transaction(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, false)
+        Transaction(options, _transaction_type, nothing, nothing, nothing, nothing, nothing, nothing, nothing, false)
 end
 
 #     def transaction_type(self):

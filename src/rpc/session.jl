@@ -1,6 +1,6 @@
  
 using gRPC
-using .grakn.protocol
+using .grakn
 # import grakn_protocol.protobuf.session_pb2 as session_proto
 # import grpc
 # from grakn_protocol.protobuf.grakn_pb2_grpc import GraknStub
@@ -12,7 +12,7 @@ using .grakn.protocol
 # from grakn.rpc.transaction import Transaction, TransactionType
 
 abstract type AbstractSession end
-abstract type Session <: AbstractSession end
+abstract type Grakn_Session <: AbstractSession end
 
 
 function _session_type_proto(session_type)
@@ -48,7 +48,7 @@ end
 #         pass
 
 
-struct _SessionRPC <: Session    
+struct _SessionRPC <: AbstractSession    
     _pulse_frequency_seconds::Number
     _options
     _address
@@ -62,10 +62,10 @@ struct _SessionRPC <: Session
     _is_open
 end
 
-Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
+Grakn_Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
 _SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type)
 
-Base.show(io::IO, session::T) where {T<:Session} = print(io,"Session - database: $(session._database) server: $(session._address)")
+Base.show(io::IO, session::T) where {T<:AbstractSession} = print(io,"Session - database: $(session._database) server: $(session._address)")
 
 function init_Session(client::GraknBlockingClient, database::String, options::Union{GraknOptions,Nothing}, session_type)
     _pulse_frequency_seconds = 5
@@ -90,16 +90,16 @@ function init_Session(client::GraknBlockingClient, database::String, options::Un
     _SessionRPC(_pulse_frequency_seconds, _options, _address, _port, _channel, _database , _session_type , _session_id,_grpc_stub, _is_open)
 end
 
-function transaction(session::T, transaction_type, options=nothing) where {T<:Session}
+function transaction(session::T, transaction_type, options=nothing) where {T<:AbstractSession}
     _options = options === nothing && core()
     return Transaction(session, transaction_type, options)
 end
 
-function session_type(session::T) where {T<:Session}
+function session_type(session::T) where {T<:AbstractSession}
     session._session_type
 end
 
-function is_open(session::T) where {T<:Session}
+function is_open(session::T) where {T<:AbstractSession}
     session._is_open
 end
 
