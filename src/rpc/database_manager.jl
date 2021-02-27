@@ -1,8 +1,3 @@
-module Database_Manager
-
-include(joinpath(@__DIR__,"../generated","grakn.jl"))
-include(joinpath(@__DIR__,"../generated","grakn_pb.jl"))
-include(joinpath(@__DIR__,"../common","exception.jl"))
 
 using ProtoBuf
 using gRPC
@@ -82,5 +77,3 @@ function all(db_manager::DatabaseManager)
 
     end
 end
-
-end #End of module

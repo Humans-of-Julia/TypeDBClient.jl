@@ -11,19 +11,13 @@ using .grakn.protocol
 # from grakn.options import GraknOptions
 # from grakn.rpc.transaction import Transaction, TransactionType
 
-@enum SessionType DATA=0 SCHEMA=1
+abstract type AbstractSession end
+abstract type Session <: AbstractSession end
 
 
-function _session_type_proto(session_type::SessionType)
-    if session_type == SessionType.DATA
-        return session_proto.Session.Type.Value("DATA")
-    elseif  session_type == SessionType.SCHEMA
-        return session_proto.Session.Type.Value("SCHEMA")
-    end
+function _session_type_proto(session_type)
+    return Int(session_type)
 end
-
-
-# class Session(ABC):
 
 #     @abstractmethod
 #     def transaction(self, transaction_type: TransactionType, options=None) -> Transaction:
@@ -54,43 +48,48 @@ end
 #         pass
 
 
-struct _SessionRPC    
-    _PULSE_FREQUENCY_SECONDS::Number
-    options
+struct _SessionRPC <: Session    
+    _pulse_frequency_seconds::Number
+    _options
     _address
+    _port
     _channel
     #_scheduler
     _database
     _session_type
     _grpc_stub
 end
-_SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type::SessionType) = init_Session(client, database, options, session_type)
 
-function init_Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type::SessionType)
-         options === nothing ? _options = graknOptions_core() : _options = options
-        _address = client.addresss
-        _port = client.port
-        _channel = grpc_channel(GraknBlockingClient(address,port))
-        # _scheduler = sched.scheduler(time.time, time.sleep)
-        _database = database
-        _session_type = session_type
-        _grpc_stub = GraknBlockingStub(_channel)
+Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
+_SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type)
 
-        open_req = grakn.protocol.Session_Open_Req(database = database)
-        open_req.type = _session_type_proto(session_type)
-        open_req.options = copyFrom(options ,grakn.protocol.Options)
+function init_Session(client::GraknBlockingClient, database::String, options::Union{GraknOptions,Nothing}, session_type)
+    _pulse_frequency_seconds = 5
+    options === nothing ? _options = core() : _options = options
+    _address = client.address
+    _port = client.port
+    _channel = grpc_channel(GraknBlockingClient(_address,_port))
+    # _scheduler = sched.scheduler(time.time, time.sleep)
+    _database = database
+    _session_type = session_type
+    _grpc_stub = GraknBlockingStub(_channel)
 
-        result = session_open(stub_local, gRPCController(), open_req)
-        _session_id = result.session_id
-#         self._is_open = True
+    open_req = grakn.protocol.Session_Open_Req()
+    open_req.database = database
+    open_req._type = _session_type_proto(session_type)
+    open_req.options = copyFrom(options ,grakn.protocol.Options)
+
+    _session_id = session_open(_grpc_stub, gRPCController(), open_req).session_id
+    _is_open = true
 #         self._pulse = self._scheduler.enter(delay=self._PULSE_FREQUENCY_SECONDS, priority=1, action=self._transmit_pulse, argument=())
 #         Thread(target=self._scheduler.run, name="session_pulse_{}".format(self._session_id.hex()), daemon=True).start()
+    _SessionRPC(_pulse_frequency_seconds, _options, _address, _port, _channel, _database , _session_type , _grpc_stub)
 end
 
-#     def transaction(self, transaction_type: TransactionType, options=None) -> Transaction:
-#         if not options:
-#             options = GraknOptions.core()
-#         return Transaction(self._address, self._session_id, transaction_type, options)
+function transaction(session::T, transaction_type, options=nothing) where {T<:Session}
+    _options = options === nothing && core()
+    return Transaction(session, transaction_type, options)
+end
 
 #     def session_type(self) -> SessionType: return self._session_type
 
@@ -136,9 +135,11 @@ end
 
 function copyFrom(fromOption::R, toOption::Type{T}) where {T<:Options} where {R<:AbstractGraknOptions}
     result_option = toOption()
-    for fname in fieldnames(fromOption)
-        if isdefined(result_option, Symbol(fname))
-            setfield!(result_option,Symbol(fname),getfield(fromOption,Symbol(fname)))
+    for fname in fieldnames(typeof(fromOption))
+        if hasproperty(result_option, Symbol(fname))
+            setproperty!(result_option,Symbol(fname),getfield(fromOption,Symbol(fname)))
+            @info "innere Schleife copyFrom"
         end
     end
+    result_option
 end

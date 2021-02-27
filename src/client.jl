@@ -1,5 +1,4 @@
-using .grakn
-using .Database_Manager
+using .grakn.protocol
 
 const DEFAULT_GRAKN_GRPC_PORT = 1729
 

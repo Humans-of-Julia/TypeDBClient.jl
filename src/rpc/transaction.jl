@@ -1,22 +1,3 @@
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
-
 # import enum
 # from typing import Callable, List
 
@@ -37,42 +18,39 @@
 # from grakn.rpc.stream import Stream
 # from grakn.logic.logic_manager import LogicManager
 
-using .grakn.protocol
+CLOSE_STREAM = "CLOSE_STREAM"
 
-@enum TransactionType READ=0 WRITE=1
+mutable struct RequestIterator
+        _request_queue
+end
 
 mutable struct Transaction
-
-#     def __init__(self, address: str, session_id: str, transaction_type: TransactionType, options: GraknOptions = None):
-#         if not options:
-#             options = GraknOptions.core()
-#         self._transaction_type = transaction_type
-#         self._concept_manager = ConceptManager(self)
-#         self._query_manager = QueryManager(self)
-#         self._logic_manager = LogicManager(self)
-#         self._response_queues = {}
-
-#         self._grpc_stub = GraknStub(grpc.insecure_channel(address))
-#         self._request_iterator = RequestIterator()
-#         self._response_iterator = self._grpc_stub.transaction(self._request_iterator)
-#         self._transaction_was_closed = False
-
-
-####################
-        options
-        _transaction_type::TransactionType
-        _concept_manager::ConceptManager
-        _query_manager::QueryManager
-        _logic_manager::LogicManager 
+        _options
+        _transaction_type::Union{Any,Nothing}
+        _concept_manager::Union{ConceptManager,Nothing}
+        _query_manager::Union{QueryManager,Nothing}
+        _logic_manager::Union{LogicManager,Nothing} 
         _response_queues 
-
-        _grpc_stub::GraknStub
-        _request_iterator::RequestIterator
+        _grpc_stub::Union{GraknStub,Nothing}
+        _request_iterator::Union{RequestIterator,Nothing}
         _response_iterator 
-        _transaction_was_closed
+        _transaction_was_closed::Bool
+end
 
-####################
+function Transaction(session, transaction_type, options= nothing) 
+    
+        _options = options === nothing ? core() : options
+        _transaction_type = transaction_type
+        _concept_manager = ConceptManager()
+        _query_manager = QueryManager()
+        _logic_manager = LogicManager()
+        _response_queues = Dict{String,Any}()
 
+        _channel = grpc_channel(GraknBlockingClient(session._address,session._port))
+        _grpc_stub = GraknBlockingStub(_channel)
+        _request_iterator = RequestIterator()
+        _response_iterator = _grpc_stub.transaction(_request_iterator)
+        _transaction_was_closed = false
 
 #         open_req = transaction_proto.Transaction.Open.Req()
 #         open_req.session_id = session_id
@@ -85,11 +63,8 @@ mutable struct Transaction
 #         res = self._execute(req)
 #         end_time = time.time() * 1000.0
 #         self._network_latency_millis = end_time - start_time - res.open_res.processing_time_millis
-end
 
-function Transaction(address, session_id, transaction_type::TransactionType, options::GraknOptions=nothing) 
-    
-
+        Transaction(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, false)
 end
 
 #     def transaction_type(self):
@@ -194,17 +169,8 @@ end
 #             return transaction_proto.Transaction.Type.Value("WRITE")
 
 
-# class RequestIterator:
-#     CLOSE_STREAM = "CLOSE_STREAM"
-
-#     def __init__(self):
-#         self._request_queue = queue.Queue()
-
-#     def __iter__(self):
-#         return self
-
-#     # Essentially the gRPC stream is constantly polling this iterator. When we issue a new request, it gets put into
-#     # the back of the queue and gRPC will pick it up when it gets round to it (this is usually instantaneous)
+    # Essentially the gRPC stream is constantly polling this iterator. When we issue a new request, it gets put into
+    # the back of the queue and gRPC will pick it up when it gets round to it (this is usually instantaneous)
 #     def __next__(self):
 #         request = self._request_queue.get(block=True)
 #         if request is RequestIterator.CLOSE_STREAM:
