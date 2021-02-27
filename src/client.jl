@@ -28,7 +28,7 @@ function GraknBlockingClient(ip::IPAddr, port::Integer)
     end
 end
 
-show(io::IO, grakn::GraknBlockingClient) = print(io,"Grakn(", grakn.client.sock, ")")
+show(io::IO, grakn::GraknBlockingClient) = print(io,"Grakn( $(grakn.client.sock) )")
 close(grakn::GraknBlockingClient) = close(grakn.client)
 
 ############### Handling gRPC #####################

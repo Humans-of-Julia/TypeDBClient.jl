@@ -65,6 +65,8 @@ end
 Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
 _SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type)
 
+Base.show(io::IO, session::T) where {T<:Session} = print(io,"Session - database: $(session._database) server: $(session._address)")
+
 function init_Session(client::GraknBlockingClient, database::String, options::Union{GraknOptions,Nothing}, session_type)
     _pulse_frequency_seconds = 5
     options === nothing ? _options = core() : _options = options

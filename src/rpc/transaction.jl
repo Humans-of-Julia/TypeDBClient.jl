@@ -37,6 +37,9 @@ mutable struct Transaction <: AbstractTransaction
         _transaction_was_closed::Bool
 end
 
+Base.show(io::IO, transaction::T) where {T<:AbstractTransaction} = print(io,"Transaction - session-id: $(transaction._session_id)")
+
+
 function Transaction(session, transaction_type, options= nothing) 
     
         _options = options === nothing ? core() : options
@@ -52,12 +55,12 @@ function Transaction(session, transaction_type, options= nothing)
         _response_iterator = _grpc_stub.transaction(_request_iterator)
         _transaction_was_closed = false
 
-        open_req = Transaction_Open_Req()
-        open_req.session_id = session._session_id
-        open_req.type = _transaction_type_proto(transaction_type)
-        open_req.options = copyFrom(options ,grakn.protocol.Options)
-        req = Transaction_Req()
-        req.open_req.CopyFrom(open_req)
+        # open_req = Transaction_Open_Req()
+        # open_req.session_id = session._session_id
+        # open_req.type = _transaction_type_proto(transaction_type)
+        # open_req.options = copyFrom(options ,grakn.protocol.Options)
+        # req = Transaction_Req()
+        # req.open_req.CopyFrom(open_req)
 
 #         start_time = time.time() * 1000.0
 #         res = self._execute(req)
