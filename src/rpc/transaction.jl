@@ -1,22 +1,4 @@
-# import enum
-# from typing import Callable, List
-
-# import grpc
-# import time
-# import uuid
-
-# import queue
-
-# from grakn_protocol.protobuf.grakn_pb2_grpc import GraknStub
-# import grakn_protocol.protobuf.transaction_pb2 as transaction_proto
-
-# from grakn import grakn_proto_builder
-# from grakn.common.exception import GraknClientException
-# from grakn.concept.concept_manager import ConceptManager
-# from grakn.options import GraknOptions
-# from grakn.query.query_manager import QueryManager
-# from grakn.rpc.stream import Stream
-# from grakn.logic.logic_manager import LogicManager
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 CLOSE_STREAM = "CLOSE_STREAM"
 
@@ -52,7 +34,7 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
 
         _channel = grpc_channel(GraknBlockingClient(session._address,session._port))
         _grpc_stub = GraknBlockingStub(_channel)
-        _request_iterator = Channel{Transaction_Req}(4)
+        _request_iterator = Channel{grakn.protocol.Transaction_Req}(4)
         _response_iterator = transaction(_grpc_stub, gRPCController(), _request_iterator)
         _transaction_was_closed = false
 

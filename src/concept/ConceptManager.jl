@@ -1,9 +1,4 @@
-# import grakn_protocol.protobuf.concept_pb2 as concept_proto
-# import grakn_protocol.protobuf.transaction_pb2 as transaction_proto
-
-# from grakn.concept.proto import concept_proto_reader, concept_proto_builder
-# from grakn.concept.type.entity_type import EntityType
-# from grakn.concept.type.relation_type import RelationType
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct ConceptManager 
     _transaction::Union{T,Nothing} where {T<:AbstractTransaction}

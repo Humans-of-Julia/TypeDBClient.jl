@@ -1,17 +1,10 @@
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
  
 using gRPC
-# import grakn_protocol.protobuf.session_pb2 as session_proto
-# import grpc
-# from grakn_protocol.protobuf.grakn_pb2_grpc import GraknStub
-# from grpc import RpcError
-
-# from grakn import grakn_proto_builder
-# from grakn.common.exception import GraknClientException
-# from grakn.options import GraknOptions
-# from grakn.rpc.transaction import Transaction, TransactionType
+using .grakn
 
 abstract type AbstractSession end
-abstract type Grakn_Session <: AbstractSession end
+abstract type Session <: AbstractSession end
 
 
 function _session_type_proto(session_type)
@@ -61,7 +54,7 @@ struct _SessionRPC <: AbstractSession
     _is_open
 end
 
-Grakn_Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
+Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
 _SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type)
 
 Base.show(io::IO, session::T) where {T<:AbstractSession} = print(io,"Session - database: $(session._database) server: $(session._address)")
@@ -75,7 +68,7 @@ function init_Session(client::GraknBlockingClient, database::String, options::Un
     # _scheduler = sched.scheduler(time.time, time.sleep)
     _database = database
     _session_type = session_type
-    _grpc_stub = grakn.protocol.GraknBlockingStub(_channel)
+    _grpc_stub = GraknBlockingStub(_channel)
 
     open_req = grakn.protocol.Session_Open_Req()
     open_req.database = database
