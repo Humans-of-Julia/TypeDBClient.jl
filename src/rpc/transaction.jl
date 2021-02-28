@@ -42,7 +42,7 @@ end
 Base.show(io::IO, transaction::T) where {T<:AbstractTransaction} = print(io,"Transaction - session-id: $(transaction._session_id)")
 
 
-function Transaction(session::T, transaction_type::R, options= nothing) where {T<:Session, R<:Number}
+function Transaction(session::T, transaction_type::W, options::R) where {T<:AbstractSession} where {W<:Number} where {R<:AbstractGraknOptions}
         _options = options === nothing ? core() : options
         _transaction_type = transaction_type
         _concept_manager = ConceptManager()

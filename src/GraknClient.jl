@@ -37,8 +37,8 @@ include(joinpath(@__DIR__,"rpc","database_manager.jl"))
 include(joinpath(@__DIR__,"client.jl"))
 include(joinpath(@__DIR__,"concept","ConceptManager.jl"))
 include(joinpath(@__DIR__,"query","query_manager.jl"))
-include(joinpath(@__DIR__,"rpc","transaction.jl"))
 include(joinpath(@__DIR__,"rpc","session.jl"))
+include(joinpath(@__DIR__,"rpc","transaction.jl"))
 
 export GraknBlockingClient, GraknClientException
 
