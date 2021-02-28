@@ -1,6 +1,5 @@
  
 using gRPC
-using .grakn
 # import grakn_protocol.protobuf.session_pb2 as session_proto
 # import grpc
 # from grakn_protocol.protobuf.grakn_pb2_grpc import GraknStub
@@ -76,7 +75,7 @@ function init_Session(client::GraknBlockingClient, database::String, options::Un
     # _scheduler = sched.scheduler(time.time, time.sleep)
     _database = database
     _session_type = session_type
-    _grpc_stub = GraknBlockingStub(_channel)
+    _grpc_stub = grakn.protocol.GraknBlockingStub(_channel)
 
     open_req = grakn.protocol.Session_Open_Req()
     open_req.database = database
@@ -146,7 +145,6 @@ function copyFrom(fromOption::R, toOption::Type{T}) where {T<:Options} where {R<
     for fname in fieldnames(typeof(fromOption))
         if hasproperty(result_option, Symbol(fname))
             setproperty!(result_option,Symbol(fname),getfield(fromOption,Symbol(fname)))
-            @info "innere Schleife copyFrom"
         end
     end
     result_option
