@@ -6,6 +6,7 @@ version = "0.1.0"
 [deps]
 Conda = "8f4d0f93-b110-5947-807f-2305c1781a2d"
 <<<<<<< HEAD
+<<<<<<< HEAD
 ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
 
@@ -14,6 +15,8 @@ Conda = "1"
 PyCall = "1"
 =======
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+=======
+>>>>>>> test
 HPack = "28024e5f-9f70-4280-80a2-4be20479eed3"
 HTTP2 = "0ee529b6-85a9-4020-94aa-d5b2735f286b"
 ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
