@@ -71,8 +71,6 @@ jobs:
     steps:
       
       - uses: julia-actions/setup-julia@v1
-        env:
-            PYTHON : python
         with:
           version: '1'
       - run: |
