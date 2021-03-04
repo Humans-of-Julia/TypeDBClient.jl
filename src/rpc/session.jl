@@ -55,6 +55,7 @@ struct _SessionRPC <: AbstractSession
 end
 
 Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
+Session(client::GraknBlockingClient, database::String) = init_Session(client, database, GraknOptions(), Session_Type[:DATA]) 
 _SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type)
 
 Base.show(io::IO, session::T) where {T<:AbstractSession} = print(io,"Session - database: $(session._database) server: $(session._address)")

@@ -42,7 +42,7 @@ include(joinpath(@__DIR__,"query","query_manager.jl"))
 include(joinpath(@__DIR__,"rpc","session.jl"))
 include(joinpath(@__DIR__,"rpc","transaction.jl"))
 
-export GraknBlockingClient, GraknClientException
+export GraknBlockingClient, GraknClientException, Session
 
 end #module
 
