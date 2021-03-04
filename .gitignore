@@ -25,9 +25,9 @@ docs/site/
 # ignore local user specific files
 .git
 .vscode
-Manifest.toml
-test/Manifest.toml
-docs/Manifest.toml
+# Manifest.toml
+# test/Manifest.toml
+# docs/Manifest.toml
 
 # ignore julia internal git files in the dev folder
 _git2_*
