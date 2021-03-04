@@ -3,7 +3,6 @@ on:
   - push
 #   - pull_request
 
-
 jobs:
 
   changelog:
@@ -29,7 +28,6 @@ jobs:
         version:
           - '1.5'
           - 'nightly'
-        python: [3.7]
         
         os:
           - ubuntu-latest
