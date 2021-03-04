@@ -71,21 +71,6 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up 🐍 
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
-      - name: Set ENV Variables for 🐍 📞
-        run: |
-          echo ENV["PYTHON"] = python >> $GITHUB_ENV
-         
-
-      - name: Install dependencies 🔧
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
       
       - uses: julia-actions/setup-julia@v1
         env:
