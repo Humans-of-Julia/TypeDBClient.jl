@@ -36,5 +36,6 @@ _git2_*
 src/generated/protoc/
 src/generated/protobuf/
 src/generated/protobuf/ProtoBuf.jl/
+src/generated/protobuf/ProtoBuf.jl
 protocol
 client-python

@@ -38,37 +38,9 @@ jobs:
         arch:
           - x64
 
-#    steps:
-#      - uses: actions/checkout@v2
-#      - name: Set up 🐍 ${{ matrix.python }}
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: ${{ matrix.python }}
-#
-#      - name: Display Python version
-#        run: python -c "import sys; print(sys.version)"
-#            
-#      - name: Set ENV Variables for 🐍 📞
-#        run: |
-#          echo ENV["PYTHON"] = python >> $GITHUB_ENV
-#
-#      - name: Install dependencies 🔧
-#        run: |
-#          python -m pip install --upgrade pip
-#          pip install -r requirements.txt
-#      
-#
-#      - name: Get pip cache dir
-#        id: pip-cache
-#        run: |
-#          echo "::set-output name=dir::$(pip cache dir)"
-#    
-#      - uses: actions/cache@v2
-#        with:
-#          path: ${{ env.pythonLocation }}
-#          key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
+    steps:
 
-      # Julia Tasks test
+    # Julia Tasks test
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
