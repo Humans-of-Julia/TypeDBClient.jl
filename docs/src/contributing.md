@@ -58,6 +58,7 @@ The current project status can be seen on the [GitHub Project Kanban](https://gi
 
 - [How I translate Python code into Julia code](https://stackoverflow.com/questions/59356818/how-i-translate-python-code-into-julia-code)
 - [Python to Julia Quick translation / conversion reference Guide](https://gist.github.com/cuckookernel/9777067)
+- [Syntax Cheatsheet reference](https://cheatsheets.quantecon.org/)
 - [Client-Python tests](https://github.com/Humans-of-Julia/GraknClient.jl/tree/dev/client-python-reference/tests/integration)
 - [Protobuf](https://github.com/protocolbuffers/protobuf)
 - [gRPC](https://grpc.io/)
