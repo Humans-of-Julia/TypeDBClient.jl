@@ -59,9 +59,23 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
         Transaction(options, _transaction_type, nothing, nothing, nothing, nothing, nothing, nothing, nothing, false)
 end
 
+const __meta_Channel_Transaction_Req = Ref{ProtoMeta}()
+function meta(::Type{Channel{grakn.protocol.Transaction_Req}})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Channel_Transaction_Req)
+                __meta_Channel_Transaction_Req[] = target = ProtoMeta(Channel{grakn.protocol.Transaction_Req})
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Channel{grakn.protocol.Transaction_Req}, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES)
+        end
+        __meta_Channel_Transaction_Req[]
+    end
+end
+
 function _transaction_type_proto(transaction_type)
         Int32(transaction_type)
 end
+
+
 
 #     def transaction_type(self):
 #         return self._transaction_type
