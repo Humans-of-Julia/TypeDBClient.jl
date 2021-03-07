@@ -15,35 +15,41 @@ mutable struct Transaction <: AbstractTransaction
         _query_manager::Union{T,Nothing} where {T<:AbstractQueryManager}
         _logic_manager::Union{T,Nothing} where {T<:AbstractLogicManager}
         _response_queues 
-        _grpc_stub::Union{GraknStub,Nothing}
-        _request_iterator::Union{RequestIterator,Nothing}
+        _grpc_stub::Union{GraknBlockingStub,Nothing}
+        _request_iterator::Union{Channel{grakn.protocol.Transaction_Req},Nothing}
         _response_iterator 
         _transaction_was_closed::Bool
 end
 
-Base.show(io::IO, transaction::T) where {T<:AbstractTransaction} = print(io,"Transaction - session-id: $(transaction._session_id)")
+Base.show(io::IO, transaction::T) where {T<:AbstractTransaction} = print(io,"Transaction - first attempt")
 
+function Transaction()
+        Transaction(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, false)
+end
 
 function Transaction(session::T, transaction_type::W, options::R) where {T<:AbstractSession} where {W<:Number} where {R<:AbstractGraknOptions}
         _options = options === nothing ? core() : options
         _transaction_type = transaction_type
-        _concept_manager = ConceptManager()
-        _query_manager = QueryManager()
-        _logic_manager = LogicManager()
+        # transaction._concept_manager = ConceptManager(transaction)
+        # transaction._query_manager = QueryManager(transaction)
+        # transaction._logic_manager = LogicManager(tranaction)
         _response_queues = Dict{String,Any}()
 
-        _channel = grpc_channel(GraknBlockingClient(session._address,session._port))
-        _grpc_stub = GraknBlockingStub(_channel)
-        _request_iterator = Channel{grakn.protocol.Transaction_Req}(4)
-        _response_iterator = transaction(_grpc_stub, gRPCController(), _request_iterator)
+        channel = grpc_channel(GraknBlockingClient(session._address,session._port))
+        _grpc_stub = GraknBlockingStub(channel)
+        _request_iterator = Channel{grakn.protocol.Transaction_Req}(1)
         _transaction_was_closed = false
 
-        # open_req = Transaction_Open_Req()
-        # open_req.session_id = session._session_id
-        # open_req.type = _transaction_type_proto(transaction_type)
-        # open_req.options = copyFrom(options ,grakn.protocol.Options)
-        # req = Transaction_Req()
-        # req.open_req.CopyFrom(open_req)
+        open_req = Transaction_Open_Req()
+        open_req.session_id = session._session_id
+        open_req._type = _transaction_type_proto(transaction_type)
+        open_req.options = copyFrom(options ,grakn.protocol.Options)
+        req = Transaction_Req()
+        req.open_req = open_req
+        put!(_request_iterator, req)
+
+        _response_iterator = transaction(_grpc_stub, gRPCController(), _request_iterator)
+
 
 #         start_time = time.time() * 1000.0
 #         res = self._execute(req)
@@ -51,6 +57,10 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
 #         self._network_latency_millis = end_time - start_time - res.open_res.processing_time_millis
 
         Transaction(options, _transaction_type, nothing, nothing, nothing, nothing, nothing, nothing, nothing, false)
+end
+
+function _transaction_type_proto(transaction_type)
+        Int32(transaction_type)
 end
 
 #     def transaction_type(self):
