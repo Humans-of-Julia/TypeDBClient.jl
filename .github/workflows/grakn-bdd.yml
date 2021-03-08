@@ -4,11 +4,11 @@ on: [push]
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: A job to pull feature files, install Grakn, and execute the tests
     steps:
     - uses: actions/checkout@v2
     - id: foo
-      uses: mkschulze/graknrunner@0.1.0
+      uses: Humans-of-Julia/GraknRunner@0.1.0
       with:
         who-to-greet: 'Mark'
     - run: echo random-number ${{ steps.foo.outputs.random-number }}
