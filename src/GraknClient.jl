@@ -15,6 +15,7 @@ module GraknClient
 
 using gRPC
 using Sockets
+using UUIDs
 
 import Base: show, close
 

@@ -44,11 +44,15 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
         open_req.session_id = session._session_id
         open_req._type = _transaction_type_proto(transaction_type)
         open_req.options = copyFrom(options ,grakn.protocol.Options)
-        #req = Transaction_Req()
-        #req.open_req = open_req
-        # put!(_request_iterator, req)
+        req = Transaction_Req()
+        req.id = string(UUIDs.uuid4())
+        req.open_req = open_req
+        put!(_request_iterator, req)
+        @info "put geschafft"
+        resp = transaction(_grpc_stub, gRPCController(), _request_iterator)
+        @info "response geschafft"
+        tod = take!(resp)
 
-        resp = transaction_open(_grpc_stub, gRPCController(), open_req)
 
 
 #         start_time = time.time() * 1000.0
