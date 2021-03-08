@@ -1,4 +1,6 @@
-name: 'Hello World'
+name: Graction
+on:
+  - push
 description: 'Greet someone'
 inputs:
   who-to-greet:  # id of input
