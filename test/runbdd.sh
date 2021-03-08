@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "args: $@"
 echo "arg1: $1"
