@@ -75,6 +75,7 @@ function init_Session(client::GraknBlockingClient, database::String, options::Un
     open_req.database = database
     open_req._type = _session_type_proto(session_type)
     open_req.options = copyFrom(options ,grakn.protocol.Options)
+    @info open_req.options
 
     _session_id = session_open(_grpc_stub, gRPCController(), open_req).session_id
     _is_open = true
@@ -131,15 +132,3 @@ end
 #             pass
 #         else:
 #             return False
-
-#### helper functions  ############
-
-function copyFrom(fromOption::R, toOption::Type{T}) where {T<:Options} where {R<:AbstractGraknOptions}
-    result_option = toOption()
-    for fname in fieldnames(typeof(fromOption))
-        if hasproperty(result_option, Symbol(fname))
-            setproperty!(result_option,Symbol(fname),getfield(fromOption,Symbol(fname)))
-        end
-    end
-    result_option
-end

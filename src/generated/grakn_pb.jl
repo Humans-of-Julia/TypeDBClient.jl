@@ -13,7 +13,8 @@ const _Grakn_methods = MethodDescriptor[
         MethodDescriptor("session_open", 5, grakn.protocol.Session_Open_Req, grakn.protocol.Session_Open_Res),
         MethodDescriptor("session_close", 6, grakn.protocol.Session_Close_Req, grakn.protocol.Session_Close_Res),
         MethodDescriptor("session_pulse", 7, grakn.protocol.Session_Pulse_Req, grakn.protocol.Session_Pulse_Res),
-        MethodDescriptor("transaction", 8, Channel{grakn.protocol.Transaction_Req}, Channel{grakn.protocol.Transaction_Res})
+        MethodDescriptor("transaction", 8, Channel{grakn.protocol.Transaction_Req}, Channel{grakn.protocol.Transaction_Res}),
+        MethodDescriptor("transaction_open", 9, grakn.protocol.Transaction_Open_Req, grakn.protocol.Transaction_Open_Res)
     ] # const _Grakn_methods
 const _Grakn_desc = ServiceDescriptor("grakn.protocol.Grakn", 1, _Grakn_methods)
 
@@ -53,4 +54,7 @@ session_pulse(stub::GraknBlockingStub, controller::ProtoRpcController, inp::grak
 transaction(stub::GraknStub, controller::ProtoRpcController, inp::Channel{grakn.protocol.Transaction_Req}, done::Function) = call_method(stub.impl, _Grakn_methods[8], controller, inp, done)
 transaction(stub::GraknBlockingStub, controller::ProtoRpcController, inp::Channel{grakn.protocol.Transaction_Req}) = call_method(stub.impl, _Grakn_methods[8], controller, inp)
 
-export Grakn, GraknStub, GraknBlockingStub, database_contains, database_create, database_all, database_delete, session_open, session_close, session_pulse, transaction
+transaction_open(stub::GraknStub, controller::ProtoRpcController, inp::grakn.protocol.Transaction_Open_Req, done::Function) = call_method(stub.impl, _Grakn_methods[9], controller, inp, done)
+transaction_open(stub::GraknBlockingStub, controller::ProtoRpcController, inp::grakn.protocol.Transaction_Open_Req) = call_method(stub.impl, _Grakn_methods[9], controller, inp)
+
+export Grakn, GraknStub, GraknBlockingStub, database_contains, database_create, database_all, database_delete, session_open, session_close, session_pulse, transaction, transaction_open
