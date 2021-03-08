@@ -1,6 +1,24 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 
+using GraknClient
+using ConceptMap
+using ConceptMapGroup
+using Numeric
+using NumericGroup
+using Concept
+using Attribute, BooleanAttribute, LongAttribute, DoubleAttribute, StringAttribute, \
+    DateTimeAttribute
+using EntityType
+using RelationType
+using RoleType
+using ThingType
+using Type
+using Session
+using Transaction
+
+using Test
+
 
 
 
