@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - id: foo
-      uses: action/mkschulze/graknrunner@v0.1.0
+      uses: action/mkschulze/graknrunner@v1
       with:
         who-to-greet: 'Mark'
     - run: echo random-number ${{ steps.foo.outputs.random-number }}
