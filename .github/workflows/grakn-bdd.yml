@@ -1,0 +1,16 @@
+name: Grakn BDD runner
+on: [push]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A job to say hello
+    steps:
+    - uses: actions/checkout@v2
+    - id: foo
+      uses: https://github.com/mkschulze/graknrunner@v1
+      with:
+        who-to-greet: 'Mark'
+    - run: echo random-number ${{ steps.foo.outputs.random-number }}
+      shell: bash
+
