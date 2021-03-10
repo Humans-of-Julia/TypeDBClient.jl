@@ -37,7 +37,7 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
 
         channel = grpc_channel(GraknBlockingClient(session._address,session._port))
         _grpc_stub = GraknBlockingStub(channel)
-        _request_iterator = Channel{grakn.protocol.Transaction_Req}(1)
+        _request_iterator = Channel{grakn.protocol.Transaction_Req}(20)
         _transaction_was_closed = false
 
         open_req = Transaction_Open_Req()
@@ -47,13 +47,12 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
         req = Transaction_Req()
         req.id = string(UUIDs.uuid4())
         req.open_req = open_req
+        # res = transaction_open(_grpc_stub, gRPCController(), req)
         put!(_request_iterator, req)
         @info "put geschafft"
         resp = transaction(_grpc_stub, gRPCController(), _request_iterator)
         @info "response geschafft"
         tod = take!(resp)
-
-
 
 #         start_time = time.time() * 1000.0
 #         res = self._execute(req)

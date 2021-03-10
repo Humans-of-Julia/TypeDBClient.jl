@@ -102,12 +102,11 @@ end
         The function meant to be called as @async
 """
 function _transmit_pulse(scheduler::Scheduler)
-    @info "Scheduler erreicht"
     while scheduler.session_run
-        sleep(scheduler.pulse_interval -2)
+        sleep(scheduler.pulse_interval -1)
         pulse_req = grakn.protocol.Session_Pulse_Req()
         pulse_req.session_id = scheduler.session_id
         is_alive = session_pulse(scheduler.grpc_stub, gRPCController(), pulse_req).alive
-        @info "session is alive: $is_alive"
     end
+    @info "Session $(scheduler.session_id) no longer alive"
 end
