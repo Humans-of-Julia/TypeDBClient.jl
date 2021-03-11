@@ -58,7 +58,6 @@ function init_Session(client::GraknBlockingClient, database::String, options::Un
     _is_open = true
 
     _scheduler = Scheduler(true, _session_id, _pulse_frequency_seconds, _grpc_stub)
-    @info _scheduler
     @async _transmit_pulse(_scheduler)
 
     _SessionRPC(_pulse_frequency_seconds, _options, _address, _port, _channel, _database , _session_type , _session_id,_grpc_stub, _is_open,_scheduler)

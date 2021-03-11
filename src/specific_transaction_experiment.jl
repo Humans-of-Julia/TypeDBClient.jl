@@ -9,12 +9,20 @@ cli = GraknBlockingClient(DefaultAdress,DefaultPort)
 
 opt = GraknClient.GraknOptions(5000)
 
-ses = GraknClient.Session(cli, "test", opt, GraknClient.Session_Type[:DATA]) 
+ses = GraknClient.Session(cli, "test", opt, GraknClient.grakn.protocol.Session_Type[:DATA]) 
 
 # sleep(15)
 
 # close(ses)
-@enter tra = GraknClient.Transaction(ses, GraknClient.Transaction_Type[:READ], opt)
+tra = GraknClient.Transaction(ses, GraknClient.grakn.protocol.Transaction_Type[:READ], opt)
 
-using Base
-#ses._scheduler.session_run = false
+
+type = GraknClient.transaction_type(tra)
+
+is_open = GraknClient.is_open(tra)
+
+concepts = GraknClient.concepts(tra)
+
+query = GraknClient.query(tra)
+
+logic = GraknClient.logic(tra)
