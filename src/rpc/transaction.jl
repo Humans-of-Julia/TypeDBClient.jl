@@ -1,4 +1,5 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+using UUIDs
 
 CLOSE_STREAM = "CLOSE_STREAM"
 
@@ -89,38 +90,44 @@ function logic(trans::T) where {T<:AbstractTransaction}
         trans._logic_manager
 end
 
+function _execute(trans::T, request::grakn.protocol.Transaction_Req) where {T<:AbstractTransaction}
+        request_id = string(UUIDs.uuid4())
+        request.id = request_id
+        if trans._transaction_was_closed
+                throw(GraknClientException("The transaction has been closed and no further operation is allowed."))
+        end
+        res = transaction(trans._grpc_stub, gRPCController(), request)
+end
+
 function commit(trans::T) where {T<:AbstractTransaction}
         req = grakn.protocol.Transaction_Req()
         commit_req = grakn.protocol.Transaction_Commit_Req()
         req.commit_req = commit_req
         try
-            _execute(req)
+            _execute(trans,req)
         catch ex
-           throw(GraknClientException("Transaction commit failed"))
+           throw(GraknClientException("Transaction commit failed \n reason: $ex"))
         finally
             close(trans)
         end
 end
 
-#     def rollback(self):
-#         req = transaction_proto.Transaction.Req()
-#         rollback_req = transaction_proto.Transaction.Rollback.Req()
-#         req.rollback_req.CopyFrom(rollback_req)
-#         self._execute(req)
+function close(trans::T) where {T<:AbstractTransaction}
+        trans_transaction_was_closed = true
+        close(trans._request_iterator)
+        close(trans._response_iterator)
+end
 
-#     def close(self):
-#         self._transaction_was_closed = True
-#         self._request_iterator.close()
+function rollback(trans::T) where {T<:AbstractTransaction}
+        req = grakn.protocol.Transaction_Req()
+        rollback_req = grakn.protocol.Transaction_Rollback_Req()
+        req.rollback_req = rollback_req
+        _execute(trans, req)
+end
 
-#     def _execute(self, request: transaction_proto.Transaction.Req):
-#         response_queue = queue.Queue()
-#         request_id = str(uuid.uuid4())
-#         request.id = request_id
-#         if self._transaction_was_closed:
-#             raise GraknClientException("The transaction has been closed and no further operation is allowed.")
-#         self._response_queues[request_id] = response_queue
-#         self._request_iterator.put(request)
-#         return self._fetch(request_id)
+
+
+
 
 #     def _stream(self, request: transaction_proto.Transaction.Req, transform_response: Callable[[transaction_proto.Transaction.Res], List] = None):
 #         response_queue = queue.Queue()
@@ -171,14 +178,6 @@ end
 #             pass
 #         else:
 #             return False
-
-#     @staticmethod
-#     def _transaction_type_proto(transaction_type):
-#         if transaction_type == TransactionType.READ:
-#             return transaction_proto.Transaction.Type.Value("READ")
-#         if transaction_type == TransactionType.WRITE:
-#             return transaction_proto.Transaction.Type.Value("WRITE")
-
 
     # Essentially the gRPC stream is constantly polling this iterator. When we issue a new request, it gets put into
     # the back of the queue and gRPC will pick it up when it gets round to it (this is usually instantaneous)

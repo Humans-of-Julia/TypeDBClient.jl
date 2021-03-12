@@ -1,5 +1,7 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
+include(joinpath(@__DIR__,"Concept.jl"))
+
 mutable struct ConceptManager <:AbstractConceptManager 
     _transaction::Union{T,Nothing} where {T<:AbstractTransaction}
 end

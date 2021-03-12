@@ -6,15 +6,16 @@ end
 
 QueryManager() = QueryManager(nothing)
 
-#     def match(self, query: str, options: GraknOptions = None):
-#         if not options:
-#             options = GraknOptions.core()
-#         request = query_proto.Query.Req()
-#         match_req = query_proto.Query.Match.Req()
-#         match_req.query = query
-#         request.match_req.CopyFrom(match_req)
-#         return map(lambda answer_proto: concept_map._of(answer_proto), self._iterate_query(request, lambda res: res.query_res.match_res.answers, options))
-
+function match(querMan::T, query::String, options::GraknOptions = nothing) where {T<:AbstractQueryManager}
+    if !options
+        options = core()
+    end
+    request = grakn.protocol.Query_Req()
+    match_req =grakn.protocol.Query_Match_Req()
+    match_req.query = query
+    request.match_req = match_req
+    return map(lambda answer_proto: concept_map._of(answer_proto), self._iterate_query(request, lambda res: res.query_res.match_res.answers, options))
+end
 #     def match_aggregate(self, query: str, options: GraknOptions = None):
 #         if not options:
 #             options = GraknOptions.core()
