@@ -13,11 +13,9 @@ then install the packages from GitHub
 module GraknClient
 # following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
 
-using gRPC
-using Sockets
-using UUIDs
+using gRPC, Sockets, UUIDs, Dates
 
-import Base: show, close
+import Base: show, close, ==
 
 ###### abstract types ##################
 #                                      # 
@@ -27,6 +25,8 @@ abstract type AbstractTransaction end
 abstract type AbstractConceptManager end
 abstract type AbstractLogicManager end
 abstract type AbstractQueryManager end
+abstract type AbstractConcept end
+abstract type AbstractThing <: AbstractConcept end
 
 ###### inlcudes ########################
 #                                      # 

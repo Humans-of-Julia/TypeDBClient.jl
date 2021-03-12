@@ -58,9 +58,13 @@ function hash(conc_map::ConceptMap)
 end
 
 
-# def _of(concept_map_proto: answer_proto.ConceptMap):
-#     variable_map = {}
-#     for res_var in concept_map_proto.map:
-#         concept = concept_proto_reader.concept(concept_map_proto.map[res_var])
-#         variable_map[res_var] = concept
-#     return ConceptMap(variable_map)
+function _of(concept_map_proto::grakn.protocol.ConceptMap)
+    variable_map = Dict{String,Concept}()
+    throw(GraknClientException("concept_proto_reader is not implemented yet"))
+    for res_var in concept_map_proto.map
+        # TODO: implement the concept_proto_reader
+        concept = concept_proto_reader.concept (concept_map_proto.map[res_var])
+        variable_map[res_var] = concept
+    end
+    ConceptMap(variable_map)
+end
