@@ -1,4 +1,5 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+using UUIDs
 
 CLOSE_STREAM = "CLOSE_STREAM"
 
@@ -11,17 +12,18 @@ RequestIterator() = RequestIterator(nothing)
 mutable struct Transaction <: AbstractTransaction
         _options
         _transaction_type::Union{Any,Nothing}
-        _concept_manager::Union{T,Nothing} where {T<:AbstractConceptManager}
-        _query_manager::Union{T,Nothing} where {T<:AbstractQueryManager}
-        _logic_manager::Union{T,Nothing} where {T<:AbstractLogicManager}
-        _response_queues 
-        _grpc_stub::Union{GraknStub,Nothing}
-        _request_iterator::Union{RequestIterator,Nothing}
-        _response_iterator 
+        _concept_manager::T where {T<:Union{<:AbstractConceptManager, Nothing}}
+        _query_manager::T where {T<:Union{<:AbstractQueryManager, Nothing}}
+        _logic_manager::T where {T<:Union{<:AbstractLogicManager, Nothing}}
+        _response_queues::Dict{String,Any} 
+        _grpc_stub::Union{GraknBlockingStub,Nothing}
+        _request_iterator::Union{Channel{grakn.protocol.Transaction_Req},Nothing}
+        _response_iterator::Union{Channel{grakn.protocol.Transaction_Res},Nothing} 
         _transaction_was_closed::Bool
+        _network_latency_millis::Number
 end
 
-Base.show(io::IO, transaction::T) where {T<:AbstractTransaction} = print(io,"Transaction - session-id: $(transaction._session_id)")
+Base.show(io::IO, transaction::T) where {T<:AbstractTransaction} = print(io,"Transaction - first attempt")
 
 
 function Transaction(session::T, transaction_type::W, options::R) where {T<:AbstractSession} where {W<:Number} where {R<:AbstractGraknOptions}
@@ -32,70 +34,100 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
         _logic_manager = LogicManager()
         _response_queues = Dict{String,Any}()
 
-        _channel = grpc_channel(GraknBlockingClient(session._address,session._port))
-        _grpc_stub = GraknBlockingStub(_channel)
-        _request_iterator = Channel{grakn.protocol.Transaction_Req}(4)
-        _response_iterator = transaction(_grpc_stub, gRPCController(), _request_iterator)
+        channel = grpc_channel(GraknBlockingClient(session._address,session._port))
+        _grpc_stub = GraknBlockingStub(channel)
+        _request_iterator = Channel{grakn.protocol.Transaction_Req}(20)
+        _response_iterator = Channel{grakn.protocol.Transaction_Res}(20)
         _transaction_was_closed = false
 
-        # open_req = Transaction_Open_Req()
-        # open_req.session_id = session._session_id
-        # open_req.type = _transaction_type_proto(transaction_type)
-        # open_req.options = copyFrom(options ,grakn.protocol.Options)
-        # req = Transaction_Req()
-        # req.open_req.CopyFrom(open_req)
-
-#         start_time = time.time() * 1000.0
-#         res = self._execute(req)
-#         end_time = time.time() * 1000.0
-#         self._network_latency_millis = end_time - start_time - res.open_res.processing_time_millis
-
-        Transaction(options, _transaction_type, nothing, nothing, nothing, nothing, nothing, nothing, nothing, false)
+        open_req = grakn.protocol.Transaction_Open_Req()
+        open_req.session_id = session._session_id
+        open_req._type = _transaction_type_proto(transaction_type)
+        open_req.options = copyFrom(options ,grakn.protocol.Options)
+        req = grakn.protocol.Transaction_Req()
+        req.id = string(UUIDs.uuid4())
+        req.open_req = open_req
+        res = @timed transaction(_grpc_stub, gRPCController(), req)
+        _network_latency_millis = (res.time * 1000) - res.value.open_res.processing_time_millis
+        
+        Transaction(options, _transaction_type, _concept_manager, _query_manager, _logic_manager, _response_queues, _grpc_stub, _request_iterator, _response_iterator, _transaction_was_closed, _network_latency_millis )
 end
 
-#     def transaction_type(self):
-#         return self._transaction_type
+const __meta_Channel_Transaction_Req = Ref{ProtoMeta}()
+function meta(::Type{Channel{grakn.protocol.Transaction_Req}})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Channel_Transaction_Req)
+                __meta_Channel_Transaction_Req[] = target = ProtoMeta(Channel{grakn.protocol.Transaction_Req})
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Channel{grakn.protocol.Transaction_Req}, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES)
+        end
+        __meta_Channel_Transaction_Req[]
+    end
+end
 
-#     def is_open(self):
-#         return not self._transaction_was_closed
+function _transaction_type_proto(transaction_type)
+        Int32(transaction_type)
+end
 
-#     def concepts(self):
-#         return self._concept_manager
 
-#     def query(self):
-#         return self._query_manager
+function transaction_type(trans::T) where {T<:AbstractTransaction}
+        findfirst(x-> x == trans._transaction_type, grakn.protocol.Transaction_Type)
+end
 
-#     def logic(self):
-#         return self._logic_manager
+function is_open(trans::T) where {T<:AbstractTransaction}
+         !trans._transaction_was_closed
+end
 
-#     def commit(self):
-#         req = transaction_proto.Transaction.Req()
-#         commit_req = transaction_proto.Transaction.Commit.Req()
-#         req.commit_req.CopyFrom(commit_req)
-#         try:
-#             self._execute(req)
-#         finally:
-#             self.close()
+function concepts(trans::T) where {T<:AbstractTransaction}
+        trans._concept_manager
+end
 
-#     def rollback(self):
-#         req = transaction_proto.Transaction.Req()
-#         rollback_req = transaction_proto.Transaction.Rollback.Req()
-#         req.rollback_req.CopyFrom(rollback_req)
-#         self._execute(req)
+function query(trans::T) where {T<:AbstractTransaction}
+        trans._query_manager
+end
 
-#     def close(self):
-#         self._transaction_was_closed = True
-#         self._request_iterator.close()
+function logic(trans::T) where {T<:AbstractTransaction}
+        trans._logic_manager
+end
 
-#     def _execute(self, request: transaction_proto.Transaction.Req):
-#         response_queue = queue.Queue()
-#         request_id = str(uuid.uuid4())
-#         request.id = request_id
-#         if self._transaction_was_closed:
-#             raise GraknClientException("The transaction has been closed and no further operation is allowed.")
-#         self._response_queues[request_id] = response_queue
-#         self._request_iterator.put(request)
-#         return self._fetch(request_id)
+function _execute(trans::T, request::grakn.protocol.Transaction_Req) where {T<:AbstractTransaction}
+        request_id = string(UUIDs.uuid4())
+        request.id = request_id
+        if trans._transaction_was_closed
+                throw(GraknClientException("The transaction has been closed and no further operation is allowed."))
+        end
+        res = transaction(trans._grpc_stub, gRPCController(), request)
+end
+
+function commit(trans::T) where {T<:AbstractTransaction}
+        req = grakn.protocol.Transaction_Req()
+        commit_req = grakn.protocol.Transaction_Commit_Req()
+        req.commit_req = commit_req
+        try
+            _execute(trans,req)
+        catch ex
+           throw(GraknClientException("Transaction commit failed \n reason: $ex"))
+        finally
+            close(trans)
+        end
+end
+
+function close(trans::T) where {T<:AbstractTransaction}
+        trans_transaction_was_closed = true
+        close(trans._request_iterator)
+        close(trans._response_iterator)
+end
+
+function rollback(trans::T) where {T<:AbstractTransaction}
+        req = grakn.protocol.Transaction_Req()
+        rollback_req = grakn.protocol.Transaction_Rollback_Req()
+        req.rollback_req = rollback_req
+        _execute(trans, req)
+end
+
+
+
+
 
 #     def _stream(self, request: transaction_proto.Transaction.Req, transform_response: Callable[[transaction_proto.Transaction.Res], List] = None):
 #         response_queue = queue.Queue()
@@ -146,14 +178,6 @@ end
 #             pass
 #         else:
 #             return False
-
-#     @staticmethod
-#     def _transaction_type_proto(transaction_type):
-#         if transaction_type == TransactionType.READ:
-#             return transaction_proto.Transaction.Type.Value("READ")
-#         if transaction_type == TransactionType.WRITE:
-#             return transaction_proto.Transaction.Type.Value("WRITE")
-
 
     # Essentially the gRPC stream is constantly polling this iterator. When we issue a new request, it gets put into
     # the back of the queue and gRPC will pick it up when it gets round to it (this is usually instantaneous)

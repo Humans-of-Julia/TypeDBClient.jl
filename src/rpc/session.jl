@@ -11,47 +11,25 @@ function _session_type_proto(session_type)
     return Int(session_type)
 end
 
-#     @abstractmethod
-#     def transaction(self, transaction_type: TransactionType, options=None) -> Transaction:
-#         pass
-
-#     @abstractmethod
-#     def session_type(self) -> SessionType:
-#         pass
-
-#     @abstractmethod
-#     def is_open(self) -> bool:
-#         pass
-
-#     @abstractmethod
-#     def close(self) -> None:
-#         pass
-
-#     @abstractmethod
-#     def database(self) -> str:
-#         pass
-
-#     @abstractmethod
-#     def __enter__(self):
-#         pass
-
-#     @abstractmethod
-#     def __exit__(self, exc_type, exc_val, exc_tb):
-#         pass
-
-
-struct _SessionRPC <: AbstractSession    
+mutable struct _SessionRPC <: AbstractSession    
     _pulse_frequency_seconds::Number
     _options
     _address
     _port
     _channel
-    #_scheduler
     _database
     _session_type
     _session_id
     _grpc_stub
     _is_open
+    _scheduler
+end
+
+mutable struct Scheduler
+    session_run::Bool
+    session_id::Array{UInt8,1}
+    pulse_interval::Int
+    grpc_stub::GraknBlockingStub
 end
 
 Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
@@ -75,15 +53,17 @@ function init_Session(client::GraknBlockingClient, database::String, options::Un
     open_req.database = database
     open_req._type = _session_type_proto(session_type)
     open_req.options = copyFrom(options ,grakn.protocol.Options)
-
     _session_id = session_open(_grpc_stub, gRPCController(), open_req).session_id
+
     _is_open = true
-#         self._pulse = self._scheduler.enter(delay=self._PULSE_FREQUENCY_SECONDS, priority=1, action=self._transmit_pulse, argument=())
-#         Thread(target=self._scheduler.run, name="session_pulse_{}".format(self._session_id.hex()), daemon=True).start()
-    _SessionRPC(_pulse_frequency_seconds, _options, _address, _port, _channel, _database , _session_type , _session_id,_grpc_stub, _is_open)
+
+    _scheduler = Scheduler(true, _session_id, _pulse_frequency_seconds, _grpc_stub)
+    @async _transmit_pulse(_scheduler)
+
+    _SessionRPC(_pulse_frequency_seconds, _options, _address, _port, _channel, _database , _session_type , _session_id,_grpc_stub, _is_open,_scheduler)
 end
 
-function transaction(session::T, transaction_type, options=nothing) where {T<:AbstractSession}
+function transaction(session::T, transaction_type, options=GraknOptions()) where {T<:AbstractSession}
     _options = options === nothing && core()
     return Transaction(session, transaction_type, options)
 end
@@ -92,54 +72,40 @@ function session_type(session::T) where {T<:AbstractSession}
     session._session_type
 end
 
+function database(session::T) where {T<:AbstractSession}
+    session._database
+end
+
 function is_open(session::T) where {T<:AbstractSession}
     session._is_open
 end
 
-#     def close(self) -> None:
-#         if self._is_open:
-#             self._is_open = False
-#             self._scheduler.cancel(self._pulse)
-#             self._scheduler.empty()
-#             req = session_proto.Session.Close.Req()
-#             req.session_id = self._session_id
-#             try:
-#                 self._grpc_stub.session_close(req)
-#             except RpcError as e:
-#                 raise GraknClientException(e)
-#             finally:
-#                 self._channel.close()
-
-#     def database(self) -> str: return self._database
-
-#     def _transmit_pulse(self) -> None:
-#         if not self._is_open:
-#             return
-#         pulse_req = session_proto.Session.Pulse.Req()
-#         pulse_req.session_id = self._session_id
-#         res = self._grpc_stub.session_pulse(pulse_req)
-#         if res.alive:
-#             self._pulse = self._scheduler.enter(delay=self._PULSE_FREQUENCY_SECONDS, priority=1, action=self._transmit_pulse, argument=())
-#             Thread(target=self._scheduler.run, name="session_pulse_{}".format(self._session_id.hex()), daemon=True).start()
-
-#     def __enter__(self):
-#         return self
-
-#     def __exit__(self, exc_type, exc_val, exc_tb):
-#         self.close()
-#         if exc_tb is None:
-#             pass
-#         else:
-#             return False
-
-#### helper functions  ############
-
-function copyFrom(fromOption::R, toOption::Type{T}) where {T<:Options} where {R<:AbstractGraknOptions}
-    result_option = toOption()
-    for fname in fieldnames(typeof(fromOption))
-        if hasproperty(result_option, Symbol(fname))
-            setproperty!(result_option,Symbol(fname),getfield(fromOption,Symbol(fname)))
+function close(session::T) where {T<:AbstractSession}
+    if session._is_open
+        session._is_open = false
+        session._scheduler.session_run = false
+        req = grakn.protocol.Session_Close_Req()
+        req.session_id = session._session_id
+        try
+            result = session_close(session._grpc_stub,gRPCController(),req)
+        catch ex
+            rethrow(ex)
+        finally
+            close(session._channel)
         end
     end
-    result_option
+end
+
+"""
+    function _transmit_pulse(scheduler::Scheduler) used to keep the session alive.
+        The function meant to be called as @async
+"""
+function _transmit_pulse(scheduler::Scheduler)
+    while scheduler.session_run
+        sleep(scheduler.pulse_interval -1)
+        pulse_req = grakn.protocol.Session_Pulse_Req()
+        pulse_req.session_id = scheduler.session_id
+        is_alive = session_pulse(scheduler.grpc_stub, gRPCController(), pulse_req).alive
+    end
+    @info "Session $(scheduler.session_id) no longer alive"
 end

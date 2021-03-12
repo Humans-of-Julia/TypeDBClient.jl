@@ -2,8 +2,7 @@
 
 using ProtoBuf
 using gRPC
-
-using .grakn.protocol
+using .grakn
 
 export DatabaseManager
 export contains, create, delete, all
@@ -24,7 +23,7 @@ function contains(db_manager::DatabaseManager, name::String)
     stub_local = db_manager._grpc_stub
     request = grakn.protocol.Database_Contains_Req(name=name)
     try
-        result = database_contains(stub_local, gRPCController(), request).contains
+        result = grakn.protocol.database_contains(stub_local, gRPCController(), request).contains
     catch ex
         throw(GraknClientException(ex))
     end
@@ -37,7 +36,7 @@ function create(db_manager::DatabaseManager, name::String)
     request.name = name
     if !contains(db_manager,name)
         try
-            result = database_create(stub_local, gRPCController(), request) 
+            result = grakn.protocol.database_create(stub_local, gRPCController(), request) 
         catch ex
             throw(GraknClientException(ex))
         finally
@@ -55,7 +54,7 @@ function delete(db_manager::DatabaseManager, name::String)
     request.name = name
     if contains(db_manager,name) 
         try
-            result = database_delete(stub_local, gRPCController(), request) 
+            result = grakn.protocol.database_delete(stub_local, gRPCController(), request) 
         catch ex
             throw(GraknClientException(ex))
         finally
@@ -71,7 +70,7 @@ function all(db_manager::DatabaseManager)
     stub_local = db_manager._grpc_stub
     request = grakn.protocol.Database_All_Req()
     try
-        result = database_all(stub_local, gRPCController(), request).names
+        result = grakn.protocol.database_all(stub_local, gRPCController(), request).names
     catch ex
          throw(GraknClientException(e))
     finally
