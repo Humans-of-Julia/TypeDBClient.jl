@@ -13,10 +13,9 @@ then install the packages from GitHub
 module GraknClient
 # following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
 
-using gRPC
-using Sockets
+using gRPC, Sockets, UUIDs, Dates
 
-import Base: show, close
+import Base: show, close, ==
 
 ###### abstract types ##################
 #                                      # 
@@ -26,6 +25,8 @@ abstract type AbstractTransaction end
 abstract type AbstractConceptManager end
 abstract type AbstractLogicManager end
 abstract type AbstractQueryManager end
+abstract type AbstractConcept end
+abstract type AbstractThing <: AbstractConcept end
 
 ###### inlcudes ########################
 #                                      # 
@@ -39,10 +40,11 @@ include(joinpath(@__DIR__,"rpc","database_manager.jl"))
 include(joinpath(@__DIR__,"client.jl"))
 include(joinpath(@__DIR__,"concept","ConceptManager.jl"))
 include(joinpath(@__DIR__,"query","query_manager.jl"))
+include(joinpath(@__DIR__,"logic","logic_manager.jl"))
 include(joinpath(@__DIR__,"rpc","session.jl"))
 include(joinpath(@__DIR__,"rpc","transaction.jl"))
 
-export GraknBlockingClient, GraknClientException, Session
+export GraknBlockingClient, GraknClientException, Session, Transaction
 
 end #module
 

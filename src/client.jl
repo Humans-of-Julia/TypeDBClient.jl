@@ -1,7 +1,5 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-using .grakn.protocol
-
 const DEFAULT_GRAKN_GRPC_PORT = 1729
 
 struct GraknBlockingClient

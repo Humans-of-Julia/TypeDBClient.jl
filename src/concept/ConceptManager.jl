@@ -1,10 +1,13 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-mutable struct ConceptManager 
+include(joinpath(@__DIR__,"Concept.jl"))
+
+mutable struct ConceptManager <:AbstractConceptManager 
     _transaction::Union{T,Nothing} where {T<:AbstractTransaction}
 end
 
 ConceptManager() = ConceptManager(nothing)
+
 #     def get_root_thing_type(self):
 #         return self.get_thing_type("thing")
 
