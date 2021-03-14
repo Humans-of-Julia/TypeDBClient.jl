@@ -1,5 +1,5 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
- 
+
 using gRPC
 using .grakn
 
@@ -11,7 +11,7 @@ function _session_type_proto(session_type)
     return Int(session_type)
 end
 
-mutable struct _SessionRPC <: AbstractSession    
+mutable struct _SessionRPC <: AbstractSession
     _pulse_frequency_seconds::Number
     _options
     _address
@@ -32,9 +32,17 @@ mutable struct Scheduler
     grpc_stub::GraknBlockingStub
 end
 
-Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type) 
-Session(client::GraknBlockingClient, database::String) = init_Session(client, database, GraknOptions(), Session_Type[:DATA]) 
-_SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type) = init_Session(client, database, options, session_type)
+function Session(client::GraknBlockingClient, database::String, options::GraknOptions, session_type)
+    init_Session(client, database, options, session_type)
+end
+
+function Session(client::GraknBlockingClient, database::String)
+    init_Session(client, database, GraknOptions(), grakn.protocol.Session_Type[:DATA])
+end
+
+function _SessionRPC(client::GraknBlockingClient, database::String, options::GraknOptions, session_type)
+    init_Session(client, database, options, session_type)
+end
 
 Base.show(io::IO, session::T) where {T<:AbstractSession} = print(io,"Session - database: $(session._database) server: $(session._address)")
 
