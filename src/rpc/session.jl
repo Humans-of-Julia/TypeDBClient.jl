@@ -6,7 +6,6 @@ using .grakn
 abstract type AbstractSession end
 abstract type Session <: AbstractSession end
 
-
 function _session_type_proto(session_type)
     return Int(session_type)
 end

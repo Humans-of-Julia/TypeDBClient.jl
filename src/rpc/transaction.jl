@@ -1,6 +1,9 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 using UUIDs
 
+# Alias to the underlying constant so that we have a better name
+const TransactionType = grakn.protocol.Transaction_Type
+
 CLOSE_STREAM = "CLOSE_STREAM"
 
 mutable struct RequestIterator
@@ -15,10 +18,10 @@ mutable struct Transaction <: AbstractTransaction
         _concept_manager::T where {T<:Union{<:AbstractConceptManager, Nothing}}
         _query_manager::T where {T<:Union{<:AbstractQueryManager, Nothing}}
         _logic_manager::T where {T<:Union{<:AbstractLogicManager, Nothing}}
-        _response_queues::Dict{String,Any} 
+        _response_queues::Dict{String,Any}
         _grpc_stub::Union{GraknBlockingStub,Nothing}
         _request_iterator::Union{Channel{grakn.protocol.Transaction_Req},Nothing}
-        _response_iterator::Union{Channel{grakn.protocol.Transaction_Res},Nothing} 
+        _response_iterator::Union{Channel{grakn.protocol.Transaction_Res},Nothing}
         _transaction_was_closed::Bool
         _network_latency_millis::Number
 end
@@ -49,7 +52,7 @@ function Transaction(session::T, transaction_type::W, options::R) where {T<:Abst
         req.open_req = open_req
         res = @timed transaction(_grpc_stub, gRPCController(), req)
         _network_latency_millis = (res.time * 1000) - res.value.open_res.processing_time_millis
-        
+
         Transaction(options, _transaction_type, _concept_manager, _query_manager, _logic_manager, _response_queues, _grpc_stub, _request_iterator, _response_iterator, _transaction_was_closed, _network_latency_millis )
 end
 
