@@ -37,3 +37,5 @@ src/generated/protoc/
 src/generated/protobuf/
 protocol
 client-python
+
+test/graql_defines/
