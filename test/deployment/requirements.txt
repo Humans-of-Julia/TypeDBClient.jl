@@ -1,3 +1,0 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
-
-https://repo.grakn.ai/repository/pypi-snapshot-group/packages/grakn-client/CLIENT_PYTHON_VERSION_MARKER/grakn-client-CLIENT_PYTHON_VERSION_MARKER.tar.gz
