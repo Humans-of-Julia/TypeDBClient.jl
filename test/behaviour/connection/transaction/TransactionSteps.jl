@@ -32,6 +32,7 @@
 # import static org.junit.Assert.assertTrue;
 # import static org.junit.Assert.fail;
 # 
+# @SuppressWarnings("CheckReturnValue")
 # public class TransactionSteps {
 # 
 #     // =============================================//
