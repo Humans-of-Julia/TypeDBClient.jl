@@ -39,3 +39,6 @@ protocol
 client-python
 
 test/graql_defines/
+
+Manifest.toml
+.DS_Store
