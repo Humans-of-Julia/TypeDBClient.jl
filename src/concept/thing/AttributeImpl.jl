@@ -7,7 +7,6 @@
 # import grakn.client.api.concept.thing.Attribute;
 # import grakn.client.api.concept.type.ThingType;
 # import grakn.client.common.GraknClientException;
-# import grakn.client.common.Proto;
 # import grakn.client.concept.type.AttributeTypeImpl;
 # import grakn.protocol.ConceptProto;
 # 
@@ -18,6 +17,7 @@
 # 
 # import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
 # import static grakn.client.common.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+# import static grakn.client.common.RequestBuilder.Thing.Attribute.getOwnersReq;
 # import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
 # import static grakn.common.collection.Bytes.bytesToHexString;
 # import static grakn.common.util.Objects.className;
@@ -89,14 +89,14 @@
 # 
 #         @Override
 #         public final Stream<ThingImpl> getOwners() {
-#             return stream(Proto.Thing.Attribute.getOwners(getIID()))
+#             return stream(getOwnersReq(getIID()))
 #                     .flatMap(rp -> rp.getAttributeGetOwnersResPart().getThingsList().stream())
 #                     .map(ThingImpl::of);
 #         }
 # 
 #         @Override
 #         public Stream<ThingImpl> getOwners(ThingType ownerType) {
-#             return stream(Proto.Thing.Attribute.getOwners(getIID(), protoThingType(ownerType)))
+#             return stream(getOwnersReq(getIID(), protoThingType(ownerType)))
 #                     .flatMap(rp -> rp.getAttributeGetOwnersResPart().getThingsList().stream())
 #                     .map(ThingImpl::of);
 #         }

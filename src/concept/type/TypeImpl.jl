@@ -15,7 +15,7 @@
 # import grakn.client.api.concept.type.ThingType;
 # import grakn.client.api.concept.type.Type;
 # import grakn.client.common.GraknClientException;
-# import grakn.client.common.Proto;
+# import grakn.client.common.Label;
 # import grakn.client.concept.ConceptImpl;
 # import grakn.client.concept.thing.AttributeImpl;
 # import grakn.client.concept.thing.EntityImpl;
@@ -34,6 +34,12 @@
 # import static grakn.client.common.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 # import static grakn.client.common.ErrorMessage.Concept.MISSING_LABEL;
 # import static grakn.client.common.ErrorMessage.Concept.MISSING_TRANSACTION;
+# import static grakn.client.common.RequestBuilder.Type.deleteReq;
+# import static grakn.client.common.RequestBuilder.Type.getSubtypesReq;
+# import static grakn.client.common.RequestBuilder.Type.getSupertypeReq;
+# import static grakn.client.common.RequestBuilder.Type.getSupertypesReq;
+# import static grakn.client.common.RequestBuilder.Type.isAbstractReq;
+# import static grakn.client.common.RequestBuilder.Type.setLabelReq;
 # import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
 # import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
 # import static grakn.common.util.Objects.className;
@@ -41,12 +47,12 @@
 # 
 # public abstract class TypeImpl extends ConceptImpl implements Type {
 # 
-#     private final String label;
+#     private final Label label;
 #     private final boolean isRoot;
 #     private final int hash;
 # 
-#     TypeImpl(String label, boolean isRoot) {
-#         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
+#     TypeImpl(Label label, boolean isRoot) {
+#         if (label == null) throw new GraknClientException(MISSING_LABEL);
 #         this.label = label;
 #         this.isRoot = isRoot;
 #         this.hash = Objects.hash(this.label);
@@ -87,7 +93,7 @@
 #     }
 # 
 #     @Override
-#     public final String getLabel() {
+#     public final Label getLabel() {
 #         return label;
 #     }
 # 
@@ -123,13 +129,13 @@
 #     public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
 # 
 #         final Transaction.Extended transactionRPC;
-#         private String label;
+#         private Label label;
 #         private final boolean isRoot;
 #         private int hash;
 # 
-#         Remote(Transaction transaction, String label, boolean isRoot) {
+#         Remote(Transaction transaction, Label label, boolean isRoot) {
 #             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-#             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
+#             if (label == null) throw new GraknClientException(MISSING_LABEL);
 #             this.transactionRPC = (Transaction.Extended) transaction;
 #             this.label = label;
 #             this.isRoot = isRoot;
@@ -137,7 +143,7 @@
 #         }
 # 
 #         @Override
-#         public final String getLabel() {
+#         public final Label getLabel() {
 #             return label;
 #         }
 # 
@@ -148,14 +154,14 @@
 # 
 #         @Override
 #         public final void setLabel(String newLabel) {
-#             execute(Proto.Type.setLabel(getLabel(), newLabel));
-#             this.label = newLabel;
+#             execute(setLabelReq(getLabel(), newLabel));
+#             this.label = Label.of(label.scope().orElse(null), newLabel);
 #             this.hash = Objects.hash(transactionRPC, this.label);
 #         }
 # 
 #         @Override
 #         public final boolean isAbstract() {
-#             return execute(Proto.Type.isAbstract(getLabel())).getTypeIsAbstractRes().getAbstract();
+#             return execute(isAbstractReq(getLabel())).getTypeIsAbstractRes().getAbstract();
 #         }
 # 
 #         @Override
@@ -229,10 +235,10 @@
 #         @Nullable
 #         @Override
 #         public TypeImpl getSupertype() {
-#             ConceptProto.Type.Res res = execute(Proto.Type.getSupertype(getLabel()));
-#             switch (res.getTypeGetSupertypeRes().getResCase()) {
+#             ConceptProto.Type.GetSupertype.Res res = execute(getSupertypeReq(getLabel())).getTypeGetSupertypeRes();
+#             switch (res.getResCase()) {
 #                 case TYPE:
-#                     return TypeImpl.of(res.getTypeGetSupertypeRes().getType());
+#                     return TypeImpl.of(res.getType());
 #                 default:
 #                 case RES_NOT_SET:
 #                     return null;
@@ -241,26 +247,21 @@
 # 
 #         @Override
 #         public Stream<? extends TypeImpl> getSupertypes() {
-#             return stream(Proto.Type.getSupertypes(getLabel()))
+#             return stream(getSupertypesReq(getLabel()))
 #                     .flatMap(rp -> rp.getTypeGetSupertypesResPart().getTypesList().stream())
 #                     .map(TypeImpl::of);
 #         }
 # 
 #         @Override
 #         public Stream<? extends TypeImpl> getSubtypes() {
-#             return stream(Proto.Type.getSubtypes(getLabel()))
+#             return stream(getSubtypesReq(getLabel()))
 #                     .flatMap(rp -> rp.getTypeGetSubtypesResPart().getTypesList().stream())
 #                     .map(TypeImpl::of);
 #         }
 # 
 #         @Override
 #         public final void delete() {
-#             execute(Proto.Type.delete(getLabel()));
-#         }
-# 
-#         @Override
-#         public final boolean isDeleted() {
-#             return transactionRPC.concepts().getThingType(label) == null;
+#             execute(deleteReq(getLabel()));
 #         }
 # 
 #         final Transaction tx() {
@@ -277,7 +278,7 @@
 # 
 #         @Override
 #         public String toString() {
-#             return className(this.getClass()) + "[label: " + label + "]";
+#             return className(this.getClass()) + "[label: " + label.scopedName() + "]";
 #         }
 # 
 #         @Override

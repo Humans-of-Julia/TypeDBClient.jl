@@ -5,6 +5,7 @@
 # 
 # import grakn.client.api.Transaction;
 # import grakn.client.api.concept.Concept;
+# import grakn.client.common.Label;
 # 
 # import javax.annotation.CheckReturnValue;
 # import javax.annotation.Nullable;
@@ -13,7 +14,7 @@
 # public interface Type extends Concept {
 # 
 #     @CheckReturnValue
-#     String getLabel();
+#     Label getLabel();
 # 
 #     @CheckReturnValue
 #     boolean isRoot();

@@ -6,13 +6,16 @@
 # import grakn.client.api.Transaction;
 # import grakn.client.api.logic.LogicManager;
 # import grakn.client.api.logic.Rule;
-# import grakn.client.common.Proto;
 # import grakn.protocol.LogicProto;
 # import grakn.protocol.TransactionProto;
 # import graql.lang.pattern.Pattern;
 # 
 # import javax.annotation.Nullable;
 # import java.util.stream.Stream;
+# 
+# import static grakn.client.common.RequestBuilder.LogicManager.getRuleReq;
+# import static grakn.client.common.RequestBuilder.LogicManager.getRulesReq;
+# import static grakn.client.common.RequestBuilder.LogicManager.putRuleReq;
 # 
 # public final class LogicManagerImpl implements LogicManager {
 # 
@@ -25,7 +28,7 @@
 #     @Override
 #     @Nullable
 #     public Rule getRule(String label) {
-#         LogicProto.LogicManager.GetRule.Res res = execute(Proto.LogicManager.getRule(label)).getGetRuleRes();
+#         LogicProto.LogicManager.GetRule.Res res = execute(getRuleReq(label)).getGetRuleRes();
 #         switch (res.getResCase()) {
 #             case RULE:
 #                 return RuleImpl.of(res.getRule());
@@ -37,15 +40,12 @@
 # 
 #     @Override
 #     public Stream<RuleImpl> getRules() {
-#         return stream(Proto.LogicManager.getRules())
-#                 .flatMap(res -> res.getGetRulesResPart().getRulesList().stream())
-#                 .map(RuleImpl::of);
+#         return stream(getRulesReq()).flatMap(res -> res.getGetRulesResPart().getRulesList().stream()).map(RuleImpl::of);
 #     }
 # 
 #     @Override
 #     public Rule putRule(String label, Pattern when, Pattern then) {
-#         LogicProto.LogicManager.Res res =
-#                 execute(Proto.LogicManager.putRule(label, when.toString(), then.toString()));
+#         LogicProto.LogicManager.Res res = execute(putRuleReq(label, when.toString(), then.toString()));
 #         return RuleImpl.of(res.getPutRuleRes().getRule());
 #     }
 # 

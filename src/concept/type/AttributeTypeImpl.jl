@@ -6,7 +6,7 @@
 # import grakn.client.api.Transaction;
 # import grakn.client.api.concept.type.AttributeType;
 # import grakn.client.common.GraknClientException;
-# import grakn.client.common.Proto;
+# import grakn.client.common.Label;
 # import grakn.client.concept.thing.AttributeImpl;
 # import grakn.client.concept.thing.ThingImpl;
 # import grakn.protocol.ConceptProto;
@@ -17,16 +17,21 @@
 # 
 # import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
 # import static grakn.client.common.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-# import static grakn.client.common.Proto.Thing.Attribute.attributeValueBoolean;
-# import static grakn.client.common.Proto.Thing.Attribute.attributeValueDateTime;
-# import static grakn.client.common.Proto.Thing.Attribute.attributeValueDouble;
-# import static grakn.client.common.Proto.Thing.Attribute.attributeValueLong;
-# import static grakn.client.common.Proto.Thing.Attribute.attributeValueString;
+# import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueBooleanReq;
+# import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueDateTimeReq;
+# import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueDoubleReq;
+# import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueLongReq;
+# import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueStringReq;
+# import static grakn.client.common.RequestBuilder.Type.AttributeType.getOwnersReq;
+# import static grakn.client.common.RequestBuilder.Type.AttributeType.getRegexReq;
+# import static grakn.client.common.RequestBuilder.Type.AttributeType.getReq;
+# import static grakn.client.common.RequestBuilder.Type.AttributeType.putReq;
+# import static grakn.client.common.RequestBuilder.Type.AttributeType.setRegexReq;
 # import static grakn.common.util.Objects.className;
 # 
 # public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 # 
-#     private static final java.lang.String ROOT_LABEL = "attribute";
+#     private static final Label ROOT_LABEL = Label.of("attribute");
 # 
 #     AttributeTypeImpl(java.lang.String label, boolean isRoot) {
 #         super(label, isRoot);
@@ -75,7 +80,7 @@
 # 
 #     @Override
 #     public AttributeTypeImpl.Boolean asBoolean() {
-#         if (isRoot()) return new Boolean(ROOT_LABEL, true);
+#         if (isRoot()) return new Boolean(ROOT_LABEL.name(), true);
 #         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
 #                 className(this.getClass()), className(AttributeType.Boolean.class))
 #         );
@@ -83,7 +88,7 @@
 # 
 #     @Override
 #     public AttributeTypeImpl.Long asLong() {
-#         if (isRoot()) return new Long(ROOT_LABEL, true);
+#         if (isRoot()) return new Long(ROOT_LABEL.name(), true);
 #         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
 #                 className(this.getClass()), className(AttributeType.Long.class)
 #         ));
@@ -91,7 +96,7 @@
 # 
 #     @Override
 #     public AttributeTypeImpl.Double asDouble() {
-#         if (isRoot()) return new Double(ROOT_LABEL, true);
+#         if (isRoot()) return new Double(ROOT_LABEL.name(), true);
 #         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
 #                 className(this.getClass()), className(AttributeType.Double.class)
 #         ));
@@ -99,7 +104,7 @@
 # 
 #     @Override
 #     public AttributeTypeImpl.String asString() {
-#         if (isRoot()) return new String(ROOT_LABEL, true);
+#         if (isRoot()) return new String(ROOT_LABEL.name(), true);
 #         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
 #                 className(this.getClass()), className(AttributeType.String.class)
 #         ));
@@ -107,7 +112,7 @@
 # 
 #     @Override
 #     public AttributeTypeImpl.DateTime asDateTime() {
-#         if (isRoot()) return new DateTime(ROOT_LABEL, true);
+#         if (isRoot()) return new DateTime(ROOT_LABEL.name(), true);
 #         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
 #                 className(this.getClass()), className(AttributeType.DateTime.class)
 #         ));
@@ -128,7 +133,7 @@
 # 
 #     public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 # 
-#         Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+#         Remote(Transaction transaction, Label label, boolean isRoot) {
 #             super(transaction, label, isRoot);
 #         }
 # 
@@ -176,19 +181,19 @@
 # 
 #         @Override
 #         public Stream<ThingTypeImpl> getOwners(boolean onlyKey) {
-#             return stream(Proto.Type.AttributeType.getOwners(getLabel(), onlyKey))
+#             return stream(getOwnersReq(getLabel(), onlyKey))
 #                     .flatMap(rp -> rp.getAttributeTypeGetOwnersResPart().getOwnersList().stream())
 #                     .map(ThingTypeImpl::of);
 #         }
 # 
 #         protected final AttributeImpl<?> put(ConceptProto.Attribute.Value value) {
-#             ConceptProto.Type.Res res = execute(Proto.Type.AttributeType.put(getLabel(), value));
+#             ConceptProto.Type.Res res = execute(putReq(getLabel(), value));
 #             return AttributeImpl.of(res.getAttributeTypePutRes().getAttribute());
 #         }
 # 
 #         @Nullable
 #         protected final AttributeImpl<?> get(ConceptProto.Attribute.Value value) {
-#             ConceptProto.Type.Res res = execute(Proto.Type.AttributeType.get(getLabel(), value));
+#             ConceptProto.Type.Res res = execute(getReq(getLabel(), value));
 #             switch (res.getAttributeTypeGetRes().getResCase()) {
 #                 case ATTRIBUTE:
 #                     return AttributeImpl.of(res.getAttributeTypeGetRes().getAttribute());
@@ -284,7 +289,7 @@
 # 
 #         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 # 
-#             public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+#             public Remote(Transaction transaction, Label label, boolean isRoot) {
 #                 super(transaction, label, isRoot);
 #             }
 # 
@@ -315,13 +320,13 @@
 # 
 #             @Override
 #             public final AttributeImpl.Boolean put(boolean value) {
-#                 return super.put(attributeValueBoolean(value)).asBoolean();
+#                 return super.put(attributeValueBooleanReq(value)).asBoolean();
 #             }
 # 
 #             @Nullable
 #             @Override
 #             public final AttributeImpl.Boolean get(boolean value) {
-#                 AttributeImpl<?> attr = super.get(attributeValueBoolean(value));
+#                 AttributeImpl<?> attr = super.get(attributeValueBooleanReq(value));
 #                 return attr != null ? attr.asBoolean() : null;
 #             }
 # 
@@ -359,7 +364,7 @@
 # 
 #         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
 # 
-#             public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+#             public Remote(Transaction transaction, Label label, boolean isRoot) {
 #                 super(transaction, label, isRoot);
 #             }
 # 
@@ -390,13 +395,13 @@
 # 
 #             @Override
 #             public final AttributeImpl.Long put(long value) {
-#                 return super.put(attributeValueLong(value)).asLong();
+#                 return super.put(attributeValueLongReq(value)).asLong();
 #             }
 # 
 #             @Nullable
 #             @Override
 #             public final AttributeImpl.Long get(long value) {
-#                 AttributeImpl<?> attr = super.get(attributeValueLong(value));
+#                 AttributeImpl<?> attr = super.get(attributeValueLongReq(value));
 #                 return attr != null ? attr.asLong() : null;
 #             }
 # 
@@ -434,7 +439,7 @@
 # 
 #         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
 # 
-#             public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+#             public Remote(Transaction transaction, Label label, boolean isRoot) {
 #                 super(transaction, label, isRoot);
 #             }
 # 
@@ -465,13 +470,13 @@
 # 
 #             @Override
 #             public final AttributeImpl.Double put(double value) {
-#                 return super.put(attributeValueDouble(value)).asDouble();
+#                 return super.put(attributeValueDoubleReq(value)).asDouble();
 #             }
 # 
 #             @Nullable
 #             @Override
 #             public final AttributeImpl.Double get(double value) {
-#                 AttributeImpl<?> attr = super.get(attributeValueDouble(value));
+#                 AttributeImpl<?> attr = super.get(attributeValueDoubleReq(value));
 #                 return attr != null ? attr.asDouble() : null;
 #             }
 # 
@@ -509,7 +514,7 @@
 # 
 #         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
 # 
-#             public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+#             public Remote(Transaction transaction, Label label, boolean isRoot) {
 #                 super(transaction, label, isRoot);
 #             }
 # 
@@ -540,20 +545,20 @@
 # 
 #             @Override
 #             public final AttributeImpl.String put(java.lang.String value) {
-#                 return super.put(attributeValueString(value)).asString();
+#                 return super.put(attributeValueStringReq(value)).asString();
 #             }
 # 
 #             @Nullable
 #             @Override
 #             public final AttributeImpl.String get(java.lang.String value) {
-#                 AttributeImpl<?> attr = super.get(attributeValueString(value));
+#                 AttributeImpl<?> attr = super.get(attributeValueStringReq(value));
 #                 return attr != null ? attr.asString() : null;
 #             }
 # 
 #             @Nullable
 #             @Override
 #             public final java.lang.String getRegex() {
-#                 ConceptProto.Type.Res res = execute(Proto.Type.AttributeType.getRegex(getLabel()));
+#                 ConceptProto.Type.Res res = execute(getRegexReq(getLabel()));
 #                 java.lang.String regex = res.getAttributeTypeGetRegexRes().getRegex();
 #                 return regex.isEmpty() ? null : regex;
 #             }
@@ -561,7 +566,7 @@
 #             @Override
 #             public final void setRegex(java.lang.String regex) {
 #                 if (regex == null) regex = "";
-#                 execute(Proto.Type.AttributeType.setRegex(getLabel(), regex));
+#                 execute(setRegexReq(getLabel(), regex));
 #             }
 # 
 #             @Override
@@ -598,7 +603,7 @@
 # 
 #         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
 # 
-#             public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+#             public Remote(Transaction transaction, Label label, boolean isRoot) {
 #                 super(transaction, label, isRoot);
 #             }
 # 
@@ -629,13 +634,13 @@
 # 
 #             @Override
 #             public final AttributeImpl.DateTime put(LocalDateTime value) {
-#                 return super.put(attributeValueDateTime(value)).asDateTime();
+#                 return super.put(attributeValueDateTimeReq(value)).asDateTime();
 #             }
 # 
 #             @Nullable
 #             @Override
 #             public final AttributeImpl.DateTime get(LocalDateTime value) {
-#                 AttributeImpl<?> attr = super.get(attributeValueDateTime(value));
+#                 AttributeImpl<?> attr = super.get(attributeValueDateTimeReq(value));
 #                 return attr != null ? attr.asDateTime() : null;
 #             }
 # 

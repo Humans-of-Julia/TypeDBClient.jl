@@ -4,9 +4,9 @@
 # package grakn.client.core;
 # 
 # import grakn.client.api.database.Database;
-# import grakn.client.common.Proto;
 # import grakn.protocol.GraknGrpc;
 # 
+# import static grakn.client.common.RequestBuilder.Database.deleteReq;
 # import static grakn.client.core.CoreDatabaseManager.nonNull;
 # 
 # public class CoreDatabase implements Database {
@@ -28,7 +28,7 @@
 # 
 #     @Override
 #     public void delete() {
-#         client.call(() -> blockingGrpcStub.databaseDelete(Proto.Database.delete(name)));
+#         client.call(() -> blockingGrpcStub.databaseDelete(deleteReq(name)));
 #     }
 # 
 #     @Override

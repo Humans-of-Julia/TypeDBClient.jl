@@ -9,10 +9,6 @@
 # 
 # public interface RoleType extends Type {
 # 
-#     String getScope();
-# 
-#     String getScopedLabel();
-# 
 #     @Override
 #     default boolean isRoleType() {
 #         return true;

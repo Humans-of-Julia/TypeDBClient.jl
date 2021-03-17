@@ -5,12 +5,14 @@
 # 
 # import grakn.client.api.Transaction;
 # import grakn.client.api.concept.type.EntityType;
-# import grakn.client.common.Proto;
+# import grakn.client.common.Label;
 # import grakn.client.concept.thing.EntityImpl;
 # import grakn.client.concept.thing.ThingImpl;
 # import grakn.protocol.ConceptProto;
 # 
 # import java.util.stream.Stream;
+# 
+# import static grakn.client.common.RequestBuilder.Type.EntityType.createReq;
 # 
 # public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 # 
@@ -34,7 +36,7 @@
 # 
 #     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 # 
-#         Remote(Transaction transaction, String label, boolean isRoot) {
+#         Remote(Transaction transaction, Label label, boolean isRoot) {
 #             super(transaction, label, isRoot);
 #         }
 # 
@@ -45,8 +47,7 @@
 # 
 #         @Override
 #         public final EntityImpl create() {
-#             ConceptProto.Type.Res res = execute(Proto.Type.EntityType.create(getLabel()));
-#             return EntityImpl.of(res.getEntityTypeCreateRes().getEntity());
+#             return EntityImpl.of(execute(createReq(getLabel())).getEntityTypeCreateRes().getEntity());
 #         }
 # 
 #         @Override

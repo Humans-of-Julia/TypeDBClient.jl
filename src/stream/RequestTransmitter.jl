@@ -4,7 +4,7 @@
 # package grakn.client.stream;
 # 
 # import grakn.client.common.GraknClientException;
-# import grakn.client.common.Proto;
+# import grakn.client.common.RequestBuilder;
 # import grakn.common.collection.ConcurrentSet;
 # import grakn.common.concurrent.NamedThreadFactory;
 # import grakn.protocol.TransactionProto;
@@ -136,7 +136,7 @@
 #             if (requestQueue.isEmpty() || !isOpen) return;
 #             TransactionProto.Transaction.Req request;
 #             while ((request = requestQueue.poll()) != null) requests.add(request);
-#             requestObserver.onNext(Proto.Transaction.clientMsg(requests));
+#             requestObserver.onNext(RequestBuilder.Transaction.clientMsg(requests));
 #         }
 # 
 #         public void dispatch(TransactionProto.Transaction.Req requestProto) {

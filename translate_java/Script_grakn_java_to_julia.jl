@@ -130,9 +130,10 @@ end
 command_arr = String[]
 push!(command_arr, "-I=" * joinpath(root_dir,"generated","protobuf"))
 push!(command_arr, "--julia_out=" * joinpath(root_dir,"generated"))
-push!(command_arr, joinpath(root_dir,"generated","protobuf","options.proto"))
+push!(command_arr, string(joinpath(root_dir,"generated","protobuf","*.proto")))
 
 cmd = Cmd(command_arr)
+#do this manually 
 run(ProtoBuf.protoc(cmd))
 
 #Reading the grakn_pb.jl and change the clasnames to 
@@ -162,6 +163,26 @@ for (key, value) in dict_Result
     text_copy = replace(text_copy, key=>value)
 end
 
+#write back grakn_pb.jl
 file_io = open(joinpath(root_dir,"generated","grakn_pb.jl"),"w")
 write(file_io, text_copy)
 close(file_io)
+
+text_graknclient = open(f->read(f,String), joinpath(root_dir,"GraknClient.jl"))
+reg_source_not_working_yet = r"include\(joinpath\(\@__DIR__,\".+|export.*" 
+match_source = collect(eachmatch(reg_source_not_working_yet, text_graknclient))
+
+for match_line in match_source
+    if !occursin("grakn.jl", match_line.match) && !occursin("grakn_pb.jl", match_line.match)
+        text_graknclient = replace(text_graknclient, match_line.match=>("# " * match_line.match))
+
+    end
+end
+
+#write back GraknClient.jl
+file_io = open(joinpath(root_dir, "GraknClient.jl"), "w")
+write(file_io, text_graknclient)
+close(file_io)
+
+#delete the dependency folder
+rm(joinpath(root_dir,"dependencies"),force = true, recursive = true)
