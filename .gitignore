@@ -29,6 +29,7 @@ Manifest.toml
 test/Manifest.toml
 docs/Manifest.toml
 .DS_Store
+src/.DS_Store
 
 # ignore julia internal git files in the dev folder
 _git2_*
