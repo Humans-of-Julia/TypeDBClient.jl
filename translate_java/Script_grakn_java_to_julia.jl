@@ -164,9 +164,7 @@ for (key, value) in dict_Result
 end
 
 #write back grakn_pb.jl
-file_io = open(joinpath(root_dir,"generated","grakn_pb.jl"),"w")
-write(file_io, text_copy)
-close(file_io)
+write(joinpath(root_dir,"generated","grakn_pb.jl"), text_copy)
 
 text_graknclient = open(f->read(f,String), joinpath(root_dir,"GraknClient.jl"))
 reg_source_not_working_yet = r"include\(joinpath\(\@__DIR__,\".+|export.*" 
@@ -180,9 +178,18 @@ for match_line in match_source
 end
 
 #write back GraknClient.jl
-file_io = open(joinpath(root_dir, "GraknClient.jl"), "w")
-write(file_io, text_graknclient)
-close(file_io)
+write(joinpath(root_dir, "GraknClient.jl"),text_graknclient )
 
-#delete the dependency folder
+#delete the dependency folder, its not necessary
 rm(joinpath(root_dir,"dependencies"),force = true, recursive = true)
+
+#removing the grakn_pb.jl line in grakn.jl because it givs some trouble with including
+grakn_jl_text = open(f->read(f,String), joinpath(root_dir,"generated","grakn.jl"))
+
+reg_tex = r".*include\(\"grakn_pb.jl\"\).*\s+"
+
+matches_to_change = collect(eachmatch(reg_tex, grakn_jl_text))
+
+grakn_jl_text = replace(grakn_jl_text, matches_to_change[1].match=>"")
+
+write(joinpath(root_dir,"generated","grakn.jl"), grakn_jl_text)
