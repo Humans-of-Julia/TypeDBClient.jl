@@ -17,7 +17,7 @@
 # import static grakn.client.common.ErrorMessage.Client.UNABLE_TO_CONNECT;
 # import static grakn.client.common.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 # 
-# abstract class FailsafeTask<E> {
+# abstract class FailsafeTask<RESULT> {
 # 
 #     private static final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
 #     private static final int PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
@@ -32,13 +32,13 @@
 #         this.database = database;
 #     }
 # 
-#     abstract E run(ClusterDatabase.Replica replica);
+#     abstract RESULT run(ClusterDatabase.Replica replica);
 # 
-#     E rerun(ClusterDatabase.Replica replica) {
+#     RESULT rerun(ClusterDatabase.Replica replica) {
 #         return run(replica);
 #     }
 # 
-#     E runPrimaryReplica() {
+#     RESULT runPrimaryReplica() {
 #         if (!client.clusterDatabases().containsKey(database)
 #                 || !client.clusterDatabases().get(database).primaryReplica().isPresent()) {
 #             seekPrimaryReplica();
@@ -60,7 +60,7 @@
 #         }
 #     }
 # 
-#     E runAnyReplica() {
+#     RESULT runAnyReplica() {
 #         ClusterDatabase databaseClusterRPC = client.clusterDatabases().get(database);
 #         if (databaseClusterRPC == null) databaseClusterRPC = fetchDatabaseReplicas();
 # 

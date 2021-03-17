@@ -19,7 +19,6 @@
 # 
 # import java.time.LocalDateTime;
 # import java.time.ZoneId;
-# import java.util.ArrayList;
 # import java.util.HashMap;
 # import java.util.List;
 # import java.util.Map;
@@ -86,7 +85,7 @@
 # 
 #     public static class Transaction {
 # 
-#         public static TransactionProto.Transaction.Client clientMsg(ArrayList<TransactionProto.Transaction.Req> reqs) {
+#         public static TransactionProto.Transaction.Client clientMsg(List<TransactionProto.Transaction.Req> reqs) {
 #             return TransactionProto.Transaction.Client.newBuilder().addAllReqs(reqs).build();
 #         }
 # 

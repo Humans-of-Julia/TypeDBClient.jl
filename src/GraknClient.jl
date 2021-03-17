@@ -27,15 +27,13 @@ abstract type AbstractLogicManager end
 abstract type AbstractQueryManager end
 abstract type AbstractConcept end
 abstract type AbstractThing <: AbstractConcept end
-abstract type AbstractType <: AbstractConcept end
-abstract type AbstractEntity <: AbstractThing end
 
 ###### inlcudes ########################
 #                                      # 
 ########################################
 
-# include(joinpath(@__DIR__,"generated","grakn.jl"))
-# include(joinpath(@__DIR__,"generated","grakn_pb.jl"))
+include(joinpath(@__DIR__,"generated","grakn.jl"))
+include(joinpath(@__DIR__,"generated","grakn_pb.jl"))
 # include(joinpath(@__DIR__,"common","exception.jl"))
 # include(joinpath(@__DIR__,"GraknOptions.jl"))
 # include(joinpath(@__DIR__,"rpc","database_manager.jl"))

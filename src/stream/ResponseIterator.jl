@@ -12,6 +12,7 @@
 # import java.util.UUID;
 # 
 # import static grakn.client.common.ErrorMessage.Client.MISSING_RESPONSE;
+# import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
 # import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_STATE;
 # 
 # public class ResponseIterator implements Iterator<TransactionProto.Transaction.ResPart> {
@@ -22,14 +23,14 @@
 #     private TransactionProto.Transaction.ResPart next;
 #     private State state;
 # 
-#     enum State {EMTPY, FETCHED, DONE}
+#     enum State {EMPTY, FETCHED, DONE}
 # 
 #     public ResponseIterator(UUID requestID, ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseQueue,
 #                             RequestTransmitter.Dispatcher requestDispatcher) {
 #         this.requestID = requestID;
 #         this.dispatcher = requestDispatcher;
 #         this.responseCollector = responseQueue;
-#         state = State.EMTPY;
+#         state = State.EMPTY;
 #         next = null;
 #     }
 # 
@@ -39,12 +40,15 @@
 #             case RES_NOT_SET:
 #                 throw new GraknClientException(MISSING_RESPONSE.message(requestID));
 #             case STREAM_RES_PART:
-#                 if (resPart.getStreamResPart().getIsDone()) {
-#                     state = State.DONE;
-#                     return false;
-#                 } else {
-#                     dispatcher.dispatch(Proto.Transaction.streamReq(requestID));
-#                     return fetchAndCheck();
+#                 switch (resPart.getStreamResPart().getState()) {
+#                     case DONE:
+#                         state = State.DONE;
+#                         return false;
+#                     case CONTINUE:
+#                         dispatcher.dispatch(Proto.Transaction.streamReq(requestID));
+#                         return fetchAndCheck();
+#                     default:
+#                         throw new GraknClientException(ILLEGAL_ARGUMENT);
 #                 }
 #             default:
 #                 next = resPart;
@@ -60,7 +64,7 @@
 #                 return false;
 #             case FETCHED:
 #                 return true;
-#             case EMTPY:
+#             case EMPTY:
 #                 return fetchAndCheck();
 #             default:
 #                 throw new GraknClientException(ILLEGAL_STATE);
@@ -70,7 +74,7 @@
 #     @Override
 #     public TransactionProto.Transaction.ResPart next() {
 #         if (!hasNext()) throw new NoSuchElementException();
-#         state = State.EMTPY;
+#         state = State.EMPTY;
 #         return next;
 #     }
 # }
