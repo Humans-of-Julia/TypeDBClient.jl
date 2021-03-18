@@ -5,7 +5,7 @@
 # 
 # import com.google.protobuf.ByteString;
 # import grakn.client.api.GraknOptions;
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.ConceptManager;
 # import grakn.client.api.logic.LogicManager;
 # import grakn.client.api.query.QueryFuture;
@@ -28,9 +28,9 @@
 # import static grakn.client.common.RequestBuilder.Transaction.openReq;
 # import static grakn.client.common.RequestBuilder.Transaction.rollbackReq;
 # 
-# public class CoreTransaction implements Transaction.Extended {
+# public class CoreTransaction implements GraknTransaction.Extended {
 # 
-#     private final Transaction.Type type;
+#     private final GraknTransaction.Type type;
 #     private final GraknOptions options;
 #     private final ConceptManager conceptManager;
 #     private final LogicManager logicManager;

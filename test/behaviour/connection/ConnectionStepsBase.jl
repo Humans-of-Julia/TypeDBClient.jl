@@ -3,9 +3,9 @@
 # 
 # package grakn.client.test.behaviour.connection;
 # 
-# import grakn.client.api.Client;
-# import grakn.client.api.Session;
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknClient;
+# import grakn.client.api.GraknSession;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.database.Database;
 # import grakn.common.test.server.GraknSingleton;
 # 
@@ -27,15 +27,15 @@
 #     public static int THREAD_POOL_SIZE = 32;
 #     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 # 
-#     public static Client client;
-#     public static List<Session> sessions = new ArrayList<>();
-#     public static List<CompletableFuture<Session>> sessionsParallel = new ArrayList<>();
-#     public static Map<Session, List<Transaction>> sessionsToTransactions = new HashMap<>();
-#     public static Map<Session, List<CompletableFuture<Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
-#     public static Map<CompletableFuture<Session>, List<CompletableFuture<Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
+#     public static GraknClient client;
+#     public static List<GraknSession> sessions = new ArrayList<>();
+#     public static List<CompletableFuture<GraknSession>> sessionsParallel = new ArrayList<>();
+#     public static Map<GraknSession, List<GraknTransaction>> sessionsToTransactions = new HashMap<>();
+#     public static Map<GraknSession, List<CompletableFuture<GraknTransaction>>> sessionsToTransactionsParallel = new HashMap<>();
+#     public static Map<CompletableFuture<GraknSession>, List<CompletableFuture<GraknTransaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
 #     private static boolean isBeforeAllRan = false;
 # 
-#     public static Transaction tx() {
+#     public static GraknTransaction tx() {
 #         return sessionsToTransactions.get(sessions.get(0)).get(0);
 #     }
 # 
@@ -64,7 +64,7 @@
 #         } catch (InterruptedException e) {
 #             e.printStackTrace();
 #         }
-#         sessions.parallelStream().forEach(Session::close);
+#         sessions.parallelStream().forEach(GraknSession::close);
 #         sessions.clear();
 # 
 #         Stream<CompletableFuture<Void>> closures = sessionsParallel
@@ -85,7 +85,7 @@
 #         System.out.println("ConnectionSteps.after");
 #     }
 # 
-#     abstract Client createGraknClient(String address);
+#     abstract GraknClient createGraknClient(String address);
 # 
 #     void connection_has_been_opened() {
 #         assertNotNull(client);

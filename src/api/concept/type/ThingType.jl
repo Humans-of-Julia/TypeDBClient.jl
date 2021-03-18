@@ -3,7 +3,7 @@
 # 
 # package grakn.client.api.concept.type;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.thing.Thing;
 # import grakn.client.api.concept.type.AttributeType.ValueType;
 # 
@@ -19,7 +19,7 @@
 #     }
 # 
 #     @Override
-#     ThingType.Remote asRemote(Transaction transaction);
+#     ThingType.Remote asRemote(GraknTransaction transaction);
 # 
 #     interface Remote extends Type.Remote, ThingType {
 # 
@@ -42,7 +42,7 @@
 # 
 #         void unsetAbstract();
 # 
-#         void setPlays(RoleType role);
+#         void setPlays(RoleType roleType);
 # 
 #         void setPlays(RoleType roleType, RoleType overriddenType);
 # 
@@ -69,7 +69,7 @@
 #         @CheckReturnValue
 #         Stream<? extends AttributeType> getOwns(ValueType valueType, boolean keysOnly);
 # 
-#         void unsetPlays(RoleType role);
+#         void unsetPlays(RoleType roleType);
 # 
 #         void unsetOwns(AttributeType attributeType);
 #     }

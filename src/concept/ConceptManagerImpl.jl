@@ -3,7 +3,7 @@
 # 
 # package grakn.client.concept;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.ConceptManager;
 # import grakn.client.api.concept.thing.Thing;
 # import grakn.client.api.concept.type.AttributeType;
@@ -29,9 +29,9 @@
 # 
 # public final class ConceptManagerImpl implements ConceptManager {
 # 
-#     private final Transaction.Extended transactionExt;
+#     private final GraknTransaction.Extended transactionExt;
 # 
-#     public ConceptManagerImpl(Transaction.Extended transactionExt) {
+#     public ConceptManagerImpl(GraknTransaction.Extended transactionExt) {
 #         this.transactionExt = transactionExt;
 #     }
 # 

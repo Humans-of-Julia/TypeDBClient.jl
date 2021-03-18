@@ -12,7 +12,7 @@
 # import javax.annotation.CheckReturnValue;
 # import java.util.stream.Stream;
 # 
-# public interface Transaction extends AutoCloseable {
+# public interface GraknTransaction extends AutoCloseable {
 # 
 #     @CheckReturnValue
 #     boolean isOpen();
@@ -70,7 +70,7 @@
 #         }
 #     }
 # 
-#     interface Extended extends Transaction {
+#     interface Extended extends GraknTransaction {
 # 
 #         TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request);
 # 

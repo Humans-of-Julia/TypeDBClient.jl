@@ -3,7 +3,7 @@
 # 
 # package grakn.client.api.concept.thing;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.type.AttributeType;
 # import grakn.client.api.concept.type.ThingType;
 # 
@@ -68,7 +68,7 @@
 # 
 #     @Override
 #     @CheckReturnValue
-#     Attribute.Remote<VALUE> asRemote(Transaction transaction);
+#     Attribute.Remote<VALUE> asRemote(GraknTransaction transaction);
 # 
 #     interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
 # 
@@ -117,7 +117,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         Attribute.Boolean.Remote asRemote(Transaction transaction);
+#         Attribute.Boolean.Remote asRemote(GraknTransaction transaction);
 # 
 #         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {}
 #     }
@@ -136,7 +136,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         Attribute.Long.Remote asRemote(Transaction transaction);
+#         Attribute.Long.Remote asRemote(GraknTransaction transaction);
 # 
 #         interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {}
 #     }
@@ -155,7 +155,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         Attribute.Double.Remote asRemote(Transaction transaction);
+#         Attribute.Double.Remote asRemote(GraknTransaction transaction);
 # 
 #         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {}
 #     }
@@ -174,7 +174,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         Attribute.String.Remote asRemote(Transaction transaction);
+#         Attribute.String.Remote asRemote(GraknTransaction transaction);
 # 
 #         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {}
 #     }
@@ -193,7 +193,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         Attribute.DateTime.Remote asRemote(Transaction transaction);
+#         Attribute.DateTime.Remote asRemote(GraknTransaction transaction);
 # 
 #         interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {}
 #     }

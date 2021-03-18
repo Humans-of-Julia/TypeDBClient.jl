@@ -3,7 +3,7 @@
 # 
 # package grakn.client.concept.thing;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.thing.Attribute;
 # import grakn.client.api.concept.thing.Thing;
 # import grakn.client.api.concept.type.AttributeType;
@@ -23,7 +23,7 @@
 # import static grakn.client.common.ErrorMessage.Concept.MISSING_TRANSACTION;
 # import static grakn.client.common.RequestBuilder.Thing.deleteReq;
 # import static grakn.client.common.RequestBuilder.Thing.getHasReq;
-# import static grakn.client.common.RequestBuilder.Thing.getPlaysReq;
+# import static grakn.client.common.RequestBuilder.Thing.getPlayingReq;
 # import static grakn.client.common.RequestBuilder.Thing.getRelationsReq;
 # import static grakn.client.common.RequestBuilder.Thing.isInferredReq;
 # import static grakn.client.common.RequestBuilder.Thing.protoThing;
@@ -90,13 +90,13 @@
 # 
 #     public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
 # 
-#         final Transaction.Extended transactionRPC;
+#         final GraknTransaction.Extended transactionRPC;
 #         private final String iid;
 #         private final int hash;
 # 
-#         Remote(Transaction transaction, String iid) {
+#         Remote(GraknTransaction transaction, String iid) {
 #             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-#             this.transactionRPC = (Transaction.Extended) transaction;
+#             this.transactionRPC = (GraknTransaction.Extended) transaction;
 #             if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
 #             this.iid = iid;
 #             this.hash = Objects.hash(this.transactionRPC, this.getIID());
@@ -155,17 +155,17 @@
 #         }
 # 
 #         @Override
-#         public final Stream<RoleTypeImpl> getPlays() {
-#             return stream(getPlaysReq(getIID()))
-#                     .flatMap(rp -> rp.getThingGetPlaysResPart().getRoleTypesList().stream())
-#                     .map(RoleTypeImpl::of);
-#         }
-# 
-#         @Override
 #         public final Stream<RelationImpl> getRelations(RoleType... roleTypes) {
 #             return stream(getRelationsReq(getIID(), protoTypes(asList(roleTypes))))
 #                     .flatMap(rp -> rp.getThingGetRelationsResPart().getRelationsList().stream())
 #                     .map(RelationImpl::of);
+#         }
+# 
+#         @Override
+#         public final Stream<RoleTypeImpl> getPlaying() {
+#             return stream(getPlayingReq(getIID()))
+#                     .flatMap(rp -> rp.getThingGetPlayingResPart().getRoleTypesList().stream())
+#                     .map(RoleTypeImpl::of);
 #         }
 # 
 #         @Override

@@ -3,7 +3,7 @@
 # 
 # package grakn.client.api.concept.thing;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.type.RelationType;
 # import grakn.client.api.concept.type.RoleType;
 # 
@@ -26,7 +26,7 @@
 # 
 #     @Override
 #     @CheckReturnValue
-#     Relation.Remote asRemote(Transaction transaction);
+#     Relation.Remote asRemote(GraknTransaction transaction);
 # 
 #     interface Remote extends Thing.Remote, Relation {
 # 
@@ -39,6 +39,9 @@
 # 
 #         @CheckReturnValue
 #         Map<? extends RoleType, ? extends List<? extends Thing>> getPlayersByRoleType();
+# 
+#         @CheckReturnValue
+#         Stream<? extends RoleType> getRelating();
 # 
 #         @Override
 #         @CheckReturnValue

@@ -3,7 +3,7 @@
 # 
 # package grakn.client.concept.thing;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.thing.Relation;
 # import grakn.client.api.concept.thing.Thing;
 # import grakn.client.api.concept.type.RoleType;
@@ -23,6 +23,7 @@
 # import static grakn.client.common.RequestBuilder.Thing.Relation.addPlayerReq;
 # import static grakn.client.common.RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq;
 # import static grakn.client.common.RequestBuilder.Thing.Relation.getPlayersReq;
+# import static grakn.client.common.RequestBuilder.Thing.Relation.getRelatingReq;
 # import static grakn.client.common.RequestBuilder.Thing.Relation.removePlayerReq;
 # import static grakn.client.common.RequestBuilder.Thing.protoThing;
 # import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
@@ -44,7 +45,7 @@
 #     }
 # 
 #     @Override
-#     public RelationImpl.Remote asRemote(Transaction transaction) {
+#     public RelationImpl.Remote asRemote(GraknTransaction transaction) {
 #         return new RelationImpl.Remote(transaction, getIID(), type);
 #     }
 # 
@@ -62,19 +63,36 @@
 # 
 #         private final RelationTypeImpl type;
 # 
-#         public Remote(Transaction transaction, String iid, RelationTypeImpl type) {
+#         public Remote(GraknTransaction transaction, String iid, RelationTypeImpl type) {
 #             super(transaction, iid);
 #             this.type = type;
 #         }
 # 
 #         @Override
-#         public RelationImpl.Remote asRemote(Transaction transaction) {
+#         public RelationImpl.Remote asRemote(GraknTransaction transaction) {
 #             return new RelationImpl.Remote(transaction, getIID(), type);
 #         }
 # 
 #         @Override
 #         public RelationTypeImpl getType() {
 #             return type;
+#         }
+# 
+#         @Override
+#         public void addPlayer(RoleType roleType, Thing player) {
+#             execute(addPlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+#         }
+# 
+#         @Override
+#         public void removePlayer(RoleType roleType, Thing player) {
+#             execute(removePlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+#         }
+# 
+#         @Override
+#         public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
+#             return stream(getPlayersReq(getIID(), protoTypes(asList(roleTypes))))
+#                     .flatMap(rp -> rp.getRelationGetPlayersResPart().getThingsList().stream())
+#                     .map(ThingImpl::of);
 #         }
 # 
 #         @Override
@@ -92,20 +110,10 @@
 #         }
 # 
 #         @Override
-#         public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
-#             return stream(getPlayersReq(getIID(), protoTypes(asList(roleTypes))))
-#                     .flatMap(rp -> rp.getRelationGetPlayersResPart().getThingsList().stream())
-#                     .map(ThingImpl::of);
-#         }
-# 
-#         @Override
-#         public void addPlayer(RoleType roleType, Thing player) {
-#             execute(addPlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
-#         }
-# 
-#         @Override
-#         public void removePlayer(RoleType roleType, Thing player) {
-#             execute(removePlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+#         public Stream<? extends RoleType> getRelating() {
+#             return stream(getRelatingReq(getIID()))
+#                     .flatMap(rp -> rp.getRelationGetRelatingResPart().getRoleTypesList().stream())
+#                     .map(RoleTypeImpl::of);
 #         }
 # 
 #         @Override

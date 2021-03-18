@@ -3,7 +3,7 @@
 # 
 # package grakn.client.api.concept.type;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.Concept;
 # import grakn.client.common.Label;
 # 
@@ -25,7 +25,7 @@
 #     }
 # 
 #     @Override
-#     Remote asRemote(Transaction transaction);
+#     Remote asRemote(GraknTransaction transaction);
 # 
 #     interface Remote extends Type, Concept.Remote {
 # 

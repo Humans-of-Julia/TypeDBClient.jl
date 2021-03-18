@@ -7,7 +7,7 @@
 # 
 # import javax.annotation.CheckReturnValue;
 # 
-# public interface Client extends AutoCloseable {
+# public interface GraknClient extends AutoCloseable {
 # 
 #     @CheckReturnValue
 #     boolean isOpen();
@@ -16,20 +16,20 @@
 #     DatabaseManager databases();
 # 
 #     @CheckReturnValue
-#     Session session(String database, Session.Type type);
+#     GraknSession session(String database, GraknSession.Type type);
 # 
 #     @CheckReturnValue
-#     Session session(String database, Session.Type type, GraknOptions options);
+#     GraknSession session(String database, GraknSession.Type type, GraknOptions options);
 # 
 #     @CheckReturnValue
 #     boolean isCluster();
 # 
 #     @CheckReturnValue
-#     Client.Cluster asCluster();
+#     GraknClient.Cluster asCluster();
 # 
 #     void close();
 # 
-#     interface Cluster extends Client {
+#     interface Cluster extends GraknClient {
 # 
 #         @Override
 #         @CheckReturnValue

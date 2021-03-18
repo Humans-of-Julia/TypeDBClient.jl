@@ -8,7 +8,7 @@
 # 
 # import javax.annotation.CheckReturnValue;
 # 
-# public interface Session extends AutoCloseable {
+# public interface GraknSession extends AutoCloseable {
 # 
 #     @CheckReturnValue
 #     boolean isOpen();
@@ -23,10 +23,10 @@
 #     GraknOptions options();
 # 
 #     @CheckReturnValue
-#     Transaction transaction(Transaction.Type type);
+#     GraknTransaction transaction(GraknTransaction.Type type);
 # 
 #     @CheckReturnValue
-#     Transaction transaction(Transaction.Type type, GraknOptions options);
+#     GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options);
 # 
 #     void close();
 # 

@@ -110,6 +110,11 @@ function meta(::Type{Transaction_Open})
     end
 end
 
+const Transaction_Stream_State = (;[
+    Symbol("CONTINUE") => Int32(0),
+    Symbol("DONE") => Int32(1),
+]...)
+
 mutable struct Transaction_Stream_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -163,15 +168,15 @@ function meta(::Type{Transaction_Stream_ResPart})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Transaction_Stream_ResPart)
             __meta_Transaction_Stream_ResPart[] = target = ProtoMeta(Transaction_Stream_ResPart)
-            allflds = Pair{Symbol,Union{Type,String}}[:is_done => Bool]
+            allflds = Pair{Symbol,Union{Type,String}}[:state => Int32]
             meta(target, Transaction_Stream_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Transaction_Stream_ResPart[]
     end
 end
 function Base.getproperty(obj::Transaction_Stream_ResPart, name::Symbol)
-    if name === :is_done
-        return (obj.__protobuf_jl_internal_values[name])::Bool
+    if name === :state
+        return (obj.__protobuf_jl_internal_values[name])::Int32
     else
         getfield(obj, name)
     end
@@ -702,5 +707,5 @@ function meta(::Type{Transaction})
     end
 end
 
-export Transaction_Type, Transaction_Client, Transaction_Server, Transaction_Req_MetadataEntry, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Open_Req, Transaction_Open_Res, Transaction_Open, Transaction_Stream_Req, Transaction_Stream_ResPart, Transaction_Stream, Transaction_Commit_Req, Transaction_Commit_Res, Transaction_Commit, Transaction_Rollback_Req, Transaction_Rollback_Res, Transaction_Rollback, Transaction
+export Transaction_Type, Transaction_Client, Transaction_Server, Transaction_Req_MetadataEntry, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Open_Req, Transaction_Open_Res, Transaction_Open, Transaction_Stream_State, Transaction_Stream_Req, Transaction_Stream_ResPart, Transaction_Stream, Transaction_Commit_Req, Transaction_Commit_Res, Transaction_Commit, Transaction_Rollback_Req, Transaction_Rollback_Res, Transaction_Rollback, Transaction
 # mapentries: "Transaction_Req_MetadataEntry" => ("AbstractString", "AbstractString")

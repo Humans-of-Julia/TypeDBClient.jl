@@ -5,8 +5,8 @@
 # 
 # import com.google.protobuf.ByteString;
 # import grakn.client.api.GraknOptions;
-# import grakn.client.api.Session;
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknSession;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.common.GraknClientException;
 # import grakn.common.collection.ConcurrentSet;
 # import grakn.protocol.GraknGrpc;
@@ -27,7 +27,7 @@
 # import static grakn.client.common.RequestBuilder.Session.openReq;
 # import static grakn.client.common.RequestBuilder.Session.pulseReq;
 # 
-# public class CoreSession implements Session {
+# public class CoreSession implements GraknSession {
 # 
 #     private static final int PULSE_INTERVAL_MILLIS = 5_000;
 # 
@@ -35,7 +35,7 @@
 #     private final CoreDatabase database;
 #     private final ByteString sessionID;
 #     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
-#     private final ConcurrentSet<Transaction.Extended> transactions;
+#     private final ConcurrentSet<GraknTransaction.Extended> transactions;
 #     private final Type type;
 #     private final GraknOptions options;
 #     private final Timer pulse;
@@ -81,16 +81,16 @@
 #     public GraknOptions options() { return options; }
 # 
 #     @Override
-#     public Transaction transaction(Transaction.Type type) {
+#     public GraknTransaction transaction(GraknTransaction.Type type) {
 #         return transaction(type, GraknOptions.core());
 #     }
 # 
 #     @Override
-#     public Transaction transaction(Transaction.Type type, GraknOptions options) {
+#     public GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options) {
 #         try {
 #             accessLock.readLock().lock();
 #             if (!isOpen.get()) throw new GraknClientException(SESSION_CLOSED);
-#             Transaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options, client.transmitter());
+#             GraknTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options, client.transmitter());
 #             transactions.add(transactionRPC);
 #             return transactionRPC;
 #         } finally {
@@ -111,7 +111,7 @@
 #         try {
 #             accessLock.writeLock().lock();
 #             if (isOpen.compareAndSet(true, false)) {
-#                 transactions.forEach(Transaction.Extended::close);
+#                 transactions.forEach(GraknTransaction.Extended::close);
 #                 client.removeSession(this);
 #                 pulse.cancel();
 #                 client.reconnect();

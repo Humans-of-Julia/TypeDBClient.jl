@@ -416,96 +416,6 @@ function meta(::Type{ConceptManager})
     end
 end
 
-mutable struct Relation_GetPlayers <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayers(; kwargs...)
-        obj = new(meta(Relation_GetPlayers), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayers
-const __meta_Relation_GetPlayers = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayers})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayers)
-            __meta_Relation_GetPlayers[] = target = ProtoMeta(Relation_GetPlayers)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Relation_GetPlayers, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_GetPlayers[]
-    end
-end
-
-mutable struct Relation_GetPlayersByRoleType_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayersByRoleType_Req(; kwargs...)
-        obj = new(meta(Relation_GetPlayersByRoleType_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayersByRoleType_Req
-const __meta_Relation_GetPlayersByRoleType_Req = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayersByRoleType_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayersByRoleType_Req)
-            __meta_Relation_GetPlayersByRoleType_Req[] = target = ProtoMeta(Relation_GetPlayersByRoleType_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Relation_GetPlayersByRoleType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_GetPlayersByRoleType_Req[]
-    end
-end
-
-mutable struct Relation_GetPlayersByRoleType <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayersByRoleType(; kwargs...)
-        obj = new(meta(Relation_GetPlayersByRoleType), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayersByRoleType
-const __meta_Relation_GetPlayersByRoleType = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayersByRoleType})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayersByRoleType)
-            __meta_Relation_GetPlayersByRoleType[] = target = ProtoMeta(Relation_GetPlayersByRoleType)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Relation_GetPlayersByRoleType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_GetPlayersByRoleType[]
-    end
-end
-
 mutable struct Relation_AddPlayer_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -626,6 +536,156 @@ function meta(::Type{Relation_RemovePlayer})
     end
 end
 
+mutable struct Relation_GetPlayers <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetPlayers(; kwargs...)
+        obj = new(meta(Relation_GetPlayers), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetPlayers
+const __meta_Relation_GetPlayers = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayers})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetPlayers)
+            __meta_Relation_GetPlayers[] = target = ProtoMeta(Relation_GetPlayers)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetPlayers, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetPlayers[]
+    end
+end
+
+mutable struct Relation_GetPlayersByRoleType_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetPlayersByRoleType_Req(; kwargs...)
+        obj = new(meta(Relation_GetPlayersByRoleType_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetPlayersByRoleType_Req
+const __meta_Relation_GetPlayersByRoleType_Req = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayersByRoleType_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetPlayersByRoleType_Req)
+            __meta_Relation_GetPlayersByRoleType_Req[] = target = ProtoMeta(Relation_GetPlayersByRoleType_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetPlayersByRoleType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetPlayersByRoleType_Req[]
+    end
+end
+
+mutable struct Relation_GetPlayersByRoleType <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetPlayersByRoleType(; kwargs...)
+        obj = new(meta(Relation_GetPlayersByRoleType), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetPlayersByRoleType
+const __meta_Relation_GetPlayersByRoleType = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayersByRoleType})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetPlayersByRoleType)
+            __meta_Relation_GetPlayersByRoleType[] = target = ProtoMeta(Relation_GetPlayersByRoleType)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetPlayersByRoleType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetPlayersByRoleType[]
+    end
+end
+
+mutable struct Relation_GetRelating_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetRelating_Req(; kwargs...)
+        obj = new(meta(Relation_GetRelating_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetRelating_Req
+const __meta_Relation_GetRelating_Req = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetRelating_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetRelating_Req)
+            __meta_Relation_GetRelating_Req[] = target = ProtoMeta(Relation_GetRelating_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetRelating_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetRelating_Req[]
+    end
+end
+
+mutable struct Relation_GetRelating <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetRelating(; kwargs...)
+        obj = new(meta(Relation_GetRelating), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetRelating
+const __meta_Relation_GetRelating = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetRelating})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetRelating)
+            __meta_Relation_GetRelating[] = target = ProtoMeta(Relation_GetRelating)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetRelating, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetRelating[]
+    end
+end
+
 mutable struct Relation <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -653,36 +713,6 @@ function meta(::Type{Relation})
             meta(target, Relation, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Relation[]
-    end
-end
-
-mutable struct Attribute_GetOwners <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Attribute_GetOwners(; kwargs...)
-        obj = new(meta(Attribute_GetOwners), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Attribute_GetOwners
-const __meta_Attribute_GetOwners = Ref{ProtoMeta}()
-function meta(::Type{Attribute_GetOwners})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Attribute_GetOwners)
-            __meta_Attribute_GetOwners[] = target = ProtoMeta(Attribute_GetOwners)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Attribute_GetOwners, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Attribute_GetOwners[]
     end
 end
 
@@ -730,6 +760,36 @@ function Base.getproperty(obj::Attribute_Value, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Int64
     else
         getfield(obj, name)
+    end
+end
+
+mutable struct Attribute_GetOwners <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Attribute_GetOwners(; kwargs...)
+        obj = new(meta(Attribute_GetOwners), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Attribute_GetOwners
+const __meta_Attribute_GetOwners = Ref{ProtoMeta}()
+function meta(::Type{Attribute_GetOwners})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Attribute_GetOwners)
+            __meta_Attribute_GetOwners[] = target = ProtoMeta(Attribute_GetOwners)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Attribute_GetOwners, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Attribute_GetOwners[]
     end
 end
 
@@ -1455,43 +1515,6 @@ function Base.getproperty(obj::ConceptManager_PutRelationType_Res, name::Symbol)
     end
 end
 
-mutable struct Thing_GetPlays_ResPart <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetPlays_ResPart(; kwargs...)
-        obj = new(meta(Thing_GetPlays_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetPlays_ResPart
-const __meta_Thing_GetPlays_ResPart = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetPlays_ResPart})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetPlays_ResPart)
-            __meta_Thing_GetPlays_ResPart[] = target = ProtoMeta(Thing_GetPlays_ResPart)
-            allflds = Pair{Symbol,Union{Type,String}}[:role_types => Base.Vector{_Type}]
-            meta(target, Thing_GetPlays_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetPlays_ResPart[]
-    end
-end
-function Base.getproperty(obj::Thing_GetPlays_ResPart, name::Symbol)
-    if name === :role_types
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
-    else
-        getfield(obj, name)
-    end
-end
-
 mutable struct Attribute_GetOwners_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -1526,6 +1549,43 @@ end
 function Base.getproperty(obj::Attribute_GetOwners_Req, name::Symbol)
     if name === :thing_type
         return (obj.__protobuf_jl_internal_values[name])::_Type
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Thing_GetPlaying_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetPlaying_ResPart(; kwargs...)
+        obj = new(meta(Thing_GetPlaying_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetPlaying_ResPart
+const __meta_Thing_GetPlaying_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetPlaying_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetPlaying_ResPart)
+            __meta_Thing_GetPlaying_ResPart[] = target = ProtoMeta(Thing_GetPlaying_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:role_types => Base.Vector{_Type}]
+            meta(target, Thing_GetPlaying_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetPlaying_ResPart[]
+    end
+end
+function Base.getproperty(obj::Thing_GetPlaying_ResPart, name::Symbol)
+    if name === :role_types
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
         getfield(obj, name)
     end
@@ -2115,13 +2175,13 @@ function meta(::Type{Thing_GetHas})
     end
 end
 
-mutable struct Thing_GetPlays_Req <: ProtoType
+mutable struct Thing_GetPlaying_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Thing_GetPlays_Req(; kwargs...)
-        obj = new(meta(Thing_GetPlays_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function Thing_GetPlaying_Req(; kwargs...)
+        obj = new(meta(Thing_GetPlaying_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -2132,26 +2192,26 @@ mutable struct Thing_GetPlays_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Thing_GetPlays_Req
-const __meta_Thing_GetPlays_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetPlays_Req})
+end # mutable struct Thing_GetPlaying_Req
+const __meta_Thing_GetPlaying_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetPlaying_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetPlays_Req)
-            __meta_Thing_GetPlays_Req[] = target = ProtoMeta(Thing_GetPlays_Req)
+        if !isassigned(__meta_Thing_GetPlaying_Req)
+            __meta_Thing_GetPlaying_Req[] = target = ProtoMeta(Thing_GetPlaying_Req)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetPlays_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, Thing_GetPlaying_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Thing_GetPlays_Req[]
+        __meta_Thing_GetPlaying_Req[]
     end
 end
 
-mutable struct Thing_GetPlays <: ProtoType
+mutable struct Thing_GetPlaying <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Thing_GetPlays(; kwargs...)
-        obj = new(meta(Thing_GetPlays), Dict{Symbol,Any}(), Set{Symbol}())
+    function Thing_GetPlaying(; kwargs...)
+        obj = new(meta(Thing_GetPlaying), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -2162,16 +2222,16 @@ mutable struct Thing_GetPlays <: ProtoType
         end
         obj
     end
-end # mutable struct Thing_GetPlays
-const __meta_Thing_GetPlays = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetPlays})
+end # mutable struct Thing_GetPlaying
+const __meta_Thing_GetPlaying = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetPlaying})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetPlays)
-            __meta_Thing_GetPlays[] = target = ProtoMeta(Thing_GetPlays)
+        if !isassigned(__meta_Thing_GetPlaying)
+            __meta_Thing_GetPlaying[] = target = ProtoMeta(Thing_GetPlaying)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetPlays, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, Thing_GetPlaying, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Thing_GetPlays[]
+        __meta_Thing_GetPlaying[]
     end
 end
 
@@ -2278,6 +2338,43 @@ end
 function Base.getproperty(obj::ConceptManager_PutAttributeType_Res, name::Symbol)
     if name === :attribute_type
         return (obj.__protobuf_jl_internal_values[name])::_Type
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Relation_GetRelating_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetRelating_ResPart(; kwargs...)
+        obj = new(meta(Relation_GetRelating_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetRelating_ResPart
+const __meta_Relation_GetRelating_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetRelating_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetRelating_ResPart)
+            __meta_Relation_GetRelating_ResPart[] = target = ProtoMeta(Relation_GetRelating_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:role_types => Base.Vector{_Type}]
+            meta(target, Relation_GetRelating_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetRelating_ResPart[]
+    end
+end
+function Base.getproperty(obj::Relation_GetRelating_ResPart, name::Symbol)
+    if name === :role_types
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
         getfield(obj, name)
     end
@@ -2925,9 +3022,9 @@ function meta(::Type{Thing_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Thing_Req)
             __meta_Thing_Req[] = target = ProtoMeta(Thing_Req)
-            fnum = Int[1,100,101,102,103,104,105,106,107,200,201,202,203,300]
-            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :thing_delete_req => Thing_Delete_Req, :thing_get_type_req => Thing_GetType_Req, :thing_is_inferred_req => Thing_IsInferred_Req, :thing_set_has_req => Thing_SetHas_Req, :thing_unset_has_req => Thing_UnsetHas_Req, :thing_get_has_req => Thing_GetHas_Req, :thing_get_relations_req => Thing_GetRelations_Req, :thing_get_plays_req => Thing_GetPlays_Req, :relation_add_player_req => Relation_AddPlayer_Req, :relation_remove_player_req => Relation_RemovePlayer_Req, :relation_get_players_req => Relation_GetPlayers_Req, :relation_get_players_by_role_type_req => Relation_GetPlayersByRoleType_Req, :attribute_get_owners_req => Attribute_GetOwners_Req]
-            oneofs = Int[0,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            fnum = Int[1,100,101,102,103,104,105,106,107,200,201,202,203,204,300]
+            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :thing_delete_req => Thing_Delete_Req, :thing_get_type_req => Thing_GetType_Req, :thing_is_inferred_req => Thing_IsInferred_Req, :thing_get_has_req => Thing_GetHas_Req, :thing_set_has_req => Thing_SetHas_Req, :thing_unset_has_req => Thing_UnsetHas_Req, :thing_get_relations_req => Thing_GetRelations_Req, :thing_get_playing_req => Thing_GetPlaying_Req, :relation_add_player_req => Relation_AddPlayer_Req, :relation_remove_player_req => Relation_RemovePlayer_Req, :relation_get_players_req => Relation_GetPlayers_Req, :relation_get_players_by_role_type_req => Relation_GetPlayersByRoleType_Req, :relation_get_relating_req => Relation_GetRelating_Req, :attribute_get_owners_req => Attribute_GetOwners_Req]
+            oneofs = Int[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("req")]
             meta(target, Thing_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -2943,16 +3040,16 @@ function Base.getproperty(obj::Thing_Req, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Thing_GetType_Req
     elseif name === :thing_is_inferred_req
         return (obj.__protobuf_jl_internal_values[name])::Thing_IsInferred_Req
+    elseif name === :thing_get_has_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_Req
     elseif name === :thing_set_has_req
         return (obj.__protobuf_jl_internal_values[name])::Thing_SetHas_Req
     elseif name === :thing_unset_has_req
         return (obj.__protobuf_jl_internal_values[name])::Thing_UnsetHas_Req
-    elseif name === :thing_get_has_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_Req
     elseif name === :thing_get_relations_req
         return (obj.__protobuf_jl_internal_values[name])::Thing_GetRelations_Req
-    elseif name === :thing_get_plays_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlays_Req
+    elseif name === :thing_get_playing_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlaying_Req
     elseif name === :relation_add_player_req
         return (obj.__protobuf_jl_internal_values[name])::Relation_AddPlayer_Req
     elseif name === :relation_remove_player_req
@@ -2961,58 +3058,10 @@ function Base.getproperty(obj::Thing_Req, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayers_Req
     elseif name === :relation_get_players_by_role_type_req
         return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayersByRoleType_Req
+    elseif name === :relation_get_relating_req
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetRelating_Req
     elseif name === :attribute_get_owners_req
         return (obj.__protobuf_jl_internal_values[name])::Attribute_GetOwners_Req
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_ResPart <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_ResPart(; kwargs...)
-        obj = new(meta(Thing_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_ResPart
-const __meta_Thing_ResPart = Ref{ProtoMeta}()
-function meta(::Type{Thing_ResPart})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_ResPart)
-            __meta_Thing_ResPart[] = target = ProtoMeta(Thing_ResPart)
-            fnum = Int[100,101,102,200,201,300]
-            allflds = Pair{Symbol,Union{Type,String}}[:thing_get_has_res_part => Thing_GetHas_ResPart, :thing_get_relations_res_part => Thing_GetRelations_ResPart, :thing_get_plays_res_part => Thing_GetPlays_ResPart, :relation_get_players_res_part => Relation_GetPlayers_ResPart, :relation_get_players_by_role_type_res_part => Relation_GetPlayersByRoleType_ResPart, :attribute_get_owners_res_part => Attribute_GetOwners_ResPart]
-            oneofs = Int[1,1,1,1,1,1]
-            oneof_names = Symbol[Symbol("res")]
-            meta(target, Thing_ResPart, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
-        end
-        __meta_Thing_ResPart[]
-    end
-end
-function Base.getproperty(obj::Thing_ResPart, name::Symbol)
-    if name === :thing_get_has_res_part
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_ResPart
-    elseif name === :thing_get_relations_res_part
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetRelations_ResPart
-    elseif name === :thing_get_plays_res_part
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlays_ResPart
-    elseif name === :relation_get_players_res_part
-        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayers_ResPart
-    elseif name === :relation_get_players_by_role_type_res_part
-        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayersByRoleType_ResPart
-    elseif name === :attribute_get_owners_res_part
-        return (obj.__protobuf_jl_internal_values[name])::Attribute_GetOwners_ResPart
     else
         getfield(obj, name)
     end
@@ -3065,13 +3114,13 @@ function Base.getproperty(obj::ConceptManager_Res, name::Symbol)
     end
 end
 
-mutable struct RoleType_GetRelationType_Req <: ProtoType
+mutable struct Thing_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function RoleType_GetRelationType_Req(; kwargs...)
-        obj = new(meta(RoleType_GetRelationType_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function Thing_ResPart(; kwargs...)
+        obj = new(meta(Thing_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -3082,83 +3131,38 @@ mutable struct RoleType_GetRelationType_Req <: ProtoType
         end
         obj
     end
-end # mutable struct RoleType_GetRelationType_Req
-const __meta_RoleType_GetRelationType_Req = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetRelationType_Req})
+end # mutable struct Thing_ResPart
+const __meta_Thing_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Thing_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetRelationType_Req)
-            __meta_RoleType_GetRelationType_Req[] = target = ProtoMeta(RoleType_GetRelationType_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, RoleType_GetRelationType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        if !isassigned(__meta_Thing_ResPart)
+            __meta_Thing_ResPart[] = target = ProtoMeta(Thing_ResPart)
+            fnum = Int[100,101,102,200,201,202,300]
+            allflds = Pair{Symbol,Union{Type,String}}[:thing_get_has_res_part => Thing_GetHas_ResPart, :thing_get_relations_res_part => Thing_GetRelations_ResPart, :thing_get_playing_res_part => Thing_GetPlaying_ResPart, :relation_get_players_res_part => Relation_GetPlayers_ResPart, :relation_get_players_by_role_type_res_part => Relation_GetPlayersByRoleType_ResPart, :relation_get_relating_res_part => Relation_GetRelating_ResPart, :attribute_get_owners_res_part => Attribute_GetOwners_ResPart]
+            oneofs = Int[1,1,1,1,1,1,1]
+            oneof_names = Symbol[Symbol("res")]
+            meta(target, Thing_ResPart, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
-        __meta_RoleType_GetRelationType_Req[]
+        __meta_Thing_ResPart[]
     end
 end
-
-mutable struct RoleType_GetRelationType_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function RoleType_GetRelationType_Res(; kwargs...)
-        obj = new(meta(RoleType_GetRelationType_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct RoleType_GetRelationType_Res
-const __meta_RoleType_GetRelationType_Res = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetRelationType_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetRelationType_Res)
-            __meta_RoleType_GetRelationType_Res[] = target = ProtoMeta(RoleType_GetRelationType_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:relation_type => _Type]
-            meta(target, RoleType_GetRelationType_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_RoleType_GetRelationType_Res[]
-    end
-end
-function Base.getproperty(obj::RoleType_GetRelationType_Res, name::Symbol)
-    if name === :relation_type
-        return (obj.__protobuf_jl_internal_values[name])::_Type
+function Base.getproperty(obj::Thing_ResPart, name::Symbol)
+    if name === :thing_get_has_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_ResPart
+    elseif name === :thing_get_relations_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetRelations_ResPart
+    elseif name === :thing_get_playing_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlaying_ResPart
+    elseif name === :relation_get_players_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayers_ResPart
+    elseif name === :relation_get_players_by_role_type_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayersByRoleType_ResPart
+    elseif name === :relation_get_relating_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetRelating_ResPart
+    elseif name === :attribute_get_owners_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Attribute_GetOwners_ResPart
     else
         getfield(obj, name)
-    end
-end
-
-mutable struct RoleType_GetRelationType <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function RoleType_GetRelationType(; kwargs...)
-        obj = new(meta(RoleType_GetRelationType), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct RoleType_GetRelationType
-const __meta_RoleType_GetRelationType = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetRelationType})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetRelationType)
-            __meta_RoleType_GetRelationType[] = target = ProtoMeta(RoleType_GetRelationType)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, RoleType_GetRelationType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_RoleType_GetRelationType[]
     end
 end
 
@@ -5488,9 +5492,9 @@ function meta(::Type{Type_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Type_Req)
             __meta_Type_Req[] = target = ProtoMeta(Type_Req)
-            fnum = Int[1,2,100,101,102,103,104,105,106,200,201,202,300,301,302,303,304,305,306,307,308,400,500,501,502,503,504,600,601,602,603,604]
-            allflds = Pair{Symbol,Union{Type,String}}[:label => AbstractString, :scope => AbstractString, :type_delete_req => Type_Delete_Req, :type_set_label_req => Type_SetLabel_Req, :type_is_abstract_req => Type_IsAbstract_Req, :type_get_supertype_req => Type_GetSupertype_Req, :type_set_supertype_req => Type_SetSupertype_Req, :type_get_supertypes_req => Type_GetSupertypes_Req, :type_get_subtypes_req => Type_GetSubtypes_Req, :role_type_get_relation_type_req => RoleType_GetRelationType_Req, :role_type_get_relation_types_req => RoleType_GetRelationTypes_Req, :role_type_get_players_req => RoleType_GetPlayers_Req, :thing_type_set_abstract_req => ThingType_SetAbstract_Req, :thing_type_unset_abstract_req => ThingType_UnsetAbstract_Req, :thing_type_set_owns_req => ThingType_SetOwns_Req, :thing_type_unset_owns_req => ThingType_UnsetOwns_Req, :thing_type_set_plays_req => ThingType_SetPlays_Req, :thing_type_unset_plays_req => ThingType_UnsetPlays_Req, :thing_type_get_instances_req => ThingType_GetInstances_Req, :thing_type_get_owns_req => ThingType_GetOwns_Req, :thing_type_get_plays_req => ThingType_GetPlays_Req, :entity_type_create_req => EntityType_Create_Req, :relation_type_create_req => RelationType_Create_Req, :relation_type_get_relates_for_role_label_req => RelationType_GetRelatesForRoleLabel_Req, :relation_type_set_relates_req => RelationType_SetRelates_Req, :relation_type_unset_relates_req => RelationType_UnsetRelates_Req, :relation_type_get_relates_req => RelationType_GetRelates_Req, :attribute_type_put_req => AttributeType_Put_Req, :attribute_type_get_req => AttributeType_Get_Req, :attribute_type_get_regex_req => AttributeType_GetRegex_Req, :attribute_type_set_regex_req => AttributeType_SetRegex_Req, :attribute_type_get_owners_req => AttributeType_GetOwners_Req]
-            oneofs = Int[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            fnum = Int[1,2,100,101,102,103,104,105,106,200,201,300,301,302,303,304,305,306,307,308,400,500,501,502,503,504,600,601,602,603,604]
+            allflds = Pair{Symbol,Union{Type,String}}[:label => AbstractString, :scope => AbstractString, :type_delete_req => Type_Delete_Req, :type_set_label_req => Type_SetLabel_Req, :type_is_abstract_req => Type_IsAbstract_Req, :type_get_supertype_req => Type_GetSupertype_Req, :type_set_supertype_req => Type_SetSupertype_Req, :type_get_supertypes_req => Type_GetSupertypes_Req, :type_get_subtypes_req => Type_GetSubtypes_Req, :role_type_get_relation_types_req => RoleType_GetRelationTypes_Req, :role_type_get_players_req => RoleType_GetPlayers_Req, :thing_type_get_instances_req => ThingType_GetInstances_Req, :thing_type_set_abstract_req => ThingType_SetAbstract_Req, :thing_type_unset_abstract_req => ThingType_UnsetAbstract_Req, :thing_type_get_owns_req => ThingType_GetOwns_Req, :thing_type_set_owns_req => ThingType_SetOwns_Req, :thing_type_unset_owns_req => ThingType_UnsetOwns_Req, :thing_type_get_plays_req => ThingType_GetPlays_Req, :thing_type_set_plays_req => ThingType_SetPlays_Req, :thing_type_unset_plays_req => ThingType_UnsetPlays_Req, :entity_type_create_req => EntityType_Create_Req, :relation_type_create_req => RelationType_Create_Req, :relation_type_get_relates_for_role_label_req => RelationType_GetRelatesForRoleLabel_Req, :relation_type_get_relates_req => RelationType_GetRelates_Req, :relation_type_set_relates_req => RelationType_SetRelates_Req, :relation_type_unset_relates_req => RelationType_UnsetRelates_Req, :attribute_type_put_req => AttributeType_Put_Req, :attribute_type_get_req => AttributeType_Get_Req, :attribute_type_get_regex_req => AttributeType_GetRegex_Req, :attribute_type_set_regex_req => AttributeType_SetRegex_Req, :attribute_type_get_owners_req => AttributeType_GetOwners_Req]
+            oneofs = Int[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("req")]
             meta(target, Type_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -5516,42 +5520,40 @@ function Base.getproperty(obj::Type_Req, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Type_GetSupertypes_Req
     elseif name === :type_get_subtypes_req
         return (obj.__protobuf_jl_internal_values[name])::Type_GetSubtypes_Req
-    elseif name === :role_type_get_relation_type_req
-        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationType_Req
     elseif name === :role_type_get_relation_types_req
         return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationTypes_Req
     elseif name === :role_type_get_players_req
         return (obj.__protobuf_jl_internal_values[name])::RoleType_GetPlayers_Req
+    elseif name === :thing_type_get_instances_req
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetInstances_Req
     elseif name === :thing_type_set_abstract_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetAbstract_Req
     elseif name === :thing_type_unset_abstract_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_UnsetAbstract_Req
+    elseif name === :thing_type_get_owns_req
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetOwns_Req
     elseif name === :thing_type_set_owns_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetOwns_Req
     elseif name === :thing_type_unset_owns_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_UnsetOwns_Req
+    elseif name === :thing_type_get_plays_req
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetPlays_Req
     elseif name === :thing_type_set_plays_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetPlays_Req
     elseif name === :thing_type_unset_plays_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_UnsetPlays_Req
-    elseif name === :thing_type_get_instances_req
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetInstances_Req
-    elseif name === :thing_type_get_owns_req
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetOwns_Req
-    elseif name === :thing_type_get_plays_req
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetPlays_Req
     elseif name === :entity_type_create_req
         return (obj.__protobuf_jl_internal_values[name])::EntityType_Create_Req
     elseif name === :relation_type_create_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_Create_Req
     elseif name === :relation_type_get_relates_for_role_label_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelatesForRoleLabel_Req
+    elseif name === :relation_type_get_relates_req
+        return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelates_Req
     elseif name === :relation_type_set_relates_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_SetRelates_Req
     elseif name === :relation_type_unset_relates_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_UnsetRelates_Req
-    elseif name === :relation_type_get_relates_req
-        return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelates_Req
     elseif name === :attribute_type_put_req
         return (obj.__protobuf_jl_internal_values[name])::AttributeType_Put_Req
     elseif name === :attribute_type_get_req
@@ -5620,9 +5622,9 @@ function meta(::Type{Type_Res})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Type_Res)
             __meta_Type_Res[] = target = ProtoMeta(Type_Res)
-            fnum = Int[100,101,102,103,104,200,300,301,302,303,304,305,400,500,501,502,503,600,601,602,603]
-            allflds = Pair{Symbol,Union{Type,String}}[:type_delete_res => Type_Delete_Res, :type_set_label_res => Type_SetLabel_Res, :type_is_abstract_res => Type_IsAbstract_Res, :type_get_supertype_res => Type_GetSupertype_Res, :type_set_supertype_res => Type_SetSupertype_Res, :role_type_get_relation_type_res => RoleType_GetRelationType_Res, :thing_type_set_abstract_res => ThingType_SetAbstract_Res, :thing_type_unset_abstract_res => ThingType_UnsetAbstract_Res, :thing_type_set_owns_res => ThingType_SetOwns_Res, :thing_type_unset_owns_res => ThingType_UnsetOwns_Res, :thing_type_set_plays_res => ThingType_SetPlays_Res, :thing_type_unset_plays_res => ThingType_UnsetPlays_Res, :entity_type_create_res => EntityType_Create_Res, :relation_type_create_res => RelationType_Create_Res, :relation_type_get_relates_for_role_label_res => RelationType_GetRelatesForRoleLabel_Res, :relation_type_set_relates_res => RelationType_SetRelates_Res, :relation_type_unset_relates_res => RelationType_UnsetRelates_Res, :attribute_type_put_res => AttributeType_Put_Res, :attribute_type_get_res => AttributeType_Get_Res, :attribute_type_get_regex_res => AttributeType_GetRegex_Res, :attribute_type_set_regex_res => AttributeType_SetRegex_Res]
-            oneofs = Int[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            fnum = Int[100,101,102,103,104,300,301,302,303,304,305,400,500,501,502,503,600,601,602,603]
+            allflds = Pair{Symbol,Union{Type,String}}[:type_delete_res => Type_Delete_Res, :type_set_label_res => Type_SetLabel_Res, :type_is_abstract_res => Type_IsAbstract_Res, :type_get_supertype_res => Type_GetSupertype_Res, :type_set_supertype_res => Type_SetSupertype_Res, :thing_type_set_abstract_res => ThingType_SetAbstract_Res, :thing_type_unset_abstract_res => ThingType_UnsetAbstract_Res, :thing_type_set_owns_res => ThingType_SetOwns_Res, :thing_type_unset_owns_res => ThingType_UnsetOwns_Res, :thing_type_set_plays_res => ThingType_SetPlays_Res, :thing_type_unset_plays_res => ThingType_UnsetPlays_Res, :entity_type_create_res => EntityType_Create_Res, :relation_type_create_res => RelationType_Create_Res, :relation_type_get_relates_for_role_label_res => RelationType_GetRelatesForRoleLabel_Res, :relation_type_set_relates_res => RelationType_SetRelates_Res, :relation_type_unset_relates_res => RelationType_UnsetRelates_Res, :attribute_type_put_res => AttributeType_Put_Res, :attribute_type_get_res => AttributeType_Get_Res, :attribute_type_get_regex_res => AttributeType_GetRegex_Res, :attribute_type_set_regex_res => AttributeType_SetRegex_Res]
+            oneofs = Int[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
             meta(target, Type_Res, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -5640,8 +5642,6 @@ function Base.getproperty(obj::Type_Res, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Type_GetSupertype_Res
     elseif name === :type_set_supertype_res
         return (obj.__protobuf_jl_internal_values[name])::Type_SetSupertype_Res
-    elseif name === :role_type_get_relation_type_res
-        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationType_Res
     elseif name === :thing_type_set_abstract_res
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetAbstract_Res
     elseif name === :thing_type_unset_abstract_res
@@ -5949,4 +5949,4 @@ function meta(::Type{AttributeType})
     end
 end
 
-export ConceptManager_Req, ConceptManager_Res, ConceptManager_GetThingType_Req, ConceptManager_GetThingType_Res, ConceptManager_GetThingType, ConceptManager_GetThing_Req, ConceptManager_GetThing_Res, ConceptManager_GetThing, ConceptManager_PutEntityType_Req, ConceptManager_PutEntityType_Res, ConceptManager_PutEntityType, ConceptManager_PutAttributeType_Req, ConceptManager_PutAttributeType_Res, ConceptManager_PutAttributeType, ConceptManager_PutRelationType_Req, ConceptManager_PutRelationType_Res, ConceptManager_PutRelationType, ConceptManager, Concept, Thing_Req, Thing_Res, Thing_ResPart, Thing_Delete_Req, Thing_Delete_Res, Thing_Delete, Thing_IsInferred_Req, Thing_IsInferred_Res, Thing_IsInferred, Thing_GetType_Req, Thing_GetType_Res, Thing_GetType, Thing_SetHas_Req, Thing_SetHas_Res, Thing_SetHas, Thing_UnsetHas_Req, Thing_UnsetHas_Res, Thing_UnsetHas, Thing_GetHas_Req, Thing_GetHas_ResPart, Thing_GetHas, Thing_GetPlays_Req, Thing_GetPlays_ResPart, Thing_GetPlays, Thing_GetRelations_Req, Thing_GetRelations_ResPart, Thing_GetRelations, Thing, Relation_GetPlayers_Req, Relation_GetPlayers_ResPart, Relation_GetPlayers, Relation_GetPlayersByRoleType_RoleTypeWithPlayer, Relation_GetPlayersByRoleType_Req, Relation_GetPlayersByRoleType_ResPart, Relation_GetPlayersByRoleType, Relation_AddPlayer_Req, Relation_AddPlayer_Res, Relation_AddPlayer, Relation_RemovePlayer_Req, Relation_RemovePlayer_Res, Relation_RemovePlayer, Relation, Attribute_GetOwners_Req, Attribute_GetOwners_ResPart, Attribute_GetOwners, Attribute_Value, Attribute, Type_Encoding, Type_Req, Type_Res, Type_ResPart, Type_Delete_Req, Type_Delete_Res, Type_Delete, Type_SetLabel_Req, Type_SetLabel_Res, Type_SetLabel, Type_IsAbstract_Req, Type_IsAbstract_Res, Type_IsAbstract, Type_GetSupertype_Req, Type_GetSupertype_Res, Type_GetSupertype, Type_SetSupertype_Req, Type_SetSupertype_Res, Type_SetSupertype, Type_GetSupertypes_Req, Type_GetSupertypes_ResPart, Type_GetSupertypes, Type_GetSubtypes_Req, Type_GetSubtypes_ResPart, Type_GetSubtypes, _Type, RoleType_GetRelationType_Req, RoleType_GetRelationType_Res, RoleType_GetRelationType, RoleType_GetRelationTypes_Req, RoleType_GetRelationTypes_ResPart, RoleType_GetRelationTypes, RoleType_GetPlayers_Req, RoleType_GetPlayers_ResPart, RoleType_GetPlayers, RoleType, ThingType_SetAbstract_Req, ThingType_SetAbstract_Res, ThingType_SetAbstract, ThingType_UnsetAbstract_Req, ThingType_UnsetAbstract_Res, ThingType_UnsetAbstract, ThingType_GetInstances_Req, ThingType_GetInstances_ResPart, ThingType_GetInstances, ThingType_GetOwns_Req, ThingType_GetOwns_ResPart, ThingType_GetOwns, ThingType_GetPlays_Req, ThingType_GetPlays_ResPart, ThingType_GetPlays, ThingType_SetOwns_Req, ThingType_SetOwns_Res, ThingType_SetOwns, ThingType_SetPlays_Req, ThingType_SetPlays_Res, ThingType_SetPlays, ThingType_UnsetOwns_Req, ThingType_UnsetOwns_Res, ThingType_UnsetOwns, ThingType_UnsetPlays_Req, ThingType_UnsetPlays_Res, ThingType_UnsetPlays, ThingType, EntityType_Create_Req, EntityType_Create_Res, EntityType_Create, EntityType, RelationType_Create_Req, RelationType_Create_Res, RelationType_Create, RelationType_GetRelates_Req, RelationType_GetRelates_ResPart, RelationType_GetRelates, RelationType_GetRelatesForRoleLabel_Req, RelationType_GetRelatesForRoleLabel_Res, RelationType_GetRelatesForRoleLabel, RelationType_SetRelates_Req, RelationType_SetRelates_Res, RelationType_SetRelates, RelationType_UnsetRelates_Req, RelationType_UnsetRelates_Res, RelationType_UnsetRelates, RelationType, AttributeType_ValueType, AttributeType_Put_Req, AttributeType_Put_Res, AttributeType_Put, AttributeType_Get_Req, AttributeType_Get_Res, AttributeType_Get, AttributeType_GetOwners_Req, AttributeType_GetOwners_ResPart, AttributeType_GetOwners, AttributeType_GetRegex_Req, AttributeType_GetRegex_Res, AttributeType_GetRegex, AttributeType_SetRegex_Req, AttributeType_SetRegex_Res, AttributeType_SetRegex, AttributeType_GetSubtypes_Req, AttributeType_GetSubtypes_ResPart, AttributeType_GetSubtypes, AttributeType_GetInstances_Req, AttributeType_GetInstances_ResPart, AttributeType_GetInstances, AttributeType
+export ConceptManager_Req, ConceptManager_Res, ConceptManager_GetThingType_Req, ConceptManager_GetThingType_Res, ConceptManager_GetThingType, ConceptManager_GetThing_Req, ConceptManager_GetThing_Res, ConceptManager_GetThing, ConceptManager_PutEntityType_Req, ConceptManager_PutEntityType_Res, ConceptManager_PutEntityType, ConceptManager_PutAttributeType_Req, ConceptManager_PutAttributeType_Res, ConceptManager_PutAttributeType, ConceptManager_PutRelationType_Req, ConceptManager_PutRelationType_Res, ConceptManager_PutRelationType, ConceptManager, Concept, Thing_Req, Thing_Res, Thing_ResPart, Thing_Delete_Req, Thing_Delete_Res, Thing_Delete, Thing_IsInferred_Req, Thing_IsInferred_Res, Thing_IsInferred, Thing_GetType_Req, Thing_GetType_Res, Thing_GetType, Thing_SetHas_Req, Thing_SetHas_Res, Thing_SetHas, Thing_UnsetHas_Req, Thing_UnsetHas_Res, Thing_UnsetHas, Thing_GetHas_Req, Thing_GetHas_ResPart, Thing_GetHas, Thing_GetPlaying_Req, Thing_GetPlaying_ResPart, Thing_GetPlaying, Thing_GetRelations_Req, Thing_GetRelations_ResPart, Thing_GetRelations, Thing, Relation_AddPlayer_Req, Relation_AddPlayer_Res, Relation_AddPlayer, Relation_RemovePlayer_Req, Relation_RemovePlayer_Res, Relation_RemovePlayer, Relation_GetPlayers_Req, Relation_GetPlayers_ResPart, Relation_GetPlayers, Relation_GetPlayersByRoleType_RoleTypeWithPlayer, Relation_GetPlayersByRoleType_Req, Relation_GetPlayersByRoleType_ResPart, Relation_GetPlayersByRoleType, Relation_GetRelating_Req, Relation_GetRelating_ResPart, Relation_GetRelating, Relation, Attribute_Value, Attribute_GetOwners_Req, Attribute_GetOwners_ResPart, Attribute_GetOwners, Attribute, Type_Encoding, Type_Req, Type_Res, Type_ResPart, Type_Delete_Req, Type_Delete_Res, Type_Delete, Type_SetLabel_Req, Type_SetLabel_Res, Type_SetLabel, Type_IsAbstract_Req, Type_IsAbstract_Res, Type_IsAbstract, Type_GetSupertype_Req, Type_GetSupertype_Res, Type_GetSupertype, Type_SetSupertype_Req, Type_SetSupertype_Res, Type_SetSupertype, Type_GetSupertypes_Req, Type_GetSupertypes_ResPart, Type_GetSupertypes, Type_GetSubtypes_Req, Type_GetSubtypes_ResPart, Type_GetSubtypes, _Type, RoleType_GetRelationTypes_Req, RoleType_GetRelationTypes_ResPart, RoleType_GetRelationTypes, RoleType_GetPlayers_Req, RoleType_GetPlayers_ResPart, RoleType_GetPlayers, RoleType, ThingType_SetAbstract_Req, ThingType_SetAbstract_Res, ThingType_SetAbstract, ThingType_UnsetAbstract_Req, ThingType_UnsetAbstract_Res, ThingType_UnsetAbstract, ThingType_GetInstances_Req, ThingType_GetInstances_ResPart, ThingType_GetInstances, ThingType_GetOwns_Req, ThingType_GetOwns_ResPart, ThingType_GetOwns, ThingType_GetPlays_Req, ThingType_GetPlays_ResPart, ThingType_GetPlays, ThingType_SetOwns_Req, ThingType_SetOwns_Res, ThingType_SetOwns, ThingType_SetPlays_Req, ThingType_SetPlays_Res, ThingType_SetPlays, ThingType_UnsetOwns_Req, ThingType_UnsetOwns_Res, ThingType_UnsetOwns, ThingType_UnsetPlays_Req, ThingType_UnsetPlays_Res, ThingType_UnsetPlays, ThingType, EntityType_Create_Req, EntityType_Create_Res, EntityType_Create, EntityType, RelationType_Create_Req, RelationType_Create_Res, RelationType_Create, RelationType_GetRelates_Req, RelationType_GetRelates_ResPart, RelationType_GetRelates, RelationType_GetRelatesForRoleLabel_Req, RelationType_GetRelatesForRoleLabel_Res, RelationType_GetRelatesForRoleLabel, RelationType_SetRelates_Req, RelationType_SetRelates_Res, RelationType_SetRelates, RelationType_UnsetRelates_Req, RelationType_UnsetRelates_Res, RelationType_UnsetRelates, RelationType, AttributeType_ValueType, AttributeType_Put_Req, AttributeType_Put_Res, AttributeType_Put, AttributeType_Get_Req, AttributeType_Get_Res, AttributeType_Get, AttributeType_GetOwners_Req, AttributeType_GetOwners_ResPart, AttributeType_GetOwners, AttributeType_GetRegex_Req, AttributeType_GetRegex_Res, AttributeType_GetRegex, AttributeType_SetRegex_Req, AttributeType_SetRegex_Res, AttributeType_SetRegex, AttributeType_GetSubtypes_Req, AttributeType_GetSubtypes_ResPart, AttributeType_GetSubtypes, AttributeType_GetInstances_Req, AttributeType_GetInstances_ResPart, AttributeType_GetInstances, AttributeType

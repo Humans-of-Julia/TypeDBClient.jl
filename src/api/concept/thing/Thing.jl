@@ -3,7 +3,7 @@
 # 
 # package grakn.client.api.concept.thing;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.Concept;
 # import grakn.client.api.concept.type.AttributeType;
 # import grakn.client.api.concept.type.RoleType;
@@ -28,7 +28,7 @@
 # 
 #     @Override
 #     @CheckReturnValue
-#     Thing.Remote asRemote(Transaction transaction);
+#     Thing.Remote asRemote(GraknTransaction transaction);
 # 
 #     interface Remote extends Concept.Remote, Thing {
 # 
@@ -61,9 +61,9 @@
 #         Stream<? extends Attribute<?>> getHas(AttributeType... attributeTypes);
 # 
 #         @CheckReturnValue
-#         Stream<? extends RoleType> getPlays();
+#         Stream<? extends Relation> getRelations(RoleType... roleTypes);
 # 
 #         @CheckReturnValue
-#         Stream<? extends Relation> getRelations(RoleType... roleTypes);
+#         Stream<? extends RoleType> getPlaying();
 #     }
 # }

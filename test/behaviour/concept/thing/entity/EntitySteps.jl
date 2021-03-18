@@ -5,6 +5,7 @@
 # 
 # import grakn.client.api.concept.thing.Attribute;
 # import grakn.client.api.concept.thing.Entity;
+# import grakn.client.common.Label;
 # import io.cucumber.java.en.Then;
 # import io.cucumber.java.en.When;
 # 
@@ -57,19 +58,19 @@
 #     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
 #     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
 #         put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(type)).findFirst().orElse(null));
+#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
 #     }
 # 
 #     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
 #     public void entity_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
 #         put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(type)).findFirst().orElse(null));
+#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
 #     }
 # 
 #     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
 #     public void entity_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
 #         put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(type)).findFirst().orElse(null));
+#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
 #     }
 # 
 #     @Then("entity\\( ?{type_label} ?) get instances contain: {var}")

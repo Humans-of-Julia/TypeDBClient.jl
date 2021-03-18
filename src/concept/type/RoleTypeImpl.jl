@@ -3,7 +3,7 @@
 # 
 # package grakn.client.concept.type;
 # 
-# import grakn.client.api.Transaction;
+# import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.type.RelationType;
 # import grakn.client.api.concept.type.RoleType;
 # import grakn.client.common.Label;
@@ -31,7 +31,7 @@
 #     }
 # 
 #     @Override
-#     public RoleTypeImpl.Remote asRemote(Transaction transaction) {
+#     public RoleTypeImpl.Remote asRemote(GraknTransaction transaction) {
 #         return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot());
 #     }
 # 
@@ -42,7 +42,7 @@
 # 
 #     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 # 
-#         public Remote(Transaction transaction, Label label, boolean isRoot) {
+#         public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
 #             super(transaction, label, isRoot);
 #         }
 # 
@@ -64,7 +64,7 @@
 #         }
 # 
 #         @Override
-#         public RoleType.Remote asRemote(Transaction transaction) {
+#         public RoleType.Remote asRemote(GraknTransaction transaction) {
 #             return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot());
 #         }
 # 
