@@ -81,7 +81,7 @@ end
 mkdir(root_dir * "/generated")
 
 #get the actual proto files
-command_split = string.(split("git clone -b architecture-refactor https://github.com/haikalpribadi/protocol.git", " "))
+command_split = string.(split("git clone -b master https://github.com/graknlabs/protocol.git", " "))
 push!(command_split, joinpath(root_dir,"generated","protocol"))
 command = Cmd(command_split)
 run(command)
@@ -185,11 +185,18 @@ rm(joinpath(root_dir,"dependencies"),force = true, recursive = true)
 
 #removing the grakn_pb.jl line in grakn.jl because it givs some trouble with including
 grakn_jl_text = open(f->read(f,String), joinpath(root_dir,"generated","grakn.jl"))
-
 reg_tex = r".*include\(\"grakn_pb.jl\"\).*\s+"
-
 matches_to_change = collect(eachmatch(reg_tex, grakn_jl_text))
-
 grakn_jl_text = replace(grakn_jl_text, matches_to_change[1].match=>"")
 
 write(joinpath(root_dir,"generated","grakn.jl"), grakn_jl_text)
+
+#remove test from source path
+try
+    mv(joinpath(root_dir,"test"), joinpath(rstrip(root_dir,collect.("/src")),"test"),
+       force = true)
+catch ex
+    @info "Something went wrong. Maybe moved bevor"
+finally 
+    @info "done!"
+end
