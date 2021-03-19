@@ -7,11 +7,11 @@
 # import grakn.client.api.GraknOptions;
 # import grakn.client.api.GraknSession;
 # import grakn.client.api.GraknTransaction;
-# import grakn.client.common.GraknClientException;
+# import grakn.client.common.exception.GraknClientException;
+# import grakn.client.common.rpc.GraknStub;
+# import grakn.client.stream.RequestTransmitter;
 # import grakn.common.collection.ConcurrentSet;
-# import grakn.protocol.GraknGrpc;
 # import grakn.protocol.SessionProto;
-# import io.grpc.Channel;
 # import io.grpc.StatusRuntimeException;
 # 
 # import java.time.Duration;
@@ -22,10 +22,10 @@
 # import java.util.concurrent.locks.ReadWriteLock;
 # import java.util.concurrent.locks.StampedLock;
 # 
-# import static grakn.client.common.ErrorMessage.Client.SESSION_CLOSED;
-# import static grakn.client.common.RequestBuilder.Session.closeReq;
-# import static grakn.client.common.RequestBuilder.Session.openReq;
-# import static grakn.client.common.RequestBuilder.Session.pulseReq;
+# import static grakn.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
+# import static grakn.client.common.rpc.RequestBuilder.Session.closeReq;
+# import static grakn.client.common.rpc.RequestBuilder.Session.openReq;
+# import static grakn.client.common.rpc.RequestBuilder.Session.pulseReq;
 # 
 # public class CoreSession implements GraknSession {
 # 
@@ -34,7 +34,6 @@
 #     private final CoreClient client;
 #     private final CoreDatabase database;
 #     private final ByteString sessionID;
-#     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 #     private final ConcurrentSet<GraknTransaction.Extended> transactions;
 #     private final Type type;
 #     private final GraknOptions options;
@@ -45,17 +44,15 @@
 # 
 #     public CoreSession(CoreClient client, String database, Type type, GraknOptions options) {
 #         try {
-#             client.reconnect();
 #             this.client = client;
 #             this.type = type;
 #             this.options = options;
-#             this.database = new CoreDatabase(client.databases(), database);
-#             blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
 #             Instant startTime = Instant.now();
-#             SessionProto.Session.Open.Res res = blockingGrpcStub.sessionOpen(
+#             SessionProto.Session.Open.Res res = client.stub().sessionOpen(
 #                     openReq(database, type.proto(), options.proto())
 #             );
 #             Instant endTime = Instant.now();
+#             this.database = new CoreDatabase(client.databases(), database);
 #             networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
 #             sessionID = res.getSessionId();
 #             transactions = new ConcurrentSet<>();
@@ -90,7 +87,7 @@
 #         try {
 #             accessLock.readLock().lock();
 #             if (!isOpen.get()) throw new GraknClientException(SESSION_CLOSED);
-#             GraknTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options, client.transmitter());
+#             GraknTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options);
 #             transactions.add(transactionRPC);
 #             return transactionRPC;
 #         } finally {
@@ -100,11 +97,15 @@
 # 
 #     ByteString id() { return sessionID; }
 # 
-#     Channel channel() { return client.channel(); }
+#     GraknStub.Core stub() {
+#         return client.stub();
+#     }
+# 
+#     RequestTransmitter transmitter() {
+#         return client.transmitter();
+#     }
 # 
 #     int networkLatencyMillis() { return networkLatencyMillis; }
-# 
-#     void reconnect() { client.reconnect(); }
 # 
 #     @Override
 #     public void close() {
@@ -114,9 +115,8 @@
 #                 transactions.forEach(GraknTransaction.Extended::close);
 #                 client.removeSession(this);
 #                 pulse.cancel();
-#                 client.reconnect();
 #                 try {
-#                     SessionProto.Session.Close.Res ignore = blockingGrpcStub.sessionClose(closeReq(sessionID));
+#                     SessionProto.Session.Close.Res ignore = stub().sessionClose(closeReq(sessionID));
 #                 } catch (StatusRuntimeException e) {
 #                     // Most likely the session is already closed or the server is no longer running.
 #                 }
@@ -135,7 +135,7 @@
 #             if (!isOpen()) return;
 #             boolean alive;
 #             try {
-#                 alive = blockingGrpcStub.sessionPulse(pulseReq(sessionID)).getAlive();
+#                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
 #             } catch (StatusRuntimeException exception) {
 #                 alive = false;
 #             }

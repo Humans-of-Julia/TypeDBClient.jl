@@ -20,12 +20,12 @@
 # import java.util.Map;
 # import java.util.stream.Stream;
 # 
-# import static grakn.client.common.RequestBuilder.Thing.Relation.addPlayerReq;
-# import static grakn.client.common.RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq;
-# import static grakn.client.common.RequestBuilder.Thing.Relation.getPlayersReq;
-# import static grakn.client.common.RequestBuilder.Thing.Relation.getRelatingReq;
-# import static grakn.client.common.RequestBuilder.Thing.Relation.removePlayerReq;
-# import static grakn.client.common.RequestBuilder.Thing.protoThing;
+# import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.addPlayerReq;
+# import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq;
+# import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersReq;
+# import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getRelatingReq;
+# import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.removePlayerReq;
+# import static grakn.client.common.rpc.RequestBuilder.Thing.protoThing;
 # import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
 # import static grakn.client.concept.type.TypeImpl.protoTypes;
 # import static java.util.Arrays.asList;

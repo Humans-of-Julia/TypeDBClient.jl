@@ -12,10 +12,10 @@
 # 
 # import java.util.stream.Stream;
 # 
-# import static grakn.client.common.RequestBuilder.Type.RelationType.createReq;
-# import static grakn.client.common.RequestBuilder.Type.RelationType.getRelatesReq;
-# import static grakn.client.common.RequestBuilder.Type.RelationType.setRelatesReq;
-# import static grakn.client.common.RequestBuilder.Type.RelationType.unsetRelatesReq;
+# import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
+# import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesReq;
+# import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.setRelatesReq;
+# import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.unsetRelatesReq;
 # 
 # public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 # 

@@ -9,13 +9,13 @@
 # public interface DatabaseManager {
 # 
 #     @CheckReturnValue
-#     boolean contains(String name);
-# 
-#     // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
-#     void create(String name);
+#     Database get(String name);
 # 
 #     @CheckReturnValue
-#     Database get(String name);
+#     boolean contains(String name);
+#     // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
+# 
+#     void create(String name);
 # 
 #     @CheckReturnValue
 #     List<? extends Database> all();

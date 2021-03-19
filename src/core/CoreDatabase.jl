@@ -4,21 +4,24 @@
 # package grakn.client.core;
 # 
 # import grakn.client.api.database.Database;
-# import grakn.protocol.GraknGrpc;
+# import grakn.client.common.rpc.GraknStub;
 # 
-# import static grakn.client.common.RequestBuilder.Database.deleteReq;
+# import static grakn.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
+# import static grakn.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
 # import static grakn.client.core.CoreDatabaseManager.nonNull;
 # 
 # public class CoreDatabase implements Database {
 # 
 #     private final String name;
-#     private final CoreClient client;
-#     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
+#     private final CoreDatabaseManager databaseMgr;
 # 
-#     public CoreDatabase(CoreDatabaseManager databaseManager, String name) {
+#     public CoreDatabase(CoreDatabaseManager databaseMgr, String name) {
+#         this.databaseMgr = databaseMgr;
 #         this.name = nonNull((name));
-#         this.client = databaseManager.client();
-#         this.blockingGrpcStub = databaseManager.blockingGrpcStub();
+#     }
+# 
+#     private GraknStub.Core stub() {
+#         return databaseMgr.stub();
 #     }
 # 
 #     @Override
@@ -27,8 +30,13 @@
 #     }
 # 
 #     @Override
+#     public String schema() {
+#         return stub().databaseSchema(schemaReq(name)).getSchema();
+#     }
+# 
+#     @Override
 #     public void delete() {
-#         client.call(() -> blockingGrpcStub.databaseDelete(deleteReq(name)));
+#         stub().databaseDelete(deleteReq(name));
 #     }
 # 
 #     @Override

@@ -3,8 +3,8 @@
 # 
 # package grakn.client.cluster;
 # 
-# import grakn.client.common.GraknClientException;
-# import grakn.protocol.cluster.DatabaseProto;
+# import grakn.client.common.exception.GraknClientException;
+# import grakn.protocol.ClusterDatabaseProto;
 # import io.grpc.StatusRuntimeException;
 # import org.slf4j.Logger;
 # import org.slf4j.LoggerFactory;
@@ -12,10 +12,11 @@
 # import java.util.ArrayList;
 # import java.util.List;
 # 
-# import static grakn.client.common.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-# import static grakn.client.common.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-# import static grakn.client.common.ErrorMessage.Client.UNABLE_TO_CONNECT;
-# import static grakn.client.common.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+# import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+# import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+# import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
+# import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+# import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
 # 
 # abstract class FailsafeTask<RESULT> {
 # 
@@ -39,11 +40,11 @@
 #     }
 # 
 #     RESULT runPrimaryReplica() {
-#         if (!client.clusterDatabases().containsKey(database)
-#                 || !client.clusterDatabases().get(database).primaryReplica().isPresent()) {
+#         if (!client.databaseByName().containsKey(database)
+#                 || !client.databaseByName().get(database).primaryReplica().isPresent()) {
 #             seekPrimaryReplica();
 #         }
-#         ClusterDatabase.Replica replica = client.clusterDatabases().get(database).primaryReplica().get();
+#         ClusterDatabase.Replica replica = client.databaseByName().get(database).primaryReplica().get();
 #         int retries = 0;
 #         while (true) {
 #             try {
@@ -61,7 +62,7 @@
 #     }
 # 
 #     RESULT runAnyReplica() {
-#         ClusterDatabase databaseClusterRPC = client.clusterDatabases().get(database);
+#         ClusterDatabase databaseClusterRPC = client.databaseByName().get(database);
 #         if (databaseClusterRPC == null) databaseClusterRPC = fetchDatabaseReplicas();
 # 
 #         // Try the preferred secondary replica first, then go through the others
@@ -106,15 +107,17 @@
 #         for (String serverAddress : client.clusterMembers()) {
 #             try {
 #                 LOG.debug("Fetching replica info from {}", serverAddress);
-#                 DatabaseProto.Database.Get.Res res = client.graknClusterRPC(serverAddress).databaseGet(
-#                         DatabaseProto.Database.Get.Req.newBuilder().setName(database).build()
-#                 );
+#                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
 #                 ClusterDatabase databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), client.databases());
-#                 client.clusterDatabases().put(database, databaseClusterRPC);
+#                 client.databaseByName().put(database, databaseClusterRPC);
 #                 return databaseClusterRPC;
-#             } catch (StatusRuntimeException e) {
-#                 LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
-#                                   serverAddress + ". Attempting next server.", e);
+#             } catch (GraknClientException e) {
+#                 if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
+#                     LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
+#                             serverAddress + ". Attempting next server.", e);
+#                 } else {
+#                     throw e;
+#                 }
 #             }
 #         }
 #         throw clusterNotAvailableException();

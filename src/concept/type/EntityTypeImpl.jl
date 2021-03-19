@@ -12,7 +12,7 @@
 # 
 # import java.util.stream.Stream;
 # 
-# import static grakn.client.common.RequestBuilder.Type.EntityType.createReq;
+# import static grakn.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
 # 
 # public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 # 

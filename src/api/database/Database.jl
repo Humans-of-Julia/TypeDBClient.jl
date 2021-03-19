@@ -12,6 +12,9 @@
 #     @CheckReturnValue
 #     String name();
 # 
+#     @CheckReturnValue
+#     String schema();
+# 
 #     void delete();
 # 
 #     interface Cluster extends Database {

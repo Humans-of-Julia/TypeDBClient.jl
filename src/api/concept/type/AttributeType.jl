@@ -5,7 +5,7 @@
 # 
 # import grakn.client.api.GraknTransaction;
 # import grakn.client.api.concept.thing.Attribute;
-# import grakn.client.common.GraknClientException;
+# import grakn.client.common.exception.GraknClientException;
 # import grakn.protocol.ConceptProto;
 # 
 # import javax.annotation.CheckReturnValue;
@@ -13,7 +13,7 @@
 # import java.time.LocalDateTime;
 # import java.util.stream.Stream;
 # 
-# import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
+# import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 # 
 # public interface AttributeType extends ThingType {
 # 

@@ -5,7 +5,7 @@
 # 
 # import grakn.client.api.GraknTransaction;
 # import grakn.client.api.logic.Rule;
-# import grakn.client.common.GraknClientException;
+# import grakn.client.common.exception.GraknClientException;
 # import grakn.protocol.LogicProto;
 # import graql.lang.Graql;
 # import graql.lang.pattern.Conjunction;
@@ -14,10 +14,10 @@
 # 
 # import java.util.Objects;
 # 
-# import static grakn.client.common.ErrorMessage.Concept.MISSING_LABEL;
-# import static grakn.client.common.ErrorMessage.Concept.MISSING_TRANSACTION;
-# import static grakn.client.common.RequestBuilder.Rule.deleteReq;
-# import static grakn.client.common.RequestBuilder.Rule.setLabelReq;
+# import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
+# import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+# import static grakn.client.common.rpc.RequestBuilder.Rule.deleteReq;
+# import static grakn.client.common.rpc.RequestBuilder.Rule.setLabelReq;
 # import static grakn.common.util.Objects.className;
 # 
 # public class RuleImpl implements Rule {
