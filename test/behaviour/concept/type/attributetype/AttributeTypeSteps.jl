@@ -57,7 +57,7 @@
 #             case DATETIME:
 #                 return attributeType.asDateTime();
 #             default:
-#                 throw new GraknClientException(BAD_VALUE_TYPE.message(valueType));
+#                 throw new GraknClientException(BAD_VALUE_TYPE, valueType);
 #         }
 #     }
 # 

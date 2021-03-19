@@ -39,7 +39,7 @@
 #     @Override
 #     public Database get(String name) {
 #         if (contains(name)) return new CoreDatabase(this, name);
-#         else throw new GraknClientException(DB_DOES_NOT_EXIST.message(name));
+#         else throw new GraknClientException(DB_DOES_NOT_EXIST, name);
 #     }
 # 
 #     @Override

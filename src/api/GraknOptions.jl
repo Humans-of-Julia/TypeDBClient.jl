@@ -86,7 +86,7 @@
 # 
 #     public GraknOptions batchSize(int batchSize) {
 #         if (batchSize < 1) {
-#             throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(batchSize));
+#             throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, batchSize);
 #         }
 #         this.batchSize = batchSize;
 #         return this;
@@ -109,7 +109,7 @@
 # 
 #     public GraknOptions sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
 #         if (sessionIdleTimeoutMillis < 1) {
-#             throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(sessionIdleTimeoutMillis));
+#             throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, sessionIdleTimeoutMillis);
 #         }
 #         this.sessionIdleTimeoutMillis = sessionIdleTimeoutMillis;
 #         return this;
@@ -122,7 +122,7 @@
 # 
 #     public GraknOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
 #         if (schemaLockAcquireTimeoutMillis < 1) {
-#             throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(schemaLockAcquireTimeoutMillis));
+#             throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, schemaLockAcquireTimeoutMillis);
 #         }
 #         this.schemaLockAcquireTimeoutMillis = schemaLockAcquireTimeoutMillis;
 #         return this;

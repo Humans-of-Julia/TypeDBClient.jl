@@ -34,7 +34,7 @@
 #                 errors.append("- ").append(address).append(": ").append(e).append("\n");
 #             }
 #         }
-#         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED.message(errors.toString()));
+#         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
 #     }
 # 
 #     @Override
@@ -59,7 +59,7 @@
 #                 errors.append("- ").append(address).append(": ").append(e).append("\n");
 #             }
 #         }
-#         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED.message(errors.toString()));
+#         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
 #     }
 # 
 #     @Override
@@ -74,7 +74,7 @@
 #                 errors.append("- ").append(address).append(": ").append(e).append("\n");
 #             }
 #         }
-#         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED.message(errors.toString()));
+#         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
 #     }
 # 
 #     Map<String, CoreDatabaseManager> databaseManagers() {

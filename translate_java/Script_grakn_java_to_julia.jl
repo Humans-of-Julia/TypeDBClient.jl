@@ -87,10 +87,37 @@ command = Cmd(command_split)
 run(command)
 
 #copy protobuf to generated an remove protocol
-cp(joinpath(root_dir,"generated","protocol","protobuf"), joinpath(root_dir,"generated", "protobuf"))
+src_dir =joinpath(root_dir,"generated","protocol")
+file_arr = String[]
+protobuf_arr = String[]
+
+for (root,dirs,files) in walkdir(src_dir)
+    for file in files
+        if occursin(".proto", basename(file)) && occursin("cluster",root)
+            push!(file_arr,joinpath(root,file))
+        elseif occursin(".proto", basename(file))
+            push!(protobuf_arr,joinpath(root,file))
+        end
+    end
+end
+
+mkdir(joinpath(root_dir,"generated","protobuf"))
+mkdir(joinpath(root_dir,"generated","protobuf","cluster"))
+
+for file in file_arr
+    cp(file,joinpath(root_dir,"generated","protobuf","cluster",basename(file)))
+end
+
+for file in protobuf_arr
+    cp(file,joinpath(root_dir,"generated","protobuf",basename(file)))
+end
+
 rm(joinpath(root_dir,"generated","protocol"), force = true, recursive = true)
 
+
 #prepare the proto file
+reg_proto = r"""import\s+"\w+\/"""
+
 function prepare_proto_file(filepath::String)
     #reading text
     text = readlines(filepath, keep = true)
@@ -98,9 +125,7 @@ function prepare_proto_file(filepath::String)
     #replacing the needed
     for i in 1:length(text)
         #replacing the extension protobuf
-        text[i]=replace(text[i], "import \"protobuf/"=>"import \"")
-        #replacing the extension cluster
-        text[i]=replace(text[i], "import \"cluster/"=>"import \"")
+        text[i]=replace(text[i], reg_proto=>"import \"")
         if basename(filepath) == "grakn.proto"
             text[i] = replace(text[i], "option java_outer_classname = \"GraknProto\";" => "option java_outer_classname = \"GraknProto\"; \noption java_generic_services = true;")
         end
@@ -138,7 +163,7 @@ run(ProtoBuf.protoc(cmd))
 
 #Reading the grakn_pb.jl and change the clasnames to 
 regex_change = r"(grakn\.protocol\.)(\w+\.){2}(\w+)|(?<=\{)(grakn\.protocol\.)(\w+\.){1}(\w+)(?=\})"
-text_grakn_pb = open(f->read(f,String) ,joinpath(root_dir,"generated","grakn_pb.jl"))
+text_grakn_pb = open(f->read(f,String) ,joinpath(root_dir,"generated","core_service_pb.jl"))
 text_copy = deepcopy(text_grakn_pb)
 matches_to_change = collect(eachmatch(regex_change,text_grakn_pb))
 dict_Result = Dict{String,String}()
@@ -164,16 +189,15 @@ for (key, value) in dict_Result
 end
 
 #write back grakn_pb.jl
-write(joinpath(root_dir,"generated","grakn_pb.jl"), text_copy)
+write(joinpath(root_dir,"generated","core_service_pb.jl"), text_copy)
 
 text_graknclient = open(f->read(f,String), joinpath(root_dir,"GraknClient.jl"))
 reg_source_not_working_yet = r"include\(joinpath\(\@__DIR__,\".+|export.*" 
 match_source = collect(eachmatch(reg_source_not_working_yet, text_graknclient))
 
 for match_line in match_source
-    if !occursin("grakn.jl", match_line.match) && !occursin("grakn_pb.jl", match_line.match)
+    if !occursin("grakn.jl", match_line.match) && !occursin("core_service_pb.jl", match_line.match)
         text_graknclient = replace(text_graknclient, match_line.match=>("# " * match_line.match))
-
     end
 end
 
@@ -185,7 +209,7 @@ rm(joinpath(root_dir,"dependencies"),force = true, recursive = true)
 
 #removing the grakn_pb.jl line in grakn.jl because it givs some trouble with including
 grakn_jl_text = open(f->read(f,String), joinpath(root_dir,"generated","grakn.jl"))
-reg_tex = r".*include\(\"grakn_pb.jl\"\).*\s+"
+reg_tex = r".*include\(\"core_service_pb.jl\"\).*\s+"
 matches_to_change = collect(eachmatch(reg_tex, grakn_jl_text))
 grakn_jl_text = replace(grakn_jl_text, matches_to_change[1].match=>"")
 

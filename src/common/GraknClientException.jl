@@ -13,15 +13,15 @@
 #     @Nullable
 #     private final ErrorMessage errorMessage;
 # 
-#     public GraknClientException(String error) {
-#         super(error);
-#         this.errorMessage = null;
-#     }
-# 
 #     public GraknClientException(ErrorMessage error, Object... parameters) {
 #         super(error.message(parameters));
 #         assert !getMessage().contains("%s");
 #         this.errorMessage = error;
+#     }
+# 
+#     public GraknClientException(String message, Throwable cause) {
+#         super(message, cause);
+#         this.errorMessage = null;
 #     }
 # 
 #     public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
@@ -34,16 +34,6 @@
 #             return new GraknClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
 #         }
 #         return new GraknClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
-#     }
-# 
-#     public GraknClientException(Exception e) {
-#         super(e);
-#         this.errorMessage = null;
-#     }
-# 
-#     public GraknClientException(String message, Throwable cause) {
-#         super(message, cause);
-#         this.errorMessage = null;
 #     }
 # 
 #     public String getName() {

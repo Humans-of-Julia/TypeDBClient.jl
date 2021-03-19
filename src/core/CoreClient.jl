@@ -93,7 +93,7 @@
 # 
 #     @Override
 #     public Cluster asCluster() {
-#         throw new GraknClientException(ILLEGAL_CAST.message(className(GraknClient.Cluster.class)));
+#         throw new GraknClientException(ILLEGAL_CAST, className(GraknClient.Cluster.class));
 #     }
 # 
 #     public <RES> RES call(Supplier<RES> req) {
