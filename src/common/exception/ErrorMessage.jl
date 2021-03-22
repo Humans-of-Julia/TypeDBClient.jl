@@ -1,11 +1,15 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
 
+# Devide the ErrorClassification Client, Concept, Query and Internal is possible
+# with the following abstrat types. 
 abstract type AbstractGeneralError end
 abstract type AbstractClientError <: AbstractGeneralError end
 abstract type AbstractConceptError <: AbstractGeneralError end
 abstract type AbstractQueryError <: AbstractGeneralError end
 abstract type AbstractInternalError <: AbstractGeneralError end
 
+# The Symbol left side is assigned to the struct which will be build bellow
+# The right side of the Pair is assigned to the abstract type representing the section of error
 const error_structs = (
     :Client_CLIENT_CLOSED=>:AbstractClientError,
     :Client_SESSION_CLOSED=>:AbstractClientError, 
@@ -36,15 +40,18 @@ const error_structs = (
     :Internal_ILLEGAL_ARGUMENT=>:AbstractInternalError, 
     :Internal_ILLEGAL_CAST=>:AbstractInternalError)
 
-    for (T,A) in error_structs
-        @eval mutable struct $T <: $A
-            code_prefix::String  
-            code_number::Int 
-            message_prefix::String   
-            message_body::String
-        end
+# building the error structs according the Pairs above with some meta programming
+for (T,A) in error_structs
+    @eval mutable struct $T <: $A
+        code_prefix::String  
+        code_number::Int 
+        message_prefix::String   
+        message_body::String
     end
+end
 
+# All structs represent a unique number in a section of errors and the description. Both of them are 
+# assigned on the right side pair
 const error_messages = Dict([
         Client_CLIENT_CLOSED=>( 1, "The client has been closed and no further operation is allowed."),
         Client_SESSION_CLOSED=>( 2, "The session has been closed and no further operation is allowed."),
@@ -73,10 +80,18 @@ const error_messages = Dict([
         Query_VARIABLE_DOES_NOT_EXIST=>(1,  "The variable '%s' does not exist."),
         Query_NO_EXPLANATION=>(2,  "No explanation was found."),
         Query_BAD_ANSWER_TYPE=>(3,  "The answer type '%s' was not recognised."),
-        Query_MISSING_ANSWER=>(4,  "The required field 'answer' of type '%s' was not set.")
+        Query_MISSING_ANSWER=>(4,  "The required field 'answer' of type '%s' was not set."),
+
+        #Internal Error Section
+        Internal_UNEXPECTED_INTERRUPTION =>(1, "Unexpected thread interruption!"),
+        Internal_ILLEGAL_STATE =>(2, "Illegal state has been reached!"),
+        Internal_ILLEGAL_ARGUMENT =>(3, "Illegal argument provided: '%s'"),
+        Internal_ILLEGAL_CAST =>(4, "Illegal casting operation to '%s'.")
 ])    
 
 
+# Build the error massage according the section of errors represented by the 
+# abstract type of each section of errors
 function _buidl_error_messages(class::Type{T}) where {T<:AbstractClientError}
     items = error_messages[class]
     class("CLI",items[1], "Client Error", items[2])
