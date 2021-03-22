@@ -41,5 +41,9 @@ client-python
 test/graql_defines/
 
 Manifest.toml
+docs/.DS_Store
+docs/src/.DS_Store
+docs/src/assets/.DS_Store
 .DS_Store
+
 
