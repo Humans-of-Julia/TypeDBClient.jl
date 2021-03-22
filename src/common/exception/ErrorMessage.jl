@@ -10,8 +10,8 @@ abstract type AbstractInternalError <: AbstractGeneralError end
 
 # The Symbol left side is assigned to the struct which will be build bellow
 # The right side of the Pair is assigned to the abstract type representing the section of error
-const error_structs = (
-    :Client_CLIENT_CLOSED=>:AbstractClientError,
+const ERROR_STRUCTS = (
+    :CLIENT_CLIENT_CLOSED => :AbstractClientError,
     :Client_SESSION_CLOSED=>:AbstractClientError, 
     :Client_TRANSACTION_CLOSED=>:AbstractClientError, 
     :Client_UNABLE_TO_CONNECT=>:AbstractClientError, 
