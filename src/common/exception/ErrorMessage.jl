@@ -1,5 +1,103 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
 
+abstract type AbstractGeneralError end
+abstract type AbstractClientError <: AbstractGeneralError end
+abstract type AbstractConceptError <: AbstractGeneralError end
+abstract type AbstractQueryError <: AbstractGeneralError end
+abstract type AbstractInternalError <: AbstractGeneralError end
+
+const error_structs = (
+    :Client_CLIENT_CLOSED=>:AbstractClientError,
+    :Client_SESSION_CLOSED=>:AbstractClientError, 
+    :Client_TRANSACTION_CLOSED=>:AbstractClientError, 
+    :Client_UNABLE_TO_CONNECT=>:AbstractClientError, 
+    :Client_NEGATIVE_VALUE_NOT_ALLOWED=>:AbstractClientError,  
+    :Client_MISSING_DB_NAME=>:AbstractClientError, 
+    :Client_DB_DOES_NOT_EXIST=>:AbstractClientError, 
+    :Client_MISSING_RESPONSE=>:AbstractClientError, 
+    :Client_UNKNOWN_REQUEST_ID=>:AbstractClientError, 
+    :Client_CLUSTER_NO_PRIMARY_REPLICA_YET=>:AbstractClientError, 
+    :Client_CLUSTER_UNABLE_TO_CONNECT=>:AbstractClientError, 
+    :Client_CLUSTER_REPLICA_NOT_PRIMARY=>:AbstractClientError, 
+    :Client_CLUSTER_ALL_NODES_FAILED=>:AbstractClientError, 
+    :Concept_INVALID_CONCEPT_CASTING=>:AbstractConceptError, 
+    :Concept_MISSING_TRANSACTION=>:AbstractConceptError,  
+    :Concept_MISSING_IID=>:AbstractConceptError, 
+    :Concept_MISSING_LABEL=>:AbstractConceptError, 
+    :Concept_BAD_ENCODING=>:AbstractConceptError, 
+    :Concept_BAD_VALUE_TYPE=>:AbstractConceptError, 
+    :Concept_BAD_ATTRIBUTE_VALUE=>:AbstractConceptError, 
+    :Query_VARIABLE_DOES_NOT_EXIST=>:AbstractQueryError, 
+    :Query_NO_EXPLANATION=>:AbstractQueryError,  
+    :Query_BAD_ANSWER_TYPE=>:AbstractQueryError,  
+    :Query_MISSING_ANSWER=>:AbstractQueryError,  
+    :Internal_UNEXPECTED_INTERRUPTION=>:AbstractInternalError, 
+    :Internal_ILLEGAL_STATE=>:AbstractInternalError, 
+    :Internal_ILLEGAL_ARGUMENT=>:AbstractInternalError, 
+    :Internal_ILLEGAL_CAST=>:AbstractInternalError)
+
+    for (T,A) in error_structs
+        @eval mutable struct $T <: $A
+            code_prefix::String  
+            code_number::Int 
+            message_prefix::String   
+            message_body::String
+        end
+    end
+
+const error_messages = Dict([
+        Client_CLIENT_CLOSED=>( 1, "The client has been closed and no further operation is allowed."),
+        Client_SESSION_CLOSED=>( 2, "The session has been closed and no further operation is allowed."),
+        Client_TRANSACTION_CLOSED=>( 3, "The transaction has been closed and no further operation is allowed."),
+        Client_UNABLE_TO_CONNECT=>(4, "Unable to connect to Grakn server."),
+        Client_NEGATIVE_VALUE_NOT_ALLOWED=>(5, "Value cannot be less than 1, was: '%d'."),
+        Client_MISSING_DB_NAME=>(6,  "Database name cannot be null."),
+        Client_DB_DOES_NOT_EXIST=>(7,  "The database '%s' does not exist."),
+        Client_MISSING_RESPONSE=>(8,  "Unexpected empty response for request ID '%s'."),
+        Client_UNKNOWN_REQUEST_ID=>(9,  "Received a response with unknown request id '%s'."),
+        Client_CLUSTER_NO_PRIMARY_REPLICA_YET=>(10,  "No replica has been marked as the primary replica for latest known term '%d'."),
+        Client_CLUSTER_UNABLE_TO_CONNECT=>(11,  "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '%s'."),
+        Client_CLUSTER_REPLICA_NOT_PRIMARY=>(12,  "The replica is not the primary replica."),
+        Client_CLUSTER_ALL_NODES_FAILED=>(13,  "Attempted connecting to all cluster members, but the following errors occurred: \n%s"),
+    
+        ### Conept Error Section
+        Concept_INVALID_CONCEPT_CASTING=>(1, "Invalid concept conversion from '%s' to '%s'."),
+        Concept_MISSING_TRANSACTION=>(2,  "Transaction cannot be null."),
+        Concept_MISSING_IID=>(3,  "IID cannot be null or empty."),
+        Concept_MISSING_LABEL=>(4,  "Label cannot be null or empty."),
+        Concept_BAD_ENCODING=>(5,  "The encoding '%s' was not recognised."),
+        Concept_BAD_VALUE_TYPE=>(6,  "The value type '%s' was not recognised."),
+        Concept_BAD_ATTRIBUTE_VALUE=>(7,  "The attribute value '%s' was not recognised."),
+
+        # Query Error Section
+        Query_VARIABLE_DOES_NOT_EXIST=>(1,  "The variable '%s' does not exist."),
+        Query_NO_EXPLANATION=>(2,  "No explanation was found."),
+        Query_BAD_ANSWER_TYPE=>(3,  "The answer type '%s' was not recognised."),
+        Query_MISSING_ANSWER=>(4,  "The required field 'answer' of type '%s' was not set.")
+])    
+
+
+function _buidl_error_messages(class::Type{T}) where {T<:AbstractClientError}
+    items = error_messages[class]
+    class("CLI",items[1], "Client Error", items[2])
+end
+
+function _buidl_error_messages(class::Type{T}) where {T<:AbstractConceptError}
+    items = error_messages[class]
+    class("CON",items[1], "Concept Error", items[2])
+end
+
+function _buidl_error_messages(class::Type{T}) where {T<:AbstractQueryError}
+    items = error_messages[class]
+    class("QRY",items[1], "Query Error", items[2])
+end
+
+function _buidl_error_messages(class::Type{T}) where {T<:AbstractQueryError}
+    items = error_messages[class]
+    class("INT",items[1], "Internal Error", items[2])
+end
+
+
 # 
 # package grakn.client.common.exception;
 # 
