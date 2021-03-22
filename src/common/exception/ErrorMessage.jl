@@ -10,8 +10,8 @@ abstract type AbstractInternalError <: AbstractGeneralError end
 
 # The Symbol left side is assigned to the struct which will be build bellow
 # The right side of the Pair is assigned to the abstract type representing the section of error
-const error_structs = (
-    :Client_CLIENT_CLOSED=>:AbstractClientError,
+const ERROR_STRUCTS = (
+    :CLIENT_CLIENT_CLOSED => :AbstractClientError,
     :Client_SESSION_CLOSED=>:AbstractClientError, 
     :Client_TRANSACTION_CLOSED=>:AbstractClientError, 
     :Client_UNABLE_TO_CONNECT=>:AbstractClientError, 
@@ -53,7 +53,7 @@ end
 # All structs represent a unique number in a section of errors and the description. Both of them are 
 # assigned on the right side pair
 const error_messages = Dict([
-        Client_CLIENT_CLOSED=>( 1, "The client has been closed and no further operation is allowed."),
+        CLIENT_CLIENT_CLOSED => (1, "The client has been closed and no further operation is allowed."),
         Client_SESSION_CLOSED=>( 2, "The session has been closed and no further operation is allowed."),
         Client_TRANSACTION_CLOSED=>( 3, "The transaction has been closed and no further operation is allowed."),
         Client_UNABLE_TO_CONNECT=>(4, "Unable to connect to Grakn server."),
@@ -92,22 +92,22 @@ const error_messages = Dict([
 
 # Build the error massage according the section of errors represented by the 
 # abstract type of each section of errors
-function _buidl_error_messages(class::Type{T}) where {T<:AbstractClientError}
+function _build_error_messages(class::Type{T}) where {T<:AbstractClientError}
     items = error_messages[class]
     class("CLI",items[1], "Client Error", items[2])
 end
 
-function _buidl_error_messages(class::Type{T}) where {T<:AbstractConceptError}
+function _build_error_messages(class::Type{T}) where {T<:AbstractConceptError}
     items = error_messages[class]
     class("CON",items[1], "Concept Error", items[2])
 end
 
-function _buidl_error_messages(class::Type{T}) where {T<:AbstractQueryError}
+function _build_error_messages(class::Type{T}) where {T<:AbstractQueryError}
     items = error_messages[class]
     class("QRY",items[1], "Query Error", items[2])
 end
 
-function _buidl_error_messages(class::Type{T}) where {T<:AbstractQueryError}
+function _build_error_messages(class::Type{T}) where {T<:AbstractQueryError}
     items = error_messages[class]
     class("INT",items[1], "Internal Error", items[2])
 end

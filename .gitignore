@@ -25,9 +25,11 @@ docs/site/
 # ignore local user specific files
 .git
 .vscode
-# Manifest.toml
-# test/Manifest.toml
-# docs/Manifest.toml
+Manifest.toml
+test/Manifest.toml
+docs/Manifest.toml
+.DS_Store
+src/.DS_Store
 
 # ignore julia internal git files in the dev folder
 _git2_*
@@ -41,5 +43,9 @@ client-python
 test/graql_defines/
 
 Manifest.toml
+docs/.DS_Store
+docs/src/.DS_Store
+docs/src/assets/.DS_Store
 .DS_Store
+
 
