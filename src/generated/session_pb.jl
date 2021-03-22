@@ -1,5 +1,3 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
-
 # syntax: proto3
 using ProtoBuf
 import ProtoBuf.meta
@@ -73,7 +71,7 @@ function meta(::Type{Session_Open_Res})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Session_Open_Res)
             __meta_Session_Open_Res[] = target = ProtoMeta(Session_Open_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Array{UInt8,1}]
+            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Array{UInt8,1}, :server_duration_millis => Int32]
             meta(target, Session_Open_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Session_Open_Res[]
@@ -82,6 +80,8 @@ end
 function Base.getproperty(obj::Session_Open_Res, name::Symbol)
     if name === :session_id
         return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
+    elseif name === :server_duration_millis
+        return (obj.__protobuf_jl_internal_values[name])::Int32
     else
         getfield(obj, name)
     end

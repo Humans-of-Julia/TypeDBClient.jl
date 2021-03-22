@@ -1,16 +1,14 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
-
 # syntax: proto3
 using ProtoBuf
 import ProtoBuf.meta
 
-mutable struct Query_Match_Req <: ProtoType
+mutable struct QueryManager_Match_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Match_Req(; kwargs...)
-        obj = new(meta(Query_Match_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Match_Req(; kwargs...)
+        obj = new(meta(QueryManager_Match_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -21,19 +19,19 @@ mutable struct Query_Match_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Match_Req
-const __meta_Query_Match_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_Match_Req})
+end # mutable struct QueryManager_Match_Req
+const __meta_QueryManager_Match_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Match_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Match_Req)
-            __meta_Query_Match_Req[] = target = ProtoMeta(Query_Match_Req)
+        if !isassigned(__meta_QueryManager_Match_Req)
+            __meta_QueryManager_Match_Req[] = target = ProtoMeta(QueryManager_Match_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_Match_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Match_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Match_Req[]
+        __meta_QueryManager_Match_Req[]
     end
 end
-function Base.getproperty(obj::Query_Match_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_Match_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -41,13 +39,13 @@ function Base.getproperty(obj::Query_Match_Req, name::Symbol)
     end
 end
 
-mutable struct Query_Match_Res <: ProtoType
+mutable struct QueryManager_Match_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Match_Res(; kwargs...)
-        obj = new(meta(Query_Match_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Match_ResPart(; kwargs...)
+        obj = new(meta(QueryManager_Match_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -58,19 +56,19 @@ mutable struct Query_Match_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Match_Res
-const __meta_Query_Match_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_Match_Res})
+end # mutable struct QueryManager_Match_ResPart
+const __meta_QueryManager_Match_ResPart = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Match_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Match_Res)
-            __meta_Query_Match_Res[] = target = ProtoMeta(Query_Match_Res)
+        if !isassigned(__meta_QueryManager_Match_ResPart)
+            __meta_QueryManager_Match_ResPart[] = target = ProtoMeta(QueryManager_Match_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:answers => Base.Vector{ConceptMap}]
-            meta(target, Query_Match_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Match_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Match_Res[]
+        __meta_QueryManager_Match_ResPart[]
     end
 end
-function Base.getproperty(obj::Query_Match_Res, name::Symbol)
+function Base.getproperty(obj::QueryManager_Match_ResPart, name::Symbol)
     if name === :answers
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{ConceptMap}
     else
@@ -78,13 +76,13 @@ function Base.getproperty(obj::Query_Match_Res, name::Symbol)
     end
 end
 
-mutable struct Query_Match <: ProtoType
+mutable struct QueryManager_Match <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Match(; kwargs...)
-        obj = new(meta(Query_Match), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Match(; kwargs...)
+        obj = new(meta(QueryManager_Match), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -95,26 +93,26 @@ mutable struct Query_Match <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Match
-const __meta_Query_Match = Ref{ProtoMeta}()
-function meta(::Type{Query_Match})
+end # mutable struct QueryManager_Match
+const __meta_QueryManager_Match = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Match})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Match)
-            __meta_Query_Match[] = target = ProtoMeta(Query_Match)
+        if !isassigned(__meta_QueryManager_Match)
+            __meta_QueryManager_Match[] = target = ProtoMeta(QueryManager_Match)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Match, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Match, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Match[]
+        __meta_QueryManager_Match[]
     end
 end
 
-mutable struct Query_MatchAggregate_Req <: ProtoType
+mutable struct QueryManager_MatchAggregate_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchAggregate_Req(; kwargs...)
-        obj = new(meta(Query_MatchAggregate_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchAggregate_Req(; kwargs...)
+        obj = new(meta(QueryManager_MatchAggregate_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -125,19 +123,19 @@ mutable struct Query_MatchAggregate_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchAggregate_Req
-const __meta_Query_MatchAggregate_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchAggregate_Req})
+end # mutable struct QueryManager_MatchAggregate_Req
+const __meta_QueryManager_MatchAggregate_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchAggregate_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchAggregate_Req)
-            __meta_Query_MatchAggregate_Req[] = target = ProtoMeta(Query_MatchAggregate_Req)
+        if !isassigned(__meta_QueryManager_MatchAggregate_Req)
+            __meta_QueryManager_MatchAggregate_Req[] = target = ProtoMeta(QueryManager_MatchAggregate_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_MatchAggregate_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchAggregate_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchAggregate_Req[]
+        __meta_QueryManager_MatchAggregate_Req[]
     end
 end
-function Base.getproperty(obj::Query_MatchAggregate_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_MatchAggregate_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -145,13 +143,13 @@ function Base.getproperty(obj::Query_MatchAggregate_Req, name::Symbol)
     end
 end
 
-mutable struct Query_MatchAggregate_Res <: ProtoType
+mutable struct QueryManager_MatchAggregate_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchAggregate_Res(; kwargs...)
-        obj = new(meta(Query_MatchAggregate_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchAggregate_Res(; kwargs...)
+        obj = new(meta(QueryManager_MatchAggregate_Res), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -162,19 +160,19 @@ mutable struct Query_MatchAggregate_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchAggregate_Res
-const __meta_Query_MatchAggregate_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchAggregate_Res})
+end # mutable struct QueryManager_MatchAggregate_Res
+const __meta_QueryManager_MatchAggregate_Res = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchAggregate_Res})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchAggregate_Res)
-            __meta_Query_MatchAggregate_Res[] = target = ProtoMeta(Query_MatchAggregate_Res)
+        if !isassigned(__meta_QueryManager_MatchAggregate_Res)
+            __meta_QueryManager_MatchAggregate_Res[] = target = ProtoMeta(QueryManager_MatchAggregate_Res)
             allflds = Pair{Symbol,Union{Type,String}}[:answer => Numeric]
-            meta(target, Query_MatchAggregate_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchAggregate_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchAggregate_Res[]
+        __meta_QueryManager_MatchAggregate_Res[]
     end
 end
-function Base.getproperty(obj::Query_MatchAggregate_Res, name::Symbol)
+function Base.getproperty(obj::QueryManager_MatchAggregate_Res, name::Symbol)
     if name === :answer
         return (obj.__protobuf_jl_internal_values[name])::Numeric
     else
@@ -182,13 +180,13 @@ function Base.getproperty(obj::Query_MatchAggregate_Res, name::Symbol)
     end
 end
 
-mutable struct Query_MatchAggregate <: ProtoType
+mutable struct QueryManager_MatchAggregate <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchAggregate(; kwargs...)
-        obj = new(meta(Query_MatchAggregate), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchAggregate(; kwargs...)
+        obj = new(meta(QueryManager_MatchAggregate), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -199,26 +197,26 @@ mutable struct Query_MatchAggregate <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchAggregate
-const __meta_Query_MatchAggregate = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchAggregate})
+end # mutable struct QueryManager_MatchAggregate
+const __meta_QueryManager_MatchAggregate = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchAggregate})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchAggregate)
-            __meta_Query_MatchAggregate[] = target = ProtoMeta(Query_MatchAggregate)
+        if !isassigned(__meta_QueryManager_MatchAggregate)
+            __meta_QueryManager_MatchAggregate[] = target = ProtoMeta(QueryManager_MatchAggregate)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_MatchAggregate, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchAggregate, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchAggregate[]
+        __meta_QueryManager_MatchAggregate[]
     end
 end
 
-mutable struct Query_MatchGroup_Req <: ProtoType
+mutable struct QueryManager_MatchGroup_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchGroup_Req(; kwargs...)
-        obj = new(meta(Query_MatchGroup_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchGroup_Req(; kwargs...)
+        obj = new(meta(QueryManager_MatchGroup_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -229,19 +227,19 @@ mutable struct Query_MatchGroup_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchGroup_Req
-const __meta_Query_MatchGroup_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchGroup_Req})
+end # mutable struct QueryManager_MatchGroup_Req
+const __meta_QueryManager_MatchGroup_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchGroup_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchGroup_Req)
-            __meta_Query_MatchGroup_Req[] = target = ProtoMeta(Query_MatchGroup_Req)
+        if !isassigned(__meta_QueryManager_MatchGroup_Req)
+            __meta_QueryManager_MatchGroup_Req[] = target = ProtoMeta(QueryManager_MatchGroup_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_MatchGroup_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchGroup_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchGroup_Req[]
+        __meta_QueryManager_MatchGroup_Req[]
     end
 end
-function Base.getproperty(obj::Query_MatchGroup_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_MatchGroup_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -249,13 +247,13 @@ function Base.getproperty(obj::Query_MatchGroup_Req, name::Symbol)
     end
 end
 
-mutable struct Query_MatchGroup_Res <: ProtoType
+mutable struct QueryManager_MatchGroup_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchGroup_Res(; kwargs...)
-        obj = new(meta(Query_MatchGroup_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchGroup_ResPart(; kwargs...)
+        obj = new(meta(QueryManager_MatchGroup_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -266,19 +264,19 @@ mutable struct Query_MatchGroup_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchGroup_Res
-const __meta_Query_MatchGroup_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchGroup_Res})
+end # mutable struct QueryManager_MatchGroup_ResPart
+const __meta_QueryManager_MatchGroup_ResPart = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchGroup_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchGroup_Res)
-            __meta_Query_MatchGroup_Res[] = target = ProtoMeta(Query_MatchGroup_Res)
+        if !isassigned(__meta_QueryManager_MatchGroup_ResPart)
+            __meta_QueryManager_MatchGroup_ResPart[] = target = ProtoMeta(QueryManager_MatchGroup_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:answers => Base.Vector{ConceptMapGroup}]
-            meta(target, Query_MatchGroup_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchGroup_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchGroup_Res[]
+        __meta_QueryManager_MatchGroup_ResPart[]
     end
 end
-function Base.getproperty(obj::Query_MatchGroup_Res, name::Symbol)
+function Base.getproperty(obj::QueryManager_MatchGroup_ResPart, name::Symbol)
     if name === :answers
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{ConceptMapGroup}
     else
@@ -286,13 +284,13 @@ function Base.getproperty(obj::Query_MatchGroup_Res, name::Symbol)
     end
 end
 
-mutable struct Query_MatchGroup <: ProtoType
+mutable struct QueryManager_MatchGroup <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchGroup(; kwargs...)
-        obj = new(meta(Query_MatchGroup), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchGroup(; kwargs...)
+        obj = new(meta(QueryManager_MatchGroup), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -303,26 +301,26 @@ mutable struct Query_MatchGroup <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchGroup
-const __meta_Query_MatchGroup = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchGroup})
+end # mutable struct QueryManager_MatchGroup
+const __meta_QueryManager_MatchGroup = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchGroup})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchGroup)
-            __meta_Query_MatchGroup[] = target = ProtoMeta(Query_MatchGroup)
+        if !isassigned(__meta_QueryManager_MatchGroup)
+            __meta_QueryManager_MatchGroup[] = target = ProtoMeta(QueryManager_MatchGroup)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_MatchGroup, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchGroup, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchGroup[]
+        __meta_QueryManager_MatchGroup[]
     end
 end
 
-mutable struct Query_MatchGroupAggregate_Req <: ProtoType
+mutable struct QueryManager_MatchGroupAggregate_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchGroupAggregate_Req(; kwargs...)
-        obj = new(meta(Query_MatchGroupAggregate_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchGroupAggregate_Req(; kwargs...)
+        obj = new(meta(QueryManager_MatchGroupAggregate_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -333,19 +331,19 @@ mutable struct Query_MatchGroupAggregate_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchGroupAggregate_Req
-const __meta_Query_MatchGroupAggregate_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchGroupAggregate_Req})
+end # mutable struct QueryManager_MatchGroupAggregate_Req
+const __meta_QueryManager_MatchGroupAggregate_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchGroupAggregate_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchGroupAggregate_Req)
-            __meta_Query_MatchGroupAggregate_Req[] = target = ProtoMeta(Query_MatchGroupAggregate_Req)
+        if !isassigned(__meta_QueryManager_MatchGroupAggregate_Req)
+            __meta_QueryManager_MatchGroupAggregate_Req[] = target = ProtoMeta(QueryManager_MatchGroupAggregate_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_MatchGroupAggregate_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchGroupAggregate_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchGroupAggregate_Req[]
+        __meta_QueryManager_MatchGroupAggregate_Req[]
     end
 end
-function Base.getproperty(obj::Query_MatchGroupAggregate_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_MatchGroupAggregate_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -353,13 +351,13 @@ function Base.getproperty(obj::Query_MatchGroupAggregate_Req, name::Symbol)
     end
 end
 
-mutable struct Query_MatchGroupAggregate_Res <: ProtoType
+mutable struct QueryManager_MatchGroupAggregate_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchGroupAggregate_Res(; kwargs...)
-        obj = new(meta(Query_MatchGroupAggregate_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchGroupAggregate_ResPart(; kwargs...)
+        obj = new(meta(QueryManager_MatchGroupAggregate_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -370,19 +368,19 @@ mutable struct Query_MatchGroupAggregate_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchGroupAggregate_Res
-const __meta_Query_MatchGroupAggregate_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchGroupAggregate_Res})
+end # mutable struct QueryManager_MatchGroupAggregate_ResPart
+const __meta_QueryManager_MatchGroupAggregate_ResPart = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchGroupAggregate_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchGroupAggregate_Res)
-            __meta_Query_MatchGroupAggregate_Res[] = target = ProtoMeta(Query_MatchGroupAggregate_Res)
+        if !isassigned(__meta_QueryManager_MatchGroupAggregate_ResPart)
+            __meta_QueryManager_MatchGroupAggregate_ResPart[] = target = ProtoMeta(QueryManager_MatchGroupAggregate_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:answers => Base.Vector{NumericGroup}]
-            meta(target, Query_MatchGroupAggregate_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchGroupAggregate_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchGroupAggregate_Res[]
+        __meta_QueryManager_MatchGroupAggregate_ResPart[]
     end
 end
-function Base.getproperty(obj::Query_MatchGroupAggregate_Res, name::Symbol)
+function Base.getproperty(obj::QueryManager_MatchGroupAggregate_ResPart, name::Symbol)
     if name === :answers
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{NumericGroup}
     else
@@ -390,13 +388,13 @@ function Base.getproperty(obj::Query_MatchGroupAggregate_Res, name::Symbol)
     end
 end
 
-mutable struct Query_MatchGroupAggregate <: ProtoType
+mutable struct QueryManager_MatchGroupAggregate <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_MatchGroupAggregate(; kwargs...)
-        obj = new(meta(Query_MatchGroupAggregate), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_MatchGroupAggregate(; kwargs...)
+        obj = new(meta(QueryManager_MatchGroupAggregate), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -407,26 +405,26 @@ mutable struct Query_MatchGroupAggregate <: ProtoType
         end
         obj
     end
-end # mutable struct Query_MatchGroupAggregate
-const __meta_Query_MatchGroupAggregate = Ref{ProtoMeta}()
-function meta(::Type{Query_MatchGroupAggregate})
+end # mutable struct QueryManager_MatchGroupAggregate
+const __meta_QueryManager_MatchGroupAggregate = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_MatchGroupAggregate})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_MatchGroupAggregate)
-            __meta_Query_MatchGroupAggregate[] = target = ProtoMeta(Query_MatchGroupAggregate)
+        if !isassigned(__meta_QueryManager_MatchGroupAggregate)
+            __meta_QueryManager_MatchGroupAggregate[] = target = ProtoMeta(QueryManager_MatchGroupAggregate)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_MatchGroupAggregate, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_MatchGroupAggregate, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_MatchGroupAggregate[]
+        __meta_QueryManager_MatchGroupAggregate[]
     end
 end
 
-mutable struct Query_Insert_Req <: ProtoType
+mutable struct QueryManager_Insert_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Insert_Req(; kwargs...)
-        obj = new(meta(Query_Insert_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Insert_Req(; kwargs...)
+        obj = new(meta(QueryManager_Insert_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -437,19 +435,19 @@ mutable struct Query_Insert_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Insert_Req
-const __meta_Query_Insert_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_Insert_Req})
+end # mutable struct QueryManager_Insert_Req
+const __meta_QueryManager_Insert_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Insert_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Insert_Req)
-            __meta_Query_Insert_Req[] = target = ProtoMeta(Query_Insert_Req)
+        if !isassigned(__meta_QueryManager_Insert_Req)
+            __meta_QueryManager_Insert_Req[] = target = ProtoMeta(QueryManager_Insert_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_Insert_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Insert_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Insert_Req[]
+        __meta_QueryManager_Insert_Req[]
     end
 end
-function Base.getproperty(obj::Query_Insert_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_Insert_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -457,13 +455,13 @@ function Base.getproperty(obj::Query_Insert_Req, name::Symbol)
     end
 end
 
-mutable struct Query_Insert_Res <: ProtoType
+mutable struct QueryManager_Insert_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Insert_Res(; kwargs...)
-        obj = new(meta(Query_Insert_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Insert_ResPart(; kwargs...)
+        obj = new(meta(QueryManager_Insert_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -474,19 +472,19 @@ mutable struct Query_Insert_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Insert_Res
-const __meta_Query_Insert_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_Insert_Res})
+end # mutable struct QueryManager_Insert_ResPart
+const __meta_QueryManager_Insert_ResPart = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Insert_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Insert_Res)
-            __meta_Query_Insert_Res[] = target = ProtoMeta(Query_Insert_Res)
+        if !isassigned(__meta_QueryManager_Insert_ResPart)
+            __meta_QueryManager_Insert_ResPart[] = target = ProtoMeta(QueryManager_Insert_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:answers => Base.Vector{ConceptMap}]
-            meta(target, Query_Insert_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Insert_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Insert_Res[]
+        __meta_QueryManager_Insert_ResPart[]
     end
 end
-function Base.getproperty(obj::Query_Insert_Res, name::Symbol)
+function Base.getproperty(obj::QueryManager_Insert_ResPart, name::Symbol)
     if name === :answers
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{ConceptMap}
     else
@@ -494,13 +492,13 @@ function Base.getproperty(obj::Query_Insert_Res, name::Symbol)
     end
 end
 
-mutable struct Query_Insert <: ProtoType
+mutable struct QueryManager_Insert <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Insert(; kwargs...)
-        obj = new(meta(Query_Insert), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Insert(; kwargs...)
+        obj = new(meta(QueryManager_Insert), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -511,26 +509,26 @@ mutable struct Query_Insert <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Insert
-const __meta_Query_Insert = Ref{ProtoMeta}()
-function meta(::Type{Query_Insert})
+end # mutable struct QueryManager_Insert
+const __meta_QueryManager_Insert = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Insert})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Insert)
-            __meta_Query_Insert[] = target = ProtoMeta(Query_Insert)
+        if !isassigned(__meta_QueryManager_Insert)
+            __meta_QueryManager_Insert[] = target = ProtoMeta(QueryManager_Insert)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Insert, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Insert, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Insert[]
+        __meta_QueryManager_Insert[]
     end
 end
 
-mutable struct Query_Delete_Req <: ProtoType
+mutable struct QueryManager_Delete_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Delete_Req(; kwargs...)
-        obj = new(meta(Query_Delete_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Delete_Req(; kwargs...)
+        obj = new(meta(QueryManager_Delete_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -541,19 +539,19 @@ mutable struct Query_Delete_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Delete_Req
-const __meta_Query_Delete_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_Delete_Req})
+end # mutable struct QueryManager_Delete_Req
+const __meta_QueryManager_Delete_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Delete_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Delete_Req)
-            __meta_Query_Delete_Req[] = target = ProtoMeta(Query_Delete_Req)
+        if !isassigned(__meta_QueryManager_Delete_Req)
+            __meta_QueryManager_Delete_Req[] = target = ProtoMeta(QueryManager_Delete_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_Delete_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Delete_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Delete_Req[]
+        __meta_QueryManager_Delete_Req[]
     end
 end
-function Base.getproperty(obj::Query_Delete_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_Delete_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -561,13 +559,13 @@ function Base.getproperty(obj::Query_Delete_Req, name::Symbol)
     end
 end
 
-mutable struct Query_Delete_Res <: ProtoType
+mutable struct QueryManager_Delete_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Delete_Res(; kwargs...)
-        obj = new(meta(Query_Delete_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Delete_Res(; kwargs...)
+        obj = new(meta(QueryManager_Delete_Res), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -578,26 +576,26 @@ mutable struct Query_Delete_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Delete_Res
-const __meta_Query_Delete_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_Delete_Res})
+end # mutable struct QueryManager_Delete_Res
+const __meta_QueryManager_Delete_Res = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Delete_Res})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Delete_Res)
-            __meta_Query_Delete_Res[] = target = ProtoMeta(Query_Delete_Res)
+        if !isassigned(__meta_QueryManager_Delete_Res)
+            __meta_QueryManager_Delete_Res[] = target = ProtoMeta(QueryManager_Delete_Res)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Delete_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Delete_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Delete_Res[]
+        __meta_QueryManager_Delete_Res[]
     end
 end
 
-mutable struct Query_Delete <: ProtoType
+mutable struct QueryManager_Delete <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Delete(; kwargs...)
-        obj = new(meta(Query_Delete), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Delete(; kwargs...)
+        obj = new(meta(QueryManager_Delete), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -608,26 +606,26 @@ mutable struct Query_Delete <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Delete
-const __meta_Query_Delete = Ref{ProtoMeta}()
-function meta(::Type{Query_Delete})
+end # mutable struct QueryManager_Delete
+const __meta_QueryManager_Delete = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Delete})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Delete)
-            __meta_Query_Delete[] = target = ProtoMeta(Query_Delete)
+        if !isassigned(__meta_QueryManager_Delete)
+            __meta_QueryManager_Delete[] = target = ProtoMeta(QueryManager_Delete)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Delete, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Delete, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Delete[]
+        __meta_QueryManager_Delete[]
     end
 end
 
-mutable struct Query_Update_Req <: ProtoType
+mutable struct QueryManager_Update_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Update_Req(; kwargs...)
-        obj = new(meta(Query_Update_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Update_Req(; kwargs...)
+        obj = new(meta(QueryManager_Update_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -638,19 +636,19 @@ mutable struct Query_Update_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Update_Req
-const __meta_Query_Update_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_Update_Req})
+end # mutable struct QueryManager_Update_Req
+const __meta_QueryManager_Update_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Update_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Update_Req)
-            __meta_Query_Update_Req[] = target = ProtoMeta(Query_Update_Req)
+        if !isassigned(__meta_QueryManager_Update_Req)
+            __meta_QueryManager_Update_Req[] = target = ProtoMeta(QueryManager_Update_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_Update_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Update_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Update_Req[]
+        __meta_QueryManager_Update_Req[]
     end
 end
-function Base.getproperty(obj::Query_Update_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_Update_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -658,13 +656,13 @@ function Base.getproperty(obj::Query_Update_Req, name::Symbol)
     end
 end
 
-mutable struct Query_Update_Res <: ProtoType
+mutable struct QueryManager_Update_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Update_Res(; kwargs...)
-        obj = new(meta(Query_Update_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Update_ResPart(; kwargs...)
+        obj = new(meta(QueryManager_Update_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -675,19 +673,19 @@ mutable struct Query_Update_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Update_Res
-const __meta_Query_Update_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_Update_Res})
+end # mutable struct QueryManager_Update_ResPart
+const __meta_QueryManager_Update_ResPart = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Update_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Update_Res)
-            __meta_Query_Update_Res[] = target = ProtoMeta(Query_Update_Res)
+        if !isassigned(__meta_QueryManager_Update_ResPart)
+            __meta_QueryManager_Update_ResPart[] = target = ProtoMeta(QueryManager_Update_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:answers => Base.Vector{ConceptMap}]
-            meta(target, Query_Update_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Update_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Update_Res[]
+        __meta_QueryManager_Update_ResPart[]
     end
 end
-function Base.getproperty(obj::Query_Update_Res, name::Symbol)
+function Base.getproperty(obj::QueryManager_Update_ResPart, name::Symbol)
     if name === :answers
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{ConceptMap}
     else
@@ -695,13 +693,13 @@ function Base.getproperty(obj::Query_Update_Res, name::Symbol)
     end
 end
 
-mutable struct Query_Update <: ProtoType
+mutable struct QueryManager_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Update(; kwargs...)
-        obj = new(meta(Query_Update), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_ResPart(; kwargs...)
+        obj = new(meta(QueryManager_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -712,26 +710,74 @@ mutable struct Query_Update <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Update
-const __meta_Query_Update = Ref{ProtoMeta}()
-function meta(::Type{Query_Update})
+end # mutable struct QueryManager_ResPart
+const __meta_QueryManager_ResPart = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Update)
-            __meta_Query_Update[] = target = ProtoMeta(Query_Update)
+        if !isassigned(__meta_QueryManager_ResPart)
+            __meta_QueryManager_ResPart[] = target = ProtoMeta(QueryManager_ResPart)
+            fnum = Int[100,101,102,103,104]
+            allflds = Pair{Symbol,Union{Type,String}}[:match_res_part => QueryManager_Match_ResPart, :match_group_res_part => QueryManager_MatchGroup_ResPart, :match_group_aggregate_res_part => QueryManager_MatchGroupAggregate_ResPart, :insert_res_part => QueryManager_Insert_ResPart, :update_res_part => QueryManager_Update_ResPart]
+            oneofs = Int[1,1,1,1,1]
+            oneof_names = Symbol[Symbol("res")]
+            meta(target, QueryManager_ResPart, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+        end
+        __meta_QueryManager_ResPart[]
+    end
+end
+function Base.getproperty(obj::QueryManager_ResPart, name::Symbol)
+    if name === :match_res_part
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Match_ResPart
+    elseif name === :match_group_res_part
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_MatchGroup_ResPart
+    elseif name === :match_group_aggregate_res_part
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_MatchGroupAggregate_ResPart
+    elseif name === :insert_res_part
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Insert_ResPart
+    elseif name === :update_res_part
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Update_ResPart
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct QueryManager_Update <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function QueryManager_Update(; kwargs...)
+        obj = new(meta(QueryManager_Update), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct QueryManager_Update
+const __meta_QueryManager_Update = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Update})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_QueryManager_Update)
+            __meta_QueryManager_Update[] = target = ProtoMeta(QueryManager_Update)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Update, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Update, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Update[]
+        __meta_QueryManager_Update[]
     end
 end
 
-mutable struct Query_Define_Req <: ProtoType
+mutable struct QueryManager_Define_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Define_Req(; kwargs...)
-        obj = new(meta(Query_Define_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Define_Req(; kwargs...)
+        obj = new(meta(QueryManager_Define_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -742,19 +788,19 @@ mutable struct Query_Define_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Define_Req
-const __meta_Query_Define_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_Define_Req})
+end # mutable struct QueryManager_Define_Req
+const __meta_QueryManager_Define_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Define_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Define_Req)
-            __meta_Query_Define_Req[] = target = ProtoMeta(Query_Define_Req)
+        if !isassigned(__meta_QueryManager_Define_Req)
+            __meta_QueryManager_Define_Req[] = target = ProtoMeta(QueryManager_Define_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_Define_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Define_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Define_Req[]
+        __meta_QueryManager_Define_Req[]
     end
 end
-function Base.getproperty(obj::Query_Define_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_Define_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -762,13 +808,13 @@ function Base.getproperty(obj::Query_Define_Req, name::Symbol)
     end
 end
 
-mutable struct Query_Define_Res <: ProtoType
+mutable struct QueryManager_Define_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Define_Res(; kwargs...)
-        obj = new(meta(Query_Define_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Define_Res(; kwargs...)
+        obj = new(meta(QueryManager_Define_Res), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -779,26 +825,26 @@ mutable struct Query_Define_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Define_Res
-const __meta_Query_Define_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_Define_Res})
+end # mutable struct QueryManager_Define_Res
+const __meta_QueryManager_Define_Res = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Define_Res})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Define_Res)
-            __meta_Query_Define_Res[] = target = ProtoMeta(Query_Define_Res)
+        if !isassigned(__meta_QueryManager_Define_Res)
+            __meta_QueryManager_Define_Res[] = target = ProtoMeta(QueryManager_Define_Res)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Define_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Define_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Define_Res[]
+        __meta_QueryManager_Define_Res[]
     end
 end
 
-mutable struct Query_Define <: ProtoType
+mutable struct QueryManager_Define <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Define(; kwargs...)
-        obj = new(meta(Query_Define), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Define(; kwargs...)
+        obj = new(meta(QueryManager_Define), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -809,26 +855,26 @@ mutable struct Query_Define <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Define
-const __meta_Query_Define = Ref{ProtoMeta}()
-function meta(::Type{Query_Define})
+end # mutable struct QueryManager_Define
+const __meta_QueryManager_Define = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Define})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Define)
-            __meta_Query_Define[] = target = ProtoMeta(Query_Define)
+        if !isassigned(__meta_QueryManager_Define)
+            __meta_QueryManager_Define[] = target = ProtoMeta(QueryManager_Define)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Define, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Define, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Define[]
+        __meta_QueryManager_Define[]
     end
 end
 
-mutable struct Query_Undefine_Req <: ProtoType
+mutable struct QueryManager_Undefine_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Undefine_Req(; kwargs...)
-        obj = new(meta(Query_Undefine_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Undefine_Req(; kwargs...)
+        obj = new(meta(QueryManager_Undefine_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -839,19 +885,19 @@ mutable struct Query_Undefine_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Undefine_Req
-const __meta_Query_Undefine_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_Undefine_Req})
+end # mutable struct QueryManager_Undefine_Req
+const __meta_QueryManager_Undefine_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Undefine_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Undefine_Req)
-            __meta_Query_Undefine_Req[] = target = ProtoMeta(Query_Undefine_Req)
+        if !isassigned(__meta_QueryManager_Undefine_Req)
+            __meta_QueryManager_Undefine_Req[] = target = ProtoMeta(QueryManager_Undefine_Req)
             allflds = Pair{Symbol,Union{Type,String}}[:query => AbstractString]
-            meta(target, Query_Undefine_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Undefine_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Undefine_Req[]
+        __meta_QueryManager_Undefine_Req[]
     end
 end
-function Base.getproperty(obj::Query_Undefine_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_Undefine_Req, name::Symbol)
     if name === :query
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     else
@@ -859,13 +905,13 @@ function Base.getproperty(obj::Query_Undefine_Req, name::Symbol)
     end
 end
 
-mutable struct Query_Req <: ProtoType
+mutable struct QueryManager_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Req(; kwargs...)
-        obj = new(meta(Query_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Req(; kwargs...)
+        obj = new(meta(QueryManager_Req), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -876,54 +922,54 @@ mutable struct Query_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Req
-const __meta_Query_Req = Ref{ProtoMeta}()
-function meta(::Type{Query_Req})
+end # mutable struct QueryManager_Req
+const __meta_QueryManager_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Req})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Req)
-            __meta_Query_Req[] = target = ProtoMeta(Query_Req)
+        if !isassigned(__meta_QueryManager_Req)
+            __meta_QueryManager_Req[] = target = ProtoMeta(QueryManager_Req)
             fnum = Int[1,100,101,102,103,104,105,106,107,108]
-            allflds = Pair{Symbol,Union{Type,String}}[:options => Options, :define_req => Query_Define_Req, :undefine_req => Query_Undefine_Req, :match_req => Query_Match_Req, :match_aggregate_req => Query_MatchAggregate_Req, :match_group_req => Query_MatchGroup_Req, :match_group_aggregate_req => Query_MatchGroupAggregate_Req, :insert_req => Query_Insert_Req, :delete_req => Query_Delete_Req, :update_req => Query_Update_Req]
+            allflds = Pair{Symbol,Union{Type,String}}[:options => Options, :define_req => QueryManager_Define_Req, :undefine_req => QueryManager_Undefine_Req, :match_req => QueryManager_Match_Req, :match_aggregate_req => QueryManager_MatchAggregate_Req, :match_group_req => QueryManager_MatchGroup_Req, :match_group_aggregate_req => QueryManager_MatchGroupAggregate_Req, :insert_req => QueryManager_Insert_Req, :delete_req => QueryManager_Delete_Req, :update_req => QueryManager_Update_Req]
             oneofs = Int[0,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("req")]
-            meta(target, Query_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+            meta(target, QueryManager_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
-        __meta_Query_Req[]
+        __meta_QueryManager_Req[]
     end
 end
-function Base.getproperty(obj::Query_Req, name::Symbol)
+function Base.getproperty(obj::QueryManager_Req, name::Symbol)
     if name === :options
         return (obj.__protobuf_jl_internal_values[name])::Options
     elseif name === :define_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_Define_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Define_Req
     elseif name === :undefine_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_Undefine_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Undefine_Req
     elseif name === :match_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_Match_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Match_Req
     elseif name === :match_aggregate_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_MatchAggregate_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_MatchAggregate_Req
     elseif name === :match_group_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_MatchGroup_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_MatchGroup_Req
     elseif name === :match_group_aggregate_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_MatchGroupAggregate_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_MatchGroupAggregate_Req
     elseif name === :insert_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_Insert_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Insert_Req
     elseif name === :delete_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_Delete_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Delete_Req
     elseif name === :update_req
-        return (obj.__protobuf_jl_internal_values[name])::Query_Update_Req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Update_Req
     else
         getfield(obj, name)
     end
 end
 
-mutable struct Query_Undefine_Res <: ProtoType
+mutable struct QueryManager_Undefine_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Undefine_Res(; kwargs...)
-        obj = new(meta(Query_Undefine_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Undefine_Res(; kwargs...)
+        obj = new(meta(QueryManager_Undefine_Res), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -934,26 +980,26 @@ mutable struct Query_Undefine_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Undefine_Res
-const __meta_Query_Undefine_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_Undefine_Res})
+end # mutable struct QueryManager_Undefine_Res
+const __meta_QueryManager_Undefine_Res = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Undefine_Res})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Undefine_Res)
-            __meta_Query_Undefine_Res[] = target = ProtoMeta(Query_Undefine_Res)
+        if !isassigned(__meta_QueryManager_Undefine_Res)
+            __meta_QueryManager_Undefine_Res[] = target = ProtoMeta(QueryManager_Undefine_Res)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Undefine_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Undefine_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Undefine_Res[]
+        __meta_QueryManager_Undefine_Res[]
     end
 end
 
-mutable struct Query_Res <: ProtoType
+mutable struct QueryManager_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Res(; kwargs...)
-        obj = new(meta(Query_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Res(; kwargs...)
+        obj = new(meta(QueryManager_Res), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -964,52 +1010,42 @@ mutable struct Query_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Res
-const __meta_Query_Res = Ref{ProtoMeta}()
-function meta(::Type{Query_Res})
+end # mutable struct QueryManager_Res
+const __meta_QueryManager_Res = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Res})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Res)
-            __meta_Query_Res[] = target = ProtoMeta(Query_Res)
-            fnum = Int[100,101,102,103,104,105,106,107,108]
-            allflds = Pair{Symbol,Union{Type,String}}[:define_res => Query_Define_Res, :undefine_res => Query_Undefine_Res, :match_res => Query_Match_Res, :match_aggregate_res => Query_MatchAggregate_Res, :match_group_res => Query_MatchGroup_Res, :match_group_aggregate_res => Query_MatchGroupAggregate_Res, :insert_res => Query_Insert_Res, :delete_res => Query_Delete_Res, :update_res => Query_Update_Res]
-            oneofs = Int[1,1,1,1,1,1,1,1,1]
+        if !isassigned(__meta_QueryManager_Res)
+            __meta_QueryManager_Res[] = target = ProtoMeta(QueryManager_Res)
+            fnum = Int[100,101,102,104]
+            allflds = Pair{Symbol,Union{Type,String}}[:define_res => QueryManager_Define_Res, :undefine_res => QueryManager_Undefine_Res, :match_aggregate_res => QueryManager_MatchAggregate_Res, :delete_res => QueryManager_Delete_Res]
+            oneofs = Int[1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
-            meta(target, Query_Res, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+            meta(target, QueryManager_Res, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
-        __meta_Query_Res[]
+        __meta_QueryManager_Res[]
     end
 end
-function Base.getproperty(obj::Query_Res, name::Symbol)
+function Base.getproperty(obj::QueryManager_Res, name::Symbol)
     if name === :define_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_Define_Res
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Define_Res
     elseif name === :undefine_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_Undefine_Res
-    elseif name === :match_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_Match_Res
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Undefine_Res
     elseif name === :match_aggregate_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_MatchAggregate_Res
-    elseif name === :match_group_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_MatchGroup_Res
-    elseif name === :match_group_aggregate_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_MatchGroupAggregate_Res
-    elseif name === :insert_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_Insert_Res
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_MatchAggregate_Res
     elseif name === :delete_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_Delete_Res
-    elseif name === :update_res
-        return (obj.__protobuf_jl_internal_values[name])::Query_Update_Res
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Delete_Res
     else
         getfield(obj, name)
     end
 end
 
-mutable struct Query_Undefine <: ProtoType
+mutable struct QueryManager_Undefine <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query_Undefine(; kwargs...)
-        obj = new(meta(Query_Undefine), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager_Undefine(; kwargs...)
+        obj = new(meta(QueryManager_Undefine), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -1020,26 +1056,26 @@ mutable struct Query_Undefine <: ProtoType
         end
         obj
     end
-end # mutable struct Query_Undefine
-const __meta_Query_Undefine = Ref{ProtoMeta}()
-function meta(::Type{Query_Undefine})
+end # mutable struct QueryManager_Undefine
+const __meta_QueryManager_Undefine = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Undefine})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query_Undefine)
-            __meta_Query_Undefine[] = target = ProtoMeta(Query_Undefine)
+        if !isassigned(__meta_QueryManager_Undefine)
+            __meta_QueryManager_Undefine[] = target = ProtoMeta(QueryManager_Undefine)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query_Undefine, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager_Undefine, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query_Undefine[]
+        __meta_QueryManager_Undefine[]
     end
 end
 
-mutable struct Query <: ProtoType
+mutable struct QueryManager <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Query(; kwargs...)
-        obj = new(meta(Query), Dict{Symbol,Any}(), Set{Symbol}())
+    function QueryManager(; kwargs...)
+        obj = new(meta(QueryManager), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -1050,17 +1086,17 @@ mutable struct Query <: ProtoType
         end
         obj
     end
-end # mutable struct Query
-const __meta_Query = Ref{ProtoMeta}()
-function meta(::Type{Query})
+end # mutable struct QueryManager
+const __meta_QueryManager = Ref{ProtoMeta}()
+function meta(::Type{QueryManager})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Query)
-            __meta_Query[] = target = ProtoMeta(Query)
+        if !isassigned(__meta_QueryManager)
+            __meta_QueryManager[] = target = ProtoMeta(QueryManager)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Query, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, QueryManager, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Query[]
+        __meta_QueryManager[]
     end
 end
 
-export Query_Req, Query_Res, Query_Match_Req, Query_Match_Res, Query_Match, Query_MatchAggregate_Req, Query_MatchAggregate_Res, Query_MatchAggregate, Query_MatchGroup_Req, Query_MatchGroup_Res, Query_MatchGroup, Query_MatchGroupAggregate_Req, Query_MatchGroupAggregate_Res, Query_MatchGroupAggregate, Query_Insert_Req, Query_Insert_Res, Query_Insert, Query_Delete_Req, Query_Delete_Res, Query_Delete, Query_Update_Req, Query_Update_Res, Query_Update, Query_Define_Req, Query_Define_Res, Query_Define, Query_Undefine_Req, Query_Undefine_Res, Query_Undefine, Query
+export QueryManager_Req, QueryManager_Res, QueryManager_ResPart, QueryManager_Match_Req, QueryManager_Match_ResPart, QueryManager_Match, QueryManager_MatchAggregate_Req, QueryManager_MatchAggregate_Res, QueryManager_MatchAggregate, QueryManager_MatchGroup_Req, QueryManager_MatchGroup_ResPart, QueryManager_MatchGroup, QueryManager_MatchGroupAggregate_Req, QueryManager_MatchGroupAggregate_ResPart, QueryManager_MatchGroupAggregate, QueryManager_Insert_Req, QueryManager_Insert_ResPart, QueryManager_Insert, QueryManager_Delete_Req, QueryManager_Delete_Res, QueryManager_Delete, QueryManager_Update_Req, QueryManager_Update_ResPart, QueryManager_Update, QueryManager_Define_Req, QueryManager_Define_Res, QueryManager_Define, QueryManager_Undefine_Req, QueryManager_Undefine_Res, QueryManager_Undefine, QueryManager

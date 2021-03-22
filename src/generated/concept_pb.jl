@@ -1,5 +1,3 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
-
 # syntax: proto3
 using ProtoBuf
 import ProtoBuf.meta
@@ -418,96 +416,6 @@ function meta(::Type{ConceptManager})
     end
 end
 
-mutable struct Relation_GetPlayers <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayers(; kwargs...)
-        obj = new(meta(Relation_GetPlayers), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayers
-const __meta_Relation_GetPlayers = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayers})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayers)
-            __meta_Relation_GetPlayers[] = target = ProtoMeta(Relation_GetPlayers)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Relation_GetPlayers, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_GetPlayers[]
-    end
-end
-
-mutable struct Relation_GetPlayersByRoleType_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayersByRoleType_Req(; kwargs...)
-        obj = new(meta(Relation_GetPlayersByRoleType_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayersByRoleType_Req
-const __meta_Relation_GetPlayersByRoleType_Req = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayersByRoleType_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayersByRoleType_Req)
-            __meta_Relation_GetPlayersByRoleType_Req[] = target = ProtoMeta(Relation_GetPlayersByRoleType_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Relation_GetPlayersByRoleType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_GetPlayersByRoleType_Req[]
-    end
-end
-
-mutable struct Relation_GetPlayersByRoleType <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayersByRoleType(; kwargs...)
-        obj = new(meta(Relation_GetPlayersByRoleType), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayersByRoleType
-const __meta_Relation_GetPlayersByRoleType = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayersByRoleType})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayersByRoleType)
-            __meta_Relation_GetPlayersByRoleType[] = target = ProtoMeta(Relation_GetPlayersByRoleType)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Relation_GetPlayersByRoleType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_GetPlayersByRoleType[]
-    end
-end
-
 mutable struct Relation_AddPlayer_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -628,6 +536,156 @@ function meta(::Type{Relation_RemovePlayer})
     end
 end
 
+mutable struct Relation_GetPlayers <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetPlayers(; kwargs...)
+        obj = new(meta(Relation_GetPlayers), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetPlayers
+const __meta_Relation_GetPlayers = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayers})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetPlayers)
+            __meta_Relation_GetPlayers[] = target = ProtoMeta(Relation_GetPlayers)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetPlayers, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetPlayers[]
+    end
+end
+
+mutable struct Relation_GetPlayersByRoleType_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetPlayersByRoleType_Req(; kwargs...)
+        obj = new(meta(Relation_GetPlayersByRoleType_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetPlayersByRoleType_Req
+const __meta_Relation_GetPlayersByRoleType_Req = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayersByRoleType_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetPlayersByRoleType_Req)
+            __meta_Relation_GetPlayersByRoleType_Req[] = target = ProtoMeta(Relation_GetPlayersByRoleType_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetPlayersByRoleType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetPlayersByRoleType_Req[]
+    end
+end
+
+mutable struct Relation_GetPlayersByRoleType <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetPlayersByRoleType(; kwargs...)
+        obj = new(meta(Relation_GetPlayersByRoleType), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetPlayersByRoleType
+const __meta_Relation_GetPlayersByRoleType = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayersByRoleType})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetPlayersByRoleType)
+            __meta_Relation_GetPlayersByRoleType[] = target = ProtoMeta(Relation_GetPlayersByRoleType)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetPlayersByRoleType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetPlayersByRoleType[]
+    end
+end
+
+mutable struct Relation_GetRelating_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetRelating_Req(; kwargs...)
+        obj = new(meta(Relation_GetRelating_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetRelating_Req
+const __meta_Relation_GetRelating_Req = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetRelating_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetRelating_Req)
+            __meta_Relation_GetRelating_Req[] = target = ProtoMeta(Relation_GetRelating_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetRelating_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetRelating_Req[]
+    end
+end
+
+mutable struct Relation_GetRelating <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetRelating(; kwargs...)
+        obj = new(meta(Relation_GetRelating), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetRelating
+const __meta_Relation_GetRelating = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetRelating})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetRelating)
+            __meta_Relation_GetRelating[] = target = ProtoMeta(Relation_GetRelating)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Relation_GetRelating, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetRelating[]
+    end
+end
+
 mutable struct Relation <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -655,36 +713,6 @@ function meta(::Type{Relation})
             meta(target, Relation, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Relation[]
-    end
-end
-
-mutable struct Attribute_GetOwners <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Attribute_GetOwners(; kwargs...)
-        obj = new(meta(Attribute_GetOwners), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Attribute_GetOwners
-const __meta_Attribute_GetOwners = Ref{ProtoMeta}()
-function meta(::Type{Attribute_GetOwners})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Attribute_GetOwners)
-            __meta_Attribute_GetOwners[] = target = ProtoMeta(Attribute_GetOwners)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Attribute_GetOwners, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Attribute_GetOwners[]
     end
 end
 
@@ -735,19 +763,13 @@ function Base.getproperty(obj::Attribute_Value, name::Symbol)
     end
 end
 
-const Thing_Encoding = (;[
-    Symbol("ENTITY") => Int32(0),
-    Symbol("RELATION") => Int32(1),
-    Symbol("ATTRIBUTE") => Int32(2),
-]...)
-
-mutable struct Thing_Delete_Req <: ProtoType
+mutable struct Attribute_GetOwners <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Thing_Delete_Req(; kwargs...)
-        obj = new(meta(Thing_Delete_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function Attribute_GetOwners(; kwargs...)
+        obj = new(meta(Attribute_GetOwners), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -758,777 +780,16 @@ mutable struct Thing_Delete_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Thing_Delete_Req
-const __meta_Thing_Delete_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_Delete_Req})
+end # mutable struct Attribute_GetOwners
+const __meta_Attribute_GetOwners = Ref{ProtoMeta}()
+function meta(::Type{Attribute_GetOwners})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_Delete_Req)
-            __meta_Thing_Delete_Req[] = target = ProtoMeta(Thing_Delete_Req)
+        if !isassigned(__meta_Attribute_GetOwners)
+            __meta_Attribute_GetOwners[] = target = ProtoMeta(Attribute_GetOwners)
             allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_Delete_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, Attribute_GetOwners, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Thing_Delete_Req[]
-    end
-end
-
-mutable struct Thing_Delete_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_Delete_Res(; kwargs...)
-        obj = new(meta(Thing_Delete_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_Delete_Res
-const __meta_Thing_Delete_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_Delete_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_Delete_Res)
-            __meta_Thing_Delete_Res[] = target = ProtoMeta(Thing_Delete_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_Delete_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_Delete_Res[]
-    end
-end
-
-mutable struct Thing_Delete <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_Delete(; kwargs...)
-        obj = new(meta(Thing_Delete), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_Delete
-const __meta_Thing_Delete = Ref{ProtoMeta}()
-function meta(::Type{Thing_Delete})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_Delete)
-            __meta_Thing_Delete[] = target = ProtoMeta(Thing_Delete)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_Delete, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_Delete[]
-    end
-end
-
-mutable struct Thing_IsInferred_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_IsInferred_Req(; kwargs...)
-        obj = new(meta(Thing_IsInferred_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_IsInferred_Req
-const __meta_Thing_IsInferred_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_IsInferred_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_IsInferred_Req)
-            __meta_Thing_IsInferred_Req[] = target = ProtoMeta(Thing_IsInferred_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_IsInferred_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_IsInferred_Req[]
-    end
-end
-
-mutable struct Thing_IsInferred_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_IsInferred_Res(; kwargs...)
-        obj = new(meta(Thing_IsInferred_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_IsInferred_Res
-const __meta_Thing_IsInferred_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_IsInferred_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_IsInferred_Res)
-            __meta_Thing_IsInferred_Res[] = target = ProtoMeta(Thing_IsInferred_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:inferred => Bool]
-            meta(target, Thing_IsInferred_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_IsInferred_Res[]
-    end
-end
-function Base.getproperty(obj::Thing_IsInferred_Res, name::Symbol)
-    if name === :inferred
-        return (obj.__protobuf_jl_internal_values[name])::Bool
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_IsInferred <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_IsInferred(; kwargs...)
-        obj = new(meta(Thing_IsInferred), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_IsInferred
-const __meta_Thing_IsInferred = Ref{ProtoMeta}()
-function meta(::Type{Thing_IsInferred})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_IsInferred)
-            __meta_Thing_IsInferred[] = target = ProtoMeta(Thing_IsInferred)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_IsInferred, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_IsInferred[]
-    end
-end
-
-mutable struct Thing_GetType_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetType_Req(; kwargs...)
-        obj = new(meta(Thing_GetType_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetType_Req
-const __meta_Thing_GetType_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetType_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetType_Req)
-            __meta_Thing_GetType_Req[] = target = ProtoMeta(Thing_GetType_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetType_Req[]
-    end
-end
-
-mutable struct Thing_GetType <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetType(; kwargs...)
-        obj = new(meta(Thing_GetType), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetType
-const __meta_Thing_GetType = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetType})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetType)
-            __meta_Thing_GetType[] = target = ProtoMeta(Thing_GetType)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetType[]
-    end
-end
-
-mutable struct Thing_SetHas_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_SetHas_Res(; kwargs...)
-        obj = new(meta(Thing_SetHas_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_SetHas_Res
-const __meta_Thing_SetHas_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_SetHas_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_SetHas_Res)
-            __meta_Thing_SetHas_Res[] = target = ProtoMeta(Thing_SetHas_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_SetHas_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_SetHas_Res[]
-    end
-end
-
-mutable struct Thing_SetHas <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_SetHas(; kwargs...)
-        obj = new(meta(Thing_SetHas), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_SetHas
-const __meta_Thing_SetHas = Ref{ProtoMeta}()
-function meta(::Type{Thing_SetHas})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_SetHas)
-            __meta_Thing_SetHas[] = target = ProtoMeta(Thing_SetHas)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_SetHas, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_SetHas[]
-    end
-end
-
-mutable struct Thing_UnsetHas_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_UnsetHas_Res(; kwargs...)
-        obj = new(meta(Thing_UnsetHas_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_UnsetHas_Res
-const __meta_Thing_UnsetHas_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_UnsetHas_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_UnsetHas_Res)
-            __meta_Thing_UnsetHas_Res[] = target = ProtoMeta(Thing_UnsetHas_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_UnsetHas_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_UnsetHas_Res[]
-    end
-end
-
-mutable struct Thing_UnsetHas <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_UnsetHas(; kwargs...)
-        obj = new(meta(Thing_UnsetHas), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_UnsetHas
-const __meta_Thing_UnsetHas = Ref{ProtoMeta}()
-function meta(::Type{Thing_UnsetHas})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_UnsetHas)
-            __meta_Thing_UnsetHas[] = target = ProtoMeta(Thing_UnsetHas)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_UnsetHas, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_UnsetHas[]
-    end
-end
-
-mutable struct Thing_GetHas <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetHas(; kwargs...)
-        obj = new(meta(Thing_GetHas), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetHas
-const __meta_Thing_GetHas = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetHas})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetHas)
-            __meta_Thing_GetHas[] = target = ProtoMeta(Thing_GetHas)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetHas, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetHas[]
-    end
-end
-
-mutable struct Thing_GetPlays_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetPlays_Req(; kwargs...)
-        obj = new(meta(Thing_GetPlays_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetPlays_Req
-const __meta_Thing_GetPlays_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetPlays_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetPlays_Req)
-            __meta_Thing_GetPlays_Req[] = target = ProtoMeta(Thing_GetPlays_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetPlays_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetPlays_Req[]
-    end
-end
-
-mutable struct Thing_GetPlays <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetPlays(; kwargs...)
-        obj = new(meta(Thing_GetPlays), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetPlays
-const __meta_Thing_GetPlays = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetPlays})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetPlays)
-            __meta_Thing_GetPlays[] = target = ProtoMeta(Thing_GetPlays)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetPlays, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetPlays[]
-    end
-end
-
-mutable struct Thing_GetRelations <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetRelations(; kwargs...)
-        obj = new(meta(Thing_GetRelations), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetRelations
-const __meta_Thing_GetRelations = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetRelations})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetRelations)
-            __meta_Thing_GetRelations[] = target = ProtoMeta(Thing_GetRelations)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_GetRelations, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetRelations[]
-    end
-end
-
-mutable struct Thing <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing(; kwargs...)
-        obj = new(meta(Thing), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing
-const __meta_Thing = Ref{ProtoMeta}()
-function meta(::Type{Thing})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing)
-            __meta_Thing[] = target = ProtoMeta(Thing)
-            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :encoding => Int32, :value_type => Int32, :value => Attribute_Value]
-            meta(target, Thing, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing[]
-    end
-end
-function Base.getproperty(obj::Thing, name::Symbol)
-    if name === :iid
-        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
-    elseif name === :encoding
-        return (obj.__protobuf_jl_internal_values[name])::Int32
-    elseif name === :value_type
-        return (obj.__protobuf_jl_internal_values[name])::Int32
-    elseif name === :value
-        return (obj.__protobuf_jl_internal_values[name])::Attribute_Value
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Relation_GetPlayers_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayers_Res(; kwargs...)
-        obj = new(meta(Relation_GetPlayers_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayers_Res
-const __meta_Relation_GetPlayers_Res = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayers_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayers_Res)
-            __meta_Relation_GetPlayers_Res[] = target = ProtoMeta(Relation_GetPlayers_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:things => Base.Vector{Thing}]
-            meta(target, Relation_GetPlayers_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_GetPlayers_Res[]
-    end
-end
-function Base.getproperty(obj::Relation_GetPlayers_Res, name::Symbol)
-    if name === :things
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct ConceptManager_GetThing_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function ConceptManager_GetThing_Res(; kwargs...)
-        obj = new(meta(ConceptManager_GetThing_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct ConceptManager_GetThing_Res
-const __meta_ConceptManager_GetThing_Res = Ref{ProtoMeta}()
-function meta(::Type{ConceptManager_GetThing_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_ConceptManager_GetThing_Res)
-            __meta_ConceptManager_GetThing_Res[] = target = ProtoMeta(ConceptManager_GetThing_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:thing => Thing]
-            oneofs = Int[1]
-            oneof_names = Symbol[Symbol("res")]
-            meta(target, ConceptManager_GetThing_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
-        end
-        __meta_ConceptManager_GetThing_Res[]
-    end
-end
-function Base.getproperty(obj::ConceptManager_GetThing_Res, name::Symbol)
-    if name === :thing
-        return (obj.__protobuf_jl_internal_values[name])::Thing
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_GetHas_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetHas_Res(; kwargs...)
-        obj = new(meta(Thing_GetHas_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetHas_Res
-const __meta_Thing_GetHas_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetHas_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetHas_Res)
-            __meta_Thing_GetHas_Res[] = target = ProtoMeta(Thing_GetHas_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:attributes => Base.Vector{Thing}]
-            meta(target, Thing_GetHas_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetHas_Res[]
-    end
-end
-function Base.getproperty(obj::Thing_GetHas_Res, name::Symbol)
-    if name === :attributes
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_GetRelations_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_GetRelations_Res(; kwargs...)
-        obj = new(meta(Thing_GetRelations_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_GetRelations_Res
-const __meta_Thing_GetRelations_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetRelations_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetRelations_Res)
-            __meta_Thing_GetRelations_Res[] = target = ProtoMeta(Thing_GetRelations_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:relations => Base.Vector{Thing}]
-            meta(target, Thing_GetRelations_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_GetRelations_Res[]
-    end
-end
-function Base.getproperty(obj::Thing_GetRelations_Res, name::Symbol)
-    if name === :relations
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Attribute_GetOwners_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Attribute_GetOwners_Res(; kwargs...)
-        obj = new(meta(Attribute_GetOwners_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Attribute_GetOwners_Res
-const __meta_Attribute_GetOwners_Res = Ref{ProtoMeta}()
-function meta(::Type{Attribute_GetOwners_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Attribute_GetOwners_Res)
-            __meta_Attribute_GetOwners_Res[] = target = ProtoMeta(Attribute_GetOwners_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:things => Base.Vector{Thing}]
-            meta(target, Attribute_GetOwners_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Attribute_GetOwners_Res[]
-    end
-end
-function Base.getproperty(obj::Attribute_GetOwners_Res, name::Symbol)
-    if name === :things
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_UnsetHas_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_UnsetHas_Req(; kwargs...)
-        obj = new(meta(Thing_UnsetHas_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_UnsetHas_Req
-const __meta_Thing_UnsetHas_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_UnsetHas_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_UnsetHas_Req)
-            __meta_Thing_UnsetHas_Req[] = target = ProtoMeta(Thing_UnsetHas_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[:attribute => Thing]
-            meta(target, Thing_UnsetHas_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_UnsetHas_Req[]
-    end
-end
-function Base.getproperty(obj::Thing_UnsetHas_Req, name::Symbol)
-    if name === :attribute
-        return (obj.__protobuf_jl_internal_values[name])::Thing
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_SetHas_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_SetHas_Req(; kwargs...)
-        obj = new(meta(Thing_SetHas_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_SetHas_Req
-const __meta_Thing_SetHas_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_SetHas_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_SetHas_Req)
-            __meta_Thing_SetHas_Req[] = target = ProtoMeta(Thing_SetHas_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[:attribute => Thing]
-            meta(target, Thing_SetHas_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_SetHas_Req[]
-    end
-end
-function Base.getproperty(obj::Thing_SetHas_Req, name::Symbol)
-    if name === :attribute
-        return (obj.__protobuf_jl_internal_values[name])::Thing
-    else
-        getfield(obj, name)
+        __meta_Attribute_GetOwners[]
     end
 end
 
@@ -2139,45 +1400,6 @@ function Base.getproperty(obj::_Type, name::Symbol)
     end
 end
 
-mutable struct Relation_RemovePlayer_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_RemovePlayer_Req(; kwargs...)
-        obj = new(meta(Relation_RemovePlayer_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_RemovePlayer_Req
-const __meta_Relation_RemovePlayer_Req = Ref{ProtoMeta}()
-function meta(::Type{Relation_RemovePlayer_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_RemovePlayer_Req)
-            __meta_Relation_RemovePlayer_Req[] = target = ProtoMeta(Relation_RemovePlayer_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[:role_type => _Type, :player => Thing]
-            meta(target, Relation_RemovePlayer_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Relation_RemovePlayer_Req[]
-    end
-end
-function Base.getproperty(obj::Relation_RemovePlayer_Req, name::Symbol)
-    if name === :role_type
-        return (obj.__protobuf_jl_internal_values[name])::_Type
-    elseif name === :player
-        return (obj.__protobuf_jl_internal_values[name])::Thing
-    else
-        getfield(obj, name)
-    end
-end
-
 mutable struct Thing_GetHas_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -2332,6 +1554,43 @@ function Base.getproperty(obj::Attribute_GetOwners_Req, name::Symbol)
     end
 end
 
+mutable struct Thing_GetPlaying_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetPlaying_ResPart(; kwargs...)
+        obj = new(meta(Thing_GetPlaying_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetPlaying_ResPart
+const __meta_Thing_GetPlaying_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetPlaying_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetPlaying_ResPart)
+            __meta_Thing_GetPlaying_ResPart[] = target = ProtoMeta(Thing_GetPlaying_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:role_types => Base.Vector{_Type}]
+            meta(target, Thing_GetPlaying_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetPlaying_ResPart[]
+    end
+end
+function Base.getproperty(obj::Thing_GetPlaying_ResPart, name::Symbol)
+    if name === :role_types
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
+    else
+        getfield(obj, name)
+    end
+end
+
 mutable struct Thing_GetRelations_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -2443,43 +1702,6 @@ function Base.getproperty(obj::Relation_GetPlayers_Req, name::Symbol)
     end
 end
 
-mutable struct Type_GetSubtypes_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Type_GetSubtypes_Res(; kwargs...)
-        obj = new(meta(Type_GetSubtypes_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Type_GetSubtypes_Res
-const __meta_Type_GetSubtypes_Res = Ref{ProtoMeta}()
-function meta(::Type{Type_GetSubtypes_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Type_GetSubtypes_Res)
-            __meta_Type_GetSubtypes_Res[] = target = ProtoMeta(Type_GetSubtypes_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:types => Base.Vector{_Type}]
-            meta(target, Type_GetSubtypes_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Type_GetSubtypes_Res[]
-    end
-end
-function Base.getproperty(obj::Type_GetSubtypes_Res, name::Symbol)
-    if name === :types
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
-    else
-        getfield(obj, name)
-    end
-end
-
 mutable struct Type_GetSupertype_Res <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -2556,6 +1778,849 @@ function Base.getproperty(obj::Thing_GetType_Res, name::Symbol)
     end
 end
 
+mutable struct Thing_Delete_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_Delete_Req(; kwargs...)
+        obj = new(meta(Thing_Delete_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_Delete_Req
+const __meta_Thing_Delete_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_Delete_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_Delete_Req)
+            __meta_Thing_Delete_Req[] = target = ProtoMeta(Thing_Delete_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_Delete_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_Delete_Req[]
+    end
+end
+
+mutable struct Thing_Delete_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_Delete_Res(; kwargs...)
+        obj = new(meta(Thing_Delete_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_Delete_Res
+const __meta_Thing_Delete_Res = Ref{ProtoMeta}()
+function meta(::Type{Thing_Delete_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_Delete_Res)
+            __meta_Thing_Delete_Res[] = target = ProtoMeta(Thing_Delete_Res)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_Delete_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_Delete_Res[]
+    end
+end
+
+mutable struct Thing_Delete <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_Delete(; kwargs...)
+        obj = new(meta(Thing_Delete), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_Delete
+const __meta_Thing_Delete = Ref{ProtoMeta}()
+function meta(::Type{Thing_Delete})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_Delete)
+            __meta_Thing_Delete[] = target = ProtoMeta(Thing_Delete)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_Delete, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_Delete[]
+    end
+end
+
+mutable struct Thing_IsInferred_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_IsInferred_Req(; kwargs...)
+        obj = new(meta(Thing_IsInferred_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_IsInferred_Req
+const __meta_Thing_IsInferred_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_IsInferred_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_IsInferred_Req)
+            __meta_Thing_IsInferred_Req[] = target = ProtoMeta(Thing_IsInferred_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_IsInferred_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_IsInferred_Req[]
+    end
+end
+
+mutable struct Thing_IsInferred_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_IsInferred_Res(; kwargs...)
+        obj = new(meta(Thing_IsInferred_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_IsInferred_Res
+const __meta_Thing_IsInferred_Res = Ref{ProtoMeta}()
+function meta(::Type{Thing_IsInferred_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_IsInferred_Res)
+            __meta_Thing_IsInferred_Res[] = target = ProtoMeta(Thing_IsInferred_Res)
+            allflds = Pair{Symbol,Union{Type,String}}[:inferred => Bool]
+            meta(target, Thing_IsInferred_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_IsInferred_Res[]
+    end
+end
+function Base.getproperty(obj::Thing_IsInferred_Res, name::Symbol)
+    if name === :inferred
+        return (obj.__protobuf_jl_internal_values[name])::Bool
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Thing_IsInferred <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_IsInferred(; kwargs...)
+        obj = new(meta(Thing_IsInferred), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_IsInferred
+const __meta_Thing_IsInferred = Ref{ProtoMeta}()
+function meta(::Type{Thing_IsInferred})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_IsInferred)
+            __meta_Thing_IsInferred[] = target = ProtoMeta(Thing_IsInferred)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_IsInferred, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_IsInferred[]
+    end
+end
+
+mutable struct Thing_GetType_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetType_Req(; kwargs...)
+        obj = new(meta(Thing_GetType_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetType_Req
+const __meta_Thing_GetType_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetType_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetType_Req)
+            __meta_Thing_GetType_Req[] = target = ProtoMeta(Thing_GetType_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_GetType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetType_Req[]
+    end
+end
+
+mutable struct Thing_GetType <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetType(; kwargs...)
+        obj = new(meta(Thing_GetType), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetType
+const __meta_Thing_GetType = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetType})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetType)
+            __meta_Thing_GetType[] = target = ProtoMeta(Thing_GetType)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_GetType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetType[]
+    end
+end
+
+mutable struct Thing_SetHas_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_SetHas_Res(; kwargs...)
+        obj = new(meta(Thing_SetHas_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_SetHas_Res
+const __meta_Thing_SetHas_Res = Ref{ProtoMeta}()
+function meta(::Type{Thing_SetHas_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_SetHas_Res)
+            __meta_Thing_SetHas_Res[] = target = ProtoMeta(Thing_SetHas_Res)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_SetHas_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_SetHas_Res[]
+    end
+end
+
+mutable struct Thing_SetHas <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_SetHas(; kwargs...)
+        obj = new(meta(Thing_SetHas), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_SetHas
+const __meta_Thing_SetHas = Ref{ProtoMeta}()
+function meta(::Type{Thing_SetHas})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_SetHas)
+            __meta_Thing_SetHas[] = target = ProtoMeta(Thing_SetHas)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_SetHas, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_SetHas[]
+    end
+end
+
+mutable struct Thing_UnsetHas_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_UnsetHas_Res(; kwargs...)
+        obj = new(meta(Thing_UnsetHas_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_UnsetHas_Res
+const __meta_Thing_UnsetHas_Res = Ref{ProtoMeta}()
+function meta(::Type{Thing_UnsetHas_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_UnsetHas_Res)
+            __meta_Thing_UnsetHas_Res[] = target = ProtoMeta(Thing_UnsetHas_Res)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_UnsetHas_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_UnsetHas_Res[]
+    end
+end
+
+mutable struct Thing_UnsetHas <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_UnsetHas(; kwargs...)
+        obj = new(meta(Thing_UnsetHas), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_UnsetHas
+const __meta_Thing_UnsetHas = Ref{ProtoMeta}()
+function meta(::Type{Thing_UnsetHas})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_UnsetHas)
+            __meta_Thing_UnsetHas[] = target = ProtoMeta(Thing_UnsetHas)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_UnsetHas, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_UnsetHas[]
+    end
+end
+
+mutable struct Thing_GetHas <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetHas(; kwargs...)
+        obj = new(meta(Thing_GetHas), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetHas
+const __meta_Thing_GetHas = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetHas})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetHas)
+            __meta_Thing_GetHas[] = target = ProtoMeta(Thing_GetHas)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_GetHas, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetHas[]
+    end
+end
+
+mutable struct Thing_GetPlaying_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetPlaying_Req(; kwargs...)
+        obj = new(meta(Thing_GetPlaying_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetPlaying_Req
+const __meta_Thing_GetPlaying_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetPlaying_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetPlaying_Req)
+            __meta_Thing_GetPlaying_Req[] = target = ProtoMeta(Thing_GetPlaying_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_GetPlaying_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetPlaying_Req[]
+    end
+end
+
+mutable struct Thing_GetPlaying <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetPlaying(; kwargs...)
+        obj = new(meta(Thing_GetPlaying), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetPlaying
+const __meta_Thing_GetPlaying = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetPlaying})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetPlaying)
+            __meta_Thing_GetPlaying[] = target = ProtoMeta(Thing_GetPlaying)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_GetPlaying, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetPlaying[]
+    end
+end
+
+mutable struct Thing_GetRelations <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetRelations(; kwargs...)
+        obj = new(meta(Thing_GetRelations), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetRelations
+const __meta_Thing_GetRelations = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetRelations})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetRelations)
+            __meta_Thing_GetRelations[] = target = ProtoMeta(Thing_GetRelations)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, Thing_GetRelations, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetRelations[]
+    end
+end
+
+mutable struct Thing <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing(; kwargs...)
+        obj = new(meta(Thing), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing
+const __meta_Thing = Ref{ProtoMeta}()
+function meta(::Type{Thing})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing)
+            __meta_Thing[] = target = ProtoMeta(Thing)
+            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :_type => _Type, :value => Attribute_Value]
+            meta(target, Thing, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing[]
+    end
+end
+function Base.getproperty(obj::Thing, name::Symbol)
+    if name === :iid
+        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
+    elseif name === :_type
+        return (obj.__protobuf_jl_internal_values[name])::_Type
+    elseif name === :value
+        return (obj.__protobuf_jl_internal_values[name])::Attribute_Value
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct ConceptManager_PutAttributeType_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function ConceptManager_PutAttributeType_Res(; kwargs...)
+        obj = new(meta(ConceptManager_PutAttributeType_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct ConceptManager_PutAttributeType_Res
+const __meta_ConceptManager_PutAttributeType_Res = Ref{ProtoMeta}()
+function meta(::Type{ConceptManager_PutAttributeType_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_ConceptManager_PutAttributeType_Res)
+            __meta_ConceptManager_PutAttributeType_Res[] = target = ProtoMeta(ConceptManager_PutAttributeType_Res)
+            allflds = Pair{Symbol,Union{Type,String}}[:attribute_type => _Type]
+            meta(target, ConceptManager_PutAttributeType_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_ConceptManager_PutAttributeType_Res[]
+    end
+end
+function Base.getproperty(obj::ConceptManager_PutAttributeType_Res, name::Symbol)
+    if name === :attribute_type
+        return (obj.__protobuf_jl_internal_values[name])::_Type
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Relation_GetRelating_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetRelating_ResPart(; kwargs...)
+        obj = new(meta(Relation_GetRelating_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetRelating_ResPart
+const __meta_Relation_GetRelating_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetRelating_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetRelating_ResPart)
+            __meta_Relation_GetRelating_ResPart[] = target = ProtoMeta(Relation_GetRelating_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:role_types => Base.Vector{_Type}]
+            meta(target, Relation_GetRelating_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetRelating_ResPart[]
+    end
+end
+function Base.getproperty(obj::Relation_GetRelating_ResPart, name::Symbol)
+    if name === :role_types
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Type_GetSubtypes_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Type_GetSubtypes_ResPart(; kwargs...)
+        obj = new(meta(Type_GetSubtypes_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Type_GetSubtypes_ResPart
+const __meta_Type_GetSubtypes_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Type_GetSubtypes_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Type_GetSubtypes_ResPart)
+            __meta_Type_GetSubtypes_ResPart[] = target = ProtoMeta(Type_GetSubtypes_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:types => Base.Vector{_Type}]
+            meta(target, Type_GetSubtypes_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Type_GetSubtypes_ResPart[]
+    end
+end
+function Base.getproperty(obj::Type_GetSubtypes_ResPart, name::Symbol)
+    if name === :types
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Type_SetSupertype_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Type_SetSupertype_Req(; kwargs...)
+        obj = new(meta(Type_SetSupertype_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Type_SetSupertype_Req
+const __meta_Type_SetSupertype_Req = Ref{ProtoMeta}()
+function meta(::Type{Type_SetSupertype_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Type_SetSupertype_Req)
+            __meta_Type_SetSupertype_Req[] = target = ProtoMeta(Type_SetSupertype_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[:_type => _Type]
+            meta(target, Type_SetSupertype_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Type_SetSupertype_Req[]
+    end
+end
+function Base.getproperty(obj::Type_SetSupertype_Req, name::Symbol)
+    if name === :_type
+        return (obj.__protobuf_jl_internal_values[name])::_Type
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Type_GetSupertypes_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Type_GetSupertypes_ResPart(; kwargs...)
+        obj = new(meta(Type_GetSupertypes_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Type_GetSupertypes_ResPart
+const __meta_Type_GetSupertypes_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Type_GetSupertypes_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Type_GetSupertypes_ResPart)
+            __meta_Type_GetSupertypes_ResPart[] = target = ProtoMeta(Type_GetSupertypes_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:types => Base.Vector{_Type}]
+            meta(target, Type_GetSupertypes_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Type_GetSupertypes_ResPart[]
+    end
+end
+function Base.getproperty(obj::Type_GetSupertypes_ResPart, name::Symbol)
+    if name === :types
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Thing_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_Res(; kwargs...)
+        obj = new(meta(Thing_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_Res
+const __meta_Thing_Res = Ref{ProtoMeta}()
+function meta(::Type{Thing_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_Res)
+            __meta_Thing_Res[] = target = ProtoMeta(Thing_Res)
+            fnum = Int[100,101,102,103,104,200,201]
+            allflds = Pair{Symbol,Union{Type,String}}[:thing_delete_res => Thing_Delete_Res, :thing_get_type_res => Thing_GetType_Res, :thing_is_inferred_res => Thing_IsInferred_Res, :thing_set_has_res => Thing_SetHas_Res, :thing_unset_has_res => Thing_UnsetHas_Res, :relation_add_player_res => Relation_AddPlayer_Res, :relation_remove_player_res => Relation_RemovePlayer_Res]
+            oneofs = Int[1,1,1,1,1,1,1]
+            oneof_names = Symbol[Symbol("res")]
+            meta(target, Thing_Res, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+        end
+        __meta_Thing_Res[]
+    end
+end
+function Base.getproperty(obj::Thing_Res, name::Symbol)
+    if name === :thing_delete_res
+        return (obj.__protobuf_jl_internal_values[name])::Thing_Delete_Res
+    elseif name === :thing_get_type_res
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetType_Res
+    elseif name === :thing_is_inferred_res
+        return (obj.__protobuf_jl_internal_values[name])::Thing_IsInferred_Res
+    elseif name === :thing_set_has_res
+        return (obj.__protobuf_jl_internal_values[name])::Thing_SetHas_Res
+    elseif name === :thing_unset_has_res
+        return (obj.__protobuf_jl_internal_values[name])::Thing_UnsetHas_Res
+    elseif name === :relation_add_player_res
+        return (obj.__protobuf_jl_internal_values[name])::Relation_AddPlayer_Res
+    elseif name === :relation_remove_player_res
+        return (obj.__protobuf_jl_internal_values[name])::Relation_RemovePlayer_Res
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Relation_RemovePlayer_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_RemovePlayer_Req(; kwargs...)
+        obj = new(meta(Relation_RemovePlayer_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_RemovePlayer_Req
+const __meta_Relation_RemovePlayer_Req = Ref{ProtoMeta}()
+function meta(::Type{Relation_RemovePlayer_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_RemovePlayer_Req)
+            __meta_Relation_RemovePlayer_Req[] = target = ProtoMeta(Relation_RemovePlayer_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[:role_type => _Type, :player => Thing]
+            meta(target, Relation_RemovePlayer_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_RemovePlayer_Req[]
+    end
+end
+function Base.getproperty(obj::Relation_RemovePlayer_Req, name::Symbol)
+    if name === :role_type
+        return (obj.__protobuf_jl_internal_values[name])::_Type
+    elseif name === :player
+        return (obj.__protobuf_jl_internal_values[name])::Thing
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct ConceptManager_GetThing_Res <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function ConceptManager_GetThing_Res(; kwargs...)
+        obj = new(meta(ConceptManager_GetThing_Res), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct ConceptManager_GetThing_Res
+const __meta_ConceptManager_GetThing_Res = Ref{ProtoMeta}()
+function meta(::Type{ConceptManager_GetThing_Res})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_ConceptManager_GetThing_Res)
+            __meta_ConceptManager_GetThing_Res[] = target = ProtoMeta(ConceptManager_GetThing_Res)
+            allflds = Pair{Symbol,Union{Type,String}}[:thing => Thing]
+            oneofs = Int[1]
+            oneof_names = Symbol[Symbol("res")]
+            meta(target, ConceptManager_GetThing_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+        end
+        __meta_ConceptManager_GetThing_Res[]
+    end
+end
+function Base.getproperty(obj::ConceptManager_GetThing_Res, name::Symbol)
+    if name === :thing
+        return (obj.__protobuf_jl_internal_values[name])::Thing
+    else
+        getfield(obj, name)
+    end
+end
+
 mutable struct Relation_GetPlayersByRoleType_RoleTypeWithPlayer <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -2595,13 +2660,13 @@ function Base.getproperty(obj::Relation_GetPlayersByRoleType_RoleTypeWithPlayer,
     end
 end
 
-mutable struct Type_GetSupertypes_Res <: ProtoType
+mutable struct Thing_GetRelations_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Type_GetSupertypes_Res(; kwargs...)
-        obj = new(meta(Type_GetSupertypes_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function Thing_GetRelations_ResPart(; kwargs...)
+        obj = new(meta(Thing_GetRelations_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -2612,58 +2677,21 @@ mutable struct Type_GetSupertypes_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Type_GetSupertypes_Res
-const __meta_Type_GetSupertypes_Res = Ref{ProtoMeta}()
-function meta(::Type{Type_GetSupertypes_Res})
+end # mutable struct Thing_GetRelations_ResPart
+const __meta_Thing_GetRelations_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetRelations_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Type_GetSupertypes_Res)
-            __meta_Type_GetSupertypes_Res[] = target = ProtoMeta(Type_GetSupertypes_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:types => Base.Vector{_Type}]
-            meta(target, Type_GetSupertypes_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        if !isassigned(__meta_Thing_GetRelations_ResPart)
+            __meta_Thing_GetRelations_ResPart[] = target = ProtoMeta(Thing_GetRelations_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:relations => Base.Vector{Thing}]
+            meta(target, Thing_GetRelations_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Type_GetSupertypes_Res[]
+        __meta_Thing_GetRelations_ResPart[]
     end
 end
-function Base.getproperty(obj::Type_GetSupertypes_Res, name::Symbol)
-    if name === :types
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct ConceptManager_PutAttributeType_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function ConceptManager_PutAttributeType_Res(; kwargs...)
-        obj = new(meta(ConceptManager_PutAttributeType_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct ConceptManager_PutAttributeType_Res
-const __meta_ConceptManager_PutAttributeType_Res = Ref{ProtoMeta}()
-function meta(::Type{ConceptManager_PutAttributeType_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_ConceptManager_PutAttributeType_Res)
-            __meta_ConceptManager_PutAttributeType_Res[] = target = ProtoMeta(ConceptManager_PutAttributeType_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:attribute_type => _Type]
-            meta(target, ConceptManager_PutAttributeType_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_ConceptManager_PutAttributeType_Res[]
-    end
-end
-function Base.getproperty(obj::ConceptManager_PutAttributeType_Res, name::Symbol)
-    if name === :attribute_type
-        return (obj.__protobuf_jl_internal_values[name])::_Type
+function Base.getproperty(obj::Thing_GetRelations_ResPart, name::Symbol)
+    if name === :relations
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
     else
         getfield(obj, name)
     end
@@ -2710,6 +2738,154 @@ function Base.getproperty(obj::Concept, name::Symbol)
     end
 end
 
+mutable struct Relation_GetPlayers_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Relation_GetPlayers_ResPart(; kwargs...)
+        obj = new(meta(Relation_GetPlayers_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Relation_GetPlayers_ResPart
+const __meta_Relation_GetPlayers_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayers_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Relation_GetPlayers_ResPart)
+            __meta_Relation_GetPlayers_ResPart[] = target = ProtoMeta(Relation_GetPlayers_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:things => Base.Vector{Thing}]
+            meta(target, Relation_GetPlayers_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Relation_GetPlayers_ResPart[]
+    end
+end
+function Base.getproperty(obj::Relation_GetPlayers_ResPart, name::Symbol)
+    if name === :things
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Thing_UnsetHas_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_UnsetHas_Req(; kwargs...)
+        obj = new(meta(Thing_UnsetHas_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_UnsetHas_Req
+const __meta_Thing_UnsetHas_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_UnsetHas_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_UnsetHas_Req)
+            __meta_Thing_UnsetHas_Req[] = target = ProtoMeta(Thing_UnsetHas_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[:attribute => Thing]
+            meta(target, Thing_UnsetHas_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_UnsetHas_Req[]
+    end
+end
+function Base.getproperty(obj::Thing_UnsetHas_Req, name::Symbol)
+    if name === :attribute
+        return (obj.__protobuf_jl_internal_values[name])::Thing
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Thing_GetHas_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_GetHas_ResPart(; kwargs...)
+        obj = new(meta(Thing_GetHas_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_GetHas_ResPart
+const __meta_Thing_GetHas_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Thing_GetHas_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_GetHas_ResPart)
+            __meta_Thing_GetHas_ResPart[] = target = ProtoMeta(Thing_GetHas_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:attributes => Base.Vector{Thing}]
+            meta(target, Thing_GetHas_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_GetHas_ResPart[]
+    end
+end
+function Base.getproperty(obj::Thing_GetHas_ResPart, name::Symbol)
+    if name === :attributes
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Thing_SetHas_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_SetHas_Req(; kwargs...)
+        obj = new(meta(Thing_SetHas_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_SetHas_Req
+const __meta_Thing_SetHas_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_SetHas_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_SetHas_Req)
+            __meta_Thing_SetHas_Req[] = target = ProtoMeta(Thing_SetHas_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[:attribute => Thing]
+            meta(target, Thing_SetHas_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Thing_SetHas_Req[]
+    end
+end
+function Base.getproperty(obj::Thing_SetHas_Req, name::Symbol)
+    if name === :attribute
+        return (obj.__protobuf_jl_internal_values[name])::Thing
+    else
+        getfield(obj, name)
+    end
+end
+
 mutable struct Relation_AddPlayer_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -2749,13 +2925,13 @@ function Base.getproperty(obj::Relation_AddPlayer_Req, name::Symbol)
     end
 end
 
-mutable struct Thing_GetPlays_Res <: ProtoType
+mutable struct Attribute_GetOwners_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Thing_GetPlays_Res(; kwargs...)
-        obj = new(meta(Thing_GetPlays_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function Attribute_GetOwners_ResPart(; kwargs...)
+        obj = new(meta(Attribute_GetOwners_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -2766,33 +2942,33 @@ mutable struct Thing_GetPlays_Res <: ProtoType
         end
         obj
     end
-end # mutable struct Thing_GetPlays_Res
-const __meta_Thing_GetPlays_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_GetPlays_Res})
+end # mutable struct Attribute_GetOwners_ResPart
+const __meta_Attribute_GetOwners_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Attribute_GetOwners_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_GetPlays_Res)
-            __meta_Thing_GetPlays_Res[] = target = ProtoMeta(Thing_GetPlays_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:role_types => Base.Vector{_Type}]
-            meta(target, Thing_GetPlays_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        if !isassigned(__meta_Attribute_GetOwners_ResPart)
+            __meta_Attribute_GetOwners_ResPart[] = target = ProtoMeta(Attribute_GetOwners_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:things => Base.Vector{Thing}]
+            meta(target, Attribute_GetOwners_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Thing_GetPlays_Res[]
+        __meta_Attribute_GetOwners_ResPart[]
     end
 end
-function Base.getproperty(obj::Thing_GetPlays_Res, name::Symbol)
-    if name === :role_types
-        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
+function Base.getproperty(obj::Attribute_GetOwners_ResPart, name::Symbol)
+    if name === :things
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
     else
         getfield(obj, name)
     end
 end
 
-mutable struct Type_SetSupertype_Req <: ProtoType
+mutable struct Relation_GetPlayersByRoleType_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Type_SetSupertype_Req(; kwargs...)
-        obj = new(meta(Type_SetSupertype_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function Relation_GetPlayersByRoleType_ResPart(; kwargs...)
+        obj = new(meta(Relation_GetPlayersByRoleType_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -2803,58 +2979,89 @@ mutable struct Type_SetSupertype_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Type_SetSupertype_Req
-const __meta_Type_SetSupertype_Req = Ref{ProtoMeta}()
-function meta(::Type{Type_SetSupertype_Req})
+end # mutable struct Relation_GetPlayersByRoleType_ResPart
+const __meta_Relation_GetPlayersByRoleType_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Relation_GetPlayersByRoleType_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Type_SetSupertype_Req)
-            __meta_Type_SetSupertype_Req[] = target = ProtoMeta(Type_SetSupertype_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[:_type => _Type]
-            meta(target, Type_SetSupertype_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Type_SetSupertype_Req[]
-    end
-end
-function Base.getproperty(obj::Type_SetSupertype_Req, name::Symbol)
-    if name === :_type
-        return (obj.__protobuf_jl_internal_values[name])::_Type
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Relation_GetPlayersByRoleType_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Relation_GetPlayersByRoleType_Res(; kwargs...)
-        obj = new(meta(Relation_GetPlayersByRoleType_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Relation_GetPlayersByRoleType_Res
-const __meta_Relation_GetPlayersByRoleType_Res = Ref{ProtoMeta}()
-function meta(::Type{Relation_GetPlayersByRoleType_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Relation_GetPlayersByRoleType_Res)
-            __meta_Relation_GetPlayersByRoleType_Res[] = target = ProtoMeta(Relation_GetPlayersByRoleType_Res)
+        if !isassigned(__meta_Relation_GetPlayersByRoleType_ResPart)
+            __meta_Relation_GetPlayersByRoleType_ResPart[] = target = ProtoMeta(Relation_GetPlayersByRoleType_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:role_types_with_players => Base.Vector{Relation_GetPlayersByRoleType_RoleTypeWithPlayer}]
-            meta(target, Relation_GetPlayersByRoleType_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, Relation_GetPlayersByRoleType_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_Relation_GetPlayersByRoleType_Res[]
+        __meta_Relation_GetPlayersByRoleType_ResPart[]
     end
 end
-function Base.getproperty(obj::Relation_GetPlayersByRoleType_Res, name::Symbol)
+function Base.getproperty(obj::Relation_GetPlayersByRoleType_ResPart, name::Symbol)
     if name === :role_types_with_players
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Relation_GetPlayersByRoleType_RoleTypeWithPlayer}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Thing_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Thing_Req(; kwargs...)
+        obj = new(meta(Thing_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Thing_Req
+const __meta_Thing_Req = Ref{ProtoMeta}()
+function meta(::Type{Thing_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Thing_Req)
+            __meta_Thing_Req[] = target = ProtoMeta(Thing_Req)
+            fnum = Int[1,100,101,102,103,104,105,106,107,200,201,202,203,204,300]
+            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :thing_delete_req => Thing_Delete_Req, :thing_get_type_req => Thing_GetType_Req, :thing_is_inferred_req => Thing_IsInferred_Req, :thing_get_has_req => Thing_GetHas_Req, :thing_set_has_req => Thing_SetHas_Req, :thing_unset_has_req => Thing_UnsetHas_Req, :thing_get_relations_req => Thing_GetRelations_Req, :thing_get_playing_req => Thing_GetPlaying_Req, :relation_add_player_req => Relation_AddPlayer_Req, :relation_remove_player_req => Relation_RemovePlayer_Req, :relation_get_players_req => Relation_GetPlayers_Req, :relation_get_players_by_role_type_req => Relation_GetPlayersByRoleType_Req, :relation_get_relating_req => Relation_GetRelating_Req, :attribute_get_owners_req => Attribute_GetOwners_Req]
+            oneofs = Int[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            oneof_names = Symbol[Symbol("req")]
+            meta(target, Thing_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+        end
+        __meta_Thing_Req[]
+    end
+end
+function Base.getproperty(obj::Thing_Req, name::Symbol)
+    if name === :iid
+        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
+    elseif name === :thing_delete_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_Delete_Req
+    elseif name === :thing_get_type_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetType_Req
+    elseif name === :thing_is_inferred_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_IsInferred_Req
+    elseif name === :thing_get_has_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_Req
+    elseif name === :thing_set_has_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_SetHas_Req
+    elseif name === :thing_unset_has_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_UnsetHas_Req
+    elseif name === :thing_get_relations_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetRelations_Req
+    elseif name === :thing_get_playing_req
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlaying_Req
+    elseif name === :relation_add_player_req
+        return (obj.__protobuf_jl_internal_values[name])::Relation_AddPlayer_Req
+    elseif name === :relation_remove_player_req
+        return (obj.__protobuf_jl_internal_values[name])::Relation_RemovePlayer_Req
+    elseif name === :relation_get_players_req
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayers_Req
+    elseif name === :relation_get_players_by_role_type_req
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayersByRoleType_Req
+    elseif name === :relation_get_relating_req
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetRelating_Req
+    elseif name === :attribute_get_owners_req
+        return (obj.__protobuf_jl_internal_values[name])::Attribute_GetOwners_Req
     else
         getfield(obj, name)
     end
@@ -2907,13 +3114,13 @@ function Base.getproperty(obj::ConceptManager_Res, name::Symbol)
     end
 end
 
-mutable struct Thing_Req <: ProtoType
+mutable struct Thing_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function Thing_Req(; kwargs...)
-        obj = new(meta(Thing_Req), Dict{Symbol,Any}(), Set{Symbol}())
+    function Thing_ResPart(; kwargs...)
+        obj = new(meta(Thing_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -2924,213 +3131,38 @@ mutable struct Thing_Req <: ProtoType
         end
         obj
     end
-end # mutable struct Thing_Req
-const __meta_Thing_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_Req})
+end # mutable struct Thing_ResPart
+const __meta_Thing_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Thing_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_Req)
-            __meta_Thing_Req[] = target = ProtoMeta(Thing_Req)
-            fnum = Int[1,100,101,102,103,104,105,106,107,200,201,202,203,300]
-            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :thing_delete_req => Thing_Delete_Req, :thing_get_type_req => Thing_GetType_Req, :thing_is_inferred_req => Thing_IsInferred_Req, :thing_set_has_req => Thing_SetHas_Req, :thing_unset_has_req => Thing_UnsetHas_Req, :thing_get_has_req => Thing_GetHas_Req, :thing_get_relations_req => Thing_GetRelations_Req, :thing_get_plays_req => Thing_GetPlays_Req, :relation_add_player_req => Relation_AddPlayer_Req, :relation_remove_player_req => Relation_RemovePlayer_Req, :relation_get_players_req => Relation_GetPlayers_Req, :relation_get_players_by_role_type_req => Relation_GetPlayersByRoleType_Req, :attribute_get_owners_req => Attribute_GetOwners_Req]
-            oneofs = Int[0,1,1,1,1,1,1,1,1,1,1,1,1,1]
-            oneof_names = Symbol[Symbol("req")]
-            meta(target, Thing_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
-        end
-        __meta_Thing_Req[]
-    end
-end
-function Base.getproperty(obj::Thing_Req, name::Symbol)
-    if name === :iid
-        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
-    elseif name === :thing_delete_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_Delete_Req
-    elseif name === :thing_get_type_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetType_Req
-    elseif name === :thing_is_inferred_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_IsInferred_Req
-    elseif name === :thing_set_has_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_SetHas_Req
-    elseif name === :thing_unset_has_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_UnsetHas_Req
-    elseif name === :thing_get_has_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_Req
-    elseif name === :thing_get_relations_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetRelations_Req
-    elseif name === :thing_get_plays_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlays_Req
-    elseif name === :relation_add_player_req
-        return (obj.__protobuf_jl_internal_values[name])::Relation_AddPlayer_Req
-    elseif name === :relation_remove_player_req
-        return (obj.__protobuf_jl_internal_values[name])::Relation_RemovePlayer_Req
-    elseif name === :relation_get_players_req
-        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayers_Req
-    elseif name === :relation_get_players_by_role_type_req
-        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayersByRoleType_Req
-    elseif name === :attribute_get_owners_req
-        return (obj.__protobuf_jl_internal_values[name])::Attribute_GetOwners_Req
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_Res(; kwargs...)
-        obj = new(meta(Thing_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_Res
-const __meta_Thing_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_Res)
-            __meta_Thing_Res[] = target = ProtoMeta(Thing_Res)
-            fnum = Int[100,101,102,103,104,105,106,107,200,201,202,203,300]
-            allflds = Pair{Symbol,Union{Type,String}}[:thing_delete_res => Thing_Delete_Res, :thing_get_type_res => Thing_GetType_Res, :thing_is_inferred_res => Thing_IsInferred_Res, :thing_set_has_res => Thing_SetHas_Res, :thing_unset_has_res => Thing_UnsetHas_Res, :thing_get_has_res => Thing_GetHas_Res, :thing_get_relations_res => Thing_GetRelations_Res, :thing_get_plays_res => Thing_GetPlays_Res, :relation_add_player_res => Relation_AddPlayer_Res, :relation_remove_player_res => Relation_RemovePlayer_Res, :relation_get_players_res => Relation_GetPlayers_Res, :relation_get_players_by_role_type_res => Relation_GetPlayersByRoleType_Res, :attribute_get_owners_res => Attribute_GetOwners_Res]
-            oneofs = Int[1,1,1,1,1,1,1,1,1,1,1,1,1]
+        if !isassigned(__meta_Thing_ResPart)
+            __meta_Thing_ResPart[] = target = ProtoMeta(Thing_ResPart)
+            fnum = Int[100,101,102,200,201,202,300]
+            allflds = Pair{Symbol,Union{Type,String}}[:thing_get_has_res_part => Thing_GetHas_ResPart, :thing_get_relations_res_part => Thing_GetRelations_ResPart, :thing_get_playing_res_part => Thing_GetPlaying_ResPart, :relation_get_players_res_part => Relation_GetPlayers_ResPart, :relation_get_players_by_role_type_res_part => Relation_GetPlayersByRoleType_ResPart, :relation_get_relating_res_part => Relation_GetRelating_ResPart, :attribute_get_owners_res_part => Attribute_GetOwners_ResPart]
+            oneofs = Int[1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
-            meta(target, Thing_Res, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+            meta(target, Thing_ResPart, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
-        __meta_Thing_Res[]
+        __meta_Thing_ResPart[]
     end
 end
-function Base.getproperty(obj::Thing_Res, name::Symbol)
-    if name === :thing_delete_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_Delete_Res
-    elseif name === :thing_get_type_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetType_Res
-    elseif name === :thing_is_inferred_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_IsInferred_Res
-    elseif name === :thing_set_has_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_SetHas_Res
-    elseif name === :thing_unset_has_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_UnsetHas_Res
-    elseif name === :thing_get_has_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_Res
-    elseif name === :thing_get_relations_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetRelations_Res
-    elseif name === :thing_get_plays_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlays_Res
-    elseif name === :relation_add_player_res
-        return (obj.__protobuf_jl_internal_values[name])::Relation_AddPlayer_Res
-    elseif name === :relation_remove_player_res
-        return (obj.__protobuf_jl_internal_values[name])::Relation_RemovePlayer_Res
-    elseif name === :relation_get_players_res
-        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayers_Res
-    elseif name === :relation_get_players_by_role_type_res
-        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayersByRoleType_Res
-    elseif name === :attribute_get_owners_res
-        return (obj.__protobuf_jl_internal_values[name])::Attribute_GetOwners_Res
+function Base.getproperty(obj::Thing_ResPart, name::Symbol)
+    if name === :thing_get_has_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_ResPart
+    elseif name === :thing_get_relations_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetRelations_ResPart
+    elseif name === :thing_get_playing_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Thing_GetPlaying_ResPart
+    elseif name === :relation_get_players_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayers_ResPart
+    elseif name === :relation_get_players_by_role_type_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetPlayersByRoleType_ResPart
+    elseif name === :relation_get_relating_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Relation_GetRelating_ResPart
+    elseif name === :attribute_get_owners_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Attribute_GetOwners_ResPart
     else
         getfield(obj, name)
-    end
-end
-
-mutable struct RoleType_GetRelationType_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function RoleType_GetRelationType_Req(; kwargs...)
-        obj = new(meta(RoleType_GetRelationType_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct RoleType_GetRelationType_Req
-const __meta_RoleType_GetRelationType_Req = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetRelationType_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetRelationType_Req)
-            __meta_RoleType_GetRelationType_Req[] = target = ProtoMeta(RoleType_GetRelationType_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, RoleType_GetRelationType_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_RoleType_GetRelationType_Req[]
-    end
-end
-
-mutable struct RoleType_GetRelationType_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function RoleType_GetRelationType_Res(; kwargs...)
-        obj = new(meta(RoleType_GetRelationType_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct RoleType_GetRelationType_Res
-const __meta_RoleType_GetRelationType_Res = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetRelationType_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetRelationType_Res)
-            __meta_RoleType_GetRelationType_Res[] = target = ProtoMeta(RoleType_GetRelationType_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:relation_type => _Type]
-            meta(target, RoleType_GetRelationType_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_RoleType_GetRelationType_Res[]
-    end
-end
-function Base.getproperty(obj::RoleType_GetRelationType_Res, name::Symbol)
-    if name === :relation_type
-        return (obj.__protobuf_jl_internal_values[name])::_Type
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct RoleType_GetRelationType <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function RoleType_GetRelationType(; kwargs...)
-        obj = new(meta(RoleType_GetRelationType), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct RoleType_GetRelationType
-const __meta_RoleType_GetRelationType = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetRelationType})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetRelationType)
-            __meta_RoleType_GetRelationType[] = target = ProtoMeta(RoleType_GetRelationType)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, RoleType_GetRelationType, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_RoleType_GetRelationType[]
     end
 end
 
@@ -3164,13 +3196,13 @@ function meta(::Type{RoleType_GetRelationTypes_Req})
     end
 end
 
-mutable struct RoleType_GetRelationTypes_Res <: ProtoType
+mutable struct RoleType_GetRelationTypes_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function RoleType_GetRelationTypes_Res(; kwargs...)
-        obj = new(meta(RoleType_GetRelationTypes_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function RoleType_GetRelationTypes_ResPart(; kwargs...)
+        obj = new(meta(RoleType_GetRelationTypes_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -3181,19 +3213,19 @@ mutable struct RoleType_GetRelationTypes_Res <: ProtoType
         end
         obj
     end
-end # mutable struct RoleType_GetRelationTypes_Res
-const __meta_RoleType_GetRelationTypes_Res = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetRelationTypes_Res})
+end # mutable struct RoleType_GetRelationTypes_ResPart
+const __meta_RoleType_GetRelationTypes_ResPart = Ref{ProtoMeta}()
+function meta(::Type{RoleType_GetRelationTypes_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetRelationTypes_Res)
-            __meta_RoleType_GetRelationTypes_Res[] = target = ProtoMeta(RoleType_GetRelationTypes_Res)
+        if !isassigned(__meta_RoleType_GetRelationTypes_ResPart)
+            __meta_RoleType_GetRelationTypes_ResPart[] = target = ProtoMeta(RoleType_GetRelationTypes_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:relation_types => Base.Vector{_Type}]
-            meta(target, RoleType_GetRelationTypes_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, RoleType_GetRelationTypes_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_RoleType_GetRelationTypes_Res[]
+        __meta_RoleType_GetRelationTypes_ResPart[]
     end
 end
-function Base.getproperty(obj::RoleType_GetRelationTypes_Res, name::Symbol)
+function Base.getproperty(obj::RoleType_GetRelationTypes_ResPart, name::Symbol)
     if name === :relation_types
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
@@ -3261,13 +3293,13 @@ function meta(::Type{RoleType_GetPlayers_Req})
     end
 end
 
-mutable struct RoleType_GetPlayers_Res <: ProtoType
+mutable struct RoleType_GetPlayers_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function RoleType_GetPlayers_Res(; kwargs...)
-        obj = new(meta(RoleType_GetPlayers_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function RoleType_GetPlayers_ResPart(; kwargs...)
+        obj = new(meta(RoleType_GetPlayers_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -3278,19 +3310,19 @@ mutable struct RoleType_GetPlayers_Res <: ProtoType
         end
         obj
     end
-end # mutable struct RoleType_GetPlayers_Res
-const __meta_RoleType_GetPlayers_Res = Ref{ProtoMeta}()
-function meta(::Type{RoleType_GetPlayers_Res})
+end # mutable struct RoleType_GetPlayers_ResPart
+const __meta_RoleType_GetPlayers_ResPart = Ref{ProtoMeta}()
+function meta(::Type{RoleType_GetPlayers_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_RoleType_GetPlayers_Res)
-            __meta_RoleType_GetPlayers_Res[] = target = ProtoMeta(RoleType_GetPlayers_Res)
+        if !isassigned(__meta_RoleType_GetPlayers_ResPart)
+            __meta_RoleType_GetPlayers_ResPart[] = target = ProtoMeta(RoleType_GetPlayers_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:thing_types => Base.Vector{_Type}]
-            meta(target, RoleType_GetPlayers_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, RoleType_GetPlayers_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_RoleType_GetPlayers_Res[]
+        __meta_RoleType_GetPlayers_ResPart[]
     end
 end
-function Base.getproperty(obj::RoleType_GetPlayers_Res, name::Symbol)
+function Base.getproperty(obj::RoleType_GetPlayers_ResPart, name::Symbol)
     if name === :thing_types
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
@@ -3568,13 +3600,13 @@ function meta(::Type{ThingType_GetInstances_Req})
     end
 end
 
-mutable struct ThingType_GetInstances_Res <: ProtoType
+mutable struct ThingType_GetInstances_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function ThingType_GetInstances_Res(; kwargs...)
-        obj = new(meta(ThingType_GetInstances_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function ThingType_GetInstances_ResPart(; kwargs...)
+        obj = new(meta(ThingType_GetInstances_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -3585,19 +3617,19 @@ mutable struct ThingType_GetInstances_Res <: ProtoType
         end
         obj
     end
-end # mutable struct ThingType_GetInstances_Res
-const __meta_ThingType_GetInstances_Res = Ref{ProtoMeta}()
-function meta(::Type{ThingType_GetInstances_Res})
+end # mutable struct ThingType_GetInstances_ResPart
+const __meta_ThingType_GetInstances_ResPart = Ref{ProtoMeta}()
+function meta(::Type{ThingType_GetInstances_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_ThingType_GetInstances_Res)
-            __meta_ThingType_GetInstances_Res[] = target = ProtoMeta(ThingType_GetInstances_Res)
+        if !isassigned(__meta_ThingType_GetInstances_ResPart)
+            __meta_ThingType_GetInstances_ResPart[] = target = ProtoMeta(ThingType_GetInstances_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:things => Base.Vector{Thing}]
-            meta(target, ThingType_GetInstances_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, ThingType_GetInstances_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_ThingType_GetInstances_Res[]
+        __meta_ThingType_GetInstances_ResPart[]
     end
 end
-function Base.getproperty(obj::ThingType_GetInstances_Res, name::Symbol)
+function Base.getproperty(obj::ThingType_GetInstances_ResPart, name::Symbol)
     if name === :things
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
     else
@@ -3677,13 +3709,13 @@ function Base.getproperty(obj::ThingType_GetOwns_Req, name::Symbol)
     end
 end
 
-mutable struct ThingType_GetOwns_Res <: ProtoType
+mutable struct ThingType_GetOwns_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function ThingType_GetOwns_Res(; kwargs...)
-        obj = new(meta(ThingType_GetOwns_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function ThingType_GetOwns_ResPart(; kwargs...)
+        obj = new(meta(ThingType_GetOwns_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -3694,19 +3726,19 @@ mutable struct ThingType_GetOwns_Res <: ProtoType
         end
         obj
     end
-end # mutable struct ThingType_GetOwns_Res
-const __meta_ThingType_GetOwns_Res = Ref{ProtoMeta}()
-function meta(::Type{ThingType_GetOwns_Res})
+end # mutable struct ThingType_GetOwns_ResPart
+const __meta_ThingType_GetOwns_ResPart = Ref{ProtoMeta}()
+function meta(::Type{ThingType_GetOwns_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_ThingType_GetOwns_Res)
-            __meta_ThingType_GetOwns_Res[] = target = ProtoMeta(ThingType_GetOwns_Res)
+        if !isassigned(__meta_ThingType_GetOwns_ResPart)
+            __meta_ThingType_GetOwns_ResPart[] = target = ProtoMeta(ThingType_GetOwns_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:attribute_types => Base.Vector{_Type}]
-            meta(target, ThingType_GetOwns_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, ThingType_GetOwns_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_ThingType_GetOwns_Res[]
+        __meta_ThingType_GetOwns_ResPart[]
     end
 end
-function Base.getproperty(obj::ThingType_GetOwns_Res, name::Symbol)
+function Base.getproperty(obj::ThingType_GetOwns_ResPart, name::Symbol)
     if name === :attribute_types
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
@@ -3774,13 +3806,13 @@ function meta(::Type{ThingType_GetPlays_Req})
     end
 end
 
-mutable struct ThingType_GetPlays_Res <: ProtoType
+mutable struct ThingType_GetPlays_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function ThingType_GetPlays_Res(; kwargs...)
-        obj = new(meta(ThingType_GetPlays_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function ThingType_GetPlays_ResPart(; kwargs...)
+        obj = new(meta(ThingType_GetPlays_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -3791,19 +3823,19 @@ mutable struct ThingType_GetPlays_Res <: ProtoType
         end
         obj
     end
-end # mutable struct ThingType_GetPlays_Res
-const __meta_ThingType_GetPlays_Res = Ref{ProtoMeta}()
-function meta(::Type{ThingType_GetPlays_Res})
+end # mutable struct ThingType_GetPlays_ResPart
+const __meta_ThingType_GetPlays_ResPart = Ref{ProtoMeta}()
+function meta(::Type{ThingType_GetPlays_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_ThingType_GetPlays_Res)
-            __meta_ThingType_GetPlays_Res[] = target = ProtoMeta(ThingType_GetPlays_Res)
+        if !isassigned(__meta_ThingType_GetPlays_ResPart)
+            __meta_ThingType_GetPlays_ResPart[] = target = ProtoMeta(ThingType_GetPlays_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:roles => Base.Vector{_Type}]
-            meta(target, ThingType_GetPlays_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, ThingType_GetPlays_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_ThingType_GetPlays_Res[]
+        __meta_ThingType_GetPlays_ResPart[]
     end
 end
-function Base.getproperty(obj::ThingType_GetPlays_Res, name::Symbol)
+function Base.getproperty(obj::ThingType_GetPlays_ResPart, name::Symbol)
     if name === :roles
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
@@ -4523,13 +4555,13 @@ function meta(::Type{RelationType_GetRelates_Req})
     end
 end
 
-mutable struct RelationType_GetRelates_Res <: ProtoType
+mutable struct RelationType_GetRelates_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function RelationType_GetRelates_Res(; kwargs...)
-        obj = new(meta(RelationType_GetRelates_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function RelationType_GetRelates_ResPart(; kwargs...)
+        obj = new(meta(RelationType_GetRelates_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -4540,19 +4572,19 @@ mutable struct RelationType_GetRelates_Res <: ProtoType
         end
         obj
     end
-end # mutable struct RelationType_GetRelates_Res
-const __meta_RelationType_GetRelates_Res = Ref{ProtoMeta}()
-function meta(::Type{RelationType_GetRelates_Res})
+end # mutable struct RelationType_GetRelates_ResPart
+const __meta_RelationType_GetRelates_ResPart = Ref{ProtoMeta}()
+function meta(::Type{RelationType_GetRelates_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_RelationType_GetRelates_Res)
-            __meta_RelationType_GetRelates_Res[] = target = ProtoMeta(RelationType_GetRelates_Res)
+        if !isassigned(__meta_RelationType_GetRelates_ResPart)
+            __meta_RelationType_GetRelates_ResPart[] = target = ProtoMeta(RelationType_GetRelates_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:roles => Base.Vector{_Type}]
-            meta(target, RelationType_GetRelates_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, RelationType_GetRelates_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_RelationType_GetRelates_Res[]
+        __meta_RelationType_GetRelates_ResPart[]
     end
 end
-function Base.getproperty(obj::RelationType_GetRelates_Res, name::Symbol)
+function Base.getproperty(obj::RelationType_GetRelates_ResPart, name::Symbol)
     if name === :roles
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
@@ -5180,13 +5212,13 @@ function Base.getproperty(obj::AttributeType_GetOwners_Req, name::Symbol)
     end
 end
 
-mutable struct AttributeType_GetOwners_Res <: ProtoType
+mutable struct AttributeType_GetOwners_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function AttributeType_GetOwners_Res(; kwargs...)
-        obj = new(meta(AttributeType_GetOwners_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function AttributeType_GetOwners_ResPart(; kwargs...)
+        obj = new(meta(AttributeType_GetOwners_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -5197,21 +5229,77 @@ mutable struct AttributeType_GetOwners_Res <: ProtoType
         end
         obj
     end
-end # mutable struct AttributeType_GetOwners_Res
-const __meta_AttributeType_GetOwners_Res = Ref{ProtoMeta}()
-function meta(::Type{AttributeType_GetOwners_Res})
+end # mutable struct AttributeType_GetOwners_ResPart
+const __meta_AttributeType_GetOwners_ResPart = Ref{ProtoMeta}()
+function meta(::Type{AttributeType_GetOwners_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_AttributeType_GetOwners_Res)
-            __meta_AttributeType_GetOwners_Res[] = target = ProtoMeta(AttributeType_GetOwners_Res)
+        if !isassigned(__meta_AttributeType_GetOwners_ResPart)
+            __meta_AttributeType_GetOwners_ResPart[] = target = ProtoMeta(AttributeType_GetOwners_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:owners => Base.Vector{_Type}]
-            meta(target, AttributeType_GetOwners_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, AttributeType_GetOwners_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_AttributeType_GetOwners_Res[]
+        __meta_AttributeType_GetOwners_ResPart[]
     end
 end
-function Base.getproperty(obj::AttributeType_GetOwners_Res, name::Symbol)
+function Base.getproperty(obj::AttributeType_GetOwners_ResPart, name::Symbol)
     if name === :owners
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Type_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Type_ResPart(; kwargs...)
+        obj = new(meta(Type_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Type_ResPart
+const __meta_Type_ResPart = Ref{ProtoMeta}()
+function meta(::Type{Type_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Type_ResPart)
+            __meta_Type_ResPart[] = target = ProtoMeta(Type_ResPart)
+            fnum = Int[100,101,200,201,300,301,302,500,600]
+            allflds = Pair{Symbol,Union{Type,String}}[:type_get_supertypes_res_part => Type_GetSupertypes_ResPart, :type_get_subtypes_res_part => Type_GetSubtypes_ResPart, :role_type_get_relation_types_res_part => RoleType_GetRelationTypes_ResPart, :role_type_get_players_res_part => RoleType_GetPlayers_ResPart, :thing_type_get_instances_res_part => ThingType_GetInstances_ResPart, :thing_type_get_owns_res_part => ThingType_GetOwns_ResPart, :thing_type_get_plays_res_part => ThingType_GetPlays_ResPart, :relation_type_get_relates_res_part => RelationType_GetRelates_ResPart, :attribute_type_get_owners_res_part => AttributeType_GetOwners_ResPart]
+            oneofs = Int[1,1,1,1,1,1,1,1,1]
+            oneof_names = Symbol[Symbol("res")]
+            meta(target, Type_ResPart, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
+        end
+        __meta_Type_ResPart[]
+    end
+end
+function Base.getproperty(obj::Type_ResPart, name::Symbol)
+    if name === :type_get_supertypes_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Type_GetSupertypes_ResPart
+    elseif name === :type_get_subtypes_res_part
+        return (obj.__protobuf_jl_internal_values[name])::Type_GetSubtypes_ResPart
+    elseif name === :role_type_get_relation_types_res_part
+        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationTypes_ResPart
+    elseif name === :role_type_get_players_res_part
+        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetPlayers_ResPart
+    elseif name === :thing_type_get_instances_res_part
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetInstances_ResPart
+    elseif name === :thing_type_get_owns_res_part
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetOwns_ResPart
+    elseif name === :thing_type_get_plays_res_part
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetPlays_ResPart
+    elseif name === :relation_type_get_relates_res_part
+        return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelates_ResPart
+    elseif name === :attribute_type_get_owners_res_part
+        return (obj.__protobuf_jl_internal_values[name])::AttributeType_GetOwners_ResPart
     else
         getfield(obj, name)
     end
@@ -5404,9 +5492,9 @@ function meta(::Type{Type_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Type_Req)
             __meta_Type_Req[] = target = ProtoMeta(Type_Req)
-            fnum = Int[1,2,100,101,102,103,104,105,106,200,201,202,300,301,302,303,304,305,306,307,308,400,500,501,502,503,504,600,601,602,603,604]
-            allflds = Pair{Symbol,Union{Type,String}}[:label => AbstractString, :scope => AbstractString, :type_delete_req => Type_Delete_Req, :type_set_label_req => Type_SetLabel_Req, :type_is_abstract_req => Type_IsAbstract_Req, :type_get_supertype_req => Type_GetSupertype_Req, :type_set_supertype_req => Type_SetSupertype_Req, :type_get_supertypes_req => Type_GetSupertypes_Req, :type_get_subtypes_req => Type_GetSubtypes_Req, :role_type_get_relation_type_req => RoleType_GetRelationType_Req, :role_type_get_relation_types_req => RoleType_GetRelationTypes_Req, :role_type_get_players_req => RoleType_GetPlayers_Req, :thing_type_set_abstract_req => ThingType_SetAbstract_Req, :thing_type_unset_abstract_req => ThingType_UnsetAbstract_Req, :thing_type_set_owns_req => ThingType_SetOwns_Req, :thing_type_unset_owns_req => ThingType_UnsetOwns_Req, :thing_type_set_plays_req => ThingType_SetPlays_Req, :thing_type_unset_plays_req => ThingType_UnsetPlays_Req, :thing_type_get_instances_req => ThingType_GetInstances_Req, :thing_type_get_owns_req => ThingType_GetOwns_Req, :thing_type_get_plays_req => ThingType_GetPlays_Req, :entity_type_create_req => EntityType_Create_Req, :relation_type_create_req => RelationType_Create_Req, :relation_type_get_relates_for_role_label_req => RelationType_GetRelatesForRoleLabel_Req, :relation_type_set_relates_req => RelationType_SetRelates_Req, :relation_type_unset_relates_req => RelationType_UnsetRelates_Req, :relation_type_get_relates_req => RelationType_GetRelates_Req, :attribute_type_put_req => AttributeType_Put_Req, :attribute_type_get_req => AttributeType_Get_Req, :attribute_type_get_regex_req => AttributeType_GetRegex_Req, :attribute_type_set_regex_req => AttributeType_SetRegex_Req, :attribute_type_get_owners_req => AttributeType_GetOwners_Req]
-            oneofs = Int[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            fnum = Int[1,2,100,101,102,103,104,105,106,200,201,300,301,302,303,304,305,306,307,308,400,500,501,502,503,504,600,601,602,603,604]
+            allflds = Pair{Symbol,Union{Type,String}}[:label => AbstractString, :scope => AbstractString, :type_delete_req => Type_Delete_Req, :type_set_label_req => Type_SetLabel_Req, :type_is_abstract_req => Type_IsAbstract_Req, :type_get_supertype_req => Type_GetSupertype_Req, :type_set_supertype_req => Type_SetSupertype_Req, :type_get_supertypes_req => Type_GetSupertypes_Req, :type_get_subtypes_req => Type_GetSubtypes_Req, :role_type_get_relation_types_req => RoleType_GetRelationTypes_Req, :role_type_get_players_req => RoleType_GetPlayers_Req, :thing_type_get_instances_req => ThingType_GetInstances_Req, :thing_type_set_abstract_req => ThingType_SetAbstract_Req, :thing_type_unset_abstract_req => ThingType_UnsetAbstract_Req, :thing_type_get_owns_req => ThingType_GetOwns_Req, :thing_type_set_owns_req => ThingType_SetOwns_Req, :thing_type_unset_owns_req => ThingType_UnsetOwns_Req, :thing_type_get_plays_req => ThingType_GetPlays_Req, :thing_type_set_plays_req => ThingType_SetPlays_Req, :thing_type_unset_plays_req => ThingType_UnsetPlays_Req, :entity_type_create_req => EntityType_Create_Req, :relation_type_create_req => RelationType_Create_Req, :relation_type_get_relates_for_role_label_req => RelationType_GetRelatesForRoleLabel_Req, :relation_type_get_relates_req => RelationType_GetRelates_Req, :relation_type_set_relates_req => RelationType_SetRelates_Req, :relation_type_unset_relates_req => RelationType_UnsetRelates_Req, :attribute_type_put_req => AttributeType_Put_Req, :attribute_type_get_req => AttributeType_Get_Req, :attribute_type_get_regex_req => AttributeType_GetRegex_Req, :attribute_type_set_regex_req => AttributeType_SetRegex_Req, :attribute_type_get_owners_req => AttributeType_GetOwners_Req]
+            oneofs = Int[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("req")]
             meta(target, Type_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -5432,42 +5520,40 @@ function Base.getproperty(obj::Type_Req, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Type_GetSupertypes_Req
     elseif name === :type_get_subtypes_req
         return (obj.__protobuf_jl_internal_values[name])::Type_GetSubtypes_Req
-    elseif name === :role_type_get_relation_type_req
-        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationType_Req
     elseif name === :role_type_get_relation_types_req
         return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationTypes_Req
     elseif name === :role_type_get_players_req
         return (obj.__protobuf_jl_internal_values[name])::RoleType_GetPlayers_Req
+    elseif name === :thing_type_get_instances_req
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetInstances_Req
     elseif name === :thing_type_set_abstract_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetAbstract_Req
     elseif name === :thing_type_unset_abstract_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_UnsetAbstract_Req
+    elseif name === :thing_type_get_owns_req
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetOwns_Req
     elseif name === :thing_type_set_owns_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetOwns_Req
     elseif name === :thing_type_unset_owns_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_UnsetOwns_Req
+    elseif name === :thing_type_get_plays_req
+        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetPlays_Req
     elseif name === :thing_type_set_plays_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetPlays_Req
     elseif name === :thing_type_unset_plays_req
         return (obj.__protobuf_jl_internal_values[name])::ThingType_UnsetPlays_Req
-    elseif name === :thing_type_get_instances_req
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetInstances_Req
-    elseif name === :thing_type_get_owns_req
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetOwns_Req
-    elseif name === :thing_type_get_plays_req
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetPlays_Req
     elseif name === :entity_type_create_req
         return (obj.__protobuf_jl_internal_values[name])::EntityType_Create_Req
     elseif name === :relation_type_create_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_Create_Req
     elseif name === :relation_type_get_relates_for_role_label_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelatesForRoleLabel_Req
+    elseif name === :relation_type_get_relates_req
+        return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelates_Req
     elseif name === :relation_type_set_relates_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_SetRelates_Req
     elseif name === :relation_type_unset_relates_req
         return (obj.__protobuf_jl_internal_values[name])::RelationType_UnsetRelates_Req
-    elseif name === :relation_type_get_relates_req
-        return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelates_Req
     elseif name === :attribute_type_put_req
         return (obj.__protobuf_jl_internal_values[name])::AttributeType_Put_Req
     elseif name === :attribute_type_get_req
@@ -5536,9 +5622,9 @@ function meta(::Type{Type_Res})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Type_Res)
             __meta_Type_Res[] = target = ProtoMeta(Type_Res)
-            fnum = Int[100,101,102,103,104,105,106,200,201,202,300,301,302,303,304,305,306,307,308,400,500,501,502,503,504,600,601,602,603,604]
-            allflds = Pair{Symbol,Union{Type,String}}[:type_delete_res => Type_Delete_Res, :type_set_label_res => Type_SetLabel_Res, :type_is_abstract_res => Type_IsAbstract_Res, :type_get_supertype_res => Type_GetSupertype_Res, :type_set_supertype_res => Type_SetSupertype_Res, :type_get_supertypes_res => Type_GetSupertypes_Res, :type_get_subtypes_res => Type_GetSubtypes_Res, :role_type_get_relation_type_res => RoleType_GetRelationType_Res, :role_type_get_relation_types_res => RoleType_GetRelationTypes_Res, :role_type_get_players_res => RoleType_GetPlayers_Res, :thing_type_set_abstract_res => ThingType_SetAbstract_Res, :thing_type_unset_abstract_res => ThingType_UnsetAbstract_Res, :thing_type_set_owns_res => ThingType_SetOwns_Res, :thing_type_unset_owns_res => ThingType_UnsetOwns_Res, :thing_type_set_plays_res => ThingType_SetPlays_Res, :thing_type_unset_plays_res => ThingType_UnsetPlays_Res, :thing_type_get_instances_res => ThingType_GetInstances_Res, :thing_type_get_owns_res => ThingType_GetOwns_Res, :thing_type_get_plays_res => ThingType_GetPlays_Res, :entity_type_create_res => EntityType_Create_Res, :relation_type_create_res => RelationType_Create_Res, :relation_type_get_relates_for_role_label_res => RelationType_GetRelatesForRoleLabel_Res, :relation_type_set_relates_res => RelationType_SetRelates_Res, :relation_type_unset_relates_res => RelationType_UnsetRelates_Res, :relation_type_get_relates_res => RelationType_GetRelates_Res, :attribute_type_put_res => AttributeType_Put_Res, :attribute_type_get_res => AttributeType_Get_Res, :attribute_type_get_regex_res => AttributeType_GetRegex_Res, :attribute_type_set_regex_res => AttributeType_SetRegex_Res, :attribute_type_get_owners_res => AttributeType_GetOwners_Res]
-            oneofs = Int[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            fnum = Int[100,101,102,103,104,300,301,302,303,304,305,400,500,501,502,503,600,601,602,603]
+            allflds = Pair{Symbol,Union{Type,String}}[:type_delete_res => Type_Delete_Res, :type_set_label_res => Type_SetLabel_Res, :type_is_abstract_res => Type_IsAbstract_Res, :type_get_supertype_res => Type_GetSupertype_Res, :type_set_supertype_res => Type_SetSupertype_Res, :thing_type_set_abstract_res => ThingType_SetAbstract_Res, :thing_type_unset_abstract_res => ThingType_UnsetAbstract_Res, :thing_type_set_owns_res => ThingType_SetOwns_Res, :thing_type_unset_owns_res => ThingType_UnsetOwns_Res, :thing_type_set_plays_res => ThingType_SetPlays_Res, :thing_type_unset_plays_res => ThingType_UnsetPlays_Res, :entity_type_create_res => EntityType_Create_Res, :relation_type_create_res => RelationType_Create_Res, :relation_type_get_relates_for_role_label_res => RelationType_GetRelatesForRoleLabel_Res, :relation_type_set_relates_res => RelationType_SetRelates_Res, :relation_type_unset_relates_res => RelationType_UnsetRelates_Res, :attribute_type_put_res => AttributeType_Put_Res, :attribute_type_get_res => AttributeType_Get_Res, :attribute_type_get_regex_res => AttributeType_GetRegex_Res, :attribute_type_set_regex_res => AttributeType_SetRegex_Res]
+            oneofs = Int[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
             meta(target, Type_Res, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -5556,16 +5642,6 @@ function Base.getproperty(obj::Type_Res, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Type_GetSupertype_Res
     elseif name === :type_set_supertype_res
         return (obj.__protobuf_jl_internal_values[name])::Type_SetSupertype_Res
-    elseif name === :type_get_supertypes_res
-        return (obj.__protobuf_jl_internal_values[name])::Type_GetSupertypes_Res
-    elseif name === :type_get_subtypes_res
-        return (obj.__protobuf_jl_internal_values[name])::Type_GetSubtypes_Res
-    elseif name === :role_type_get_relation_type_res
-        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationType_Res
-    elseif name === :role_type_get_relation_types_res
-        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetRelationTypes_Res
-    elseif name === :role_type_get_players_res
-        return (obj.__protobuf_jl_internal_values[name])::RoleType_GetPlayers_Res
     elseif name === :thing_type_set_abstract_res
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetAbstract_Res
     elseif name === :thing_type_unset_abstract_res
@@ -5578,12 +5654,6 @@ function Base.getproperty(obj::Type_Res, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::ThingType_SetPlays_Res
     elseif name === :thing_type_unset_plays_res
         return (obj.__protobuf_jl_internal_values[name])::ThingType_UnsetPlays_Res
-    elseif name === :thing_type_get_instances_res
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetInstances_Res
-    elseif name === :thing_type_get_owns_res
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetOwns_Res
-    elseif name === :thing_type_get_plays_res
-        return (obj.__protobuf_jl_internal_values[name])::ThingType_GetPlays_Res
     elseif name === :entity_type_create_res
         return (obj.__protobuf_jl_internal_values[name])::EntityType_Create_Res
     elseif name === :relation_type_create_res
@@ -5594,8 +5664,6 @@ function Base.getproperty(obj::Type_Res, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::RelationType_SetRelates_Res
     elseif name === :relation_type_unset_relates_res
         return (obj.__protobuf_jl_internal_values[name])::RelationType_UnsetRelates_Res
-    elseif name === :relation_type_get_relates_res
-        return (obj.__protobuf_jl_internal_values[name])::RelationType_GetRelates_Res
     elseif name === :attribute_type_put_res
         return (obj.__protobuf_jl_internal_values[name])::AttributeType_Put_Res
     elseif name === :attribute_type_get_res
@@ -5604,8 +5672,6 @@ function Base.getproperty(obj::Type_Res, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::AttributeType_GetRegex_Res
     elseif name === :attribute_type_set_regex_res
         return (obj.__protobuf_jl_internal_values[name])::AttributeType_SetRegex_Res
-    elseif name === :attribute_type_get_owners_res
-        return (obj.__protobuf_jl_internal_values[name])::AttributeType_GetOwners_Res
     else
         getfield(obj, name)
     end
@@ -5680,13 +5746,13 @@ function Base.getproperty(obj::AttributeType_GetSubtypes_Req, name::Symbol)
     end
 end
 
-mutable struct AttributeType_GetSubtypes_Res <: ProtoType
+mutable struct AttributeType_GetSubtypes_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function AttributeType_GetSubtypes_Res(; kwargs...)
-        obj = new(meta(AttributeType_GetSubtypes_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function AttributeType_GetSubtypes_ResPart(; kwargs...)
+        obj = new(meta(AttributeType_GetSubtypes_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -5697,19 +5763,19 @@ mutable struct AttributeType_GetSubtypes_Res <: ProtoType
         end
         obj
     end
-end # mutable struct AttributeType_GetSubtypes_Res
-const __meta_AttributeType_GetSubtypes_Res = Ref{ProtoMeta}()
-function meta(::Type{AttributeType_GetSubtypes_Res})
+end # mutable struct AttributeType_GetSubtypes_ResPart
+const __meta_AttributeType_GetSubtypes_ResPart = Ref{ProtoMeta}()
+function meta(::Type{AttributeType_GetSubtypes_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_AttributeType_GetSubtypes_Res)
-            __meta_AttributeType_GetSubtypes_Res[] = target = ProtoMeta(AttributeType_GetSubtypes_Res)
+        if !isassigned(__meta_AttributeType_GetSubtypes_ResPart)
+            __meta_AttributeType_GetSubtypes_ResPart[] = target = ProtoMeta(AttributeType_GetSubtypes_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:types => Base.Vector{_Type}]
-            meta(target, AttributeType_GetSubtypes_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, AttributeType_GetSubtypes_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_AttributeType_GetSubtypes_Res[]
+        __meta_AttributeType_GetSubtypes_ResPart[]
     end
 end
-function Base.getproperty(obj::AttributeType_GetSubtypes_Res, name::Symbol)
+function Base.getproperty(obj::AttributeType_GetSubtypes_ResPart, name::Symbol)
     if name === :types
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{_Type}
     else
@@ -5786,13 +5852,13 @@ function Base.getproperty(obj::AttributeType_GetInstances_Req, name::Symbol)
     end
 end
 
-mutable struct AttributeType_GetInstances_Res <: ProtoType
+mutable struct AttributeType_GetInstances_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function AttributeType_GetInstances_Res(; kwargs...)
-        obj = new(meta(AttributeType_GetInstances_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function AttributeType_GetInstances_ResPart(; kwargs...)
+        obj = new(meta(AttributeType_GetInstances_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -5803,19 +5869,19 @@ mutable struct AttributeType_GetInstances_Res <: ProtoType
         end
         obj
     end
-end # mutable struct AttributeType_GetInstances_Res
-const __meta_AttributeType_GetInstances_Res = Ref{ProtoMeta}()
-function meta(::Type{AttributeType_GetInstances_Res})
+end # mutable struct AttributeType_GetInstances_ResPart
+const __meta_AttributeType_GetInstances_ResPart = Ref{ProtoMeta}()
+function meta(::Type{AttributeType_GetInstances_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_AttributeType_GetInstances_Res)
-            __meta_AttributeType_GetInstances_Res[] = target = ProtoMeta(AttributeType_GetInstances_Res)
+        if !isassigned(__meta_AttributeType_GetInstances_ResPart)
+            __meta_AttributeType_GetInstances_ResPart[] = target = ProtoMeta(AttributeType_GetInstances_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:things => Base.Vector{Thing}]
-            meta(target, AttributeType_GetInstances_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, AttributeType_GetInstances_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_AttributeType_GetInstances_Res[]
+        __meta_AttributeType_GetInstances_ResPart[]
     end
 end
-function Base.getproperty(obj::AttributeType_GetInstances_Res, name::Symbol)
+function Base.getproperty(obj::AttributeType_GetInstances_ResPart, name::Symbol)
     if name === :things
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Thing}
     else
@@ -5883,4 +5949,4 @@ function meta(::Type{AttributeType})
     end
 end
 
-export ConceptManager_Req, ConceptManager_Res, ConceptManager_GetThingType_Req, ConceptManager_GetThingType_Res, ConceptManager_GetThingType, ConceptManager_GetThing_Req, ConceptManager_GetThing_Res, ConceptManager_GetThing, ConceptManager_PutEntityType_Req, ConceptManager_PutEntityType_Res, ConceptManager_PutEntityType, ConceptManager_PutAttributeType_Req, ConceptManager_PutAttributeType_Res, ConceptManager_PutAttributeType, ConceptManager_PutRelationType_Req, ConceptManager_PutRelationType_Res, ConceptManager_PutRelationType, ConceptManager, Concept, Thing_Encoding, Thing_Req, Thing_Res, Thing_Delete_Req, Thing_Delete_Res, Thing_Delete, Thing_IsInferred_Req, Thing_IsInferred_Res, Thing_IsInferred, Thing_GetType_Req, Thing_GetType_Res, Thing_GetType, Thing_SetHas_Req, Thing_SetHas_Res, Thing_SetHas, Thing_UnsetHas_Req, Thing_UnsetHas_Res, Thing_UnsetHas, Thing_GetHas_Req, Thing_GetHas_Res, Thing_GetHas, Thing_GetPlays_Req, Thing_GetPlays_Res, Thing_GetPlays, Thing_GetRelations_Req, Thing_GetRelations_Res, Thing_GetRelations, Thing, Relation_GetPlayers_Req, Relation_GetPlayers_Res, Relation_GetPlayers, Relation_GetPlayersByRoleType_RoleTypeWithPlayer, Relation_GetPlayersByRoleType_Req, Relation_GetPlayersByRoleType_Res, Relation_GetPlayersByRoleType, Relation_AddPlayer_Req, Relation_AddPlayer_Res, Relation_AddPlayer, Relation_RemovePlayer_Req, Relation_RemovePlayer_Res, Relation_RemovePlayer, Relation, Attribute_GetOwners_Req, Attribute_GetOwners_Res, Attribute_GetOwners, Attribute_Value, Attribute, Type_Encoding, Type_Req, Type_Res, Type_Delete_Req, Type_Delete_Res, Type_Delete, Type_SetLabel_Req, Type_SetLabel_Res, Type_SetLabel, Type_IsAbstract_Req, Type_IsAbstract_Res, Type_IsAbstract, Type_GetSupertype_Req, Type_GetSupertype_Res, Type_GetSupertype, Type_SetSupertype_Req, Type_SetSupertype_Res, Type_SetSupertype, Type_GetSupertypes_Req, Type_GetSupertypes_Res, Type_GetSupertypes, Type_GetSubtypes_Req, Type_GetSubtypes_Res, Type_GetSubtypes, _Type, RoleType_GetRelationType_Req, RoleType_GetRelationType_Res, RoleType_GetRelationType, RoleType_GetRelationTypes_Req, RoleType_GetRelationTypes_Res, RoleType_GetRelationTypes, RoleType_GetPlayers_Req, RoleType_GetPlayers_Res, RoleType_GetPlayers, RoleType, ThingType_SetAbstract_Req, ThingType_SetAbstract_Res, ThingType_SetAbstract, ThingType_UnsetAbstract_Req, ThingType_UnsetAbstract_Res, ThingType_UnsetAbstract, ThingType_GetInstances_Req, ThingType_GetInstances_Res, ThingType_GetInstances, ThingType_GetOwns_Req, ThingType_GetOwns_Res, ThingType_GetOwns, ThingType_GetPlays_Req, ThingType_GetPlays_Res, ThingType_GetPlays, ThingType_SetOwns_Req, ThingType_SetOwns_Res, ThingType_SetOwns, ThingType_SetPlays_Req, ThingType_SetPlays_Res, ThingType_SetPlays, ThingType_UnsetOwns_Req, ThingType_UnsetOwns_Res, ThingType_UnsetOwns, ThingType_UnsetPlays_Req, ThingType_UnsetPlays_Res, ThingType_UnsetPlays, ThingType, EntityType_Create_Req, EntityType_Create_Res, EntityType_Create, EntityType, RelationType_Create_Req, RelationType_Create_Res, RelationType_Create, RelationType_GetRelates_Req, RelationType_GetRelates_Res, RelationType_GetRelates, RelationType_GetRelatesForRoleLabel_Req, RelationType_GetRelatesForRoleLabel_Res, RelationType_GetRelatesForRoleLabel, RelationType_SetRelates_Req, RelationType_SetRelates_Res, RelationType_SetRelates, RelationType_UnsetRelates_Req, RelationType_UnsetRelates_Res, RelationType_UnsetRelates, RelationType, AttributeType_ValueType, AttributeType_Put_Req, AttributeType_Put_Res, AttributeType_Put, AttributeType_Get_Req, AttributeType_Get_Res, AttributeType_Get, AttributeType_GetOwners_Req, AttributeType_GetOwners_Res, AttributeType_GetOwners, AttributeType_GetRegex_Req, AttributeType_GetRegex_Res, AttributeType_GetRegex, AttributeType_SetRegex_Req, AttributeType_SetRegex_Res, AttributeType_SetRegex, AttributeType_GetSubtypes_Req, AttributeType_GetSubtypes_Res, AttributeType_GetSubtypes, AttributeType_GetInstances_Req, AttributeType_GetInstances_Res, AttributeType_GetInstances, AttributeType
+export ConceptManager_Req, ConceptManager_Res, ConceptManager_GetThingType_Req, ConceptManager_GetThingType_Res, ConceptManager_GetThingType, ConceptManager_GetThing_Req, ConceptManager_GetThing_Res, ConceptManager_GetThing, ConceptManager_PutEntityType_Req, ConceptManager_PutEntityType_Res, ConceptManager_PutEntityType, ConceptManager_PutAttributeType_Req, ConceptManager_PutAttributeType_Res, ConceptManager_PutAttributeType, ConceptManager_PutRelationType_Req, ConceptManager_PutRelationType_Res, ConceptManager_PutRelationType, ConceptManager, Concept, Thing_Req, Thing_Res, Thing_ResPart, Thing_Delete_Req, Thing_Delete_Res, Thing_Delete, Thing_IsInferred_Req, Thing_IsInferred_Res, Thing_IsInferred, Thing_GetType_Req, Thing_GetType_Res, Thing_GetType, Thing_SetHas_Req, Thing_SetHas_Res, Thing_SetHas, Thing_UnsetHas_Req, Thing_UnsetHas_Res, Thing_UnsetHas, Thing_GetHas_Req, Thing_GetHas_ResPart, Thing_GetHas, Thing_GetPlaying_Req, Thing_GetPlaying_ResPart, Thing_GetPlaying, Thing_GetRelations_Req, Thing_GetRelations_ResPart, Thing_GetRelations, Thing, Relation_AddPlayer_Req, Relation_AddPlayer_Res, Relation_AddPlayer, Relation_RemovePlayer_Req, Relation_RemovePlayer_Res, Relation_RemovePlayer, Relation_GetPlayers_Req, Relation_GetPlayers_ResPart, Relation_GetPlayers, Relation_GetPlayersByRoleType_RoleTypeWithPlayer, Relation_GetPlayersByRoleType_Req, Relation_GetPlayersByRoleType_ResPart, Relation_GetPlayersByRoleType, Relation_GetRelating_Req, Relation_GetRelating_ResPart, Relation_GetRelating, Relation, Attribute_Value, Attribute_GetOwners_Req, Attribute_GetOwners_ResPart, Attribute_GetOwners, Attribute, Type_Encoding, Type_Req, Type_Res, Type_ResPart, Type_Delete_Req, Type_Delete_Res, Type_Delete, Type_SetLabel_Req, Type_SetLabel_Res, Type_SetLabel, Type_IsAbstract_Req, Type_IsAbstract_Res, Type_IsAbstract, Type_GetSupertype_Req, Type_GetSupertype_Res, Type_GetSupertype, Type_SetSupertype_Req, Type_SetSupertype_Res, Type_SetSupertype, Type_GetSupertypes_Req, Type_GetSupertypes_ResPart, Type_GetSupertypes, Type_GetSubtypes_Req, Type_GetSubtypes_ResPart, Type_GetSubtypes, _Type, RoleType_GetRelationTypes_Req, RoleType_GetRelationTypes_ResPart, RoleType_GetRelationTypes, RoleType_GetPlayers_Req, RoleType_GetPlayers_ResPart, RoleType_GetPlayers, RoleType, ThingType_SetAbstract_Req, ThingType_SetAbstract_Res, ThingType_SetAbstract, ThingType_UnsetAbstract_Req, ThingType_UnsetAbstract_Res, ThingType_UnsetAbstract, ThingType_GetInstances_Req, ThingType_GetInstances_ResPart, ThingType_GetInstances, ThingType_GetOwns_Req, ThingType_GetOwns_ResPart, ThingType_GetOwns, ThingType_GetPlays_Req, ThingType_GetPlays_ResPart, ThingType_GetPlays, ThingType_SetOwns_Req, ThingType_SetOwns_Res, ThingType_SetOwns, ThingType_SetPlays_Req, ThingType_SetPlays_Res, ThingType_SetPlays, ThingType_UnsetOwns_Req, ThingType_UnsetOwns_Res, ThingType_UnsetOwns, ThingType_UnsetPlays_Req, ThingType_UnsetPlays_Res, ThingType_UnsetPlays, ThingType, EntityType_Create_Req, EntityType_Create_Res, EntityType_Create, EntityType, RelationType_Create_Req, RelationType_Create_Res, RelationType_Create, RelationType_GetRelates_Req, RelationType_GetRelates_ResPart, RelationType_GetRelates, RelationType_GetRelatesForRoleLabel_Req, RelationType_GetRelatesForRoleLabel_Res, RelationType_GetRelatesForRoleLabel, RelationType_SetRelates_Req, RelationType_SetRelates_Res, RelationType_SetRelates, RelationType_UnsetRelates_Req, RelationType_UnsetRelates_Res, RelationType_UnsetRelates, RelationType, AttributeType_ValueType, AttributeType_Put_Req, AttributeType_Put_Res, AttributeType_Put, AttributeType_Get_Req, AttributeType_Get_Res, AttributeType_Get, AttributeType_GetOwners_Req, AttributeType_GetOwners_ResPart, AttributeType_GetOwners, AttributeType_GetRegex_Req, AttributeType_GetRegex_Res, AttributeType_GetRegex, AttributeType_SetRegex_Req, AttributeType_SetRegex_Res, AttributeType_SetRegex, AttributeType_GetSubtypes_Req, AttributeType_GetSubtypes_ResPart, AttributeType_GetSubtypes, AttributeType_GetInstances_Req, AttributeType_GetInstances_ResPart, AttributeType_GetInstances, AttributeType

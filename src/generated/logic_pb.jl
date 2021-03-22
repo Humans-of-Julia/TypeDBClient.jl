@@ -1,5 +1,3 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
-
 # syntax: proto3
 using ProtoBuf
 import ProtoBuf.meta
@@ -665,13 +663,13 @@ function Base.getproperty(obj::LogicManager_PutRule_Res, name::Symbol)
     end
 end
 
-mutable struct LogicManager_GetRules_Res <: ProtoType
+mutable struct LogicManager_GetRules_ResPart <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
     __protobuf_jl_internal_defaultset::Set{Symbol}
 
-    function LogicManager_GetRules_Res(; kwargs...)
-        obj = new(meta(LogicManager_GetRules_Res), Dict{Symbol,Any}(), Set{Symbol}())
+    function LogicManager_GetRules_ResPart(; kwargs...)
+        obj = new(meta(LogicManager_GetRules_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
         values = obj.__protobuf_jl_internal_values
         symdict = obj.__protobuf_jl_internal_meta.symdict
         for nv in kwargs
@@ -682,19 +680,19 @@ mutable struct LogicManager_GetRules_Res <: ProtoType
         end
         obj
     end
-end # mutable struct LogicManager_GetRules_Res
-const __meta_LogicManager_GetRules_Res = Ref{ProtoMeta}()
-function meta(::Type{LogicManager_GetRules_Res})
+end # mutable struct LogicManager_GetRules_ResPart
+const __meta_LogicManager_GetRules_ResPart = Ref{ProtoMeta}()
+function meta(::Type{LogicManager_GetRules_ResPart})
     ProtoBuf.metalock() do
-        if !isassigned(__meta_LogicManager_GetRules_Res)
-            __meta_LogicManager_GetRules_Res[] = target = ProtoMeta(LogicManager_GetRules_Res)
+        if !isassigned(__meta_LogicManager_GetRules_ResPart)
+            __meta_LogicManager_GetRules_ResPart[] = target = ProtoMeta(LogicManager_GetRules_ResPart)
             allflds = Pair{Symbol,Union{Type,String}}[:rules => Base.Vector{Rule}]
-            meta(target, LogicManager_GetRules_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+            meta(target, LogicManager_GetRules_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
-        __meta_LogicManager_GetRules_Res[]
+        __meta_LogicManager_GetRules_ResPart[]
     end
 end
-function Base.getproperty(obj::LogicManager_GetRules_Res, name::Symbol)
+function Base.getproperty(obj::LogicManager_GetRules_ResPart, name::Symbol)
     if name === :rules
         return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Rule}
     else
@@ -725,8 +723,8 @@ function meta(::Type{LogicManager_Res})
     ProtoBuf.metalock() do
         if !isassigned(__meta_LogicManager_Res)
             __meta_LogicManager_Res[] = target = ProtoMeta(LogicManager_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:get_rule_res => LogicManager_GetRule_Res, :put_rule_res => LogicManager_PutRule_Res, :get_rules_res => LogicManager_GetRules_Res]
-            oneofs = Int[1,1,1]
+            allflds = Pair{Symbol,Union{Type,String}}[:get_rule_res => LogicManager_GetRule_Res, :put_rule_res => LogicManager_PutRule_Res]
+            oneofs = Int[1,1]
             oneof_names = Symbol[Symbol("res")]
             meta(target, LogicManager_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -738,11 +736,46 @@ function Base.getproperty(obj::LogicManager_Res, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::LogicManager_GetRule_Res
     elseif name === :put_rule_res
         return (obj.__protobuf_jl_internal_values[name])::LogicManager_PutRule_Res
-    elseif name === :get_rules_res
-        return (obj.__protobuf_jl_internal_values[name])::LogicManager_GetRules_Res
     else
         getfield(obj, name)
     end
 end
 
-export LogicManager_Req, LogicManager_Res, LogicManager_GetRule_Req, LogicManager_GetRule_Res, LogicManager_GetRule, LogicManager_PutRule_Req, LogicManager_PutRule_Res, LogicManager_PutRule, LogicManager_GetRules_Req, LogicManager_GetRules_Res, LogicManager_GetRules, LogicManager, Rule_Req, Rule_Res, Rule_Delete_Req, Rule_Delete_Res, Rule_Delete, Rule_SetLabel_Req, Rule_SetLabel_Res, Rule_SetLabel, Rule
+mutable struct LogicManager_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function LogicManager_ResPart(; kwargs...)
+        obj = new(meta(LogicManager_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct LogicManager_ResPart
+const __meta_LogicManager_ResPart = Ref{ProtoMeta}()
+function meta(::Type{LogicManager_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_LogicManager_ResPart)
+            __meta_LogicManager_ResPart[] = target = ProtoMeta(LogicManager_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:get_rules_res_part => LogicManager_GetRules_ResPart]
+            meta(target, LogicManager_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_LogicManager_ResPart[]
+    end
+end
+function Base.getproperty(obj::LogicManager_ResPart, name::Symbol)
+    if name === :get_rules_res_part
+        return (obj.__protobuf_jl_internal_values[name])::LogicManager_GetRules_ResPart
+    else
+        getfield(obj, name)
+    end
+end
+
+export LogicManager_Req, LogicManager_Res, LogicManager_ResPart, LogicManager_GetRule_Req, LogicManager_GetRule_Res, LogicManager_GetRule, LogicManager_PutRule_Req, LogicManager_PutRule_Res, LogicManager_PutRule, LogicManager_GetRules_Req, LogicManager_GetRules_ResPart, LogicManager_GetRules, LogicManager, Rule_Req, Rule_Res, Rule_Delete_Req, Rule_Delete_Res, Rule_Delete, Rule_SetLabel_Req, Rule_SetLabel_Res, Rule_SetLabel, Rule
