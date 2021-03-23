@@ -54,55 +54,46 @@ end
 # All structs represent a unique number in a section of errors and the description. Both of them are
 # assigned on the right side pair
 const error_messages = Dict([
-
     #Client Error Section
     CLIENT_CLIENT_CLOSED => (1, "The client has been closed and no further operation is allowed."),
     Client_SESSION_CLOSED=>( 2, "The session has been closed and no further operation is allowed."),
     Client_TRANSACTION_CLOSED=>( 3, "The transaction has been closed and no further operation is allowed."),
     Client_UNABLE_TO_CONNECT=>(4, "Unable to connect to Grakn server."),
-    Client_NEGATIVE_VALUE_NOT_ALLOWED=>(5, "Value cannot be less than 1, was: $error_item."),
+    Client_NEGATIVE_VALUE_NOT_ALLOWED=>(5, "Value cannot be less than 1, was: _error_item."),
     Client_MISSING_DB_NAME=>(6,  "Database name cannot be null."),
-    Client_DB_DOES_NOT_EXIST=>(7,  "The database $error_item does not exist."),
-    Client_MISSING_RESPONSE=>(8,  "Unexpected empty response for request ID $error_item."),
-    Client_UNKNOWN_REQUEST_ID=>(9,  "Received a response with unknown request id $error_item."),
-    Client_CLUSTER_NO_PRIMARY_REPLICA_YET=>(10,  "No replica has been marked as the primary replica for latest known term $error_item."),
-    Client_CLUSTER_UNABLE_TO_CONNECT=>(11,  "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: $error_item."),
+    Client_DB_DOES_NOT_EXIST=>(7,  "The database _error_item does not exist."),
+    Client_MISSING_RESPONSE=>(8,  "Unexpected empty response for request ID _error_item."),
+    Client_UNKNOWN_REQUEST_ID=>(9,  "Received a response with unknown request id _error_item."),
+    Client_CLUSTER_NO_PRIMARY_REPLICA_YET=>(10,  "No replica has been marked as the primary replica for latest known term _error_item."),
+    Client_CLUSTER_UNABLE_TO_CONNECT=>(11,  "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: _error_item."),
     Client_CLUSTER_REPLICA_NOT_PRIMARY=>(12,  "The replica is not the primary replica."),
     Client_CLUSTER_ALL_NODES_FAILED=>(13,  "Attempted connecting to all cluster members, but the following errors occurred: \n%s"),
-
     ### Conept Error Section
-    Concept_INVALID_CONCEPT_CASTING=>(1, "Invalid concept conversion from $error_item to $error_item."),
+    Concept_INVALID_CONCEPT_CASTING=>(1, "Invalid concept conversion from _error_item to _error_item."),
     Concept_MISSING_TRANSACTION=>(2,  "Transaction cannot be null."),
     Concept_MISSING_IID=>(3,  "IID cannot be null or empty."),
     Concept_MISSING_LABEL=>(4,  "Label cannot be null or empty."),
-    Concept_BAD_ENCODING=>(5,  "The encoding $error_item was not recognised."),
-    Concept_BAD_VALUE_TYPE=>(6,  "The value type $error_item was not recognised."),
-    Concept_BAD_ATTRIBUTE_VALUE=>(7,  "The attribute value $error_item was not recognised."),
-
+    Concept_BAD_ENCODING=>(5,  "The encoding _error_item was not recognised."),
+    Concept_BAD_VALUE_TYPE=>(6,  "The value type _error_item was not recognised."),
+    Concept_BAD_ATTRIBUTE_VALUE=>(7,  "The attribute value _error_item was not recognised."),
     # Query Error Section
-    Query_VARIABLE_DOES_NOT_EXIST=>(1,  "The variable $error_item does not exist."),
+    Query_VARIABLE_DOES_NOT_EXIST=>(1,  "The variable _error_item does not exist."),
     Query_NO_EXPLANATION=>(2,  "No explanation was found."),
-    Query_BAD_ANSWER_TYPE=>(3,  "The answer type $error_item was not recognised."),
-    Query_MISSING_ANSWER=>(4,  "The required field 'answer' of type $error_item was not set."),
-
+    Query_BAD_ANSWER_TYPE=>(3,  "The answer type _error_item was not recognised."),
+    Query_MISSING_ANSWER=>(4,  "The required field 'answer' of type _error_item was not set."),
     #Internal Error Section
     Internal_UNEXPECTED_INTERRUPTION =>(1, "Unexpected thread interruption!"),
     Internal_ILLEGAL_STATE =>(2, "Illegal state has been reached!"),
-    Internal_ILLEGAL_ARGUMENT =>(3, "Illegal argument provided: $error_item"),
-    Internal_ILLEGAL_CAST =>(4, "Illegal casting operation to $error_item.")
-
+    Internal_ILLEGAL_ARGUMENT =>(3, "Illegal argument provided: _error_item"),
+    Internal_ILLEGAL_CAST =>(4, "Illegal casting operation to _error_item."),
     #General Error Section included in the internal section
-    GENERAL_UNKOWN_ERROR => (100, "$error_item")
+    GENERAL_UNKOWN_ERROR => (100, "_error_item")
 ])
 
 
 # Build the error massage according the section of errors represented by the
 # abstract type of each section of errors
 
-function _build_error_messages(class::Type{T}) where {T<:AbstractClientError}
-    items = error_messages[class]
-    class("CLI",items[1], "Client Error", items[2])
-end
 function _build_error_messages(class::Type{T}) where {T<:AbstractClientError}
     items = error_messages[class]
     class("CLI",items[1], "Client Error", items[2])

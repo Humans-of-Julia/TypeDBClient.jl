@@ -1,8 +1,5 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-
-include(joinpath(@__DIR__,"ErrorMessage.jl"))
-
 mutable struct GraknClientException <: Exception
     error_massage::Type{T} where {T<:Union{<:AbstractGeneralError,<:Nothing}}
     params

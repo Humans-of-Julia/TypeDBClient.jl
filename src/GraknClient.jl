@@ -18,7 +18,7 @@ using gRPC, Sockets, UUIDs, Dates
 import Base: show, close, ==
 
 ###### abstract types ##################
-#                                      # 
+#                                      #
 ########################################
 
 abstract type AbstractTransaction end
@@ -29,12 +29,16 @@ abstract type AbstractConcept end
 abstract type AbstractThing <: AbstractConcept end
 
 ###### inlcudes ########################
-#                                      # 
+#                                      #
 ########################################
 
 include(joinpath(@__DIR__,"generated","grakn.jl"))
 include(joinpath(@__DIR__,"generated","core_service_pb.jl"))
-# include(joinpath(@__DIR__,"common","exception.jl"))
+
+#common section
+include(joinpath(@__DIR__,"common","exception","ErrorMessage.jl"))
+include(joinpath(@__DIR__,"common","exception","GraknClientException.jl"))
+
 # include(joinpath(@__DIR__,"GraknOptions.jl"))
 # include(joinpath(@__DIR__,"rpc","database_manager.jl"))
 # include(joinpath(@__DIR__,"client.jl"))
@@ -47,6 +51,3 @@ include(joinpath(@__DIR__,"generated","core_service_pb.jl"))
 # export GraknBlockingClient, GraknClientException, Session, Transaction
 
 end #module
-
-
-
