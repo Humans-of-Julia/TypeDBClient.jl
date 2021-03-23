@@ -12,6 +12,17 @@ function Core_GraknStub(channel::gRPCChannel)
     asyncStub = GraknCoreStub(channel)
 end
 
+mutable struct Cluster_GraknStub <: GraknStub
+    blockingStub::GraknClusterBlockingStub
+end
+
+function Cluster_GraknStub(channel::gRPCChannel)
+    blockingStub = GraknClusterBlockingStub(channel)
+end
+
+function ensureConnected(stub::T) where {T<:GraknStub}
+
+end
 #
 # package grakn.client.common.rpc;
 #
