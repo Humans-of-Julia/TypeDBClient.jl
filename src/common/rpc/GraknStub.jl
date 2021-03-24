@@ -7,21 +7,21 @@ mutable struct Core_GraknStub <: GraknStub
     asyncStub::GraknCoreStub
 end
 
-function Core_GraknStub(channel::gRPCChannel)
+function Core_GraknStub(channel::gRPC.gRPCChannel)
     blockingStub = GraknCoreBlockingStub(channel)
     asyncStub = GraknCoreStub(channel)
 end
 
 mutable struct Cluster_GraknStub <: GraknStub
-    blockingStub::GraknClusterBlockingStub
+    blockingStub::GraknCoreBlockingStub
 end
 
-function Cluster_GraknStub(channel::gRPCChannel)
-    blockingStub = GraknClusterBlockingStub(channel)
+function Cluster_GraknStub(channel::gRPC.gRPCChannel)
+    blockingStub = GraknCoreBlockingStub(channel)
 end
 
-function ensureConnected(stub::T) where {T<:GraknStub}
-
+function ensure_connected(stub::T) where {T<:GraknStub}
+    throw(GraknClientException(GENERAL_UNKOWN_ERROR,"function GraknStub.jl/ensure_onnected isn't implemented yet"))
 end
 #
 # package grakn.client.common.rpc;

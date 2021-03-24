@@ -32,12 +32,14 @@ abstract type AbstractThing <: AbstractConcept end
 #                                      #
 ########################################
 
+#generated section
 include(joinpath(@__DIR__,"generated","grakn.jl"))
 include(joinpath(@__DIR__,"generated","core_service_pb.jl"))
 
 #common section
 include(joinpath(@__DIR__,"common","exception","ErrorMessage.jl"))
 include(joinpath(@__DIR__,"common","exception","GraknClientException.jl"))
+include(joinpath(@__DIR__,"common","rpc","GraknStub.jl"))
 
 # include(joinpath(@__DIR__,"GraknOptions.jl"))
 # include(joinpath(@__DIR__,"rpc","database_manager.jl"))
