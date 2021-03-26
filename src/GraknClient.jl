@@ -4,10 +4,12 @@
 In root folder run $ bash setup.sh to genrate the proto files
 
 then install the packages from GitHub
-
-(GraknClient) pkg> add https://github.com/tanmaykm/HPack.jl
-(GraknClient) pkg> add https://github.com/tanmaykm/HTTP2.jl
-(GraknClient) pkg> add https://github.com/tanmaykm/gRPC.jl
+Pkg.rm("HPack")
+Pkg.rm("HTTP2")
+Pkg.rm("gRPC")
+Pkg.add(url="https://github.com/tanmaykm/HPack.jl")
+Pkg.add(url="https://github.com/tanmaykm/HTTP2.jl")
+Pkg.add(url="https://github.com/tanmaykm/gRPC.jl")
 
 =#
 module GraknClient
@@ -74,8 +76,14 @@ function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
 end
 
 
-function copy_to_proto(options, grakn.protocol.Options)
-
+function copy_to_proto(from_object, to_proto_struct::Type{T}) where {T<: ProtoType}
+    result_proto = to_proto_struct()
+    for fname in fieldnames(typeof(from_object))
+        if !hasproperty(result_proto, Symbol(fname)) && getfield(from_object,Symbol(fname)) !== nothing
+            setproperty!(result_proto,Symbol(fname),getfield(from_object,Symbol(fname)))
+        end
+    end
+    result_proto
 end
 
 end #module

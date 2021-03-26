@@ -1,12 +1,29 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-function contains_req(name::String)
+function database_contains_req(name::String)
     return CoreDatabaseManager_Contains_Req().name = name
 end
 
-function schema_req(name::String)
+function database_schema_req(name::String)
     return CoreDatabase_Schema_Req().name = name
 end
+
+function session_open_req(database_name::String, type::Int32, options::grakn.protocol.Options)
+    open_req = grakn.protocol.Session_Open_Req()
+    open_req.database = database_name
+    open_req._type = type
+    open_req.options = options
+
+    return open_req
+end
+
+function session_pulse_req(session_id::Array{UInt8,1})
+    puls_req = grakn.protocol.Session_Pulse_Req()
+    puls_req.session_id = session_id
+    return puls_req
+end
+
+
 
 # package grakn.client.common.rpc;
 #

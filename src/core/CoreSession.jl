@@ -1,12 +1,12 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-const PULSE_INTERVAL_MILLIS = 5_000
+const PULSE_INTERVAL_MILLIS = 5000
 
 mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
-    sessionID::String
-    transactions::Array{T,1} where {T<:AbstractCoreTransaction}
+    sessionID::Array{UInt8,1}
+    transactions::Array{Union{Nothing,<:AbstractCoreTransaction},1}
     type::Int
     options::GraknOptions
 # Timer pulse
@@ -15,22 +15,57 @@ mutable struct  CoreSession <: AbstractCoreSession
     networkLatencyMillis::Int
 end
 
+Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, session)
+Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "Session(ID: $(session.sessionID))")
+
 function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions) where {T<:AbstractCoreClient}
-    try
+    # try
+        open_req = session_open_req(database, type , copy_to_proto(options, grakn.protocol.Options))
+
         startTime = now()
-        session_id = session_open(openReq(database, type , copy_to_proto(options, grakn.protocol.Options)))
+        res = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
         endTime = now()
+
         database = CoreDatabase(database)
         networkLatencyMillis = (endTime - startTime).value
-        sessionID = res.session_id
+        session_id = res.session_id
         transactions = Array{Union{Nothing,<:AbstractCoreTransaction},1}(nothing,0)
         is_open = true
-        result = CoreSession(client, database, session_id, transactions, type, GraknOptions(), true, 0)
+
+        result = CoreSession(client, database, session_id, transactions, type, options, is_open, networkLatencyMillis)
+
+        start_pulse(result, PULSE_INTERVAL_MILLIS)
+
         return result
-    catch ex
-        throw(GraknClientException("Error construct a CoreSession",ex))
+    # catch ex
+    #     throw(GraknClientException("Error construct a CoreSession",ex))
+    # end
+end
+
+function start_pulse(session::T, pulse_time::Int) where {T<:AbstractCoreSession}
+    @info "Start pulse"
+    # Threads.@spawn begin
+    #     while session.isOpen
+            sleep(pulse_time - 1)
+            make_pulse_request(session)
+    #     end
+    # end
+end
+
+function make_pulse_request(session::T) where {T<:AbstractCoreSession}
+    pulsreq = session_pulse_req(session.sessionID)
+
+    if session.isOpen
+        result = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+        @info "session is alive: $(result.alive)"
+        if !result.alive
+            session.isOpen = false
+        end
     end
 end
+
+
+
 
 #
 # package grakn.client.core;

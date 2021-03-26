@@ -1,7 +1,7 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct GraknClientException <: Exception
-    error_massage::Type{T} where {T<:Union{<:AbstractGeneralError,<:Nothing}}
+    error_message::T where {T<:Union{<:AbstractGeneralError,<:Nothing}}
     params
     individual_message::Union{Nothing, String}
     cause::R where {R<:Exception}
