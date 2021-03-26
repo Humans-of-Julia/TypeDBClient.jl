@@ -11,6 +11,10 @@ mutable struct GraknOptions
     schemaLockAcquireTimeoutMillis::Union{Nothing, Int}
 end
 
+function GraknOptions()
+    return GraknOptions(nothing,nothing,nothing,nothing,nothing,nothing,nothing,nothing)
+end
+
 function grakn_options_core()
     return GraknOptions()
 end

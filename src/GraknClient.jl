@@ -73,4 +73,9 @@ function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
     return nothing
 end
 
+
+function copy_to_proto(options, grakn.protocol.Options)
+
+end
+
 end #module

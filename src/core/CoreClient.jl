@@ -1,6 +1,6 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-mutable struct CoreClient
+mutable struct CoreClient <: AbstractCoreClient
     #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc"
     channel::gRPC.gRPCChannel
     core_stub::Core_GraknStub
