@@ -1,8 +1,39 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-# 
+const PULSE_INTERVAL_MILLIS = 5_000
+
+mutable struct  CoreSession <: AbstractCoreSession
+    client::CoreClient
+    database::CoreDatabase
+    sessionID::String
+    transactions::Array{T,1} where {T<:AbstractCoreTransaction}
+    type::Int
+    options::GraknOptions
+# Timer pulse
+# ReadWriteLock accessLock
+    isOpen::Bool
+    networkLatencyMillis::Int
+end
+
+function CoreSession(client::T, database::String , type::Int , options::GraknOptions) where {T<:AbstractCoreSession}
+    try
+        startTime = now()
+        session_id = session_open(openReq(database, type , transform(options, grakn.protocol.Options)))
+        endTime = now()
+        database = CoreDatabase(database)
+        networkLatencyMillis = (endTime - startTime).value
+        sessionID = res.session_id
+        transactions = Array{Union{Nothing,<:AbstractCoreTransaction},1}(nothing,0)
+        is_open = true
+        result = CoreSession(client, database, session_id, transactions, type, GraknOptions(), true, 0)
+    catch ex
+        throw(GraknClientException("Error construct a CoreSession",ex))
+    end
+end
+
+#
 # package grakn.client.core;
-# 
+#
 # import com.google.protobuf.ByteString;
 # import grakn.client.api.GraknOptions;
 # import grakn.client.api.GraknSession;
@@ -13,7 +44,7 @@
 # import grakn.common.collection.ConcurrentSet;
 # import grakn.protocol.SessionProto;
 # import io.grpc.StatusRuntimeException;
-# 
+#
 # import java.time.Duration;
 # import java.time.Instant;
 # import java.util.Timer;
@@ -21,16 +52,16 @@
 # import java.util.concurrent.atomic.AtomicBoolean;
 # import java.util.concurrent.locks.ReadWriteLock;
 # import java.util.concurrent.locks.StampedLock;
-# 
+#
 # import static grakn.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
 # import static grakn.client.common.rpc.RequestBuilder.Session.closeReq;
 # import static grakn.client.common.rpc.RequestBuilder.Session.openReq;
 # import static grakn.client.common.rpc.RequestBuilder.Session.pulseReq;
-# 
+#
 # public class CoreSession implements GraknSession {
-# 
+#
 #     private static final int PULSE_INTERVAL_MILLIS = 5_000;
-# 
+#
 #     private final CoreClient client;
 #     private final CoreDatabase database;
 #     private final ByteString sessionID;
@@ -41,7 +72,7 @@
 #     private final ReadWriteLock accessLock;
 #     private final AtomicBoolean isOpen;
 #     private final int networkLatencyMillis;
-# 
+#
 #     public CoreSession(CoreClient client, String database, Type type, GraknOptions options) {
 #         try {
 #             this.client = client;
@@ -64,24 +95,24 @@
 #             throw GraknClientException.of(e);
 #         }
 #     }
-# 
+#
 #     @Override
 #     public boolean isOpen() { return isOpen.get(); }
-# 
+#
 #     @Override
 #     public Type type() { return type; }
-# 
+#
 #     @Override
 #     public CoreDatabase database() { return database; }
-# 
+#
 #     @Override
 #     public GraknOptions options() { return options; }
-# 
+#
 #     @Override
 #     public GraknTransaction transaction(GraknTransaction.Type type) {
 #         return transaction(type, GraknOptions.core());
 #     }
-# 
+#
 #     @Override
 #     public GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options) {
 #         try {
@@ -94,19 +125,19 @@
 #             accessLock.readLock().unlock();
 #         }
 #     }
-# 
+#
 #     ByteString id() { return sessionID; }
-# 
+#
 #     GraknStub.Core stub() {
 #         return client.stub();
 #     }
-# 
+#
 #     RequestTransmitter transmitter() {
 #         return client.transmitter();
 #     }
-# 
+#
 #     int networkLatencyMillis() { return networkLatencyMillis; }
-# 
+#
 #     @Override
 #     public void close() {
 #         try {
@@ -127,9 +158,9 @@
 #             accessLock.writeLock().unlock();
 #         }
 #     }
-# 
+#
 #     private class PulseTask extends TimerTask {
-# 
+#
 #         @Override
 #         public void run() {
 #             if (!isOpen()) return;

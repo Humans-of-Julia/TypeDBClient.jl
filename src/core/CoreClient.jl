@@ -1,8 +1,29 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-# 
+mutable struct CoreClient
+    #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc"
+    channel::gRPC.gRPCChannel
+    core_stub::Core_GraknStub
+    transmitter::RequestTransmitter
+    databaseMgr::CoreDatabaseManager
+    sessions::Dict{String, T} where {T<:AbstractCoreSession}
+end
+
+function CoreClient(address::String, port::Int)
+    # NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
+    channel = gRPCClient(address,port).channel
+    stub = GraknStub.core(channel)
+    transmitter = RequestTransmitter()
+    databaseMgr = CoreDatabaseManager()
+    sessions = Dict{String, Union{<:AbstractCoreSession, Nothing}}()
+    return CoreClient(channel,stub,transmitter,databaseMgr,sessions)
+end
+
+
+
+#
 # package grakn.client.core;
-# 
+#
 # import com.google.protobuf.ByteString;
 # import grakn.client.api.GraknClient;
 # import grakn.client.api.GraknOptions;
@@ -13,28 +34,28 @@
 # import grakn.common.concurrent.NamedThreadFactory;
 # import io.grpc.ManagedChannel;
 # import io.grpc.ManagedChannelBuilder;
-# 
+#
 # import java.util.concurrent.ConcurrentHashMap;
 # import java.util.concurrent.ConcurrentMap;
 # import java.util.concurrent.TimeUnit;
-# 
+#
 # import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 # import static grakn.common.util.Objects.className;
-# 
+#
 # public class CoreClient implements GraknClient {
-# 
+#
 #     private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc";
-# 
+#
 #     private final ManagedChannel channel;
 #     private final GraknStub.Core stub;
 #     private final RequestTransmitter transmitter;
 #     private final CoreDatabaseManager databaseMgr;
 #     private final ConcurrentMap<ByteString, CoreSession> sessions;
-# 
+#
 #     public CoreClient(String address) {
 #         this(address, calculateParallelisation());
 #     }
-# 
+#
 #     public CoreClient(String address, int parallelisation) {
 #         NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
 #         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
@@ -43,7 +64,7 @@
 #         databaseMgr = new CoreDatabaseManager(this);
 #         sessions = new ConcurrentHashMap<>();
 #     }
-# 
+#
 #     public static int calculateParallelisation() {
 #         int cores = Runtime.getRuntime().availableProcessors();
 #         if (cores <= 4) return 2;
@@ -51,12 +72,12 @@
 #         else if (cores <= 16) return 4;
 #         else return (int) Math.ceil(cores / 4.0);
 #     }
-# 
+#
 #     @Override
 #     public CoreSession session(String database, GraknSession.Type type) {
 #         return session(database, type, GraknOptions.core());
 #     }
-# 
+#
 #     @Override
 #     public CoreSession session(String database, GraknSession.Type type, GraknOptions options) {
 #         CoreSession session = new CoreSession(this, database, type, options);
@@ -64,43 +85,43 @@
 #         sessions.put(session.id(), session);
 #         return session;
 #     }
-# 
+#
 #     @Override
 #     public CoreDatabaseManager databases() {
 #         return databaseMgr;
 #     }
-# 
+#
 #     @Override
 #     public boolean isOpen() {
 #         return !channel.isShutdown();
 #     }
-# 
+#
 #     @Override
 #     public boolean isCluster() {
 #         return false;
 #     }
-# 
+#
 #     @Override
 #     public Cluster asCluster() {
 #         throw new GraknClientException(ILLEGAL_CAST, className(GraknClient.Cluster.class));
 #     }
-# 
+#
 #     public ManagedChannel channel() {
 #         return channel;
 #     }
-# 
+#
 #     GraknStub.Core stub() {
 #         return stub;
 #     }
-# 
+#
 #     RequestTransmitter transmitter() {
 #         return transmitter;
 #     }
-# 
+#
 #     void removeSession(CoreSession session) {
 #         sessions.remove(session.id());
 #     }
-# 
+#
 #     @Override
 #     public void close() {
 #         try {

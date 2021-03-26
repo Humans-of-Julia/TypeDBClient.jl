@@ -1,5 +1,21 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
+mutable struct CoreDatabaseManager <: AbstractCoreDatabaseManager
+
+end
+
+function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractCoreClient}
+    if contains_database(client, name)
+        return CoreDatabase(name)
+    else
+        throw(GraknClientException(CLIENT_DB_DOES_NOT_EXIST, name))
+    end
+end
+
+function contains_database(client::T, name::String)::Bool where {T<:AbstractCoreClient}
+
+    return databases_contains(client.core_stub, gRPCController() , contains_req(name)).contains
+end
 #
 # package grakn.client.core;
 #
