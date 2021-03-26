@@ -6,13 +6,16 @@ mutable struct CoreClient
     core_stub::Core_GraknStub
     transmitter::RequestTransmitter
     databaseMgr::CoreDatabaseManager
-    sessions::Dict{String, T} where {T<:AbstractCoreSession}
+    sessions::Dict{String, Union{<:AbstractCoreSession, Nothing}}
 end
+
+Base.show(io::IO, core_client::CoreClient) = Base.print(io,core_client)
+Base.print(io::IO, core_client::CoreClient) = Base.print(io, "CoreClient($(print(core_client.channel))")
 
 function CoreClient(address::String, port::Int)
     # NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
     channel = gRPCClient(address,port).channel
-    stub = GraknStub.core(channel)
+    stub = Core_GraknStub(channel)
     transmitter = RequestTransmitter()
     databaseMgr = CoreDatabaseManager()
     sessions = Dict{String, Union{<:AbstractCoreSession, Nothing}}()

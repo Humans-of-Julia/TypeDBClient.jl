@@ -10,6 +10,7 @@ end
 function Core_GraknStub(channel::gRPC.gRPCChannel)
     blockingStub = GraknCoreBlockingStub(channel)
     asyncStub = GraknCoreStub(channel)
+    return Core_GraknStub(blockingStub,asyncStub)
 end
 
 mutable struct Cluster_GraknStub <: GraknStub
@@ -18,6 +19,7 @@ end
 
 function Cluster_GraknStub(channel::gRPC.gRPCChannel)
     blockingStub = GraknCoreBlockingStub(channel)
+    return Cluster_GraknStub(blockingStub)
 end
 
 function ensure_connected(stub::T) where {T<:GraknStub}
