@@ -15,10 +15,10 @@ mutable struct  CoreSession <: AbstractCoreSession
     networkLatencyMillis::Int
 end
 
-function CoreSession(client::T, database::String , type::Int , options::GraknOptions) where {T<:AbstractCoreSession}
+function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions) where {T<:AbstractCoreClient}
     try
         startTime = now()
-        session_id = session_open(openReq(database, type , transform(options, grakn.protocol.Options)))
+        session_id = session_open(openReq(database, type , copy_to_proto(options, grakn.protocol.Options)))
         endTime = now()
         database = CoreDatabase(database)
         networkLatencyMillis = (endTime - startTime).value
@@ -26,6 +26,7 @@ function CoreSession(client::T, database::String , type::Int , options::GraknOpt
         transactions = Array{Union{Nothing,<:AbstractCoreTransaction},1}(nothing,0)
         is_open = true
         result = CoreSession(client, database, session_id, transactions, type, GraknOptions(), true, 0)
+        return result
     catch ex
         throw(GraknClientException("Error construct a CoreSession",ex))
     end
