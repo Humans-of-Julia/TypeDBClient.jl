@@ -34,7 +34,7 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 
         result = CoreSession(client, database, session_id, transactions, type, options, is_open, networkLatencyMillis)
 
-        @async start_pulse(result, PULSE_INTERVAL_MILLIS)
+        # @async start_pulse(result, PULSE_INTERVAL_MILLIS)
 
         return result
     # catch ex
@@ -51,12 +51,12 @@ end
 
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
     pulsreq = session_pulse_req(session.sessionID)
-    if session.isOpen
-        result = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
-        if !result.alive
-            session.isOpen = false
-        end
+
+    result = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+    if result.alive === false
+        session.isOpen = false
     end
+
 end
 
 
