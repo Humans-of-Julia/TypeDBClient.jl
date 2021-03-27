@@ -20,8 +20,8 @@ Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "
 
 function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions) where {T<:AbstractCoreClient}
     # try
+        options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS
         open_req = session_open_req(database, type , copy_to_proto(options, grakn.protocol.Options))
-
         startTime = now()
         res = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
         endTime = now()
@@ -34,7 +34,7 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 
         result = CoreSession(client, database, session_id, transactions, type, options, is_open, networkLatencyMillis)
 
-        start_pulse(result, PULSE_INTERVAL_MILLIS)
+        @async start_pulse(result, PULSE_INTERVAL_MILLIS)
 
         return result
     # catch ex
@@ -43,21 +43,16 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 end
 
 function start_pulse(session::T, pulse_time::Int) where {T<:AbstractCoreSession}
-    @info "Start pulse"
-    # Threads.@spawn begin
-    #     while session.isOpen
-            sleep(pulse_time - 1)
-            make_pulse_request(session)
-    #     end
-    # end
+    while session.isOpen
+        make_pulse_request(session)
+        sleep(pulse_time - 1)
+    end
 end
 
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
     pulsreq = session_pulse_req(session.sessionID)
-
     if session.isOpen
         result = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
-        @info "session is alive: $(result.alive)"
         if !result.alive
             session.isOpen = false
         end

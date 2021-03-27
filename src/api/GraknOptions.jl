@@ -2,13 +2,13 @@
 
 mutable struct GraknOptions
     infer::Union{Nothing, Bool}
-    traceInference::Union{Nothing, Bool}
+    trace_inference::Union{Nothing, Bool}
     explain::Union{Nothing, Bool}
     parallel::Union{Nothing, Bool}
-    batchSize::Union{Nothing, Int}
+    batch_size::Union{Nothing, Int}
     prefetch::Union{Nothing, Bool}
-    sessionIdleTimeoutMillis::Union{Nothing, Int}
-    schemaLockAcquireTimeoutMillis::Union{Nothing, Int}
+    session_idle_timeout_millis::Union{Nothing, Int}
+    schema_lock_acquire_timeout_millis::Union{Nothing, Int}
 end
 
 function GraknOptions()
