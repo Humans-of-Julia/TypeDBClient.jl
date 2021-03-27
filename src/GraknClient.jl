@@ -34,6 +34,9 @@ abstract type AbstractCoreClient end
 abstract type AbstractCoreSession end
 abstract type AbstractCoreTransaction end
 abstract type AbstractConcept end
+abstract type AbstractConceptManager end
+abstract type AbstractLogicManager end
+abstract type AbstractQueryManager end
 abstract type AbstractThing <: AbstractConcept end
 
 ###### inlcudes ########################

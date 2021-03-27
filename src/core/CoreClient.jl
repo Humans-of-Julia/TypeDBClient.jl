@@ -3,6 +3,8 @@
 mutable struct CoreClient <: AbstractCoreClient
     #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc"
     channel::gRPC.gRPCChannel
+    address::String
+    Port::Int
     core_stub::Core_GraknStub
     transmitter::RequestTransmitter
     databaseMgr::CoreDatabaseManager
@@ -19,7 +21,7 @@ function CoreClient(address::String, port::Int)
     transmitter = RequestTransmitter()
     databaseMgr = CoreDatabaseManager()
     sessions = Dict{String, Union{<:AbstractCoreSession, Nothing}}()
-    return CoreClient(channel,stub,transmitter,databaseMgr,sessions)
+    return CoreClient(channel,address, port, stub,transmitter,databaseMgr,sessions)
 end
 
 

@@ -60,7 +60,6 @@ end
 
 
 
-
 #
 # package grakn.client.core;
 #
