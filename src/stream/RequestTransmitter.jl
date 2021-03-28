@@ -7,12 +7,13 @@ mutable struct RequestTransmitter
     #private static final Logger LOG = LoggerFactory.getLogger(RequestTransmitter.class);
     # private final ArrayList<Executor> executors;
     # private final AtomicInteger executorIndex;
-    # private final ReadWriteLock accessLock;
+    accessLock::Bool
     isOpen::Bool
 end
 
-RequestTransmitter() = RequestTransmitter(true)
-
+function RequestTransmitter()
+    return RequestTransmitter(true)
+end
 #
 # package grakn.client.stream;
 #
