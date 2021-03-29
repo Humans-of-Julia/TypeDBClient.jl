@@ -48,16 +48,16 @@ end
 function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}
     @info "Start pulse $(session.isOpen)"
     while session.isOpen
+        @info "before sleep"
         make_pulse_request(session)
         sleep(pulse_time - 1)
-        @info "after sleep"
     end
     @info "$session is closed"
 end
 
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
     pulsreq = session_pulse_req(session.sessionID)
-    result = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+    result, tes = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
     if result.alive === false
         session.isOpen = false
     end
