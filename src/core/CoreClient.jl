@@ -2,7 +2,7 @@
 
 mutable struct CoreClient <: AbstractCoreClient
     #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc"
-    channel::gRPC.gRPCChannel
+    channel::gRPCClient.gRPCChannel
     address::String
     Port::Int
     core_stub::Core_GraknStub
@@ -16,7 +16,7 @@ Base.print(io::IO, core_client::CoreClient) = Base.print(io, "CoreClient($(print
 
 function CoreClient(address::String, port::Int)
     # NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
-    channel = gRPCClient(address,port).channel
+    channel = gRPCChannel(address * ":" * string(port))
     stub = Core_GraknStub(channel)
     transmitter = RequestTransmitter()
     databaseMgr = CoreDatabaseManager()

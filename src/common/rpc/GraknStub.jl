@@ -7,7 +7,7 @@ mutable struct Core_GraknStub <: GraknStub
     asyncStub::GraknCoreStub
 end
 
-function Core_GraknStub(channel::gRPC.gRPCChannel)
+function Core_GraknStub(channel::gRPCClient.gRPCChannel)
     blockingStub = GraknCoreBlockingStub(channel)
     asyncStub = GraknCoreStub(channel)
     return Core_GraknStub(blockingStub,asyncStub)
@@ -17,7 +17,7 @@ mutable struct Cluster_GraknStub <: GraknStub
     blockingStub::GraknCoreBlockingStub
 end
 
-function Cluster_GraknStub(channel::gRPC.gRPCChannel)
+function Cluster_GraknStub(channel::gRPCClient.gRPCChannel)
     blockingStub = GraknCoreBlockingStub(channel)
     return Cluster_GraknStub(blockingStub)
 end

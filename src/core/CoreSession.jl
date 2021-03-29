@@ -19,11 +19,11 @@ Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, se
 Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
 
 function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions) where {T<:AbstractCoreClient}
-    try
+    # try
         options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS
         open_req = session_open_req(database, type , copy_to_proto(options, grakn.protocol.Options))
         startTime = now()
-        res = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
+        res, tes = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
         endTime = now()
 
         database = CoreDatabase(database)
@@ -34,18 +34,23 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 
         result = CoreSession(client, database, session_id, transactions, type, options, is_open, networkLatencyMillis)
 
+        sleep(1)
+
         @async start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
 
+
         return result
-    catch ex
-        throw(GraknClientException("Error construct a CoreSession",ex))
-    end
+    # catch ex
+    #     throw(GraknClientException("Error construct a CoreSession",ex))
+    # end
 end
 
 function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}
+    @info "Start pulse $(session.isOpen)"
     while session.isOpen
         make_pulse_request(session)
         sleep(pulse_time - 1)
+        @info "after sleep"
     end
     @info "$session is closed"
 end

@@ -17,7 +17,7 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
         logicMgr = LogicManagerImpl()
         queryMgr = QueryManagerImpl()
         bidirectionalStream = BidirectionalStream(session.core_stub, session_transmitter(session))
-        transaction_execute(session, transaction_open_req(sessionId, type.proto(), options.proto(), session.networkLatencyMillis, false)
+        transaction_execute(session, transaction_open_req(sessionId, type.proto(), options.proto(), session.networkLatencyMillis, false))
     catch ex
         throw(GraknClientException("Error while building transaction", ex))
     end

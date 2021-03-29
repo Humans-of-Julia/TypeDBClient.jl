@@ -12,7 +12,7 @@ mutable struct RequestTransmitter
 end
 
 function RequestTransmitter()
-    return RequestTransmitter(true)
+    return RequestTransmitter(true, true)
 end
 #
 # package grakn.client.stream;
