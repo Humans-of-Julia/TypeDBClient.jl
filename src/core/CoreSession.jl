@@ -24,6 +24,9 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         open_req = session_open_req(database, type , copy_to_proto(options, grakn.protocol.Options))
         startTime = now()
         res, tes = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
+        if res === nothing
+            throw("no session returned")
+        end
         endTime = now()
 
         database = CoreDatabase(database)

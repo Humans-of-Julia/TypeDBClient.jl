@@ -4,13 +4,8 @@
 In root folder run $ bash setup.sh to genrate the proto files
 
 then install the packages from GitHub
-Pkg.rm("HPack")
-Pkg.rm("HTTP2")
-Pkg.rm("gRPC")
-Pkg.add(url="https://github.com/tanmaykm/HPack.jl")
-Pkg.add(url="https://github.com/tanmaykm/HTTP2.jl")
-Pkg.add(url="https://github.com/tanmaykm/gRPC.jl")
-
+Pkg.rm("gRPCClient")
+Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
 =#
 module GraknClient
 # following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
