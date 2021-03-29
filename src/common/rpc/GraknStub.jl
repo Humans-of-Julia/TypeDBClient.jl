@@ -1,8 +1,33 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-# 
+abstract type GraknStub end
+
+mutable struct Core_GraknStub <: GraknStub
+    blockingStub::GraknCoreBlockingStub
+    asyncStub::GraknCoreStub
+end
+
+function Core_GraknStub(channel::gRPCClient.gRPCChannel)
+    blockingStub = GraknCoreBlockingStub(channel)
+    asyncStub = GraknCoreStub(channel)
+    return Core_GraknStub(blockingStub,asyncStub)
+end
+
+mutable struct Cluster_GraknStub <: GraknStub
+    blockingStub::GraknCoreBlockingStub
+end
+
+function Cluster_GraknStub(channel::gRPCClient.gRPCChannel)
+    blockingStub = GraknCoreBlockingStub(channel)
+    return Cluster_GraknStub(blockingStub)
+end
+
+function ensure_connected(stub::T) where {T<:GraknStub}
+    throw(GraknClientException(GENERAL_UNKOWN_ERROR,"function GraknStub.jl/ensure_onnected isn't implemented yet"))
+end
+#
 # package grakn.client.common.rpc;
-# 
+#
 # import grakn.client.common.exception.GraknClientException;
 # import grakn.protocol.ClusterServerProto;
 # import grakn.protocol.CoreDatabaseProto.CoreDatabase;
@@ -15,27 +40,27 @@
 # import io.grpc.ManagedChannel;
 # import io.grpc.StatusRuntimeException;
 # import io.grpc.stub.StreamObserver;
-# 
+#
 # import java.util.function.Supplier;
-# 
+#
 # import static grakn.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
-# 
+#
 # public abstract class GraknStub {
-# 
+#
 #     private final ManagedChannel channel;
-# 
+#
 #     private GraknStub(ManagedChannel channel) {
 #         this.channel = channel;
 #     }
-# 
+#
 #     public static Core core(ManagedChannel channel) {
 #         return new Core(channel);
 #     }
-# 
+#
 #     public static Cluster cluster(ManagedChannel channel) {
 #         return new Cluster(channel);
 #     }
-# 
+#
 #     private void ensureConnected() {
 #         // The Channel is a persistent HTTP connection. If it gets interrupted (say, by the server going down) then
 #         // gRPC's recovery logic will kick in, marking the Channel as being in a transient failure state and rejecting
@@ -46,7 +71,7 @@
 #             channel.resetConnectBackoff();
 #         }
 #     }
-# 
+#
 #     protected <RES> RES resilientCall(Supplier<RES> function) {
 #         try {
 #             ensureConnected();
@@ -55,72 +80,72 @@
 #             throw GraknClientException.of(e);
 #         }
 #     }
-# 
+#
 #     public static class Core extends GraknStub {
-# 
+#
 #         private final GraknCoreGrpc.GraknCoreBlockingStub blockingStub;
 #         private final GraknCoreGrpc.GraknCoreStub asyncStub;
-# 
+#
 #         private Core(ManagedChannel channel) {
 #             super(channel);
 #             this.blockingStub = GraknCoreGrpc.newBlockingStub(channel);
 #             this.asyncStub = GraknCoreGrpc.newStub(channel);
 #         }
-# 
+#
 #         public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
 #             return resilientCall(() -> blockingStub.databasesContains(request));
 #         }
-# 
+#
 #         public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request) {
 #             return resilientCall(() -> blockingStub.databasesCreate(request));
 #         }
-# 
+#
 #         public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request) {
 #             return resilientCall(() -> blockingStub.databasesAll(request));
 #         }
-# 
+#
 #         public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request) {
 #             return resilientCall(() -> blockingStub.databaseSchema(request));
 #         }
-# 
+#
 #         public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request) {
 #             return resilientCall(() -> blockingStub.databaseDelete(request));
 #         }
-# 
+#
 #         public Session.Open.Res sessionOpen(Session.Open.Req request) {
 #             return resilientCall(() -> blockingStub.sessionOpen(request));
 #         }
-# 
+#
 #         public Session.Close.Res sessionClose(Session.Close.Req request) {
 #             return resilientCall(() -> blockingStub.sessionClose(request));
 #         }
-# 
+#
 #         public Session.Pulse.Res sessionPulse(Session.Pulse.Req request) {
 #             return resilientCall(() -> blockingStub.sessionPulse(request));
 #         }
-# 
+#
 #         public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
 #             return resilientCall(() -> asyncStub.transaction(responseObserver));
 #         }
 #     }
-# 
+#
 #     public static class Cluster extends GraknStub {
-# 
+#
 #         private final GraknClusterGrpc.GraknClusterBlockingStub blockingStub;
-# 
+#
 #         private Cluster(ManagedChannel channel) {
 #             super(channel);
 #             this.blockingStub = GraknClusterGrpc.newBlockingStub(channel);
 #         }
-# 
+#
 #         public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
 #             return resilientCall(() -> blockingStub.serversAll(request));
 #         }
-# 
+#
 #         public ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseManager.Get.Req request) {
 #             return resilientCall(() -> blockingStub.databasesGet(request));
 #         }
-# 
+#
 #         public ClusterDatabaseManager.All.Res databasesAll(ClusterDatabaseManager.All.Req request) {
 #             return resilientCall(() -> blockingStub.databasesAll(request));
 #         }
