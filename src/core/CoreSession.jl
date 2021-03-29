@@ -34,10 +34,7 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 
         result = CoreSession(client, database, session_id, transactions, type, options, is_open, networkLatencyMillis)
 
-        sleep(1)
-
         @async start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
-
 
         return result
     # catch ex
@@ -46,9 +43,7 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 end
 
 function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}
-    @info "Start pulse $(session.isOpen)"
     while session.isOpen
-        @info "before sleep"
         make_pulse_request(session)
         sleep(pulse_time - 1)
     end
