@@ -7,7 +7,7 @@ mutable struct RequestTransmitter
     #private static final Logger LOG = LoggerFactory.getLogger(RequestTransmitter.class);
     # private final ArrayList<Executor> executors;
     # private final AtomicInteger executorIndex;
-    accessLock::Bool
+    accessLock::Bool #ReentrantLock
     isOpen::Bool
 end
 

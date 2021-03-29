@@ -1,9 +1,9 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct  BidirectionalStream
-    resCollector::ResponseCollector
-    resPartCollector::ResponseCollector;
-    dispatcher::RequestTransmitter.Dispatcher
+    resCollector::Union{Nothing, ResponseCollector}
+    resPartCollector::Union{Nothing,ResponseCollector}
+    dispatcher::Union{Nothing,Dispatcher} #RequestTransmitter.Dispatcher
     isOpen::Bool
 end
 

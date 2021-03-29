@@ -16,6 +16,7 @@ module GraknClient
 # following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
 
 using gRPC, Sockets, UUIDs, Dates
+using DataStructures
 
 import Base: show, close, ==
 
