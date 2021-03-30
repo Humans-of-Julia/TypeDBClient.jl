@@ -1,8 +1,9 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-mutable struct CoreTransaction <: AbstractCoreTransaction
+struct CoreTransaction <: AbstractCoreTransaction
     type::Union{Nothing,Int}
     options::Union{Nothing,GraknOptions}
+    bidirectional_stream::BidirectionalStream
     conceptMgr::Union{Nothing,T} where {T<:AbstractConceptManager}
     logicMgr::Union{Nothing,T} where {T<:AbstractLogicManager}
     queryMgr::Union{Nothing,T} where {T<:AbstractQueryManager}
@@ -13,15 +14,36 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     try
         type = type
         options = options
+        stub = GraknCoreBlockingStub(gRPCChannel(session.address * ":" * string(session.port)))
         conceptMgr = ConceptManagerImpl()
         logicMgr = LogicManagerImpl()
         queryMgr = QueryManagerImpl()
-        bidirectionalStream = BidirectionalStream(session.core_stub, session_transmitter(session))
-        transaction_execute(session, transaction_open_req(sessionId, type.proto(), options.proto(), session.networkLatencyMillis, false))
+        bidirectionalStream = BidirectionalStream(stub, session_transmitter(session))
+        result = CoreTransaction(type, options, bidirectionalStream, conceptMgr, logicMgr, queryMgr)
+        open_res, req_task = transaction_execute(result, transaction_open_req(sessionId, type, options, session.networkLatencyMillis), false)
+
+        return result
     catch ex
         throw(GraknClientException("Error while building transaction", ex))
     end
 end
+
+function transaction_execute(transaction::T, request::grakn.protocol.Transaction_Req, batch::Bool) where {T<:AbstractCoreTransaction}
+        return transaction_query(transaction, request, batch)
+end
+
+function transaction_execute(transaction::T, request::grakn.protocol.Transaction_Req) where {T<:AbstractCoreTransaction}
+    return transaction_query(transaction, request, true)
+end
+
+#@Override
+#     public Res execute(Req.Builder request) {
+#         return execute(request, true);
+#     }
+#
+#     private Res execute(Req.Builder request, boolean batch) {
+#         return query(request, batch).map(res -> res).get();
+#     }
 
 #
 # package grakn.client.core;

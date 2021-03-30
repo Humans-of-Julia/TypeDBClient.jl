@@ -23,6 +23,17 @@ function session_pulse_req(session_id::Array{UInt8,1})
     return puls_req
 end
 
+function transaction_open_req(session_id::Array{UInt8,1}, type::Int32, options::GraknOptions, networkLatencyMillis::Int64)
+    transaction_open_req = grakn.protocol.Transaction_Open_Req()
+    transaction_open_req.session_id = session_id
+    transaction_open_req._type = type
+    transaction_open_req.options = copy_to_proto(options, grakn.protocol.Options)
+    transaction_open_req.network_latency_millis = networkLatencyMillis
+    transaction_req = grakn.protocol.Transaction_Req()
+    transaction_req.open_req = transaction_open_req
+    return transaction_req
+end
+
 
 
 # package grakn.client.common.rpc;
