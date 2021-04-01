@@ -3,17 +3,33 @@
 const BATCH_WINDOW_SMALL_MILLIS = 1
 const BATCH_WINDOW_LARGE_MILLIS = 3
 
-mutable struct RequestTransmitter
-    #private static final Logger LOG = LoggerFactory.getLogger(RequestTransmitter.class);
-    # private final ArrayList<Executor> executors;
-    # private final AtomicInteger executorIndex;
-    accessLock::Bool #ReentrantLock
-    isOpen::Bool
+mutable struct Dispatcher
+
+    # private final Executor executor;
+    # private final StreamObserver<TransactionProto.Transaction.Client> requestObserver;
+    # private final ConcurrentLinkedQueue<TransactionProto.Transaction.Req> requestQueue;
+
 end
 
-function RequestTransmitter()
-    return RequestTransmitter(true, true)
+mutable struct Executor
+
+        # private final ConcurrentSet<Dispatcher> dispatchers;
+        # private final AtomicBoolean isRunning;
+        # private final Semaphore permissionToRun;
+
 end
+
+mutable struct RequestTransmitter
+    #private static final Logger LOG = LoggerFactory.getLogger(RequestTransmitter.class);
+    executors::Union{Nothing, Vector{Executor}}
+    executorIndex::Int
+    accessLock::ReentrantLock
+    is_open::Bool
+end
+
+RequestTransmitter() = RequestTransmitter(nothing, 0, ReentrantLock(), true)
+
+
 #
 # package grakn.client.stream;
 #

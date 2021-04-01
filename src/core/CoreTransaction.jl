@@ -36,6 +36,21 @@ function transaction_execute(transaction::T, request::grakn.protocol.Transaction
     return transaction_query(transaction, request, true)
 end
 
+function transaction_query(transaction::T, request::grakn.protocol.Transaction_Req) where {T<:AbstractCoreTransaction}
+        return transaction_query(transaction, request, true);
+end
+
+function transaction_query(transaction::T, request::grakn.protocol.Transaction_Req, batch::Bool) where {T<:AbstractCoreTransaction}
+        !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED))
+
+        # BidirectionalStream.Single<Res> single = bidirectionalStream.single(request, batch)
+        # return single::get
+end
+
+function is_open(transaction::T)::Bool where {T<:AbstractCoreTransaction}
+    return transaction.bidirectional_stream.is_open
+end
+
 #@Override
 #     public Res execute(Req.Builder request) {
 #         return execute(request, true);

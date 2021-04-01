@@ -1,7 +1,9 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 function database_contains_req(name::String)
-    return CoreDatabaseManager_Contains_Req().name = name
+    result = grakn.protocol.CoreDatabaseManager_Contains_Req()
+    result.name = name
+    return result
 end
 
 function database_schema_req(name::String)
@@ -32,6 +34,23 @@ function transaction_open_req(session_id::Array{UInt8,1}, type::Int32, options::
     transaction_req = grakn.protocol.Transaction_Req()
     transaction_req.open_req = transaction_open_req
     return transaction_req
+end
+
+function all_req()
+    all_request = grakn.protocol.CoreDatabaseManager_All_Req()
+    return all_request
+end
+
+function create_req(name::String)
+    db_create_req = grakn.protocol.CoreDatabaseManager_Create_Req()
+    db_create_req.name = name
+    return db_create_req
+end
+
+function delete_req(name)
+    db_delet_req = grakn.protocol.CoreDatabase_Delete_Req()
+    db_delet_req.name = name
+    return db_delet_req
 end
 
 

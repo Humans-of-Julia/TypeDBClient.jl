@@ -25,6 +25,10 @@ function CoreClient(address::String, port::Int)
 end
 
 
+function transmitter(client::T) where {T<:AbstractCoreClient}
+    client.transmitter
+end
+
 
 #
 # package grakn.client.core;

@@ -43,17 +43,19 @@ abstract type AbstractThing <: AbstractConcept end
 include(joinpath(@__DIR__,"generated","grakn.jl"))
 include(joinpath(@__DIR__,"generated","core_service_pb.jl"))
 
+#api section
+include(joinpath(@__DIR__,"api","GraknOptions.jl"))
+
 #common section
 include(joinpath(@__DIR__,"common","exception","ErrorMessage.jl"))
 include(joinpath(@__DIR__,"common","exception","GraknClientException.jl"))
 include(joinpath(@__DIR__,"common","rpc","GraknStub.jl"))
 include(joinpath(@__DIR__,"common","rpc","RequestBuilder.jl"))
 
-#api section
-include(joinpath(@__DIR__,"api","GraknOptions.jl"))
-
 #stream section
 include(joinpath(@__DIR__,"stream","RequestTransmitter.jl"))
+include(joinpath(@__DIR__,"stream","ResponseCollector.jl"))
+include(joinpath(@__DIR__,"stream","BidirectionalStream.jl"))
 
 #core section
 include(joinpath(@__DIR__,"core","CoreDatabase.jl"))
@@ -62,8 +64,13 @@ include(joinpath(@__DIR__,"core","CoreClient.jl"))
 include(joinpath(@__DIR__,"core","CoreSession.jl"))
 include(joinpath(@__DIR__,"core","CoreTransaction.jl"))
 
+# part of common section -- place because of general grpc resulthandling
+include(joinpath(@__DIR__,"common","exception","gRPC_Result_Handling.jl"))
+
 
 export GraknCoreBlockingClient, GraknClientException
+export contains_database
+
 # export  Session, Transaction
 
 ####### pretty printing sectoin ##################

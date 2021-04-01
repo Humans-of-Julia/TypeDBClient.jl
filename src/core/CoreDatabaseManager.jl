@@ -5,6 +5,7 @@ mutable struct CoreDatabaseManager <: AbstractCoreDatabaseManager
 end
 
 function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractCoreClient}
+    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
     if contains_database(client, name)
         return CoreDatabase(name)
     else
@@ -12,11 +13,28 @@ function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractC
     end
 end
 
-function contains_database(client::T, name::String)::Bool where {T<:AbstractCoreClient}
-
-    return databases_contains(client.core_stub, gRPCController() , contains_req(name)).contains
+function contains_database(client::T, name::String) where {T<:AbstractCoreClient}
+    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
+    req_result, status = databases_contains(client.core_stub.blockingStub, gRPCController() , database_contains_req(name))
+    return grpc_result_or_error(req_result, status, result->result.contains)
 end
-#
+
+function get_all_databases(client::T)::Vector{CoreDatabase} where {T<:AbstractCoreClient}
+        req_result, status = databases_all(client.core_stub.blockingStub, gRPCController(), all_req())
+        return grpc_result_or_error(req_result, status, result->[CoreDatabase(db_name) for db_name in result.names])
+end
+
+function create_database(client::T, name::String) where {T<:AbstractCoreClient}
+    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
+    req_result, status =  databases_create(client.core_stub.blockingStub, gRPCController(), create_req(name))
+    return grpc_result_or_error(req_result, status, result->true)
+end
+
+function delete_database(client::T, name::String) where {T<:AbstractCoreClient}
+    db = get_database(client, name)
+    req_result, status =  database_delete(client.core_stub.blockingStub, gRPCController(), delete_req(name))
+    return grpc_result_or_error(req_result, status, result->true)
+end
 # package grakn.client.core;
 #
 # import grakn.client.api.database.Database;

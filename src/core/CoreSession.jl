@@ -61,6 +61,12 @@ function make_pulse_request(session::T) where {T<:AbstractCoreSession}
     end
 end
 
+function transmitter(session::T) where {T<:AbstractCoreSession}
+    transmitter(session.client)
+end
+
+
+
 
 
 #

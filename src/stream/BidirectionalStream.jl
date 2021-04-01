@@ -4,8 +4,11 @@ mutable struct  BidirectionalStream
     resCollector::Union{Nothing, ResponseCollector}
     resPartCollector::Union{Nothing,ResponseCollector}
     dispatcher::Union{Nothing,Dispatcher} #RequestTransmitter.Dispatcher
-    isOpen::Bool
+    is_open::Bool
 end
+
+# Only for the first time to accomplish compiling
+BidirectionalStream() = BidirectionalStream(nothing, nothing, nothing, true)
 
 #
 # package grakn.client.stream;

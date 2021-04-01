@@ -1,8 +1,10 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct ResponseCollector
-    collectors::Dict{UUID,Queue}
+    collectors::Union{Nothing,Dict{UUID,Queue}}
 end
+
+ResponseCollector() = ResponseCollector(nothing)
 
 #
 # package grakn.client.stream;
