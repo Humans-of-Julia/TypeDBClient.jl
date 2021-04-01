@@ -9,8 +9,13 @@ end
 
 Base.show(io::IO, grakn_excption::GraknClientException) = Base.print(io,grakn_excption)
 function Base.print(io::IO, grakn_excption::GraknClientException)
+    if !isempty(grakn_excption.params)
+        replace_item = "_error_item"
+        err_message = grakn_excption.error_message
+        err_message = replace(err_message,replace_item=>grakn_excption.params[1])
+    end
     str = "GraknClientException:
-        message: $(grakn_excption.error_message)
+        message: $(err_message)
         params: $(join(grakn_excption.params, "\n"))
         remark: $(grakn_excption.individual_message)
         cause: $(Base.show(grakn_excption.cause))
