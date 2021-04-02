@@ -7,10 +7,11 @@ struct CoreTransaction <: AbstractCoreTransaction
     conceptMgr::Union{Nothing,T} where {T<:AbstractConceptManager}
     logicMgr::Union{Nothing,T} where {T<:AbstractLogicManager}
     queryMgr::Union{Nothing,T} where {T<:AbstractQueryManager}
+    transaction_id::Union{Nothing,UUID}
 end
 
 
-function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int, options::GraknOptions)
+function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int, options::GraknOptions, trans_id::UUID = uuid4())
     try
         type = type
         options = options
@@ -19,7 +20,7 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
         logicMgr = LogicManagerImpl()
         queryMgr = QueryManagerImpl()
         bidirectionalStream = BidirectionalStream(stub, session_transmitter(session))
-        result = CoreTransaction(type, options, bidirectionalStream, conceptMgr, logicMgr, queryMgr)
+        result = CoreTransaction(type, options, bidirectionalStream, conceptMgr, logicMgr, queryMgr, trans_id)
         open_res, req_task = transaction_execute(result, transaction_open_req(sessionId, type, options, session.networkLatencyMillis), false)
 
         return result
@@ -41,7 +42,7 @@ function transaction_query(transaction::T, request::grakn.protocol.Transaction_R
 end
 
 function transaction_query(transaction::T, request::grakn.protocol.Transaction_Req, batch::Bool) where {T<:AbstractCoreTransaction}
-        !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED))
+        !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED, ))
 
         # BidirectionalStream.Single<Res> single = bidirectionalStream.single(request, batch)
         # return single::get
@@ -49,6 +50,10 @@ end
 
 function is_open(transaction::T)::Bool where {T<:AbstractCoreTransaction}
     return transaction.bidirectional_stream.is_open
+end
+
+function close(transaction::T)::Bool where {T<:AbstractCoreTransaction}
+    close(transaction.bidirectional_stream)
 end
 
 #@Override

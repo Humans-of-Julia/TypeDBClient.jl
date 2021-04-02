@@ -48,9 +48,15 @@ function create_req(name::String)
 end
 
 function delete_req(name)
-    db_delet_req = grakn.protocol.CoreDatabase_Delete_Req()
-    db_delet_req.name = name
-    return db_delet_req
+    db_delete_req = grakn.protocol.CoreDatabase_Delete_Req()
+    db_delete_req.name = name
+    return db_delete_req
+end
+
+function close_req(session_id::Array{Int8,1})
+    session_close_req = grakn.protocol.Session_Close_Req()
+    session_close_req.session_id = session_id
+    return session_close_req
 end
 
 

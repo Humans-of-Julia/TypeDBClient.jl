@@ -6,11 +6,10 @@ mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
     sessionID::Array{UInt8,1}
-    transactions::Array{Union{Nothing,<:AbstractCoreTransaction},1}
+    transactions::Dict{Array{Int8,1},T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
     type::Int
+    accessLock::ReentrantLock
     options::GraknOptions
-# Timer pulse
-# ReadWriteLock accessLock
     isOpen::Bool
     networkLatencyMillis::Int
 end
@@ -35,7 +34,7 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         transactions = Array{Union{Nothing,<:AbstractCoreTransaction},1}(nothing,0)
         is_open = true
 
-        result = CoreSession(client, database, session_id, transactions, type, options, is_open, networkLatencyMillis)
+        result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis)
 
         @async start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
 
@@ -65,7 +64,48 @@ function transmitter(session::T) where {T<:AbstractCoreSession}
     transmitter(session.client)
 end
 
+function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
+        return transaction(session, type, grakn_options_core())
+end
 
+function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
+    try
+        lock(session.accessLock)
+        if !session.isOpen
+            throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionId)))
+        end
+        transactionRPC = CoreTransaction(session, session.sessionID, type, options, uuid4())
+        session.transactions[transactionRPC.transaction_id] = transactionRPC
+
+        return transactionRPC
+    finally
+        unlock(accessLock)
+    end
+end
+
+function close(session::T) where {T<:AbstractCoreSession}
+    try
+        lock(accessLock)
+        if session.isOpen
+            for trans in session.transactions
+                close(trans)
+                delete!(session.tranactions, trans.transaction_id)
+            end
+            remove_session(session.client, session)
+            session.isOpen = false
+
+            req_result, status == session_close(session.core_stub.blockingStub, gRPCController(), close_req(session.sessionID))
+
+            # A reaction to the result is not necessary because if the session isn't there
+            # the grpc_result_or_error function will throw an error
+            grpc_result_or_error(req_result, status, result->result.contains)
+        end
+    catch  ex
+        throw(GraknClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
+    finally
+        unlock(accessLock)
+    end
+end
 
 
 

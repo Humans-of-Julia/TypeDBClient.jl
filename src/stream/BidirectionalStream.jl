@@ -10,6 +10,10 @@ end
 # Only for the first time to accomplish compiling
 BidirectionalStream() = BidirectionalStream(nothing, nothing, nothing, true)
 
+function close(stream::BidirectionalStream)
+    @info "BidirectionalStream close function not implemented yet"
+end
+
 #
 # package grakn.client.stream;
 #
