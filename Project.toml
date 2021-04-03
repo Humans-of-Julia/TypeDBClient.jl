@@ -6,11 +6,8 @@ version = "0.1.0"
 [deps]
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
-<<<<<<< HEAD
 ExecutableSpecifications = "7a129280-419d-58e9-81ef-4f6801251892"
-=======
 IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
->>>>>>> d4dc1f31463207afc609b833d1b6b62cbd839d5c
 ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
 Sockets = "6462fe0b-24de-5631-8697-dd941f90decc"
 UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
