@@ -29,7 +29,9 @@ end
 end
 
 
-
+@when("delete attribute: \$x") do context
+    @fail "Implement me"
+end
 
 
 
