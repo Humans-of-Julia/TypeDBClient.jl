@@ -15,13 +15,16 @@ Base.show(io::IO, core_client::CoreClient) = Base.print(io,core_client)
 Base.print(io::IO, core_client::CoreClient) = Base.print(io, "CoreClient($(print(core_client.channel))")
 
 function CoreClient(address::String, port::Int)
-    # NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
     channel = gRPCChannel(address * ":" * string(port))
     stub = Core_GraknStub(channel)
     transmitter = RequestTransmitter()
     databaseMgr = CoreDatabaseManager()
     sessions = Dict{String, Union{<:AbstractCoreSession, Nothing}}()
     return CoreClient(channel,address, port, stub,transmitter,databaseMgr,sessions)
+end
+
+function is_cluster(client) where {T<:AbstractCoreClient}
+    return false
 end
 
 

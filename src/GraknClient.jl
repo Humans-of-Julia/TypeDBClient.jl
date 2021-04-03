@@ -26,7 +26,11 @@ const Maybe{T} = Union{T,Nothing}
 ########################################
 
 abstract type AbstractCoreDatabaseManager end
-abstract type AbstractCoreClient end
+
+abstract type AbstracClient end
+abstract type AbstractClusterClient <: AbstracClient end
+abstract type AbstractCoreClient <: AbstracClient end
+
 abstract type AbstractCoreSession end
 abstract type AbstractCoreTransaction end
 abstract type AbstractConcept end
