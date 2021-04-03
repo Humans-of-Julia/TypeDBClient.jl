@@ -1,5 +1,331 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
 
+using ExecutableSpecifications
+
+@when("\$x = attribute(is-alive) as(boolean) put: true") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x is null: false") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has type: is-alive") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has value type: boolean") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has boolean value: true") do context
+    @fail "Implement me"
+end
+
+
+@when("transaction commits") do context
+    @fail "Implement me"
+end
+
+
+@when("session opens transaction of type: read") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(is-alive) as(boolean) get: true") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(age) as(long) put: 21") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has type: age") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has value type: long") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has long value: 21") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(age) as(long) get: 21") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(score) as(double) put: 123.456") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has type: score") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has value type: double") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has double value: 123.456") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(score) as(double) get: 123.456") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(name) as(string) put: alice") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has type: name") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has value type: string") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has string value: alice") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(name) as(string) get: alice") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(email) as(string) put: alice@email.com") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has type: email") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has string value: alice@email.com") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(email) as(string) get: alice@email.com") do context
+    @fail "Implement me"
+end
+
+
+@when("attribute(email) as(string) put: alice-email-com; throws exception") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has type: birth-date") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has value type: datetime") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has datetime value: 1990-01-01 11:22:33") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(birth-date) as(datetime) get: 1990-01-01 11:22:33") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute(is-alive) get instances contain: \$x") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute(age) get instances contain: \$x") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute(score) get instances contain: \$x") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute(name) get instances contain: \$x") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute(birth-date) get instances contain: \$x") do context
+    @fail "Implement me"
+end
+
+
+@when("delete attribute: \$x") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x is deleted: true") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x is null: true") do context
+    @fail "Implement me"
+end
+
+
+@when("session opens transaction of type: write") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(score) as(double) put: 123") do context
+    @fail "Implement me"
+end
+
+
+@then("attribute \$x has double value: 123") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(score) as(double) get: 123") do context
+    @fail "Implement me"
+end
+
+
+@given("connection has been opened") do context
+    @fail "Implement me"
+end
+
+
+@given("connection does not have any database") do context
+    @fail "Implement me"
+end
+
+
+@given("connection create database: grakn") do context
+    @fail "Implement me"
+end
+
+
+@given("connection open schema session for database: grakn") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: is-alive, with value type: boolean") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: age, with value type: long") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: score, with value type: double") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: birth-date, with value type: datetime") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: name, with value type: string") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: email, with value type: string") do context
+    @fail "Implement me"
+end
+
+
+@given("attribute(email) as(string) set regex: \\S+@\\S+\\.\\S+") do context
+    @fail "Implement me"
+end
+
+
+@given("put entity type: person") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: is-alive") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: age") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: score") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: name") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: email") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: birth-date") do context
+    @fail "Implement me"
+end
+
+
+@given("connection close all sessions") do context
+    @fail "Implement me"
+end
+
+
+@given("connection open data session for database: grakn") do context
+    @fail "Implement me"
+end
+
 # 
 # package grakn.client.test.behaviour.concept.thing.attribute;
 # 
