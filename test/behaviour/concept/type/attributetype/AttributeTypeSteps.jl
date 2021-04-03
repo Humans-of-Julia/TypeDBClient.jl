@@ -1,138 +1,164 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-# 
-# package grakn.client.test.behaviour.concept.type.attributetype;
-# 
-# import grakn.client.api.concept.type.AttributeType;
-# import grakn.client.api.concept.type.AttributeType.ValueType;
-# import grakn.client.api.concept.type.Type;
-# import grakn.client.common.exception.GraknClientException;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# 
-# import java.util.List;
-# import java.util.Set;
-# 
-# import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static java.util.stream.Collectors.toSet;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertFalse;
-# import static org.junit.Assert.assertNull;
-# import static org.junit.Assert.assertTrue;
-# import static org.junit.Assert.fail;
-# 
-# public class AttributeTypeSteps {
-# 
-#     @When("put attribute type: {type_label}, with value type: {value_type}")
-#     public void put_attribute_type_with_value_type(String typeLabel, ValueType valueType) {
-#         tx().concepts().putAttributeType(typeLabel, valueType);
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) get value type: {value_type}")
-#     public void attribute_type_get_value_type(String typeLabel, ValueType valueType) {
-#         assertEquals(valueType, tx().concepts().getAttributeType(typeLabel).getValueType());
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) get supertype value type: {value_type}")
-#     public void attribute_type_get_supertype_value_type(String typeLabel, ValueType valueType) {
-#         Type supertype = tx().concepts().getAttributeType(typeLabel).asRemote(tx()).getSupertype();
-#         assertEquals(valueType, supertype.asAttributeType().getValueType());
-#     }
-# 
-#     private AttributeType attribute_type_as_value_type(String typeLabel, ValueType valueType) {
-#         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-#         switch (valueType) {
-#             case OBJECT:
-#                 return attributeType;
-#             case BOOLEAN:
-#                 return attributeType.asBoolean();
-#             case LONG:
-#                 return attributeType.asLong();
-#             case DOUBLE:
-#                 return attributeType.asDouble();
-#             case STRING:
-#                 return attributeType.asString();
-#             case DATETIME:
-#                 return attributeType.asDateTime();
-#             default:
-#                 throw new GraknClientException(BAD_VALUE_TYPE, valueType);
-#         }
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")
-#     public void attribute_type_as_value_type_get_subtypes_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
-#         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-#         Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
-#         assertTrue(actuals.containsAll(subLabels));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")
-#     public void attribute_type_as_value_type_get_subtypes_do_not_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
-#         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-#         Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
-#         for (String subLabel : subLabels) {
-#             assertFalse(actuals.contains(subLabel));
-#         }
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) set regex: {}")
-#     public void attribute_type_as_value_type_set_regex(String typeLabel, ValueType valueType, String regex) {
-#         if (!valueType.equals(ValueType.STRING)) fail();
-#         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-#         attributeType.asString().asRemote(tx()).setRegex(regex);
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) unset regex")
-#     public void attribute_type_as_value_type_unset_regex(String typeLabel, AttributeType.ValueType valueType) {
-#         if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
-#         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-#         attributeType.asString().asRemote(tx()).setRegex(null);
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")
-#     public void attribute_type_as_value_type_get_regex(String typeLabel, ValueType valueType, String regex) {
-#         if (!valueType.equals(ValueType.STRING)) fail();
-#         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-#         assertEquals(regex, attributeType.asString().asRemote(tx()).getRegex());
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")
-#     public void attribute_type_as_value_type_does_not_have_any_regex(String typeLabel, AttributeType.ValueType valueType) {
-#         if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
-#         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-#         assertNull(attributeType.asString().asRemote(tx()).getRegex());
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) get key owners contain:")
-#     public void attribute_type_get_owners_as_key_contains(String typeLabel, List<String> ownerLabels) {
-#         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-#         Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(t -> t.getLabel().name()).collect(toSet());
-#         assertTrue(actuals.containsAll(ownerLabels));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) get key owners do not contain:")
-#     public void attribute_type_get_owners_as_key_do_not_contains(String typeLabel, List<String> ownerLabels) {
-#         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-#         Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(t -> t.getLabel().name()).collect(toSet());
-#         for (String ownerLabel : ownerLabels) {
-#             assertFalse(actuals.contains(ownerLabel));
-#         }
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) get attribute owners contain:")
-#     public void attribute_type_get_owners_as_attribute_contains(String typeLabel, List<String> ownerLabels) {
-#         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-#         Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(t -> t.getLabel().name()).collect(toSet());
-#         assertTrue(actuals.containsAll(ownerLabels));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) get attribute owners do not contain:")
-#     public void attribute_type_get_owners_as_attribute_do_not_contains(String typeLabel, List<String> ownerLabels) {
-#         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-#         Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(t -> t.getLabel().name()).collect(toSet());
-#         for (String ownerLabel : ownerLabels) {
-#             assertFalse(actuals.contains(ownerLabel));
-#         }
-#     }
-# }
+
+@given("put attribute type: is-alive, with value type: boolean") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: age, with value type: long") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: score, with value type: double") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: birth-date, with value type: datetime") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: name, with value type: string") do context
+    @fail "Implement me"
+end
+
+
+@given("put attribute type: email, with value type: string") do context
+    @fail "Implement me"
+end
+
+
+@given("attribute(email) as(string) set regex: \\S+@\\S+\\.\\S+") do context
+    @fail "Implement me"
+end
+#=
+
+from behave import *
+from hamcrest import *
+
+from grakn.api.concept.type.attribute_type import AttributeType
+from tests.behaviour.config.parameters import parse_value_type, parse_list, parse_label
+from tests.behaviour.context import Context
+
+
+@step("put attribute type: {type_label}, with value type: {value_type}")
+def step_impl(context: Context, type_label: str, value_type: str):
+    context.tx().concepts().put_attribute_type(type_label, parse_value_type(value_type))
+
+
+@step("attribute({type_label}) get value type: {value_type}")
+def step_impl(context: Context, type_label: str, value_type: str):
+    assert_that(context.tx().concepts().get_attribute_type(type_label).get_value_type(), is_(parse_value_type(value_type)))
+
+
+@step("attribute({type_label}) get supertype value type: {value_type}")
+def step_impl(context: Context, type_label: str, value_type: str):
+    supertype = context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).get_supertype()
+    assert_that(supertype.get_value_type(), is_(parse_value_type(value_type)))
+
+
+def attribute_type_as_value_type(context: Context, type_label: str, value_type: AttributeType.ValueType):
+    attribute_type = context.tx().concepts().get_attribute_type(type_label)
+    if value_type is AttributeType.ValueType.OBJECT:
+        return attribute_type
+    elif value_type is AttributeType.ValueType.BOOLEAN:
+        return attribute_type.as_boolean()
+    elif value_type is AttributeType.ValueType.LONG:
+        return attribute_type.as_long()
+    elif value_type is AttributeType.ValueType.DOUBLE:
+        return attribute_type.as_double()
+    elif value_type is AttributeType.ValueType.STRING:
+        return attribute_type.as_string()
+    elif value_type is AttributeType.ValueType.DATETIME:
+        return attribute_type.as_datetime()
+    else:
+        raise ValueError("Unrecognised value type: " + str(value_type))
+
+
+@step("attribute({type_label}) as({value_type}) get subtypes contain")
+def step_impl(context: Context, type_label: str, value_type: str):
+    sub_labels = [parse_label(s) for s in parse_list(context.table)]
+    attribute_type = attribute_type_as_value_type(context, type_label, parse_value_type(value_type))
+    actuals = list(map(lambda tt: tt.get_label(), attribute_type.as_remote(context.tx()).get_subtypes()))
+    for sub_label in sub_labels:
+        assert_that(sub_label, is_in(actuals))
+
+
+@step("attribute({type_label}) as({value_type}) get subtypes do not contain")
+def step_impl(context: Context, type_label: str, value_type: str):
+    sub_labels = [parse_label(s) for s in parse_list(context.table)]
+    attribute_type = attribute_type_as_value_type(context, type_label, parse_value_type(value_type))
+    actuals = list(map(lambda tt: tt.get_label(), attribute_type.as_remote(context.tx()).get_subtypes()))
+    for sub_label in sub_labels:
+        assert_that(sub_label, not_(is_in(actuals)))
+
+
+@step("attribute({type_label}) as({value_type}) set regex: {regex}")
+def step_impl(context: Context, type_label: str, value_type, regex: str):
+    value_type = parse_value_type(value_type)
+    assert_that(value_type, is_(AttributeType.ValueType.STRING))
+    attribute_type = attribute_type_as_value_type(context, type_label, value_type)
+    attribute_type.as_remote(context.tx()).set_regex(regex)
+
+
+@step("attribute({type_label}) as({value_type}) unset regex")
+def step_impl(context: Context, type_label: str, value_type):
+    value_type = parse_value_type(value_type)
+    assert_that(value_type, is_(AttributeType.ValueType.STRING))
+    attribute_type = attribute_type_as_value_type(context, type_label, value_type)
+    attribute_type.as_remote(context.tx()).set_regex(None)
+
+
+@step("attribute({type_label}) as({value_type}) get regex: {regex}")
+def step_impl(context: Context, type_label: str, value_type, regex: str):
+    value_type = parse_value_type(value_type)
+    assert_that(value_type, is_(AttributeType.ValueType.STRING))
+    attribute_type = attribute_type_as_value_type(context, type_label, value_type)
+    assert_that(attribute_type.as_remote(context.tx()).get_regex(), is_(regex))
+
+
+@step("attribute({type_label}) as({value_type}) does not have any regex")
+def step_impl(context: Context, type_label: str, value_type):
+    value_type = parse_value_type(value_type)
+    assert_that(value_type, is_(AttributeType.ValueType.STRING))
+    attribute_type = attribute_type_as_value_type(context, type_label, value_type)
+    assert_that(attribute_type.as_remote(context.tx()).get_regex(), is_(None))
+
+
+@step("attribute({type_label}) get key owners contain")
+def step_impl(context: Context, type_label: str):
+    owner_labels = [parse_label(s) for s in parse_list(context.table)]
+    attribute_type = context.tx().concepts().get_attribute_type(type_label)
+    actuals = list(map(lambda tt: tt.get_label(), attribute_type.as_remote(context.tx()).get_owners(only_key=True)))
+    for owner_label in owner_labels:
+        assert_that(actuals, has_item(owner_label))
+
+
+@step("attribute({type_label}) get key owners do not contain")
+def step_impl(context: Context, type_label: str):
+    owner_labels = [parse_label(s) for s in parse_list(context.table)]
+    attribute_type = context.tx().concepts().get_attribute_type(type_label)
+    actuals = list(map(lambda tt: tt.get_label(), attribute_type.as_remote(context.tx()).get_owners(only_key=True)))
+    for owner_label in owner_labels:
+        assert_that(actuals, not_(has_item(owner_label)))
+
+
+@step("attribute({type_label}) get attribute owners contain")
+def step_impl(context: Context, type_label: str):
+    owner_labels = [parse_label(s) for s in parse_list(context.table)]
+    attribute_type = context.tx().concepts().get_attribute_type(type_label)
+    actuals = list(map(lambda tt: tt.get_label(), attribute_type.as_remote(context.tx()).get_owners(only_key=False)))
+    for owner_label in owner_labels:
+        assert_that(actuals, has_item(owner_label))
+
+
+@step("attribute({type_label}) get attribute owners do not contain")
+def step_impl(context: Context, type_label: str):
+    owner_labels = [parse_label(s) for s in parse_list(context.table)]
+    attribute_type = context.tx().concepts().get_attribute_type(type_label)
+    actuals = list(map(lambda tt: tt.get_label(), attribute_type.as_remote(context.tx()).get_owners(only_key=False)))
+    for owner_label in owner_labels:
+        assert_that(actuals, not_(has_item(owner_label)))
