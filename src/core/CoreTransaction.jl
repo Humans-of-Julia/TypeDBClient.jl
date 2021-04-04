@@ -1,7 +1,7 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 struct CoreTransaction <: AbstractCoreTransaction
-    type::Union{Nothing,Int}
+    type::Union{Nothing,Int32}
     options::Union{Nothing,GraknOptions}
     bidirectional_stream::BidirectionalStream
     conceptMgr::Union{Nothing,T} where {T<:AbstractConceptManager}
@@ -13,7 +13,7 @@ end
 
 
 function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int32, options::GraknOptions)
-    try
+    #try
         type = type
         options = options
         stub = GraknCoreBlockingStub(gRPCChannel(session.client.address * ":" * string(session.client.port)))
@@ -27,9 +27,9 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
    #     open_res, req_task = transaction_execute(result, transaction_open_req(sessionId, type, options, session.networkLatencyMillis), false)
 
         return result
-    catch ex
-        throw(GraknClientException("Error while building transaction", ex))
-    end
+    # catch ex
+    #     throw(GraknClientException("Error while building transaction", ex))
+    # end
 end
 
 function transaction_execute(transaction::T, request::grakn.protocol.Transaction_Req, batch::Bool) where {T<:AbstractCoreTransaction}

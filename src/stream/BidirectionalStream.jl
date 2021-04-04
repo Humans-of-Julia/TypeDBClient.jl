@@ -17,6 +17,11 @@ function BidirectionalStream()
     return BidirectionalStream(resCollector, resPartCollector, dispatcher, is_open)
 end
 
+function BidirectionalStream(stub::GraknCoreBlockingStub, session_transmitter::RequestTransmitter)
+    return BidirectionalStream()
+    @info "Constructor BidirectionalStream not ready implemented"
+end
+
 function close(stream::BidirectionalStream)
     @info "BidirectionalStream close function not implemented yet"
 end

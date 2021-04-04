@@ -29,6 +29,18 @@ end
 
 RequestTransmitter() = RequestTransmitter(nothing, 0, ReentrantLock(), true)
 
+function RequestTransmitter(session::T) where {T<:AbstractCoreSession}
+    executors = Vector{Executor}()
+    index = 0
+    accesLock = ReentrantLock()
+    is_open = true
+    return RequestTransmitter(executors, index, accesLock, is_open)
+end
+
+function session_transmitter(session::T) where {T<:AbstractCoreSession}
+    return RequestTransmitter(session)
+end
+
 
 #
 # package grakn.client.stream;
