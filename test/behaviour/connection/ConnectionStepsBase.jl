@@ -1,12 +1,12 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 @given("connection has been opened") do context
-    @fail context[:cllient] !== nothing && is_open(context[:client])
+    @expect context[:cllient] !== nothing && is_open(context[:client])
 end
 
 
 @given("connection does not have any database") do context
-    @fail length(get_all(databases(context[:client]))) == 0
+    @expect length(get_all(databases(context[:client]))) == 0
 end
 
 #=

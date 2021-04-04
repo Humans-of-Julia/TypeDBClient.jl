@@ -1,7 +1,9 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
 
-using ExecutableSpecifications
-
+using ExecutableSpecifications.Gherkin: Given, When, Then
+using AttributeType
+using GraknClientException
+using ThingSteps: get, put
 
 ###### When Steps ######################
 #                                      #
@@ -11,6 +13,17 @@ using ExecutableSpecifications
 @when("\$x = attribute(is-alive) as(boolean) put: true") do context
     @fail "Implement me"
 end
+
+#maybe like this? :D
+@when("{var:Var} = attribute({type_label}) as(boolean) put: {value:Bool}") do context
+    context[Symbol(var)] = [:tx(), :concepts(), get_attribute_type(:type_label::String), :as_remote(context[:tx()]), :as_boolean(), :put(value::bool)]
+end
+
+#=
+@step("{var:Var} = attribute({type_label}) as(boolean) put: {value:Bool}")
+def step_impl(context: Context, var: str, type_label: str, value: bool):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().put(value))
+=#
 
 
 @when("\$x = attribute(age) as(long) put: 21") do context
