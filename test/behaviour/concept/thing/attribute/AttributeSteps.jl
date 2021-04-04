@@ -2,10 +2,59 @@
 
 using ExecutableSpecifications
 
+
+###### When Steps ######################
+#                                      #
+########################################
+
+
 @when("\$x = attribute(is-alive) as(boolean) put: true") do context
     @fail "Implement me"
 end
 
+
+@when("\$x = attribute(age) as(long) put: 21") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(score) as(double) put: 123.456") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(name) as(string) put: alice") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(email) as(string) put: alice@email.com") do context
+    @fail "Implement me"
+end
+
+
+@when("attribute(email) as(string) put: alice-email-com; throws exception") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
+    @fail "Implement me"
+end
+
+
+@when("\$x = attribute(score) as(double) put: 123") do context
+    @fail "Implement me"
+end
+
+
+@when("delete attribute: \$x") do context
+    @fail "Implement me"
+end
+
+###### Then Steps ######################
+#                                      #
+########################################
 
 @then("attribute \$x is null: false") do context
     @fail "Implement me"
@@ -27,26 +76,6 @@ end
 end
 
 
-@when("transaction commits") do context
-    @fail "Implement me"
-end
-
-
-@when("session opens transaction of type: read") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(is-alive) as(boolean) get: true") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(age) as(long) put: 21") do context
-    @fail "Implement me"
-end
-
-
 @then("attribute \$x has type: age") do context
     @fail "Implement me"
 end
@@ -58,16 +87,6 @@ end
 
 
 @then("attribute \$x has long value: 21") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(age) as(long) get: 21") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(score) as(double) put: 123.456") do context
     @fail "Implement me"
 end
 
@@ -87,16 +106,6 @@ end
 end
 
 
-@when("\$x = attribute(score) as(double) get: 123.456") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(name) as(string) put: alice") do context
-    @fail "Implement me"
-end
-
-
 @then("attribute \$x has type: name") do context
     @fail "Implement me"
 end
@@ -112,37 +121,12 @@ end
 end
 
 
-@when("\$x = attribute(name) as(string) get: alice") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(email) as(string) put: alice@email.com") do context
-    @fail "Implement me"
-end
-
-
 @then("attribute \$x has type: email") do context
     @fail "Implement me"
 end
 
 
 @then("attribute \$x has string value: alice@email.com") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(email) as(string) get: alice@email.com") do context
-    @fail "Implement me"
-end
-
-
-@when("attribute(email) as(string) put: alice-email-com; throws exception") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
     @fail "Implement me"
 end
 
@@ -158,11 +142,6 @@ end
 
 
 @then("attribute \$x has datetime value: 1990-01-01 11:22:33") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(birth-date) as(datetime) get: 1990-01-01 11:22:33") do context
     @fail "Implement me"
 end
 
@@ -192,11 +171,6 @@ end
 end
 
 
-@when("delete attribute: \$x") do context
-    @fail "Implement me"
-end
-
-
 @then("attribute \$x is deleted: true") do context
     @fail "Implement me"
 end
@@ -207,260 +181,148 @@ end
 end
 
 
-@when("session opens transaction of type: write") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(score) as(double) put: 123") do context
-    @fail "Implement me"
-end
-
-
 @then("attribute \$x has double value: 123") do context
     @fail "Implement me"
 end
 
 
-@when("\$x = attribute(score) as(double) get: 123") do context
-    @fail "Implement me"
-end
 
 
-@given("connection has been opened") do context
-    @fail "Implement me"
-end
 
 
-@given("connection does not have any database") do context
-    @fail "Implement me"
-end
+
+#=
+from datetime import datetime
+
+from behave import *
+from hamcrest import *
+
+from grakn.api.concept.type.attribute_type import AttributeType
+from grakn.common.exception import GraknClientException
+from tests.behaviour.context import Context
 
 
-@given("connection create database: grakn") do context
-    @fail "Implement me"
-end
+@step("attribute({type_label}) get instances contain: {var:Var}")
+def step_impl(context: Context, type_label: str, var: str):
+    assert_that(context.get(var), is_in(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).get_instances()))
 
 
-@given("connection open schema session for database: grakn") do context
-    @fail "Implement me"
-end
+@step("attribute({type_label}) get instances is empty")
+def step_impl(context: Context, type_label: str):
+    assert_that(calling(next).with_args(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).get_instances()), raises(StopIteration))
 
 
-@given("put attribute type: is-alive, with value type: boolean") do context
-    @fail "Implement me"
-end
+@step("attribute {var1:Var} get owners contain: {var2:Var}")
+def step_impl(context: Context, var1: str, var2: str):
+    assert_that(context.get(var2), is_in(context.get(var1).as_remote(context.tx()).get_owners()))
 
 
-@given("put attribute type: age, with value type: long") do context
-    @fail "Implement me"
-end
+@step("attribute {var1:Var} get owners do not contain: {var2:Var}")
+def step_impl(context: Context, var1: str, var2: str):
+    assert_that(context.get(var2), not_(is_in(context.get(var1).as_remote(context.tx()).get_owners())))
 
 
-@given("put attribute type: score, with value type: double") do context
-    @fail "Implement me"
-end
+@step("attribute {var:Var} has value type: {value_type:ValueType}")
+def step_impl(context: Context, var: str, value_type: AttributeType.ValueType):
+    assert_that(context.get(var).get_type().get_value_type(), is_(value_type))
 
 
-@given("put attribute type: birth-date, with value type: datetime") do context
-    @fail "Implement me"
-end
+@step("attribute({type_label}) as(boolean) put: {value:Bool}; throws exception")
+def step_impl(context: Context, type_label: str, value: bool):
+    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().put).with_args(value), raises(GraknClientException))
 
 
-@given("put attribute type: name, with value type: string") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(boolean) put: {value:Bool}")
+def step_impl(context: Context, var: str, type_label: str, value: bool):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().put(value))
 
 
-@given("put attribute type: email, with value type: string") do context
-    @fail "Implement me"
-end
+@step("attribute({type_label}) as(long) put: {value:Int}; throws exception")
+def step_impl(context: Context, type_label: str, value: int):
+    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_long().put).with_args(value), raises(GraknClientException))
 
 
-@given("attribute(email) as(string) set regex: \\S+@\\S+\\.\\S+") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(long) put: {value:Int}")
+def step_impl(context: Context, var: str, type_label: str, value: int):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_long().put(value))
 
 
-@given("put entity type: person") do context
-    @fail "Implement me"
-end
+@step("attribute({type_label}) as(double) put: {value:Float}; throws exception")
+def step_impl(context: Context, type_label: str, value: float):
+    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_double().put).with_args(value), raises(GraknClientException))
 
 
-@given("entity(person) set owns attribute type: is-alive") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(double) put: {value:Float}")
+def step_impl(context: Context, var: str, type_label: str, value: float):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_double().put(value))
 
 
-@given("entity(person) set owns attribute type: age") do context
-    @fail "Implement me"
-end
+@step("attribute({type_label}) as(string) put: {value}; throws exception")
+def step_impl(context: Context, type_label: str, value: str):
+    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_string().put).with_args(value), raises(GraknClientException))
 
 
-@given("entity(person) set owns attribute type: score") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(string) put: {value}")
+def step_impl(context: Context, var: str, type_label: str, value: str):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_string().put(value))
 
 
-@given("entity(person) set owns attribute type: name") do context
-    @fail "Implement me"
-end
+@step("attribute({type_label}) as(datetime) put: {value:DateTime}; throws exception")
+def step_impl(context: Context, type_label: str, value: datetime):
+    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_datetime().put).with_args(value), raises(GraknClientException))
 
 
-@given("entity(person) set owns attribute type: email") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(datetime) put: {value:DateTime}")
+def step_impl(context: Context, var: str, type_label: str, value: datetime):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_datetime().put(value))
 
 
-@given("entity(person) set owns attribute type: birth-date") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(boolean) get: {value:Bool}")
+def step_impl(context: Context, var: str, type_label: str, value: bool):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().get(value))
 
 
-@given("connection close all sessions") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(long) get: {value:Int}")
+def step_impl(context: Context, var: str, type_label: str, value: int):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_long().get(value))
 
 
-@given("connection open data session for database: grakn") do context
-    @fail "Implement me"
-end
+@step("{var:Var} = attribute({type_label}) as(double) get: {value:Float}")
+def step_impl(context: Context, var: str, type_label: str, value: float):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_double().get(value))
 
-# 
-# package grakn.client.test.behaviour.concept.thing.attribute;
-# 
-# import grakn.client.api.concept.type.AttributeType.ValueType;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# 
-# import java.time.LocalDateTime;
-# 
-# import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
-# import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static grakn.client.test.behaviour.util.Util.assertThrows;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertTrue;
-# 
-# public class AttributeSteps {
-# 
-#     @When("attribute\\( ?{type_label} ?) get instances contain: {var}")
-#     public void attribute_type_get_instances_contain(String typeLabel, String var) {
-#         assertTrue(tx().concepts().getAttributeType(typeLabel).asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("attribute {var} get owners contain: {var}")
-#     public void attribute_get_owners_contain(String var1, String var2) {
-#         assertTrue(get(var1).asAttribute().asRemote(tx()).getOwners().anyMatch(o -> o.equals(get(var2))));
-#     }
-# 
-#     @Then("attribute {var} get owners do not contain: {var}")
-#     public void attribute_get_owners_do_not_contain(String var1, String var2) {
-#         assertTrue(get(var1).asAttribute().asRemote(tx()).getOwners().noneMatch(o -> o.equals(get(var2))));
-#     }
-# 
-#     @Then("attribute {var} has value type: {value_type}")
-#     public void attribute_has_value_type(String var, ValueType valueType) {
-#         assertEquals(valueType, get(var).asAttribute().getType().getValueType());
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")
-#     public void attribute_type_as_boolean_put(String var, String typeLabel, boolean value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asBoolean().asRemote(tx()).put(value));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}; throws exception")
-#     public void attribute_type_as_boolean_put_throws_exception(String typeLabel, boolean value) {
-#         assertThrows(() -> tx().concepts().getAttributeType(typeLabel).asBoolean().asRemote(tx()).put(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}")
-#     public void attribute_type_as_long_put(String var, String typeLabel, long value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asLong().asRemote(tx()).put(value));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}; throws exception")
-#     public void attribute_type_as_long_put_throws_exception(String typeLabel, long value) {
-#         assertThrows(() -> tx().concepts().getAttributeType(typeLabel).asLong().asRemote(tx()).put(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}")
-#     public void attribute_type_as_double_put(String var, String typeLabel, double value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asDouble().asRemote(tx()).put(value));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}; throws exception")
-#     public void attribute_type_as_double_put_throws_exception(String typeLabel, double value) {
-#         assertThrows(() -> tx().concepts().getAttributeType(typeLabel).asDouble().asRemote(tx()).put(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}")
-#     public void attribute_type_as_string_put(String var, String typeLabel, String value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asString().asRemote(tx()).put(value));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}; throws exception")
-#     public void attribute_type_as_string_put_throws_exception(String typeLabel, String value) {
-#         assertThrows(() -> tx().concepts().getAttributeType(typeLabel).asString().asRemote(tx()).put(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}")
-#     public void attribute_type_as_datetime_put(String var, String typeLabel, LocalDateTime value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asDateTime().asRemote(tx()).put(value));
-#     }
-# 
-#     @Then("attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}; throws exception")
-#     public void attribute_type_as_datetime_put_throws_exception(String typeLabel, LocalDateTime value) {
-#         assertThrows(() -> tx().concepts().getAttributeType(typeLabel).asDateTime().asRemote(tx()).put(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) get: {bool}")
-#     public void attribute_type_as_boolean_get(String var, String typeLabel, boolean value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asBoolean().asRemote(tx()).get(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) get: {int}")
-#     public void attribute_type_as_long_get(String var, String typeLabel, long value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asLong().asRemote(tx()).get(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) get: {double}")
-#     public void attribute_type_as_double_get(String var, String typeLabel, double value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asDouble().asRemote(tx()).get(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) get: {word}")
-#     public void attribute_type_as_string_get(String var, String typeLabel, String value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asString().asRemote(tx()).get(value));
-#     }
-# 
-#     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) get: {datetime}")
-#     public void attribute_type_as_datetime_get(String var, String typeLabel, LocalDateTime value) {
-#         put(var, tx().concepts().getAttributeType(typeLabel).asDateTime().asRemote(tx()).get(value));
-#     }
-# 
-#     @Then("attribute {var} has boolean value: {bool}")
-#     public void attribute_has_boolean_value(String var, boolean value) {
-#         assertEquals(value, get(var).asAttribute().asBoolean().getValue());
-#     }
-# 
-#     @Then("attribute {var} has long value: {long}")
-#     public void attribute_has_long_value(String var, long value) {
-#         assertEquals(value, get(var).asAttribute().asLong().getValue().longValue());
-#     }
-# 
-#     @Then("attribute {var} has double value: {double}")
-#     public void attribute_has_double_value(String var, double value) {
-#         assertEquals(value, get(var).asAttribute().asDouble().getValue(), 0.0001);
-#     }
-# 
-#     @Then("attribute {var} has string value: {word}")
-#     public void attribute_has_string_value(String var, String value) {
-#         assertEquals(value, get(var).asAttribute().asString().getValue());
-#     }
-# 
-#     @Then("attribute {var} has datetime value: {datetime}")
-#     public void attribute_has_datetime_value(String var, LocalDateTime value) {
-#         assertEquals(value, get(var).asAttribute().asDateTime().getValue());
-#     }
-# }
+
+@step("{var:Var} = attribute({type_label}) as(string) get: {value}")
+def step_impl(context: Context, var: str, type_label: str, value: str):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_string().get(value))
+
+
+@step("{var:Var} = attribute({type_label}) as(datetime) get: {value:DateTime}")
+def step_impl(context: Context, var: str, type_label: str, value: datetime):
+    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_datetime().get(value))
+
+
+@step("attribute {var:Var} has boolean value: {value:Bool}")
+def step_impl(context: Context, var: str, value: bool):
+    assert_that(context.get(var).get_value(), is_(value))
+
+
+@step("attribute {var:Var} has long value: {value:Int}")
+def step_impl(context: Context, var: str, value: int):
+    assert_that(context.get(var).get_value(), is_(value))
+
+
+@step("attribute {var:Var} has double value: {value:Float}")
+def step_impl(context: Context, var: str, value: float):
+    assert_that(context.get(var).get_value(), is_(value))
+
+
+@step("attribute {var:Var} has string value: {value}")
+def step_impl(context: Context, var: str, value: str):
+    assert_that(context.get(var).get_value(), is_(value))
+
+
+@step("attribute {var:Var} has datetime value: {value:DateTime}")
+def step_impl(context: Context, var: str, value: datetime):
+    assert_that(context.get(var).get_value(), is_(value))
+=#

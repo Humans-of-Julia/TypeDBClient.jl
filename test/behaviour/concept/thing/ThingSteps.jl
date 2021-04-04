@@ -1,223 +1,419 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
 
-# 
-# package grakn.client.test.behaviour.concept.thing;
-# 
-# import grakn.client.api.concept.thing.Thing;
-# import grakn.client.api.concept.type.ThingType;
-# import grakn.client.common.Label;
-# import grakn.client.test.behaviour.config.Parameters.RootLabel;
-# import io.cucumber.java.After;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# 
-# import java.util.HashMap;
-# import java.util.Map;
-# 
-# import static grakn.client.test.behaviour.concept.type.thingtype.ThingTypeSteps.get_thing_type;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static grakn.client.test.behaviour.util.Util.assertThrows;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertNotNull;
-# import static org.junit.Assert.assertNull;
-# import static org.junit.Assert.assertTrue;
-# 
-# public class ThingSteps {
-# 
-#     private static Map<String, Thing> things = new HashMap<>();
-# 
-#     public static Thing get(String variable) {
-#         return things.get(variable);
-#     }
-# 
-#     public static void put(String variable, Thing thing) {
-#         things.put(variable, thing);
-#     }
-# 
-#     @Then("entity/attribute/relation {var} is null: {bool}")
-#     public void thing_is_null(String var, boolean isNull) {
-#         if (isNull) assertNull(get(var));
-#         else assertNotNull(get(var));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} is deleted: {bool}")
-#     public void thing_is_deleted(String var, boolean isDeleted) {
-#         assertEquals(isDeleted, get(var).asRemote(tx()).isDeleted());
-#     }
-# 
-#     @Then("{root_label} {var} has type: {type_label}")
-#     public void thing_has_type(RootLabel rootLabel, String var, String typeLabel) {
-#         ThingType type = get_thing_type(rootLabel, typeLabel);
-#         assertEquals(type, get(var).getType());
-#     }
-# 
-#     @When("delete entity:/attribute:/relation: {var}")
-#     public void delete_thing(String var) {
-#         Thing thing = get(var);
-#         Thing.Remote remote = thing.asRemote(tx());
-#         remote.delete();
-#     }
-# 
-#     @When("entity/attribute/relation {var} set has: {var}")
-#     public void thing_set_has(String var1, String var2) {
-#         get(var1).asRemote(tx()).setHas(get(var2).asAttribute());
-#     }
-# 
-#     @Then("entity/attribute/relation {var} set has: {var}; throws exception")
-#     public void thing_set_has_throws_exception(String var1, String var2) {
-#         assertThrows(() -> get(var1).asRemote(tx()).setHas(get(var2).asAttribute()));
-#     }
-# 
-#     @When("entity/attribute/relation {var} unset has: {var}")
-#     public void thing_remove_has(String var1, String var2) {
-#         get(var1).asRemote(tx()).unsetHas(get(var2).asAttribute());
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get keys contain: {var}")
-#     public void thing_get_keys_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(true).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get keys do not contain: {var}")
-#     public void thing_get_keys_do_not_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(true).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes contain: {var}")
-#     public void thing_get_attributes_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas().anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) contain: {var}")
-#     public void thing_get_attributes_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel)
-#         ).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?boolean ?) contain: {var}")
-#     public void thing_get_attributes_as_boolean_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asBoolean()
-#         ).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?long ?) contain: {var}")
-#     public void thing_get_attributes_as_long_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asLong()
-#         ).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?double ?) contain: {var}")
-#     public void thing_get_attributes_as_double_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asDouble()
-#         ).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?string ?) contain: {var}")
-#     public void thing_get_attributes_as_string_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asString()
-#         ).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?datetime ?) contain: {var}")
-#     public void thing_get_attributes_as_datetime_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asDateTime()
-#         ).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes do not contain: {var}")
-#     public void thing_get_attributes_do_not_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas().noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) do not contain: {var}")
-#     public void thing_get_attributes_do_not_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel)
-#         ).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?boolean ?) do not contain: {var}")
-#     public void thing_get_attributes_as_boolean_do_not_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asBoolean()
-#         ).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?long ?) do not contain: {var}")
-#     public void thing_get_attributes_as_long_do_not_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asLong()
-#         ).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?double ?) do not contain: {var}")
-#     public void thing_get_attributes_as_double_do_not_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asDouble()
-#         ).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?string ?) do not contain: {var}")
-#     public void thing_get_attributes_as_string_do_not_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asString()
-#         ).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?datetime ?) do not contain: {var}")
-#     public void thing_get_attributes_as_datetime_do_not_contain(String var1, String typeLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getHas(
-#                 tx().concepts().getAttributeType(typeLabel).asDateTime()
-#         ).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) contain: {var}")
-#     public void thing_get_relations_contain(String var1, Label scopedLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getRelations(
-#                 tx().concepts().getRelationType(scopedLabel.scope().get()).asRemote(tx()).getRelates(scopedLabel.name())
-#         ).anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get relations contain: {var}")
-#     public void thing_get_relations_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getRelations().anyMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) do not contain: {var}")
-#     public void thing_get_relations_do_not_contain(String var1, Label scopedLabel, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getRelations(
-#                 tx().concepts().getRelationType(scopedLabel.scope().get()).asRemote(tx()).getRelates(scopedLabel.name())
-#         ).noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("entity/attribute/relation {var} get relations do not contain: {var}")
-#     public void thing_get_relations_do_not_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRemote(tx()).getRelations().noneMatch(k -> k.equals(get(var2))));
-#     }
-# 
-#     @Then("root\\( ?thing ?) get instances count: {int}")
-#     public void root_thing_type_get_instances_contain(int count) {
-#         assertEquals(count, tx().concepts().getRootThingType().asRemote(tx()).getInstances().count());
-#     }
-# 
-#     @Then("root\\( ?thing ?) get instances contain: {var}")
-#     public void root_thing_type_get_instances_contain(String var) {
-#         assertTrue(tx().concepts().getRootThingType().asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("root\\( ?thing ?) get instances is empty")
-#     public void root_thing_type_get_instances_is_empty() {
-#         assertEquals(0, tx().concepts().getRootThingType().asRemote(tx()).getInstances().count());
-#     }
-# 
-#     @After
-#     public void clear() {
-#         things.clear();
-#     }
-# }
+@given("entity(person) set owns attribute type: is-alive") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: age") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: score") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: name") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: email") do context
+    @fail "Implement me"
+end
+
+
+@given("entity(person) set owns attribute type: birth-date") do context
+    @fail "Implement me"
+end
+
+
+@when("delete attribute: \$x") do context
+    @fail "Implement me"
+end
+
+
+
+
+
+
+
+#=
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+from behave import *
+from hamcrest import *
+
+from grakn.common.exception import GraknClientException
+from grakn.common.label import Label
+from tests.behaviour.config.parameters import parse_bool, parse_list, RootLabel, parse_label
+from tests.behaviour.context import Context
+
+
+@step("put {root_label:RootLabel} type: {type_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    if root_label == RootLabel.ENTITY:
+        context.tx().concepts().put_entity_type(type_label)
+    elif root_label == RootLabel.RELATION:
+        context.tx().concepts().put_relation_type(type_label)
+    else:
+        raise ValueError("Unrecognised value")
+
+
+@step("delete {root_label:RootLabel} type: {type_label}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).delete()
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("delete {root_label:RootLabel} type: {type_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).delete()
+
+
+@step("{root_label:RootLabel}({type_label}) is null: {is_null}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, is_null):
+    is_null = parse_bool(is_null)
+    assert_that(context.get_thing_type(root_label, type_label) is None, is_(is_null))
+
+
+@step("{root_label:RootLabel}({type_label}) set label: {new_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, new_label: str):
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_label(new_label)
+
+
+@step("{root_label:RootLabel}({type_label}) get label: {get_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, get_label: str):
+    assert_that(context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_label().name(), is_(get_label))
+
+
+@step("{root_label:RootLabel}({type_label}) set abstract: {is_abstract}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, is_abstract):
+    is_abstract = parse_bool(is_abstract)
+    thing_type = context.get_thing_type(root_label, type_label)
+    if is_abstract:
+        thing_type.as_remote(context.tx()).set_abstract()
+    else:
+        thing_type.as_remote(context.tx()).unset_abstract()
+
+
+@step("{root_label:RootLabel}({type_label}) is abstract: {is_abstract}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, is_abstract):
+    is_abstract = parse_bool(is_abstract)
+    assert_that(context.get_thing_type(root_label, type_label).as_remote(context.tx()).is_abstract(), is_(is_abstract))
+
+
+@step("{root_label:RootLabel}({type_label}) set supertype: {super_label}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, super_label: str):
+    if root_label == RootLabel.ENTITY:
+        entity_supertype = context.tx().concepts().get_entity_type(super_label)
+        try:
+            context.tx().concepts().get_entity_type(type_label).as_remote(context.tx()).set_supertype(entity_supertype)
+            assert False
+        except GraknClientException:
+            pass
+    elif root_label == RootLabel.ATTRIBUTE:
+        attribute_supertype = context.tx().concepts().get_attribute_type(super_label)
+        try:
+            context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).set_supertype(attribute_supertype)
+            assert False
+        except GraknClientException:
+            pass
+    elif root_label == RootLabel.RELATION:
+        relation_supertype = context.tx().concepts().get_relation_type(super_label)
+        try:
+            context.tx().concepts().get_relation_type(type_label).as_remote(context.tx()).set_supertype(relation_supertype)
+            assert False
+        except GraknClientException:
+            pass
+    else:
+        raise ValueError("Unrecognised value")
+
+
+@step("{root_label:RootLabel}({type_label}) set supertype: {super_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, super_label: str):
+    if root_label == RootLabel.ENTITY:
+        entity_supertype = context.tx().concepts().get_entity_type(super_label)
+        context.tx().concepts().get_entity_type(type_label).as_remote(context.tx()).set_supertype(entity_supertype)
+    elif root_label == RootLabel.ATTRIBUTE:
+        attribute_supertype = context.tx().concepts().get_attribute_type(super_label)
+        context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).set_supertype(attribute_supertype)
+    elif root_label == RootLabel.RELATION:
+        relation_supertype = context.tx().concepts().get_relation_type(super_label)
+        context.tx().concepts().get_relation_type(type_label).as_remote(context.tx()).set_supertype(relation_supertype)
+    else:
+        raise ValueError("Unrecognised value")
+
+
+@step("{root_label:RootLabel}({type_label}) get supertype: {super_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, super_label: str):
+    supertype = context.get_thing_type(root_label, super_label)
+    assert_that(context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_supertype(), is_(supertype))
+
+
+@step("{root_label:RootLabel}({type_label}) get supertypes contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    super_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_supertypes()]
+    for super_label in super_labels:
+        assert_that(actuals, has_item(super_label))
+
+
+@step("{root_label:RootLabel}({type_label}) get supertypes do not contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    super_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_supertypes()]
+    for super_label in super_labels:
+        assert_that(actuals, not_(has_item(super_label)))
+
+
+@step("{root_label:RootLabel}({type_label}) get subtypes contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    sub_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_subtypes()]
+    for sub_label in sub_labels:
+        assert_that(actuals, has_item(sub_label))
+
+
+@step("{root_label:RootLabel}({type_label}) get subtypes do not contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    sub_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_subtypes()]
+    for sub_label in sub_labels:
+        assert_that(actuals, not_(has_item(sub_label)))
+
+
+@step("{root_label:RootLabel}({type_label}) set owns key type: {att_type_label} as {overridden_label}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str, overridden_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    overridden_type = context.tx().concepts().get_attribute_type(overridden_label)
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, overridden_type, is_key=True)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) set owns key type: {att_type_label}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, is_key=True)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) set owns key type: {att_type_label} as {overridden_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str, overridden_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    overridden_type = context.tx().concepts().get_attribute_type(overridden_label)
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, overridden_type, is_key=True)
+
+
+@step("{root_label:RootLabel}({type_label}) set owns key type: {att_type_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, is_key=True)
+
+
+@step("{root_label:RootLabel}({type_label}) unset owns attribute type: {att_type_label}; throws exception")
+@step("{root_label:RootLabel}({type_label}) unset owns key type: {att_type_label}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).unset_owns(attribute_type)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) unset owns attribute type: {att_type_label}")
+@step("{root_label:RootLabel}({type_label}) unset owns key type: {att_type_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).unset_owns(attribute_type)
+
+
+@step("{root_label:RootLabel}({type_label}) get owns key types contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    attribute_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_owns(keys_only=True)]
+    for attribute_label in attribute_labels:
+        assert_that(actuals, has_item(attribute_label))
+
+
+@step("{root_label:RootLabel}({type_label}) get owns key types do not contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    attribute_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_owns(keys_only=True)]
+    for attribute_label in attribute_labels:
+        assert_that(actuals, not_(has_item(attribute_label)))
+
+
+@step("{root_label:RootLabel}({type_label}) set owns attribute type: {att_type_label} as {overridden_label}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str, overridden_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    overridden_type = context.tx().concepts().get_attribute_type(overridden_label)
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, overridden_type)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) set owns attribute type: {att_type_label}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) set owns attribute type: {att_type_label} as {overridden_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str, overridden_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    overridden_type = context.tx().concepts().get_attribute_type(overridden_label)
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, overridden_type)
+
+
+@step("{root_label:RootLabel}({type_label}) set owns attribute type: {att_type_label}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
+    attribute_type = context.tx().concepts().get_attribute_type(att_type_label)
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type)
+
+
+@step("{root_label:RootLabel}({type_label}) get owns attribute types contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    attribute_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_owns()]
+    for attribute_label in attribute_labels:
+        assert_that(actuals, has_item(attribute_label))
+
+
+@step("{root_label:RootLabel}({type_label}) get owns attribute types do not contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    attribute_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_owns()]
+    for attribute_label in attribute_labels:
+        assert_that(actuals, not_(has_item(attribute_label)))
+
+
+@step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel} as {overridden_label:ScopedLabel}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label, overridden_label: Label):
+    role_type = context.tx().concepts().get_relation_type(role_label.scope()).as_remote(context.tx()).get_relates(role_label.name())
+    overridden_type = context.tx().concepts().get_relation_type(overridden_label.scope()).as_remote(context.tx()).get_relates(overridden_label.name())
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_plays(role_type, overridden_type)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel} as {overridden_label:ScopedLabel}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label, overridden_label: Label):
+    role_type = context.tx().concepts().get_relation_type(role_label.scope()).as_remote(context.tx()).get_relates(role_label.name())
+    overridden_type = context.tx().concepts().get_relation_type(overridden_label.scope()).as_remote(context.tx()).get_relates(overridden_label.name())
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_plays(role_type, overridden_type)
+
+
+@step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
+    role_type = context.tx().concepts().get_relation_type(role_label.scope()).as_remote(context.tx()).get_relates(role_label.name())
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_plays(role_type)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
+    role_type = context.tx().concepts().get_relation_type(role_label.scope()).as_remote(context.tx()).get_relates(role_label.name())
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_plays(role_type)
+
+
+@step("{root_label:RootLabel}({type_label}) unset plays role: {role_label:ScopedLabel}; throws exception")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
+    role_type = context.tx().concepts().get_relation_type(role_label.scope()).as_remote(context.tx()).get_relates(role_label.name())
+    try:
+        context.get_thing_type(root_label, type_label).as_remote(context.tx()).unset_plays(role_type)
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("{root_label:RootLabel}({type_label}) unset plays role: {role_label:ScopedLabel}")
+def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
+    role_type = context.tx().concepts().get_relation_type(role_label.scope()).as_remote(context.tx()).get_relates(role_label.name())
+    context.get_thing_type(root_label, type_label).as_remote(context.tx()).unset_plays(role_type)
+
+
+@step("{root_label:RootLabel}({type_label}) get playing roles contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    role_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_plays()]
+    for role_label in role_labels:
+        assert_that(role_label, is_in(actuals))
+
+
+@step("{root_label:RootLabel}({type_label}) get playing roles do not contain")
+def step_impl(context: Context, root_label: RootLabel, type_label: str):
+    role_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.get_thing_type(root_label, type_label).as_remote(context.tx()).get_plays()]
+    for role_label in role_labels:
+        assert_that(role_label, not_(is_in(actuals)))
+
+
+@step("thing type root get supertypes contain")
+def step_impl(context: Context):
+    super_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.tx().concepts().get_root_thing_type().as_remote(context.tx()).get_supertypes()]
+    for super_label in super_labels:
+        assert_that(super_label, is_in(actuals))
+
+
+@step("thing type root get supertypes do not contain")
+def step_impl(context: Context):
+    super_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.tx().concepts().get_root_thing_type().as_remote(context.tx()).get_supertypes()]
+    for super_label in super_labels:
+        assert_that(super_label, not_(is_in(actuals)))
+
+
+@step("thing type root get subtypes contain")
+def step_impl(context: Context):
+    sub_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.tx().concepts().get_root_thing_type().as_remote(context.tx()).get_subtypes()]
+    for sub_label in sub_labels:
+        assert_that(sub_label, is_in(actuals))
+
+
+@step("thing type root get subtypes do not contain")
+def step_impl(context: Context):
+    sub_labels = [parse_label(s) for s in parse_list(context.table)]
+    actuals = [t.get_label() for t in context.tx().concepts().get_root_thing_type().as_remote(context.tx()).get_subtypes()]
+    for sub_label in sub_labels:
+        assert_that(sub_label, not_(is_in(actuals)))
