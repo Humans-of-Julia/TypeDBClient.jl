@@ -6,6 +6,11 @@ In root folder run $ bash setup.sh to genrate the proto files
 then install the packages from GitHub
 Pkg.rm("gRPCClient")
 Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
+
+Pkg.rm("ExecutableSpecifications")
+Pkg.add(url="https://github.com/erikedin/ExecutableSpecifications.jl")
+] dev ExecutableSpecifications
+
 =#
 module GraknClient
 # following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
