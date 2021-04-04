@@ -4,11 +4,18 @@ mutable struct  BidirectionalStream
     resCollector::Union{Nothing, ResponseCollector}
     resPartCollector::Union{Nothing,ResponseCollector}
     dispatcher::Union{Nothing,Dispatcher} #RequestTransmitter.Dispatcher
-    is_open::Bool
+    is_open::Threads.Atomic{Bool}
 end
 
 # Only for the first time to accomplish compiling
-BidirectionalStream() = BidirectionalStream(nothing, nothing, nothing, true)
+function BidirectionalStream()
+    resCollector = ResponseCollector()
+    resPartCollector = ResponseCollector()
+    dispatcher = Dispatcher()
+    is_open = Threads.Atomic{Bool}()
+
+    return BidirectionalStream(resCollector, resPartCollector, dispatcher, is_open)
+end
 
 function close(stream::BidirectionalStream)
     @info "BidirectionalStream close function not implemented yet"

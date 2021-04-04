@@ -5,10 +5,11 @@ In root folder run $ bash setup.sh to genrate the proto files
 
 then install the packages from GitHub
 Pkg.rm("gRPCClient")
+Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
+] dev gRPCClient
 
 =#
 module GraknClient
-# following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
 
 using gRPCClient, Sockets, UUIDs, Dates
 using DataStructures
@@ -55,6 +56,15 @@ include(joinpath(@__DIR__,"common","exception","ErrorMessage.jl"))
 include(joinpath(@__DIR__,"common","exception","GraknClientException.jl"))
 include(joinpath(@__DIR__,"common","rpc","GraknStub.jl"))
 include(joinpath(@__DIR__,"common","rpc","RequestBuilder.jl"))
+
+#concept section
+include(joinpath(@__DIR__,"concept","ConceptManagerImpl.jl"))
+
+#logic section
+include(joinpath(@__DIR__,"logic","LogicManagerImpl.jl"))
+
+#query section
+include(joinpath(@__DIR__,"query","QueryManagerImpl.jl"))
 
 #stream section
 include(joinpath(@__DIR__,"stream","RequestTransmitter.jl"))

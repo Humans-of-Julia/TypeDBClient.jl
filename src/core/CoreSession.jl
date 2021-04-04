@@ -31,7 +31,7 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         database = CoreDatabase(database)
         networkLatencyMillis = (endTime - startTime).value
         session_id = res.session_id
-        transactions = Array{Union{Nothing,<:AbstractCoreTransaction},1}(nothing,0)
+        transactions = Dict{Array{Int8,1},Union{Nothing,<:AbstractCoreTransaction}}()
         is_open = true
 
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis)
@@ -70,16 +70,17 @@ end
 
 function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
     try
-        lock(session.accessLock)
+        #lock(session.accessLock)
         if !session.isOpen
             throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionId)))
         end
-        transactionRPC = CoreTransaction(session, session.sessionID, type, options, uuid4())
+
+        transactionRPC = CoreTransaction(session, session.sessionID, type, options)
         session.transactions[transactionRPC.transaction_id] = transactionRPC
 
         return transactionRPC
     finally
-        unlock(accessLock)
+       # unlock(session.accessLock)
     end
 end
 

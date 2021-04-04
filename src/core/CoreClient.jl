@@ -4,7 +4,7 @@ mutable struct CoreClient <: AbstractCoreClient
     #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc"
     channel::gRPCClient.gRPCChannel
     address::String
-    Port::Int
+    port::Int
     core_stub::Core_GraknStub
     transmitter::RequestTransmitter
     databaseMgr::CoreDatabaseManager

@@ -8,20 +8,23 @@ struct CoreTransaction <: AbstractCoreTransaction
     logicMgr::Union{Nothing,T} where {T<:AbstractLogicManager}
     queryMgr::Union{Nothing,T} where {T<:AbstractQueryManager}
     transaction_id::Union{Nothing,UUID}
+    session_id::Array{UInt8,1}
 end
 
 
-function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int, options::GraknOptions, trans_id::UUID = uuid4())
+function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int32, options::GraknOptions)
     try
         type = type
         options = options
-        stub = GraknCoreBlockingStub(gRPCChannel(session.address * ":" * string(session.port)))
+        stub = GraknCoreBlockingStub(gRPCChannel(session.client.address * ":" * string(session.client.port)))
         conceptMgr = ConceptManagerImpl()
         logicMgr = LogicManagerImpl()
         queryMgr = QueryManagerImpl()
         bidirectionalStream = BidirectionalStream(stub, session_transmitter(session))
-        result = CoreTransaction(type, options, bidirectionalStream, conceptMgr, logicMgr, queryMgr, trans_id)
-        open_res, req_task = transaction_execute(result, transaction_open_req(sessionId, type, options, session.networkLatencyMillis), false)
+        trans_id = uuid4()
+
+        result = CoreTransaction(type, options, bidirectionalStream, conceptMgr, logicMgr, queryMgr, trans_id, sessionId)
+   #     open_res, req_task = transaction_execute(result, transaction_open_req(sessionId, type, options, session.networkLatencyMillis), false)
 
         return result
     catch ex
