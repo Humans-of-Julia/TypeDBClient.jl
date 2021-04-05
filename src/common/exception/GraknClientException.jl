@@ -2,16 +2,16 @@
 
 mutable struct GraknClientException <: Exception
     error_message::T where {T<:Union{<:AbstractGeneralError,<:Nothing}}
-    params
+    params::Tuple
     individual_message::Union{Nothing, String}
     cause::R where {R<:Union{Nothing, Exception}}
 end
 
 Base.show(io::IO, grakn_excption::GraknClientException) = Base.print(io,grakn_excption)
 function Base.print(io::IO, grakn_excption::GraknClientException)
+    err_message = string(grakn_excption.error_message)
     if !isempty(grakn_excption.params)
         replace_item = "_error_item"
-        err_message = string(grakn_excption.error_message)
         err_message = replace(err_message, replace_item=>string(grakn_excption.params[1]))
     end
     str = "GraknClientException:
@@ -26,6 +26,7 @@ end
 
 function GraknClientException(err::Type{T}, parameters...) where {T<:AbstractGeneralError}
     err = _build_error_messages(err)
+    _params = parameters === nothing && Tuple{}()
     return GraknClientException(err, parameters, nothing, nothing)
 end
 
