@@ -4,11 +4,7 @@ const BATCH_WINDOW_SMALL_MILLIS = 1
 const BATCH_WINDOW_LARGE_MILLIS = 3
 
 mutable struct Dispatcher
-
-    # private final Executor executor;
-    # private final StreamObserver<TransactionProto.Transaction.Client> requestObserver;
-    # private final ConcurrentLinkedQueue<TransactionProto.Transaction.Req> requestQueue;
-
+    input_channel::Channel
 end
 
 mutable struct Executor

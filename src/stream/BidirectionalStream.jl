@@ -12,14 +12,23 @@ function BidirectionalStream()
     resCollector = ResponseCollector()
     resPartCollector = ResponseCollector()
     dispatcher = Dispatcher()
-    is_open = Threads.Atomic{Bool}()
+    is_open = Threads.Atomic{Bool}(true)
 
     return BidirectionalStream(resCollector, resPartCollector, dispatcher, is_open)
 end
 
-function BidirectionalStream(stub::GraknCoreBlockingStub, session_transmitter::RequestTransmitter)
-    return BidirectionalStream()
-    @info "Constructor BidirectionalStream not ready implemented"
+function BidirectionalStream(input_channel::Channel, output_channel::Channel)
+    res_collector = ResponseCollector(output_channel)
+    res_part_collector = ResponseCollector()
+    dispatcher = Dispatcher(input_channel)
+end
+
+function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: ProtoType}
+    return single_request(bidirect_stream, request, true)
+end
+
+function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: ProtoType}
+    result =
 end
 
 function close(stream::BidirectionalStream)

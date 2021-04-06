@@ -27,7 +27,6 @@ function is_cluster(client) where {T<:AbstractCoreClient}
     return false
 end
 
-
 function transmitter(client::T) where {T<:AbstractCoreClient}
     client.transmitter
 end

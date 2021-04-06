@@ -1,11 +1,32 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct ResponseCollector
-    collectors::Union{Nothing,Dict{UUID,Queue}}
+    collectors::Union{Nothing,Dict{String,Channel}}
+    transact_result_channel::Channel
 end
 
-ResponseCollector() = ResponseCollector(nothing)
+function ResponseCollector()
+    dict = Dict{String,Channel}()
+    return ResponseCollector(dict,Channel())
+end
 
+function ResponseCollector(transact_result_channel::Channel)
+    resp_col = ResponseCollector()
+    resp_col.transact_result_channel = transact_result_channel
+    return resp_col
+end
+
+function response_worker(response_collector::ResponseCollector)
+    resp_chan = response_collector.transact_result_channel
+    while isOpen(resp_chan)
+        if isready(resp_chan)
+            result_srv = take!(resp_chan)
+            which_result = which_oneof(result_srv, :server)
+            tmp_result = getproperty(result_srv, which_result)
+            id = tmp_result.req_id
+        end
+    end
+end
 #
 # package grakn.client.stream;
 #

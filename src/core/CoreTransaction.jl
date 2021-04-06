@@ -32,23 +32,23 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     # end
 end
 
-function transaction_execute(transaction::T, request::grakn.protocol.Transaction_Req, batch::Bool) where {T<:AbstractCoreTransaction}
+function transaction_execute(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
         return transaction_query(transaction, request, batch)
 end
 
-function transaction_execute(transaction::T, request::grakn.protocol.Transaction_Req) where {T<:AbstractCoreTransaction}
+function transaction_execute(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
     return transaction_query(transaction, request, true)
 end
 
-function transaction_query(transaction::T, request::grakn.protocol.Transaction_Req) where {T<:AbstractCoreTransaction}
+function transaction_query(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
         return transaction_query(transaction, request, true);
 end
 
-function transaction_query(transaction::T, request::grakn.protocol.Transaction_Req, batch::Bool) where {T<:AbstractCoreTransaction}
-        !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED, ))
+function transaction_query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
+        !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED))
 
-        # BidirectionalStream.Single<Res> single = bidirectionalStream.single(request, batch)
-        # return single::get
+        result = single_request(transaction.bidirectional_stream, request, batch)
+        return result
 end
 
 function is_open(transaction::T)::Bool where {T<:AbstractCoreTransaction}

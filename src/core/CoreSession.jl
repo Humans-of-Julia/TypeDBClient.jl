@@ -17,7 +17,7 @@ end
 Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, session)
 Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
 
-function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions) where {T<:AbstractCoreClient}
+function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions = GraknOptions()) where {T<:AbstractCoreClient}
     # try
         options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS
         open_req = session_open_req(database, type , copy_to_proto(options, grakn.protocol.Options))
@@ -42,6 +42,10 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
     # catch ex
     #     throw(GraknClientException("Error construct a CoreSession",ex))
     # end
+end
+
+function CoreSession(client::T, database::String , type::Int32 = Int32(0)) where {T<:AbstractCoreClient}
+    return CoreSession(client, database, type, GraknOptions())
 end
 
 function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}
