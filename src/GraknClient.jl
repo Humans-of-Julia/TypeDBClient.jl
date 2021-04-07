@@ -16,12 +16,6 @@ using DataStructures
 
 import Base: show, close, ==
 
-###### convience types #################
-#                                      #
-########################################
-
-const Maybe{T} = Union{T,Nothing}
-
 ###### abstract types ##################
 #                                      #
 ########################################
@@ -34,28 +28,33 @@ abstract type AbstractCoreClient <: AbstracClient end
 
 abstract type AbstractCoreSession end
 abstract type AbstractCoreTransaction end
-abstract type AbstractConcept end
-abstract type AbstractConceptManager end
+abstract type AbstractRequestTransmitter end
 abstract type AbstractLogicManager end
 abstract type AbstractQueryManager end
-abstract type AbstractThing <: AbstractConcept end
 
 ###### inlcudes ########################
 #                                      #
 ########################################
 
 #generated section
-include(joinpath(@__DIR__,"generated","grakn.jl"))
-include(joinpath(@__DIR__,"generated","core_service_pb.jl"))
+include("generated/grakn.jl")
+include("generated/core_service_pb.jl")
+
+#standard julia sources
+include("standard/type_aliases.jl")
 
 #api section
 include(joinpath(@__DIR__,"api","GraknOptions.jl"))
 
 #common section
-include(joinpath(@__DIR__,"common","exception","ErrorMessage.jl"))
-include(joinpath(@__DIR__,"common","exception","GraknClientException.jl"))
-include(joinpath(@__DIR__,"common","rpc","GraknStub.jl"))
-include(joinpath(@__DIR__,"common","rpc","RequestBuilder.jl"))
+include("common/exception/ErrorMessage.jl")
+include("common/exception/GraknClientException.jl")
+include("common/rpc/GraknStub.jl")
+include("common/rpc/RequestBuilder.jl")
+
+#concepts
+include("common/Label.jl")
+include("concept/Concept.jl")
 
 #concept section
 include(joinpath(@__DIR__,"concept","ConceptManagerImpl.jl"))
@@ -67,34 +66,54 @@ include(joinpath(@__DIR__,"logic","LogicManagerImpl.jl"))
 include(joinpath(@__DIR__,"query","QueryManagerImpl.jl"))
 
 #stream section
-include(joinpath(@__DIR__,"stream","RequestTransmitter.jl"))
-include(joinpath(@__DIR__,"stream","ResponseCollector.jl"))
-include(joinpath(@__DIR__,"stream","BidirectionalStream.jl"))
+include("stream/RequestTransmitter.jl")
+include("stream/ResponseCollector.jl")
+include("stream/BidirectionalStream.jl")
 
 #core section
-include(joinpath(@__DIR__,"core","CoreDatabase.jl"))
-include(joinpath(@__DIR__,"core","CoreDatabaseManager.jl"))
-include(joinpath(@__DIR__,"core","CoreClient.jl"))
-include(joinpath(@__DIR__,"core","CoreSession.jl"))
-include(joinpath(@__DIR__,"core","CoreTransaction.jl"))
+include("core/CoreDatabase.jl")
+include("core/CoreDatabaseManager.jl")
+include("core/CoreClient.jl")
+include("core/CoreSession.jl")
+include("core/CoreTransaction.jl")
 
 # part of common section -- place because of general grpc resulthandling
-include(joinpath(@__DIR__,"common","exception","gRPC_Result_Handling.jl"))
+include("common/exception/gRPC_Result_Handling.jl")
 
 
 export GraknCoreBlockingClient, GraknClientException
 export contains_database
 
+
 # export  Session, Transaction
 
 ####### pretty printing sectoin ##################
-Base.show(io::IO, blocking_stub::GraknCoreBlockingStub) = Base.print(io,blocking_stub)
 
+Base.show(io::IO, blocking_stub::GraknCoreBlockingStub) = Base.print(io,blocking_stub)
 function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
     Base.print(io, "GraknCoreBlockingStub(open: $(!blocking_stub.impl.channel.session.closed))")
     return nothing
 end
 
+
+Base.show(io::IO, id::Array{UInt8,1}) = Base.print(io, id)
+Base.print(io::IO, id::Array{UInt8,1}) = Base.print(io, string(bytes2hex(id)))
+
+Base.show(io::IO, item::T) where {T<:ProtoType} = Base.print(io, item)
+function Base.print(io::IO, item::T) where {T<:ProtoType}
+    erg  = collect(keys(meta(typeof(item)).symdict))
+    str_item = ""
+    for attr in erg
+        if hasproperty(item, attr)
+            str_item *= string(attr) * ": " * string(getproperty(item,attr))
+            break
+        end
+    end
+    out_string = string(nameof(typeof(item))) * " ($str_item)"
+    Base.print(io, out_string)
+
+    return nothing
+end
 
 function copy_to_proto(from_object, to_proto_struct::Type{T}) where {T<: ProtoType}
     result_proto = to_proto_struct()
