@@ -10,16 +10,16 @@ Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
 module GraknClient
 # following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
 
-using gRPCClient, Sockets, UUIDs, Dates
+using Dates
 using DataStructures
+using gRPCClient
+using Pretend: Pretend, @mockable
+using Sockets
+using UUIDs: UUID, uuid4
 
+# TODO no need to import these; best practrice is to prefix module name
+#  when you extend the function
 import Base: show, close, ==
-
-###### convience types #################
-#                                      #
-########################################
-
-const Maybe{T} = Union{T,Nothing}
 
 ###### abstract types ##################
 #                                      #
@@ -29,41 +29,57 @@ abstract type AbstractCoreDatabaseManager end
 abstract type AbstractCoreClient end
 abstract type AbstractCoreSession end
 abstract type AbstractCoreTransaction end
-abstract type AbstractConcept end
-abstract type AbstractConceptManager end
 abstract type AbstractLogicManager end
 abstract type AbstractQueryManager end
-abstract type AbstractThing <: AbstractConcept end
 
 ###### inlcudes ########################
 #                                      #
 ########################################
 
 #generated section
-include(joinpath(@__DIR__,"generated","grakn.jl"))
-include(joinpath(@__DIR__,"generated","core_service_pb.jl"))
+include("generated/grakn.jl")
+include("generated/core_service_pb.jl")
+
+#standard julia sources
+include("standard/type_aliases.jl")
+include("standard/utils.jl")
 
 #common section
-include(joinpath(@__DIR__,"common","exception","ErrorMessage.jl"))
-include(joinpath(@__DIR__,"common","exception","GraknClientException.jl"))
-include(joinpath(@__DIR__,"common","rpc","GraknStub.jl"))
-include(joinpath(@__DIR__,"common","rpc","RequestBuilder.jl"))
+include("common/Label.jl")
+include("common/exception/ErrorMessage.jl")
+include("common/exception/GraknClientException.jl")
+include("common/rpc/GraknStub.jl")
+include("common/rpc/RequestBuilder.jl")
+
+#concepts
+include("concept/Concept.jl")
+
+include("concept/type/Type.jl")
+include("concept/type/RoleType.jl")
+include("concept/type/ThingType.jl")
+include("concept/type/AttributeType.jl")
+include("concept/type/EntityType.jl")
+include("concept/type/RelationType.jl")
+
+include("concept/thing/Relation.jl")
 
 #api section
-include(joinpath(@__DIR__,"api","GraknOptions.jl"))
+include("api/GraknOptions.jl")
 
 #stream section
-include(joinpath(@__DIR__,"stream","RequestTransmitter.jl"))
+include("stream/RequestTransmitter.jl")
 
 #core section
-include(joinpath(@__DIR__,"core","CoreDatabase.jl"))
-include(joinpath(@__DIR__,"core","CoreDatabaseManager.jl"))
-include(joinpath(@__DIR__,"core","CoreClient.jl"))
-include(joinpath(@__DIR__,"core","CoreSession.jl"))
-include(joinpath(@__DIR__,"core","CoreTransaction.jl"))
+include("core/CoreDatabase.jl")
+include("core/CoreDatabaseManager.jl")
+include("core/CoreClient.jl")
+include("core/CoreSession.jl")
+include("core/CoreTransaction.jl")
 
 
 export GraknCoreBlockingClient, GraknClientException
+
+
 # export  Session, Transaction
 
 ####### pretty printing sectoin ##################
