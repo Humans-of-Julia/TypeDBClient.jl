@@ -6,7 +6,7 @@ mutable struct CoreClient <: AbstractCoreClient
     address::String
     port::Int
     core_stub::Core_GraknStub
-    transmitter::RequestTransmitter
+    transmitter::Optional{T} where {T<:AbstractRequestTransmitter}
     databaseMgr::CoreDatabaseManager
     sessions::Dict{String, Union{<:AbstractCoreSession, Nothing}}
 end
