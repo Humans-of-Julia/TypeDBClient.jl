@@ -4,7 +4,22 @@ const BATCH_WINDOW_SMALL_MILLIS = 1
 const BATCH_WINDOW_LARGE_MILLIS = 3
 
 mutable struct Dispatcher
-    input_channel::Channel
+    input_channel::Channel{grakn.protocol.Transaction_Client}
+    direct_dispatch_channel::Channel{grakn.protocol.ProtoType}
+    dispatch_channel::Channel{grakn.protocol.ProtoType}
+end
+
+function Dispatcher(input_channel::Channel{grakn.protocol.Transaction_Client})
+    direct_dispatch_channel = Channel{grakn.protocol.ProtoType}(10)
+    dispatch_channel = Channel{grakn.protocol.ProtoType}(10)
+
+    return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel)
+end
+
+function process_dispatched_requests(req_channel::Channel{grakn.protocol.ProtoType}, time_to_collect::Int)
+     while isOpen(req_channel)
+        
+     end
 end
 
 mutable struct Executor
@@ -15,27 +30,27 @@ mutable struct Executor
 
 end
 
-mutable struct RequestTransmitter
-    #private static final Logger LOG = LoggerFactory.getLogger(RequestTransmitter.class);
-    executors::Union{Nothing, Vector{Executor}}
-    executorIndex::Int
-    accessLock::ReentrantLock
-    is_open::Bool
-end
+# mutable struct RequestTransmitter
+#     #private static final Logger LOG = LoggerFactory.getLogger(RequestTransmitter.class);
+#     executors::Union{Nothing, Vector{Executor}}
+#     executorIndex::Int
+#     accessLock::ReentrantLock
+#     is_open::Bool
+# end
 
-RequestTransmitter() = RequestTransmitter(nothing, 0, ReentrantLock(), true)
+# RequestTransmitter() = RequestTransmitter(nothing, 0, ReentrantLock(), true)
 
-function RequestTransmitter(session::T) where {T<:AbstractCoreSession}
-    executors = Vector{Executor}()
-    index = 0
-    accesLock = ReentrantLock()
-    is_open = true
-    return RequestTransmitter(executors, index, accesLock, is_open)
-end
+# function RequestTransmitter(session::T) where {T<:AbstractCoreSession}
+#     executors = Vector{Executor}()
+#     index = 0
+#     accesLock = ReentrantLock()
+#     is_open = true
+#     return RequestTransmitter(executors, index, accesLock, is_open)
+# end
 
-function session_transmitter(session::T) where {T<:AbstractCoreSession}
-    return RequestTransmitter(session)
-end
+# function session_transmitter(session::T) where {T<:AbstractCoreSession}
+#     return RequestTransmitter(session)
+# end
 
 
 #

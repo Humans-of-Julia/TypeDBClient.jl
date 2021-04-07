@@ -24,6 +24,7 @@ function response_worker(response_collector::ResponseCollector)
             which_result = which_oneof(result_srv, :server)
             tmp_result = getproperty(result_srv, which_result)
             id = tmp_result.req_id
+            
         end
     end
 end

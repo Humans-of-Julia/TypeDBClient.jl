@@ -36,16 +36,12 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis)
 
-        @async start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
+        Threads.@spawn start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
 
         return result
     # catch ex
     #     throw(GraknClientException("Error construct a CoreSession",ex))
     # end
-end
-
-function CoreSession(client::T, database::String , type::Int32 = Int32(0)) where {T<:AbstractCoreClient}
-    return CoreSession(client, database, type, GraknOptions())
 end
 
 function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}

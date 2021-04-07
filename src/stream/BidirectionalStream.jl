@@ -1,8 +1,8 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct  BidirectionalStream
-    resCollector::Union{Nothing, ResponseCollector}
-    resPartCollector::Union{Nothing,ResponseCollector}
+    resCollector::ResponseCollector
+    resPartCollector::ResponseCollector
     dispatcher::Union{Nothing,Dispatcher} #RequestTransmitter.Dispatcher
     is_open::Threads.Atomic{Bool}
 end
@@ -17,10 +17,11 @@ function BidirectionalStream()
     return BidirectionalStream(resCollector, resPartCollector, dispatcher, is_open)
 end
 
-function BidirectionalStream(input_channel::Channel, output_channel::Channel)
+function BidirectionalStream(input_channel::Channel{grakn.protocol.Transaction_Client}, output_channel::Channel{grakn.protocol.Transaction_Server})
     res_collector = ResponseCollector(output_channel)
     res_part_collector = ResponseCollector()
-    dispatcher = Dispatcher(input_channel)
+    dispatcher = Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel)
+
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: ProtoType}
@@ -28,7 +29,8 @@ function single_request(bidirect_stream::BidirectionalStream, request::T) where 
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: ProtoType}
-    result =
+
+    # result =
 end
 
 function close(stream::BidirectionalStream)

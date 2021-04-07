@@ -16,11 +16,15 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     #try
         type = type
         options = options
-        stub = GraknCoreBlockingStub(gRPCChannel(session.client.address * ":" * string(session.client.port)))
         conceptMgr = ConceptManagerImpl()
         logicMgr = LogicManagerImpl()
         queryMgr = QueryManagerImpl()
-        bidirectionalStream = BidirectionalStream(stub, session_transmitter(session))
+        input_channel = Channel{grakn.protocol.Transaction_Client}(10)
+
+        req_result, status = transaction(session.client.core_stub.blockingStub, gRPCController(), input_channel)
+        output_channel = grpc_result_or_error(req_result, status, result->true)
+
+        bidirectionalStream = BidirectionalStream(input_channel, output_channel)
         trans_id = uuid4()
 
         result = CoreTransaction(type, options, bidirectionalStream, conceptMgr, logicMgr, queryMgr, trans_id, sessionId)
