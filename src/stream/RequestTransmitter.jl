@@ -17,9 +17,9 @@ function Dispatcher(input_channel::Channel{P.Transaction_Client})
 end
 
 function process_dispatched_requests(req_channel::Channel{P.ProtoType}, time_to_collect::Int)
-     while isOpen(req_channel)
+    while isopen(req_channel)
         throw(ArgumentError("process_dispatched_requests isnt implementet yet"))
-     end
+    end
 end
 
 mutable struct Executor

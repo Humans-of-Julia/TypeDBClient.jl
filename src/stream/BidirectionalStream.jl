@@ -21,7 +21,7 @@ function BidirectionalStream(input_channel::Channel{grakn.protocol.Transaction_C
     res_collector = ResponseCollector(output_channel)
     res_part_collector = ResponseCollector()
     dispatcher = Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel)
-
+    return BidirectionalStream(res_collector, res_part_collector, dispatcher, Threads.Atomic{Bool}(true))
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: ProtoType}
@@ -29,8 +29,9 @@ function single_request(bidirect_stream::BidirectionalStream, request::T) where 
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: ProtoType}
-
-    # result =
+    let direct = bidirect_stream.dispatcher.direct_dispatch_channel
+    task = put!(bidirect_stream.dispatcher, request, batch)
+    result = fetch(task)
 end
 
 function close(stream::BidirectionalStream)
