@@ -2,5 +2,6 @@ using GraknClient
 using Test
 
 @testset "GraknClient" begin
-    include("standard/test_concept.jl")
+include("unit/test_common.jl")
+include("unit/test_request_builder.jl")
 end

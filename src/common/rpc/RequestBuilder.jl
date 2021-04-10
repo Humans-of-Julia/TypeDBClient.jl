@@ -1,79 +1,85 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-# function database_contains_req(name::String)
-#     return CoreDatabaseManager_Contains_Req().name = name
-# end
+# ---------------------------------------------------------------------------------
+module DatabaseManagerRequestBuilder
 
-# function database_schema_req(name::String)
-#     return CoreDatabase_Schema_Req().name = name
-# end
+import ..grakn.protocol as Proto
 
-# function session_open_req(database_name::String, type::Int32, options::grakn.protocol.Options)
-#     open_req = grakn.protocol.Session_Open_Req()
-#     open_req.database = database_name
-#     open_req._type = type
-#     open_req.options = options
+create_req(name::String) = Proto.CoreDatabaseManager_Create_Req(; name)
 
-#     return open_req
-# end
+contains_req(name::String) = Proto.CoreDatabaseManager_Contains_Req(; name)
 
-# function session_pulse_req(session_id::Array{UInt8,1})
-#     puls_req = grakn.protocol.Session_Pulse_Req()
-#     puls_req.session_id = session_id
-#     return puls_req
-# end
+all_req() = Proto.CoreDatabaseManager_All_Req()
 
-# TODO This has a dependency to grabl tracing... Confirm.
-function tracing_data()
-    return Dict{AbstractString, AbstractString}()
 end
 
-# DatabaseManager
+# ---------------------------------------------------------------------------------
+module DatabaseRequestBuilder
 
-database_manager_create_req(name::String) = P.CoreDatabaseManager_Create_Req(; name)
-database_manager_contains_req(name::String) = P.CoreDatabaseManager_Contains_Req(; name)
-database_manager_all_req() = P.CoreDatabaseManager_All_Req()
+import ..grakn.protocol as Proto
 
-# Database
+schema_req(name::String) = Proto.CoreDatabase_Schema_Req(; name)
 
-database_schema_req(name::String) = P.CoreDatabaseManager_Schema_Req(; name)
-database_delete_req(name::String) = P.CoreDatabaseManager_Delete_Req(; name)
+delete_req(name::String) = Proto.CoreDatabase_Delete_Req(; name)
 
-# Session
-
-function session_open_req(database::String, _type::EnumType, options::P.Options)
-    return P.Session_Open_Req(; database, _type, options)
 end
 
-session_pulse_req(session_id::Bytes) = P.Session_Pulse_Req(; session_id)
+# ---------------------------------------------------------------------------------
+module SessionRequestBuilder
 
-# Transaction
+import ..grakn.protocol as Proto
+using ..GraknClient: EnumType, Bytes
 
-transaction_client_msg(reqs::P.Transaction_Req) = P.Transaction_Client(; reqs)
-
-function transaction_stream_req(req_id::UUID)
-    req_id = string(req_id)
-    stream_req = P.Transaction_Stream_Req()
-    return P.Transaction_Req(; req_id, stream_req)
+function open_req(database::String, _type::EnumType, options::Proto.Options)
+    return Proto.Session_Open_Req(; database, _type, options)
 end
 
-function transaction_open_req(
+pulse_req(session_id::Bytes) = Proto.Session_Pulse_Req(; session_id)
+
+end
+
+# ---------------------------------------------------------------------------------
+module TransactionRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: EnumType, Bytes
+using UUIDs: UUID
+
+function client_msg(reqs::AbstractVector{Proto.Transaction_Req})
+    return Proto.Transaction_Client(; reqs)
+end
+
+function stream_req(req_id::UUID)
+    req_id = string(req_id) # TODO will be changed to Vector{UInt}
+    stream_req = Proto.Transaction_Stream_Req()
+    return Proto.Transaction_Req(; req_id, stream_req)
+end
+
+function open_req(
     session_id::Bytes,
     _type::EnumType,
-    options::P.Options,
+    options::Proto.Options,
     network_latency_millis::Int
 )
-    open_req = P.Transaction_Open_Req(; session_id, _type, options, network_latency_millis)
-    return P.Transaction_Req(; open_req)
+    open_req = Proto.Transaction_Open_Req(;
+        session_id, _type, options, network_latency_millis
+    )
+    return Proto.Transaction_Req(; open_req)
 end
 
-function transaction_commit_req()
-    metadata = tracing_data()
-    commit_req = P.Transaction_Commit_Req()
-    return P.Transaction_Req(; metadata, commit_req)
+function commit_req()
+    # metadata = tracing_data()
+    commit_req = Proto.Transaction_Commit_Req()
+    return Proto.Transaction_Req(; commit_req)
 end
 
-# Query Manager
+end
+
+# ---------------------------------------------------------------------------------
+module QueryManagerRequestBuilder
+
+import ..grakn.protocol as Proto
+import ..GraknClient
 
 for (f, t) in (
     (:define_req,                :Define_Req),
@@ -86,13 +92,134 @@ for (f, t) in (
     (:delete_req,                :Delete_Req),
     (:update_req,                :Update_Req),
 )
-    func = Symbol("query_manager_$f")
+    func = Symbol("$f")
     type = Symbol("QueryManager_$t")
     @eval begin
-        function $func(query::String, options::P.Options)
-            $f = P.$type(; query)
-            query_manager_req = P.QueryManager_Req(; $f, options)
-            return P.Transaction_Req(; query_manager_req)
+        function $func(query::String, options::Proto.Options = Proto.Options())
+            $f = Proto.$type(; query)
+            query_manager_req = Proto.QueryManager_Req(; $f, options)
+            return Proto.Transaction_Req(; query_manager_req)
         end
     end
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module ConceptManagerRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: EnumType, bytes
+
+function _treq(; kwargs...)
+    return Proto.Transaction_Req(
+        concept_manager_req = Proto.ConceptManager_Req(; kwargs...)
+    )
+end
+
+function put_entity_type_req(label::String)
+    return _treq(
+        put_entity_type_req = Proto.ConceptManager_PutEntityType_Req(; label)
+    )
+end
+
+function put_relation_type_req(label::String)
+    return _treq(
+        put_relation_type_req = Proto.ConceptManager_PutRelationType_Req(; label)
+    )
+end
+
+function put_attribute_type_req(label::String, value_type::EnumType)
+    return _treq(
+        put_attribute_type_req =
+            Proto.ConceptManager_PutAttributeType_Req(; label, value_type)
+    )
+end
+
+function get_thing_type_req(label::String)
+    return _treq(
+        get_thing_type_req = Proto.ConceptManager_GetThingType_Req(; label)
+    )
+end
+
+function get_thing_req(iid::String)
+    return _treq(
+        get_thing_req = Proto.ConceptManager_GetThing_Req(; iid = bytes(iid))
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module LogicManagerRequestBuilder
+
+import ..grakn.protocol as Proto
+
+function _treq(; kwargs...)
+    return Proto.Transaction_Req(
+        logic_manager_req = Proto.LogicManager_Req(
+            ; kwargs...
+        )
+    )
+end
+
+function put_rule_req(label::String, when::String, then::String)
+    return _treq(
+        put_rule_req = Proto.LogicManager_PutRule_Req(; label, when, then)
+    )
+end
+
+function get_rule_req(label::String)
+    return _treq(
+        get_rule_req = Proto.LogicManager_GetRule_Req(; label)
+    )
+end
+
+function get_rules_req()
+    return _treq(
+        get_rules_req = Proto.LogicManager_GetRules_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module TypeRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: Label
+
+# Ignore linter error here
+function _treq(label, scope; kwargs...)
+    return Proto.Transaction_Req(
+        type_req = Proto.Type_Req(; label, scope, kwargs...)
+    )
+end
+
+function is_abstract_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_is_abstract_req = Proto.Type_IsAbstract_Req()
+    )
+end
+
+function set_label_req(label::Label, new_label::String)
+    return _treq(label.name, label.scope;
+        type_set_label_req = Proto.Type_SetLabel_Req(
+            label = new_label
+        )
+    )
+end
+
+function get_supertypes_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_get_supertypes_req = Proto.Type_GetSupertypes_Req()
+    )
+end
+
+function get_subtypes_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_get_subtypes_req = Proto.Type_GetSubtypes_Req()
+    )
+end
+
 end

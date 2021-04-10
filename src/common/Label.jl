@@ -1,6 +1,6 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-# Migratin note: no need to store `hash` so we just use the standard hash function
+# Porting note: no need to store `hash` as we can just use the standard hash function
 struct Label
     scope::Optional{String}
     name::String
@@ -16,15 +16,3 @@ function scoped_name(label::Label)
 end
 
 Base.show(io::IO, label::Label) = print(io, scoped_name(label))
-
-# Base.propertynames(::Label) = (:scope, :name, :scoped_name)
-
-# function Base.getproperty(label::Label, s::Symbol)
-#     if s === :scoped_name
-#         return scoped_name(label)
-#     elseif s in (:scope, :name)
-#         return getfield(label, s)
-#     else
-#         throw(ArgumentError("Invalid property name: $s"))
-#     end
-# end

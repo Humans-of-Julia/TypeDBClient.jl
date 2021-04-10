@@ -2,6 +2,8 @@ using GraknClient: Label, scoped_name, RelationType, Remote
 using GraknClient.grakn.protocol: _Type
 using Test
 
+@testset "Common" begin
+
 @testset "Label" begin
 
     let x = Label("a")
@@ -18,7 +20,4 @@ using Test
 
 end
 
-@testset "RelationType" begin
-    type_proto = _Type(label = "a", root = false)
-    relation_type = RelationType(type_proto)
-end
+end # Common

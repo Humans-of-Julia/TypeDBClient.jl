@@ -36,15 +36,16 @@ include("generated/core_service_pb.jl")
 
 #standard julia sources
 include("standard/type_aliases.jl")
+include("standard/utils.jl")
 
 #common section
+include("common/Label.jl")
 include("common/exception/ErrorMessage.jl")
 include("common/exception/GraknClientException.jl")
 include("common/rpc/GraknStub.jl")
 include("common/rpc/RequestBuilder.jl")
 
 #concepts
-include("common/Label.jl")
 include("concept/Concept.jl")
 
 #api section
