@@ -52,6 +52,9 @@ include("common/rpc/RequestBuilder.jl")
 
 #concepts
 include("concept/Concept.jl")
+include("concept/type/RoleType.jl")
+include("concept/type/RelationType.jl")
+include("concept/thing/Relation.jl")
 
 #api section
 include("api/GraknOptions.jl")

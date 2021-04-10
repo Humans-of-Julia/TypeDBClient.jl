@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------------------
 module DatabaseManagerRequestBuilder
 
-import ..grakn.protocol as Proto
+using ..GraknClient: Proto
 
 create_req(name::String) = Proto.CoreDatabaseManager_Create_Req(; name)
 
@@ -16,7 +16,7 @@ end
 # ---------------------------------------------------------------------------------
 module DatabaseRequestBuilder
 
-import ..grakn.protocol as Proto
+using ..GraknClient: Proto
 
 schema_req(name::String) = Proto.CoreDatabase_Schema_Req(; name)
 
@@ -27,8 +27,7 @@ end
 # ---------------------------------------------------------------------------------
 module SessionRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: EnumType, Bytes
+using ..GraknClient: Proto, EnumType, Bytes
 
 function open_req(database::String, _type::EnumType, options::Proto.Options)
     return Proto.Session_Open_Req(; database, _type, options)
@@ -41,8 +40,7 @@ end
 # ---------------------------------------------------------------------------------
 module TransactionRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: EnumType, Bytes
+using ..GraknClient: Proto, EnumType, Bytes
 using UUIDs: UUID
 
 function client_msg(reqs::AbstractVector{Proto.Transaction_Req})
@@ -78,8 +76,7 @@ end
 # ---------------------------------------------------------------------------------
 module QueryManagerRequestBuilder
 
-import ..grakn.protocol as Proto
-import ..GraknClient
+using ..GraknClient: Proto
 
 for (f, t) in (
     (:define_req,                :Define_Req),
@@ -108,8 +105,7 @@ end
 # ---------------------------------------------------------------------------------
 module ConceptManagerRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: EnumType, bytes
+using ..GraknClient: Proto, EnumType, bytes
 
 function _treq(; kwargs...)
     return Proto.Transaction_Req(
@@ -153,7 +149,7 @@ end
 # ---------------------------------------------------------------------------------
 module LogicManagerRequestBuilder
 
-import ..grakn.protocol as Proto
+using ..GraknClient: Proto
 
 function _treq(; kwargs...)
     return Proto.Transaction_Req(
@@ -186,8 +182,7 @@ end
 # ---------------------------------------------------------------------------------
 module TypeRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: Label
+using ..GraknClient: Proto, Label
 
 # Ignore linter error here
 function _treq(label, scope; kwargs...)
@@ -239,8 +234,7 @@ end
 # ---------------------------------------------------------------------------------
 module RoleTypeRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: EnumType, Label
+using ..GraknClient: Proto, EnumType, Label
 using ..TypeRequestBuilder: _treq
 
 function proto_role_type(label::Label, encoding::EnumType)
@@ -269,8 +263,7 @@ end
 # ---------------------------------------------------------------------------------
 module ThingTypeRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: EnumType, Label, Optional
+using ..GraknClient: Proto, EnumType, Label, Optional
 using ..TypeRequestBuilder: _treq
 
 function proto_thing_type(label::Label, encoding::EnumType)
@@ -369,8 +362,7 @@ end
 # ---------------------------------------------------------------------------------
 module EntityTypeRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: Label
+using ..GraknClient: Proto, Label
 using ..TypeRequestBuilder: _treq
 
 function create_req(label::Label)
@@ -384,8 +376,7 @@ end
 # ---------------------------------------------------------------------------------
 module RelationTypeRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: Label, Optional
+using ..GraknClient: Proto, Label, Optional
 using ..TypeRequestBuilder: _treq
 
 function create_req(label::Label)
@@ -426,8 +417,7 @@ end
 # ---------------------------------------------------------------------------------
 module ThingRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: Label, Bytes, bytes
+using ..GraknClient: Proto, Label, Bytes, bytes
 
 proto_thing(iid::Bytes) = Proto.Thing(; iid)
 proto_thing(iid::String) = proto_thing(bytes(iid))
@@ -472,7 +462,7 @@ end
 
 function get_playing_req(iid::String)
     return _thing_req(iid;
-        thing_get_playing_req = Proto.Thing_GetPlayiing_Req()
+        thing_get_playing_req = Proto.Thing_GetPlaying_Req()
     )
 end
 
@@ -493,7 +483,7 @@ end
 # ---------------------------------------------------------------------------------
 module RelationRequestBuilder
 
-import ..grakn.protocol as Proto
+using ..GraknClient: Proto
 using ..ThingRequestBuilder: _thing_req
 
 function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
@@ -537,8 +527,7 @@ end
 # ---------------------------------------------------------------------------------
 module AttributeRequestBuilder
 
-import ..grakn.protocol as Proto
-using ..GraknClient: Optional
+using ..GraknClient: Proto, Optional
 using ..ThingRequestBuilder: _thing_req
 using TimeZones: ZonedDateTime
 
@@ -564,7 +553,7 @@ end
 # ---------------------------------------------------------------------------------
 module RuleRequestBuilder
 
-import ..grakn.protocol as Proto
+using ..GraknClient: Proto
 
 function set_label_req(current_label::String, new_label::String)
     return Proto.Transaction_Req(

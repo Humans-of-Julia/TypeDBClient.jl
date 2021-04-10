@@ -49,33 +49,5 @@ Wrap a concept with a `GraknTransaction`.
 as_remote(x::T, t) where {T <: AbstractConcept} = Remote{T}(x, t)
 
 # TODO check with Frank about the transaction API
-# execute(x::Remote{T}, request::P.Transaction_Req) = execute(x.transaction, request).type_res
-# stream(x::Remote{T}, request::P.Transaction_Req) = execute(x.transaction, request)  # iterator?
-
-#  RelationType
-
-struct RelationType <: AbstractThingType
-    label::Label
-    is_root::Bool
-end
-
-RelationType(t::P._Type) = RelationType(Label(t.label), t.root)
-
-# Relation
-
-struct Relation <: AbstractThing
-    iid::String
-    type::RelationType
-end
-
-function Relation(t::P.Thing)
-    iid = join(string(v, base = 16, pad = 2) for v in t.iid)
-    return Relation(iid, RelationType(t._type))
-end
-
-# RelationType functions
-
-function create(x::Remote{RelationType})
-    res_proto = execute(relation_type_create_req(x.data.label))
-    return RelationType(res_proto.relation_type_create_req.relation) # Thing => RelationType
-end
+# execute(x::Remote{T}, request::Proto.Transaction_Req) = execute(x.transaction, request).type_res
+# stream(x::Remote{T}, request::Proto.Transaction_Req) = execute(x.transaction, request)  # iterator?

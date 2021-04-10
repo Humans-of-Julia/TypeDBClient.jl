@@ -3,7 +3,7 @@
 const Optional{T} = Union{T,Nothing}
 
 # quick reference to commonly used modules
-const P = grakn.protocol
+const Proto = grakn.protocol
 
 # protobuf types
 const EnumType = Int32
