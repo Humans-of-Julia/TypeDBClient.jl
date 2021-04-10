@@ -222,4 +222,367 @@ function get_subtypes_req(label::Label)
     )
 end
 
+function get_supertype_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_get_supertype_req = Proto.Type_GetSupertype_Req()
+    )
+end
+
+function delete_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_delete_req = Proto.Type_Delete_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RoleTypeRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: EnumType, Label
+using ..TypeRequestBuilder: _treq
+
+function proto_role_type(label::Label, encoding::EnumType)
+    @assert label.scope !== nothing
+    return Proto._Type(
+        scope = label.scope,
+        label = label.name,
+        encoding = encoding,
+    )
+end
+
+function get_relation_types_req(label::Label)
+    return _treq(label.name, label.scope;
+        role_type_get_relation_types_req = Proto.RoleType_GetRelationTypes_Req()
+    )
+end
+
+function get_players_req(label::Label)
+    return _treq(label.name, label.scope;
+        role_type_get_players_req = Proto.RoleType_GetPlayers_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module ThingTypeRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: EnumType, Label, Optional
+using ..TypeRequestBuilder: _treq
+
+function proto_thing_type(label::Label, encoding::EnumType)
+    return Proto._Type(
+        label = label.name,
+        encoding = encoding
+    )
+end
+
+function set_abstract_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_set_abstract_req = Proto.ThingType_SetAbstract_Req()
+    )
+end
+
+function unset_abstract_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_unset_abstract_req = Proto.ThingType_UnsetAbstract_Req()
+    )
+end
+
+function set_supertype_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_set_supertype_req = Proto.Type_SetSupertype_Req()
+    )
+end
+
+function get_plays_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_get_plays_req = Proto.ThingType_GetPlays_Req()
+    )
+end
+
+function set_plays_req(
+    label::Label,
+    role_type::Proto.RoleType,
+    overridden_role_type::Optional{Proto.RoleType} = nothing
+)
+    return _treq(label.name, label.scope;
+        thing_type_set_plays_req = Proto.ThingType_SetPlays_Req(
+            role = role_type,
+            overridden_role = overridden_role_type
+        )
+    )
+end
+
+function unset_plays_req(
+    label::Label, role_type::Proto.RoleType
+)
+    return _treq(label.name, label.scope;
+        thing_type_unset_plays_req = Proto.ThingType_UnsetPlays_Req(
+            role = role_type,
+        )
+    )
+end
+
+# Porting note: the order of `keys_only` and `value_type` are swapped
+function get_owns_req(
+    label::Label,
+    keys_only::Bool,
+    value_type::Optional{EnumType} = nothing
+)
+    return _treq(label.name, label.scope;
+        thing_type_get_owns_req = Proto.ThingType_GetOwns_Req(; keys_only, value_type)
+    )
+end
+
+# Porting note: the order of `is_key` is moved upfront
+function set_owns_req(
+    label::Label,
+    is_key::Bool,
+    attribute_type::Proto.AttributeType,
+    overridden_type::Optional{Proto.AttributeType} = nothing
+)
+    return _treq(label.name, label.scope;
+        thing_type_set_owns_req = Proto.ThingType_SetOwns_Req(;
+            is_key, attribute_type, overridden_type
+        )
+    )
+end
+
+function unset_owns_req(label::Label, attribute_type::Proto.AttributeType)
+    return _treq(label.name, label.scope;
+        thing_type_unset_owns_req = Proto.ThingType_UnsetOwns_Req(; attribute_type)
+    )
+end
+
+function get_instances_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_get_instances_req = Proto.ThingType_GetInstances_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module EntityTypeRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: Label
+using ..TypeRequestBuilder: _treq
+
+function create_req(label::Label)
+    return _treq(label.name, label.scope;
+        entity_type_create_req = Proto.EntityType_Create_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RelationTypeRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: Label, Optional
+using ..TypeRequestBuilder: _treq
+
+function create_req(label::Label)
+    return _treq(label.name, label.scope;
+        relation_type_create_req = Proto.RelationType_Create_Req()
+    )
+end
+
+function get_relates_req(label::Label, role_label::Optional{String})
+    return _treq(label.name, label.scope;
+        relation_type_get_relates_req = Proto.RelationType_GetRelates_Req(;
+            label = role_label
+        )
+    )
+end
+
+function set_relates_req(
+    label::Label, role_label::String, overridden_label::Optional{String}
+)
+    return _treq(label.name, label.scope;
+        relation_type_set_relates_req = Proto.RelationType_SetRelates_Req(;
+            label = role_label,
+            overridden_label
+        )
+    )
+end
+
+function unset_relates_req(label::Label, role_label::Optional{String})
+    return _treq(label.name, label.scope;
+        relation_type_unset_relates_req = Proto.RelationType_UnsetRelates_Req(;
+            label = role_label
+        )
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module ThingRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: Label, Bytes, bytes
+
+proto_thing(iid::Bytes) = Proto.Thing(; iid)
+proto_thing(iid::String) = proto_thing(bytes(iid))
+
+function _thing_req(iid::String; kwargs...)
+    return Proto.Transaction_Req(
+        thing_req = Proto.Thing_Req(
+            ; iid = bytes(iid), kwargs...
+        )
+    )
+end
+
+function is_inferred_req(iid::String)
+    return _thing_req(iid;
+        thing_is_inferred_req = Proto.Thing_IsInferred_Req()
+    )
+end
+
+function get_has_req(iid::String, attribute_types::AbstractVector{Proto.Type})
+    return _thing_req(iid;
+        thing_get_has_req = Proto.Thing_GetHas_Req(; attribute_types)
+    )
+end
+
+function get_has_req(iid::String, only_key::Bool)
+    return _thing_req(iid;
+        thing_get_has_req = Proto.Thing_GetHas_Req(; only_key)
+    )
+end
+
+function set_has_req(iid::String, attribute::Proto.Thing)
+    return _thing_req(iid;
+        thing_set_has_req = Proto.Thing_SetHas_Req(; attribute)
+    )
+end
+
+function unset_has_req(iid::String, attribute::Proto.Thing)
+    return _thing_req(iid;
+        thing_unset_has_req = Proto.Thing_UnsetHas_Req(; attribute)
+    )
+end
+
+function get_playing_req(iid::String)
+    return _thing_req(iid;
+        thing_get_playing_req = Proto.Thing_GetPlayiing_Req()
+    )
+end
+
+function get_relations_req(iid::String, role_types::AbstractVector{Proto._Type})
+    return _thing_req(iid;
+        thing_get_relations_req = Proto.Thing_GetRelations_Req(; role_types)
+    )
+end
+
+function delete_req(iid::String)
+    return _thing_req(iid;
+        thing_delete_req = Proto.Thing_Delete_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RelationRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..ThingRequestBuilder: _thing_req
+
+function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
+    return _thing_req(iid;
+        relation_add_player_req = Proto.Relation_AddPlayer_Req(;
+            role_type,
+            player
+        )
+    )
+end
+
+function remove_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
+    return _thing_req(iid;
+        relation_remove_player_req = Proto.Relation_RemovePlayer_Req(;
+            role_type,
+            player
+        )
+    )
+end
+
+function get_players_req(iid::String, role_types::AbstractVector{Proto._Type})
+    return _thing_req(iid;
+        relation_get_players_req = Proto.Relation_GetPlayers_Req(; role_types)
+    )
+end
+
+function get_players_by_role_type_req(iid::String)
+    return _thing_req(iid;
+        relation_get_players_by_role_type_req = Proto.Relation_GetPlayersByRoleType_Req()
+    )
+end
+
+function get_relating_req(iid::String)
+    return _thing_req(iid;
+        relation_get_players_req = Proto.Relation_GetRelating_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module AttributeRequestBuilder
+
+import ..grakn.protocol as Proto
+using ..GraknClient: Optional
+using ..ThingRequestBuilder: _thing_req
+using TimeZones: ZonedDateTime
+
+function get_owners_req(iid::String, owner_type::Optional{Proto._Type})
+    return _thing_req(iid;
+        relation_get_owners_req = Proto.Relation_GetOwners_Req(),
+        thing_type = owner_type
+    )
+end
+
+proto_boolean_attribute_value(value::Bool) = Proto.Attribute_Value(; boolean = value)
+proto_long_attribute_value(value::Int64) = Proto.Attribute_Value(; long = value)
+proto_double_attribute_value(value::Float64) = Proto.Attribute_Value(; double = value)
+proto_string_attribute_value(value::String) = Proto.Attribute_Value(; string = value)
+
+function proto_date_time_attribute_value(value::ZonedDateTime)
+    epoch_millis = value.utc_datetime.instant
+    Proto.Attribute_Value(; date_time = epoch_millis)
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RuleRequestBuilder
+
+import ..grakn.protocol as Proto
+
+function set_label_req(current_label::String, new_label::String)
+    return Proto.Transaction_Req(
+        rule_req = Proto.Rule_Req(
+            label = current_label,
+            rule_set_label_req = Proto.Rule_SetLabel_Req(
+                label = new_label
+            )
+        )
+    )
+end
+
+function delete_req(label::String)
+    return Proto.Transaction_Req(
+        rule_req = Proto.Rule_Req(
+            rule_delete_req = Proto.Rule_Delete_Req()
+        )
+    )
+end
+
 end

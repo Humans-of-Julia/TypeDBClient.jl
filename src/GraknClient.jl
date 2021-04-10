@@ -10,9 +10,14 @@ Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
 module GraknClient
 # following this example here: https://github.com/tanmaykm/DexClient.jl/blob/master/src/DexClient.jl
 
-using gRPCClient, Sockets, UUIDs, Dates
+using Dates
 using DataStructures
+using gRPCClient
+using Sockets
+using UUIDs: UUID, uuid4
 
+# TODO no need to import these; best practrice is to prefix module name
+#  when you extend the function
 import Base: show, close, ==
 
 ###### abstract types ##################

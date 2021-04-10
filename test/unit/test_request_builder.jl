@@ -76,11 +76,55 @@ let b = GraknClient.LogicManagerRequestBuilder
     @test_nowarn b.get_rules_req()
 end
 
+# standard labels for testing *type request builders
+label = Label("a")
+scoped_label = Label("s","a")
+
 let b = GraknClient.TypeRequestBuilder
-    @test hasproperty(b.is_abstract_req(Label("a")).type_req, :type_is_abstract_req)
-    @test b.is_abstract_req(Label("s","a")).type_req.scope == "s"
-    @test b.is_abstract_req(Label("a")).type_req.label == "a"
-    @test !hasproperty(b.is_abstract_req(Label("a")).type_req, :scope)
+
+    # For simplicity, conditional scope settting is tested here (`is_abstract_req1)
+    # and will be excluded for other tests below.
+
+    let without_scope = b.is_abstract_req(label),
+        with_scope = b.is_abstract_req(scoped_label)
+        @test without_scope.type_req.label == "a"
+        @test hasproperty(without_scope.type_req, :type_is_abstract_req)
+        @test !hasproperty(without_scope.type_req, :scope)
+
+        @test with_scope.type_req.scope == "s"
+        @test with_scope.type_req.label == "a"
+        @test hasproperty(with_scope.type_req, :type_is_abstract_req)
+    end
+
+    @test b.set_label_req(label, "b").type_req.type_set_label_req.label == "b"
+    @test hasproperty(b.get_supertypes_req(label).type_req, :type_get_supertypes_req)
+    @test hasproperty(b.get_subtypes_req(label).type_req, :type_get_subtypes_req)
+    @test hasproperty(b.get_supertype_req(label).type_req, :type_get_supertype_req)
+    @test hasproperty(b.delete_req(label).type_req, :type_delete_req)
 end
+
+let b = GraknClient.RoleTypeRequestBuilder
+
+    let r = b.proto_role_type(scoped_label, Proto.Type_Encoding.THING_TYPE)
+        @test r.label == "a"
+        @test r.encoding == Proto.Type_Encoding.THING_TYPE
+    end
+
+    # test assertion for scope requirement
+    @test_broken b.proto_role_type(label, Proto.Type_Encoding.THING_TYPE)
+
+    @test hasproperty(b.get_relation_types_req(label).type_req, :role_type_get_relation_types_req)
+    @test hasproperty(b.get_players_req(label).type_req, :role_type_get_players_req)
+end
+
+# TODO Need to continue developing unit tests for these
+# module ThingTypeRequestBuilder
+# module EntityTypeRequestBuilder
+# module RelationTypeRequestBuilder
+# module ThingRequestBuilder
+# module RelationRequestBuilder
+# module AttributeRequestBuilder
+# module RuleRequestBuilder
+
 
 end # RequestBuilder
