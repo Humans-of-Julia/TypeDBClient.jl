@@ -42,6 +42,7 @@ include("generated/core_service_pb.jl")
 
 #standard julia sources
 include("standard/type_aliases.jl")
+include("standard/utility_functions.jl")
 
 #api section
 include(joinpath(@__DIR__,"api","GraknOptions.jl"))
@@ -95,10 +96,12 @@ function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
     return nothing
 end
 
-
+## Printing UUId stored in Vector in a more readable way
 Base.show(io::IO, id::Array{UInt8,1}) = Base.print(io, id)
 Base.print(io::IO, id::Array{UInt8,1}) = Base.print(io, string(bytes2hex(id)))
 
+## Printing each request in a shorter form except they have speicalized
+## printing options.
 Base.show(io::IO, item::T) where {T<:ProtoType} = Base.print(io, item)
 function Base.print(io::IO, item::T) where {T<:ProtoType}
     erg  = collect(keys(meta(typeof(item)).symdict))
@@ -113,16 +116,6 @@ function Base.print(io::IO, item::T) where {T<:ProtoType}
     Base.print(io, out_string)
 
     return nothing
-end
-
-function copy_to_proto(from_object, to_proto_struct::Type{T}) where {T<: ProtoType}
-    result_proto = to_proto_struct()
-    for fname in fieldnames(typeof(from_object))
-        if !hasproperty(result_proto, Symbol(fname)) && getfield(from_object,Symbol(fname)) !== nothing
-            setproperty!(result_proto,Symbol(fname),getfield(from_object,Symbol(fname)))
-        end
-    end
-    result_proto
 end
 
 end #module
