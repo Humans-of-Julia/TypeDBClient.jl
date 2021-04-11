@@ -1,13 +1,15 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct ResponseCollector
-    collectors::Union{Nothing,Dict{String,Channel}}
-    transact_result_channel::Channel
+    collectors::Dict{Bytes,Channel{P.ProtoType}}
+    transact_result_channel::Channel{P.ProtoType}
+    access_lock::ReentrantLock
 end
 
 function ResponseCollector()
-    dict = Dict{String,Channel}()
-    return ResponseCollector(dict,Channel())
+    dict = Dict{Bytes,Channel{P.ProtoType}}()
+    lock = ReentrantLock()
+    return ResponseCollector(dict, Channel{P.ProtoType}(), lock)
 end
 
 function ResponseCollector(transact_result_channel::Channel)
@@ -16,18 +18,56 @@ function ResponseCollector(transact_result_channel::Channel)
     return resp_col
 end
 
+"""
+newId_result_channel(resp_collector::ResponsCollector, request::T) where {T<:P.ProtoType}
+    Function is meant to give back the result_channel in which the results for one request
+    will be collected.
+    Attention! Don't put a new Id manually on the ResponsCollector. It wouldn't be thread safe
+"""
+function newId_result_channel(resp_collector::ResponseCollector, request::T) where {T<:P.ProtoType}
+    res_channel = Channel{T}(10)
+    id = request.req_id
+    try
+        lock(resp_collector.acces_lock)
+        resp_collector.collectors[id] = res_channel
+    catch
+    finally
+        unlock(resp_collector.acces_lock)
+    end
+    return res_channel
+end
+
+"""
+function remove_Id(resp_collector::ResponsCollector, id::Bytes)
+    The function will close the collecting result channel and remove
+    this from the the resonse collector.
+    Attention! Don't remove a result_channel manually from the Dictionary.
+    This will not be thread safe.
+"""
+function remove_Id(resp_collector::ResponseCollector, id::Bytes)
+    try
+        lock(resp_collector.acces_lock)
+        close(resp_collector[id])
+        delete!(resp_collector.collectors, id)
+    catch
+    finally
+        unlock(resp_collector.acces_lock)
+    end
+end
+
 function response_worker(response_collector::ResponseCollector)
     resp_chan = response_collector.transact_result_channel
-    while isOpen(resp_chan)
+    while isopen(resp_chan)
         if isready(resp_chan)
             result_srv = take!(resp_chan)
-            which_result = which_oneof(result_srv, :server)
+            which_result = P.which_oneof(result_srv, :server)
             tmp_result = getproperty(result_srv, which_result)
             id = tmp_result.req_id
-            
+            haskey()
         end
     end
 end
+
 #
 # package grakn.client.stream;
 #

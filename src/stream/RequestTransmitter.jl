@@ -7,51 +7,62 @@ mutable struct Dispatcher
     input_channel::Channel{P.Transaction_Client}
     direct_dispatch_channel::Channel{P.ProtoType}
     dispatch_channel::Channel{P.ProtoType}
+    dispatch_timer::Optional{Timer}
 end
+
 
 function Dispatcher(input_channel::Channel{P.Transaction_Client})
     direct_dispatch_channel = Channel{P.ProtoType}(10)
     dispatch_channel = Channel{P.ProtoType}(10)
+    disp_timer = batch_requests(dispatch_channel,input_channel)
+    process_direct_requests(direct_dispatch_channel, input_channel)
 
-    return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel)
+    return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
 
-function process_dispatched_requests(req_channel::Channel{P.ProtoType}, time_to_collect::Int)
-    while isopen(req_channel)
-        throw(ArgumentError("process_dispatched_requests isnt implementet yet"))
+function process_direct_requests(in_channel::Channel{P.ProtoType}, out_channel::Channel{P.Transaction_Client})
+   Threads.@spawn while !isopen(in_channel)
+        yield()
+        if isready(in_channel)
+            trans_client = transaction_client_msg([take!(in_channel)])
+            put!(out_channel, trans_client)
+        end
     end
 end
 
-mutable struct Executor
+function batch_requests(in_channel::Channel{P.ProtoType}, out_channel::Channel{P.Transaction_Client})
+    time_to_run = BATCH_WINDOW_SMALL_MILLIS / 1000
 
-        # private final ConcurrentSet<Dispatcher> dispatchers;
-        # private final AtomicBoolean isRunning;
-        # private final Semaphore permissionToRun;
+    function sleeper(controller::Controller)
+        sleep(controller.duration_in_seconds)
+        controller.running = false
+        return nothing
+    end
 
+    function runner(controller)
+        Threads.@spawn sleeper(controller)
+        answers = []
+        while controller.running
+            yield()
+            isready(in_channel) && push!(answers, take!(in_channel))
+        end
+        if length(answers) > 0
+            Threads.@spawn put!(out_channel, transaction_client_msg(answers))
+        end
+    end
+
+    cb(timer) = (runner(Controller(true, time_to_run)))
+    t = Timer(cb,time_to_run, interval = time_to_run)
+    wait(t)
+
+    return t
 end
 
-mutable struct RequestTransmitter <: AbstractRequestTransmitter
-    #private static final Logger LOG = LoggerFactory.getLogger(RequestTransmitter.class);
-    executors::Union{Nothing, Vector{Executor}}
-    executorIndex::Int
-    accessLock::ReentrantLock
-    is_open::Bool
+function close(dispatcher::Dispatcher)
+    close(dispatcher.direct_dispatch_channel)
+    close(dispatcher.dispatch_channel)
+    close(dispatcher.dispatch_timer)
 end
-
-RequestTransmitter() = RequestTransmitter(nothing, 0, ReentrantLock(), true)
-
-function RequestTransmitter(session::T) where {T<:AbstractCoreSession}
-    executors = Vector{Executor}()
-    index = 0
-    accesLock = ReentrantLock()
-    is_open = true
-    return RequestTransmitter(executors, index, accesLock, is_open)
-end
-
-function session_transmitter(session::T) where {T<:AbstractCoreSession}
-    return RequestTransmitter(session)
-end
-
 
 #
 # package grakn.client.stream;

@@ -2,26 +2,23 @@
 
 mutable struct  BidirectionalStream
     resCollector::ResponseCollector
-    resPartCollector::ResponseCollector
-    dispatcher::Union{Nothing,Dispatcher} #RequestTransmitter.Dispatcher
+    dispatcher::Dispatcher
     is_open::Threads.Atomic{Bool}
 end
 
-# Only for the first time to accomplish compiling
-function BidirectionalStream()
-    resCollector = ResponseCollector()
-    resPartCollector = ResponseCollector()
-    dispatcher = Dispatcher()
-    is_open = Threads.Atomic{Bool}(true)
-
-    return BidirectionalStream(resCollector, resPartCollector, dispatcher, is_open)
+mutable struct Controller
+    running::Bool
+    duration_in_seconds::Number
 end
 
-function BidirectionalStream(input_channel::Channel{grakn.protocol.Transaction_Client}, output_channel::Channel{grakn.protocol.Transaction_Server})
+function BidirectionalStream(input_channel::Channel{P.Transaction_Client},
+                             output_channel::Channel{P.Transaction_Server})
+
     res_collector = ResponseCollector(output_channel)
-    res_part_collector = ResponseCollector()
-    dispatcher = Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel)
-    return BidirectionalStream(res_collector, res_part_collector, dispatcher, Threads.Atomic{Bool}(true))
+
+    dispatcher = Dispatcher(input_channel)
+
+    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true))
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: ProtoType}
@@ -29,10 +26,48 @@ function single_request(bidirect_stream::BidirectionalStream, request::T) where 
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: ProtoType}
-    let direct = bidirect_stream.dispatcher.direct_dispatch_channel
-    task = put!(bidirect_stream.dispatcher, request, batch)
+
+    # get the channel which stores the result of the request
+    res_channel = newId_result_channel(bidirect_stream.resCollector, request)
+
+    # direct the request to the right channel direct or batched processing
+    if batch
+        Threads.@spawn put!(bidirect_stream.dispatcher.dispatch_channel, request)
+    else
+        Threads.@spawn put!(bidirect_stream.dispatcher.direct_dispatch_channel, request)
+    end
+    # start a task to collect the results asynchronusly
+    task = Threads.@spawn collect_result(res_channel)
+
+    # wait until the result is back
     result = fetch(task)
+
+    # remove the result channel from the respons collector.
+    remove_Id(bidirect_stream, request.req_id)
+
+    return result
 end
+
+"""
+function collect_result(res_channel::Channel{T}) where {T<:P.ProtoType}
+    The function will be called for each single request. She works until
+    the whole result set will be collected.
+"""
+function collect_result(res_channel::Channel{T}) where {T<:P.ProtoType}
+    answers = Vector{T}()
+    while true
+        yield()
+        if isready(res_channel)
+            tmp_result = take!(res_channel)
+            push!(answers, tmp_result)
+            if typeof(tmp_result) == P.Transaction_Res || typeof(tmp_result) == P.Transaction_Stream_ResPart
+                break
+            end
+        end
+    end
+    return answers
+end
+
 
 function close(stream::BidirectionalStream)
     @info "BidirectionalStream close function not implemented yet"

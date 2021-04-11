@@ -70,7 +70,7 @@ end
 
 function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
     try
-        #lock(session.accessLock)
+        lock(session.accessLock)
         if !session.isOpen
             throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionId)))
         end
@@ -80,7 +80,7 @@ function transaction(session::T, type::Int32, options::GraknOptions) where {T<:A
 
         return transactionRPC
     finally
-       # unlock(session.accessLock)
+       unlock(session.accessLock)
     end
 end
 

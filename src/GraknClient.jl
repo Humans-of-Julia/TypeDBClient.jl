@@ -57,9 +57,6 @@ include("common/rpc/RequestBuilder.jl")
 include("common/Label.jl")
 include("concept/Concept.jl")
 
-#concept section
-include(joinpath(@__DIR__,"concept","ConceptManagerImpl.jl"))
-
 #logic section
 include(joinpath(@__DIR__,"logic","LogicManagerImpl.jl"))
 
