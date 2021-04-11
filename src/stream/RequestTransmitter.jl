@@ -20,6 +20,11 @@ function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
     return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
 
+mutable struct Controller
+    running::Bool
+    duration_in_seconds::Number
+end
+
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
    Threads.@spawn while !isopen(in_channel)
         yield()

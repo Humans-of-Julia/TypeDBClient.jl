@@ -71,22 +71,6 @@ include("concept/thing/Relation.jl")
 #api section
 include("api/GraknOptions.jl")
 
-#common section
-include("common/exception/ErrorMessage.jl")
-include("common/exception/GraknClientException.jl")
-include("common/rpc/GraknStub.jl")
-include("common/rpc/RequestBuilder.jl")
-
-#concepts
-include("common/Label.jl")
-include("concept/Concept.jl")
-
-#logic section
-include(joinpath(@__DIR__,"logic","LogicManagerImpl.jl"))
-
-#query section
-include(joinpath(@__DIR__,"query","QueryManagerImpl.jl"))
-
 #stream section
 include("stream/RequestTransmitter.jl")
 include("stream/ResponseCollector.jl")

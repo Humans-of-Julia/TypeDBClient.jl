@@ -6,11 +6,6 @@ mutable struct  BidirectionalStream
     is_open::Threads.Atomic{Bool}
 end
 
-mutable struct Controller
-    running::Bool
-    duration_in_seconds::Number
-end
-
 function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
                              output_channel::Channel{Proto.Transaction_Server})
 

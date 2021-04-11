@@ -6,7 +6,6 @@ mutable struct CoreClient <: AbstractCoreClient
     address::String
     port::Int
     core_stub::Core_GraknStub
-    transmitter::Optional{T} where {T<:AbstractRequestTransmitter}
     databaseMgr::CoreDatabaseManager
     sessions::Dict{String, Union{<:AbstractCoreSession, Nothing}}
 end
@@ -17,13 +16,12 @@ Base.print(io::IO, core_client::CoreClient) = Base.print(io, "CoreClient($(print
 function CoreClient(address::String, port::Int)
     channel = gRPCChannel(address * ":" * string(port))
     stub = Core_GraknStub(channel)
-    transmitter = RequestTransmitter()
     databaseMgr = CoreDatabaseManager()
     sessions = Dict{String, Union{<:AbstractCoreSession, Nothing}}()
-    return CoreClient(channel,address, port, stub,transmitter,databaseMgr,sessions)
+    return CoreClient(channel,address, port, stub, databaseMgr,sessions)
 end
 
-function is_cluster(client) where {T<:AbstractCoreClient}
+function is_cluster(client::T) where {T<:AbstractCoreClient}
     return false
 end
 
