@@ -11,8 +11,8 @@ mutable struct Controller
     duration_in_seconds::Number
 end
 
-function BidirectionalStream(input_channel::Channel{P.Transaction_Client},
-                             output_channel::Channel{P.Transaction_Server})
+function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
+                             output_channel::Channel{Proto.Transaction_Server})
 
     res_collector = ResponseCollector(output_channel)
 
@@ -21,11 +21,11 @@ function BidirectionalStream(input_channel::Channel{P.Transaction_Client},
     return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true))
 end
 
-function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: ProtoType}
+function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: Proto.ProtoType}
     return single_request(bidirect_stream, request, true)
 end
 
-function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: ProtoType}
+function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
 
     # get the channel which stores the result of the request
     res_channel = newId_result_channel(bidirect_stream.resCollector, request)
@@ -49,18 +49,18 @@ function single_request(bidirect_stream::BidirectionalStream, request::T, batch:
 end
 
 """
-function collect_result(res_channel::Channel{T}) where {T<:P.ProtoType}
+function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
-function collect_result(res_channel::Channel{T}) where {T<:P.ProtoType}
+function collect_result(res_channel::Channel{T}) where {T<:Proto.ProtoType}
     answers = Vector{T}()
     while true
         yield()
         if isready(res_channel)
             tmp_result = take!(res_channel)
             push!(answers, tmp_result)
-            if typeof(tmp_result) == P.Transaction_Res || typeof(tmp_result) == P.Transaction_Stream_ResPart
+            if typeof(tmp_result) == Proto.Transaction_Res || typeof(tmp_result) == Proto.Transaction_Stream_ResPart
                 break
             end
         end

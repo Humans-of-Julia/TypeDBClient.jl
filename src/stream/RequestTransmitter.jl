@@ -4,23 +4,23 @@ const BATCH_WINDOW_SMALL_MILLIS = 1
 const BATCH_WINDOW_LARGE_MILLIS = 3
 
 mutable struct Dispatcher
-    input_channel::Channel{P.Transaction_Client}
-    direct_dispatch_channel::Channel{P.ProtoType}
-    dispatch_channel::Channel{P.ProtoType}
+    input_channel::Channel{Proto.Transaction_Client}
+    direct_dispatch_channel::Channel{Proto.ProtoType}
+    dispatch_channel::Channel{Proto.ProtoType}
     dispatch_timer::Optional{Timer}
 end
 
 
-function Dispatcher(input_channel::Channel{P.Transaction_Client})
-    direct_dispatch_channel = Channel{P.ProtoType}(10)
-    dispatch_channel = Channel{P.ProtoType}(10)
+function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
+    direct_dispatch_channel = Channel{Proto.ProtoType}(10)
+    dispatch_channel = Channel{Proto.ProtoType}(10)
     disp_timer = batch_requests(dispatch_channel,input_channel)
     process_direct_requests(direct_dispatch_channel, input_channel)
 
     return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
 
-function process_direct_requests(in_channel::Channel{P.ProtoType}, out_channel::Channel{P.Transaction_Client})
+function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
    Threads.@spawn while !isopen(in_channel)
         yield()
         if isready(in_channel)
@@ -30,7 +30,7 @@ function process_direct_requests(in_channel::Channel{P.ProtoType}, out_channel::
     end
 end
 
-function batch_requests(in_channel::Channel{P.ProtoType}, out_channel::Channel{P.Transaction_Client})
+function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
     time_to_run = BATCH_WINDOW_SMALL_MILLIS / 1000
 
     function sleeper(controller::Controller)

@@ -1,15 +1,15 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct ResponseCollector
-    collectors::Dict{Bytes,Channel{P.ProtoType}}
-    transact_result_channel::Channel{P.ProtoType}
+    collectors::Dict{Bytes,Channel{Proto.ProtoType}}
+    transact_result_channel::Channel{Proto.ProtoType}
     access_lock::ReentrantLock
 end
 
 function ResponseCollector()
-    dict = Dict{Bytes,Channel{P.ProtoType}}()
+    dict = Dict{Bytes,Channel{Proto.ProtoType}}()
     lock = ReentrantLock()
-    return ResponseCollector(dict, Channel{P.ProtoType}(), lock)
+    return ResponseCollector(dict, Channel{Proto.ProtoType}(), lock)
 end
 
 function ResponseCollector(transact_result_channel::Channel)
@@ -19,12 +19,12 @@ function ResponseCollector(transact_result_channel::Channel)
 end
 
 """
-newId_result_channel(resp_collector::ResponsCollector, request::T) where {T<:P.ProtoType}
+newId_result_channel(resp_collector::ResponsCollector, request::T) where {T<:Proto.ProtoType}
     Function is meant to give back the result_channel in which the results for one request
     will be collected.
     Attention! Don't put a new Id manually on the ResponsCollector. It wouldn't be thread safe
 """
-function newId_result_channel(resp_collector::ResponseCollector, request::T) where {T<:P.ProtoType}
+function newId_result_channel(resp_collector::ResponseCollector, request::T) where {T<:Proto.ProtoType}
     res_channel = Channel{T}(10)
     id = request.req_id
     try
@@ -60,7 +60,7 @@ function response_worker(response_collector::ResponseCollector)
     while isopen(resp_chan)
         if isready(resp_chan)
             result_srv = take!(resp_chan)
-            which_result = P.which_oneof(result_srv, :server)
+            which_result = Proto.which_oneof(result_srv, :server)
             tmp_result = getproperty(result_srv, which_result)
             id = tmp_result.req_id
             haskey()

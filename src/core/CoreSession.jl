@@ -20,7 +20,9 @@ Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "
 function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions = GraknOptions()) where {T<:AbstractCoreClient}
     # try
         options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS
-        open_req = session_open_req(database, type , copy_to_proto(options, grakn.protocol.Options))
+        open_req = SessionRequestBuilde.open_req(
+            database, type , copy_to_proto(options, grakn.protocol.Options)
+        )
         startTime = now()
         res, tes = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
         if res === nothing

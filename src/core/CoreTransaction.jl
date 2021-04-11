@@ -16,10 +16,10 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     #try
         type = type
         options = options
-        conceptMgr = ConceptManagerImpl()
+        conceptMgr = ConceptManager()
         logicMgr = LogicManagerImpl()
         queryMgr = QueryManagerImpl()
-        input_channel = Channel{grakn.protocol.Transaction_Client}(10)
+        input_channel = Channel{Proto.Transaction_Client}(10)
 
         req_result, status = transaction(session.client.core_stub.blockingStub, gRPCController(), input_channel)
         output_channel = grpc_result_or_error(req_result, status, result->true)
@@ -36,19 +36,19 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     # end
 end
 
-function transaction_execute(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
+function transaction_execute(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
         return transaction_query(transaction, request, batch)
 end
 
-function transaction_execute(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
+function transaction_execute(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
     return transaction_query(transaction, request, true)
 end
 
-function transaction_query(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
+function transaction_query(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
         return transaction_query(transaction, request, true);
 end
 
-function transaction_query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:grakn.protocol.ProtoType}
+function transaction_query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
         !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED))
 
         result = single_request(transaction.bidirectional_stream, request, batch)

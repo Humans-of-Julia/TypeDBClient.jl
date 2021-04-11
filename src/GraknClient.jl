@@ -11,9 +11,15 @@ Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
 =#
 module GraknClient
 
-using gRPCClient, Sockets, UUIDs, Dates
+using Dates
 using DataStructures
+using gRPCClient
+using Pretend: Pretend, @mockable
+using Sockets
+using UUIDs: UUID, uuid4
 
+# TODO no need to import these; best practrice is to prefix module name
+#  when you extend the function
 import Base: show, close, ==
 
 ###### abstract types ##################
@@ -28,7 +34,6 @@ abstract type AbstractCoreClient <: AbstracClient end
 
 abstract type AbstractCoreSession end
 abstract type AbstractCoreTransaction end
-abstract type AbstractRequestTransmitter end
 abstract type AbstractLogicManager end
 abstract type AbstractQueryManager end
 
@@ -42,10 +47,29 @@ include("generated/core_service_pb.jl")
 
 #standard julia sources
 include("standard/type_aliases.jl")
-include("standard/utility_functions.jl")
+include("standard/utils.jl")
+
+#common section
+include("common/Label.jl")
+include("common/exception/ErrorMessage.jl")
+include("common/exception/GraknClientException.jl")
+include("common/rpc/GraknStub.jl")
+include("common/rpc/RequestBuilder.jl")
+
+#concepts
+include("concept/Concept.jl")
+
+include("concept/type/Type.jl")
+include("concept/type/RoleType.jl")
+include("concept/type/ThingType.jl")
+include("concept/type/AttributeType.jl")
+include("concept/type/EntityType.jl")
+include("concept/type/RelationType.jl")
+
+include("concept/thing/Relation.jl")
 
 #api section
-include(joinpath(@__DIR__,"api","GraknOptions.jl"))
+include("api/GraknOptions.jl")
 
 #common section
 include("common/exception/ErrorMessage.jl")
