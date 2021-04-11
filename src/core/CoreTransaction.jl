@@ -13,7 +13,7 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     try
         type = type
         options = options
-        conceptMgr = ConceptManagerImpl()
+        conceptMgr = ConceptManager()
         logicMgr = LogicManagerImpl()
         queryMgr = QueryManagerImpl()
         bidirectionalStream = BidirectionalStream(session.core_stub, session_transmitter(session))
@@ -21,6 +21,12 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     catch ex
         throw(GraknClientException("Error while building transaction", ex))
     end
+end
+
+# Making this function mockable allow us to test client functions without
+# having to run a server.
+@mockable function execute(x::Proto.Transaction_Req)
+    @info "Executing transaction request"
 end
 
 #
