@@ -1,12 +1,16 @@
 function grpc_result_or_error(result::T,
     status::Task,
-    f::Function) where {T<:Union{<:ProtoType,<:Channel{<:ProtoType},<:Nothing}}
-    intern_status = fetch(status)
-    ok = intern_status.success
+    f::Function) where {T<:Union{<:Proto.ProtoType,<:Channel{<:Proto.ProtoType},<:Nothing}}
+    if istaskdone(status)
+        intern_status = fetch(status)
+        ok = intern_status.success
+    else
+        ok = true
+    end
     if ok == true && result !== nothing
         return f(result)
     elseif ok === false
-        throw(GraknClientException(intern_Status.message, gRPCException(intern_status.message)))
+        throw(GraknClientException(intern_status.message, gRPCException(intern_status.message)))
     else
         throw(GraknClientException("something went wrong in gRPC", gRPCException("Error not defined by gRPC")))
     end

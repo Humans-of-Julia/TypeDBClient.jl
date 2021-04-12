@@ -4,9 +4,6 @@ struct CoreTransaction <: AbstractCoreTransaction
     type::Union{Nothing,Int32}
     options::Union{Nothing,GraknOptions}
     bidirectional_stream::BidirectionalStream
-    conceptMgr::Union{Nothing,T} where {T<:AbstractConceptManager}
-    logicMgr::Union{Nothing,T} where {T<:AbstractLogicManager}
-    queryMgr::Union{Nothing,T} where {T<:AbstractQueryManager}
     transaction_id::Union{Nothing,UUID}
     session_id::Array{UInt8,1}
 end
@@ -16,19 +13,17 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     #try
         type = type
         options = options
-        conceptMgr = ConceptManager()
-        logicMgr = LogicManagerImpl()
-        queryMgr = QueryManagerImpl()
         input_channel = Channel{Proto.Transaction_Client}(10)
+        proto_options = copy_to_proto(options, Proto.Options)
 
         req_result, status = transaction(session.client.core_stub.blockingStub, gRPCController(), input_channel)
-        output_channel = grpc_result_or_error(req_result, status, result->true)
+        output_channel = grpc_result_or_error(req_result, status, result->result)
 
         bidirectionalStream = BidirectionalStream(input_channel, output_channel)
         trans_id = uuid4()
-
-        result = CoreTransaction(type, options, bidirectionalStream, conceptMgr, logicMgr, queryMgr, trans_id, sessionId)
-   #     open_res, req_task = transaction_execute(result, transaction_open_req(sessionId, type, options, session.networkLatencyMillis), false)
+        result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId)
+        open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
+        open_res = execute(result, open_req, false)
 
         return result
     # catch ex
@@ -36,19 +31,19 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     # end
 end
 
-function transaction_execute(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
-        return transaction_query(transaction, request, batch)
+function execute(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
+        return query(transaction, request, batch)
 end
 
-function transaction_execute(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
-    return transaction_query(transaction, request, true)
+function execute(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
+    return query(transaction, request, true)
 end
 
-function transaction_query(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
-        return transaction_query(transaction, request, true);
+function query(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
+        return query(transaction, request, true);
 end
 
-function transaction_query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
+function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
         !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED))
 
         result = single_request(transaction.bidirectional_stream, request, batch)
@@ -56,7 +51,7 @@ function transaction_query(transaction::T, request::R, batch::Bool) where {T<:Ab
 end
 
 function is_open(transaction::T)::Bool where {T<:AbstractCoreTransaction}
-    return transaction.bidirectional_stream.is_open
+    return transaction.bidirectional_stream.is_open.value
 end
 
 function close(transaction::T)::Bool where {T<:AbstractCoreTransaction}

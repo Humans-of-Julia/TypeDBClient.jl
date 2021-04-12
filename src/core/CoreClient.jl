@@ -25,10 +25,6 @@ function is_cluster(client::T) where {T<:AbstractCoreClient}
     return false
 end
 
-function transmitter(client::T) where {T<:AbstractCoreClient}
-    client.transmitter
-end
-
 function remove_session(client::T, session::R) where {T<:AbstractCoreClient, R<:AbstractCoreSession}
     delete!(client.sessions, session.sessionID)
 end

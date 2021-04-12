@@ -2,19 +2,15 @@
 
 mutable struct ResponseCollector
     collectors::Dict{Bytes,Channel{Proto.ProtoType}}
-    transact_result_channel::Channel{Proto.ProtoType}
+    transact_result_channel::Channel{Proto.Transaction_Server}
     access_lock::ReentrantLock
 end
 
-function ResponseCollector()
-    dict = Dict{Bytes,Channel{Proto.ProtoType}}()
-    lock = ReentrantLock()
-    return ResponseCollector(dict, Channel{Proto.ProtoType}(), lock)
-end
 
 function ResponseCollector(transact_result_channel::Channel)
-    resp_col = ResponseCollector()
-    resp_col.transact_result_channel = transact_result_channel
+    collectors = Dict{Bytes,Channel{Proto.ProtoType}}()
+    access_lock = ReentrantLock()
+    resp_col = ResponseCollector(collectors, transact_result_channel, access_lock)
     return resp_col
 end
 
@@ -63,7 +59,13 @@ function response_worker(response_collector::ResponseCollector)
             which_result = Proto.which_oneof(result_srv, :server)
             tmp_result = getproperty(result_srv, which_result)
             id = tmp_result.req_id
-            haskey()
+
+            if haskey(response_collector.collectors, id)
+                Threads.@spawn put!(response_collector[id], tmp_result)
+            else
+                throw(GraknClientException(CLIENT_UNKNOWN_REQUEST_ID, id, "function response_worker"))
+            end
+
         end
     end
 end

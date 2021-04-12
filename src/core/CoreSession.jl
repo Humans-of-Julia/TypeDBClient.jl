@@ -5,8 +5,8 @@ const PULSE_INTERVAL_MILLIS = 5000
 mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
-    sessionID::Array{UInt8,1}
-    transactions::Dict{Array{Int8,1},T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
+    sessionID::Bytes
+    transactions::Dict{UUID,T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
     type::Int
     accessLock::ReentrantLock
     options::GraknOptions
@@ -20,25 +20,25 @@ Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "
 function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions = GraknOptions()) where {T<:AbstractCoreClient}
     # try
         options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS
-        open_req = SessionRequestBuilde.open_req(
+        open_req = SessionRequestBuilder.open_req(
             database, type , copy_to_proto(options, grakn.protocol.Options)
         )
         startTime = now()
-        res, tes = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
-        if res === nothing
-            throw("no session returned")
-        end
+        req_result, status  = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
+        res_id = grpc_result_or_error(req_result, status, result->result.session_id)
         endTime = now()
 
         database = CoreDatabase(database)
         networkLatencyMillis = (endTime - startTime).value
-        session_id = res.session_id
-        transactions = Dict{Array{Int8,1},Union{Nothing,<:AbstractCoreTransaction}}()
+        session_id =  res_id
+        transactions = Dict{UUID,AbstractCoreTransaction}()
         is_open = true
 
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis)
 
-        Threads.@spawn start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
+        @async begin
+            start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
+        end
 
         return result
     # catch ex
@@ -55,15 +55,11 @@ function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSessi
 end
 
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
-    pulsreq = session_pulse_req(session.sessionID)
+    pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
     result, tes = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
     if result.alive === false
         session.isOpen = false
     end
-end
-
-function transmitter(session::T) where {T<:AbstractCoreSession}
-    transmitter(session.client)
 end
 
 function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
@@ -71,19 +67,19 @@ function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
 end
 
 function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
-    try
-        lock(session.accessLock)
+    # try
+    #     lock(session.accessLock)
         if !session.isOpen
-            throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionId)))
+            throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionID)))
         end
 
         transactionRPC = CoreTransaction(session, session.sessionID, type, options)
         session.transactions[transactionRPC.transaction_id] = transactionRPC
 
         return transactionRPC
-    finally
-       unlock(session.accessLock)
-    end
+    # finally
+    #    unlock(session.accessLock)
+    # end
 end
 
 function close(session::T) where {T<:AbstractCoreSession}
