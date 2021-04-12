@@ -205,7 +205,7 @@ function meta(::Type{Transaction_ResPart})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Transaction_ResPart)
             __meta_Transaction_ResPart[] = target = ProtoMeta(Transaction_ResPart)
-            allflds = Pair{Symbol,Union{Type,String}}[:req_id => AbstractString, :stream_res_part => Transaction_Stream_ResPart, :query_manager_res_part => QueryManager_ResPart, :logic_manager_res_part => LogicManager_ResPart, :type_res_part => Type_ResPart, :thing_res_part => Thing_ResPart]
+            allflds = Pair{Symbol,Union{Type,String}}[:req_id => Array{UInt8,1}, :stream_res_part => Transaction_Stream_ResPart, :query_manager_res_part => QueryManager_ResPart, :logic_manager_res_part => LogicManager_ResPart, :type_res_part => Type_ResPart, :thing_res_part => Thing_ResPart]
             oneofs = Int[0,1,1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
             meta(target, Transaction_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
@@ -215,7 +215,7 @@ function meta(::Type{Transaction_ResPart})
 end
 function Base.getproperty(obj::Transaction_ResPart, name::Symbol)
     if name === :req_id
-        return (obj.__protobuf_jl_internal_values[name])::AbstractString
+        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
     elseif name === :stream_res_part
         return (obj.__protobuf_jl_internal_values[name])::Transaction_Stream_ResPart
     elseif name === :query_manager_res_part
@@ -443,7 +443,7 @@ function meta(::Type{Transaction_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Transaction_Req)
             __meta_Transaction_Req[] = target = ProtoMeta(Transaction_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[:req_id => AbstractString, :metadata => Base.Dict{AbstractString,AbstractString}, :open_req => Transaction_Open_Req, :stream_req => Transaction_Stream_Req, :commit_req => Transaction_Commit_Req, :rollback_req => Transaction_Rollback_Req, :query_manager_req => QueryManager_Req, :concept_manager_req => ConceptManager_Req, :logic_manager_req => LogicManager_Req, :rule_req => Rule_Req, :type_req => Type_Req, :thing_req => Thing_Req]
+            allflds = Pair{Symbol,Union{Type,String}}[:req_id => Array{UInt8,1}, :metadata => Base.Dict{AbstractString,AbstractString}, :open_req => Transaction_Open_Req, :stream_req => Transaction_Stream_Req, :commit_req => Transaction_Commit_Req, :rollback_req => Transaction_Rollback_Req, :query_manager_req => QueryManager_Req, :concept_manager_req => ConceptManager_Req, :logic_manager_req => LogicManager_Req, :rule_req => Rule_Req, :type_req => Type_Req, :thing_req => Thing_Req]
             oneofs = Int[0,0,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("req")]
             meta(target, Transaction_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
@@ -453,7 +453,7 @@ function meta(::Type{Transaction_Req})
 end
 function Base.getproperty(obj::Transaction_Req, name::Symbol)
     if name === :req_id
-        return (obj.__protobuf_jl_internal_values[name])::AbstractString
+        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
     elseif name === :metadata
         return (obj.__protobuf_jl_internal_values[name])::Base.Dict{AbstractString,AbstractString}
     elseif name === :open_req
@@ -571,7 +571,7 @@ function meta(::Type{Transaction_Res})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Transaction_Res)
             __meta_Transaction_Res[] = target = ProtoMeta(Transaction_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:req_id => AbstractString, :open_res => Transaction_Open_Res, :commit_res => Transaction_Commit_Res, :rollback_res => Transaction_Rollback_Res, :query_manager_res => QueryManager_Res, :concept_manager_res => ConceptManager_Res, :logic_manager_res => LogicManager_Res, :rule_res => Rule_Res, :type_res => Type_Res, :thing_res => Thing_Res]
+            allflds = Pair{Symbol,Union{Type,String}}[:req_id => Array{UInt8,1}, :open_res => Transaction_Open_Res, :commit_res => Transaction_Commit_Res, :rollback_res => Transaction_Rollback_Res, :query_manager_res => QueryManager_Res, :concept_manager_res => ConceptManager_Res, :logic_manager_res => LogicManager_Res, :rule_res => Rule_Res, :type_res => Type_Res, :thing_res => Thing_Res]
             oneofs = Int[0,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
             meta(target, Transaction_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
@@ -581,7 +581,7 @@ function meta(::Type{Transaction_Res})
 end
 function Base.getproperty(obj::Transaction_Res, name::Symbol)
     if name === :req_id
-        return (obj.__protobuf_jl_internal_values[name])::AbstractString
+        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
     elseif name === :open_res
         return (obj.__protobuf_jl_internal_values[name])::Transaction_Open_Res
     elseif name === :commit_res
