@@ -84,7 +84,7 @@ end
 
 function close(session::T) where {T<:AbstractCoreSession}
     try
-        lock(accessLock)
+        lock(session.accessLock)
         if session.isOpen
             for trans in session.transactions
                 close(trans)
@@ -102,7 +102,7 @@ function close(session::T) where {T<:AbstractCoreSession}
     catch  ex
         throw(GraknClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
     finally
-        unlock(accessLock)
+        unlock(session.accessLock)
     end
 end
 
