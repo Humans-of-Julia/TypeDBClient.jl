@@ -778,4 +778,124 @@ function Base.getproperty(obj::LogicManager_ResPart, name::Symbol)
     end
 end
 
-export LogicManager_Req, LogicManager_Res, LogicManager_ResPart, LogicManager_GetRule_Req, LogicManager_GetRule_Res, LogicManager_GetRule, LogicManager_PutRule_Req, LogicManager_PutRule_Res, LogicManager_PutRule, LogicManager_GetRules_Req, LogicManager_GetRules_ResPart, LogicManager_GetRules, LogicManager, Rule_Req, Rule_Res, Rule_Delete_Req, Rule_Delete_Res, Rule_Delete, Rule_SetLabel_Req, Rule_SetLabel_Res, Rule_SetLabel, Rule
+mutable struct Explanation_VarList <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Explanation_VarList(; kwargs...)
+        obj = new(meta(Explanation_VarList), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Explanation_VarList
+const __meta_Explanation_VarList = Ref{ProtoMeta}()
+function meta(::Type{Explanation_VarList})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Explanation_VarList)
+            __meta_Explanation_VarList[] = target = ProtoMeta(Explanation_VarList)
+            allflds = Pair{Symbol,Union{Type,String}}[:vars => Base.Vector{AbstractString}]
+            meta(target, Explanation_VarList, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Explanation_VarList[]
+    end
+end
+function Base.getproperty(obj::Explanation_VarList, name::Symbol)
+    if name === :vars
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{AbstractString}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Explanation_VarMappingEntry <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Explanation_VarMappingEntry(; kwargs...)
+        obj = new(meta(Explanation_VarMappingEntry), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Explanation_VarMappingEntry (mapentry)
+const __meta_Explanation_VarMappingEntry = Ref{ProtoMeta}()
+function meta(::Type{Explanation_VarMappingEntry})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Explanation_VarMappingEntry)
+            __meta_Explanation_VarMappingEntry[] = target = ProtoMeta(Explanation_VarMappingEntry)
+            allflds = Pair{Symbol,Union{Type,String}}[:key => AbstractString, :value => Explanation_VarList]
+            meta(target, Explanation_VarMappingEntry, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Explanation_VarMappingEntry[]
+    end
+end
+function Base.getproperty(obj::Explanation_VarMappingEntry, name::Symbol)
+    if name === :key
+        return (obj.__protobuf_jl_internal_values[name])::AbstractString
+    elseif name === :value
+        return (obj.__protobuf_jl_internal_values[name])::Explanation_VarList
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct Explanation <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Explanation(; kwargs...)
+        obj = new(meta(Explanation), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Explanation
+const __meta_Explanation = Ref{ProtoMeta}()
+function meta(::Type{Explanation})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Explanation)
+            __meta_Explanation[] = target = ProtoMeta(Explanation)
+            allflds = Pair{Symbol,Union{Type,String}}[:rule => Rule, :var_mapping => Base.Dict{AbstractString,Explanation_VarList}, :condition => ConceptMap, :conclusion => ConceptMap]
+            meta(target, Explanation, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Explanation[]
+    end
+end
+function Base.getproperty(obj::Explanation, name::Symbol)
+    if name === :rule
+        return (obj.__protobuf_jl_internal_values[name])::Rule
+    elseif name === :var_mapping
+        return (obj.__protobuf_jl_internal_values[name])::Base.Dict{AbstractString,Explanation_VarList}
+    elseif name === :condition
+        return (obj.__protobuf_jl_internal_values[name])::ConceptMap
+    elseif name === :conclusion
+        return (obj.__protobuf_jl_internal_values[name])::ConceptMap
+    else
+        getfield(obj, name)
+    end
+end
+
+export LogicManager_Req, LogicManager_Res, LogicManager_ResPart, LogicManager_GetRule_Req, LogicManager_GetRule_Res, LogicManager_GetRule, LogicManager_PutRule_Req, LogicManager_PutRule_Res, LogicManager_PutRule, LogicManager_GetRules_Req, LogicManager_GetRules_ResPart, LogicManager_GetRules, LogicManager, Rule_Req, Rule_Res, Rule_Delete_Req, Rule_Delete_Res, Rule_Delete, Rule_SetLabel_Req, Rule_SetLabel_Res, Rule_SetLabel, Rule, Explanation_VarMappingEntry, Explanation_VarList, Explanation
+# mapentries: "Explanation_VarMappingEntry" => ("AbstractString", "Explanation_VarList")

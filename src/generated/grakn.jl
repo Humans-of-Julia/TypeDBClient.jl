@@ -10,5 +10,5 @@ module grakn
     include("logic_pb.jl")
     include("query_pb.jl")
     include("transaction_pb.jl")
-end
+  end
 end
