@@ -12,6 +12,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     options::GraknOptions
     isOpen::Bool
     networkLatencyMillis::Int
+    timer::Optional{Timer}
 end
 
 Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, session)
@@ -34,11 +35,15 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         transactions = Dict{UUID,AbstractCoreTransaction}()
         is_open = true
 
-        result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis)
+        result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, nothing)
 
-        @async begin
-            start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
-        end
+        cb(timer) = (make_pulse_request(result))
+        delay = (PULSE_INTERVAL_MILLIS / 1000) - 1
+        t = Timer(cb,delay, interval= delay)
+
+        @info "Time: $(Dates.now())"
+
+        result.timer = t
 
         return result
     # catch ex
@@ -47,18 +52,26 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 end
 
 function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}
-    while session.isOpen
-        make_pulse_request(session)
-        sleep(pulse_time - 1)
+    Threads.@spawn begin
+        while session.isOpen
+            yield()
+            make_pulse_request(session)
+            sleep(pulse_time - 1)
+        end
+        @info "$session is closed"
     end
-    @info "$session is closed"
 end
 
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
     pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
-    result, tes = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+    req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+    result = grpc_result_or_error(req_result,status, result->result)
+
+    @info "Time: $(Dates.now())"
     if result.alive === false
         session.isOpen = false
+        close(session.timer)
+        @info "$session is closed"
     end
 end
 
@@ -93,7 +106,7 @@ function close(session::T) where {T<:AbstractCoreSession}
             remove_session(session.client, session)
             session.isOpen = false
 
-            req_result, status == session_close(session.core_stub.blockingStub, gRPCController(), close_req(session.sessionID))
+            req_result, status == session_close(session.core_stub.blockingStub, gRPCController(), SessionRequestBuilder.close_req close_req(session.sessionID))
 
             # A reaction to the result is not necessary because if the session isn't there
             # the grpc_result_or_error function will throw an error
