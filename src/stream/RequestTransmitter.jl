@@ -26,21 +26,8 @@ mutable struct Controller
 end
 
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
-    # debug_while = 0
-    # Threads.@spawn while !isopen(in_channel)
-    #     if debug_while == 0
-    #        @info "process direct request in while "
-    #        debug_while += 1
-    #     end
-    #     yield()
-    #     if isready(in_channel)
-    #         @info "process direct request in"
-    #         trans_client = TransactionRequestBuilder.client_msg([take!(in_channel)])
-    #         put!(out_channel, trans_client)
-    #     end
-    # end
     @info "First in process_direct_requests"
-    Threads.@spawn begin
+    @async begin
         @info "Enter the Thread process_direct_requests"
         while isopen(in_channel)
             yield()
@@ -49,7 +36,6 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
                     tmp_res = take!(in_channel)
                     client_res = TransactionRequestBuilder.client_msg([tmp_res])
                     Threads.@spawn put!(out_channel,client_res)
-                    @info "Dispatched one request package"
                 end
             catch ex
                 @info "process_direct_requests shows an error"
@@ -73,14 +59,18 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
     end
 
     function runner(controller)
-        Threads.@spawn sleeper(controller)
-        answers = []
-        while controller.running
-            yield()
-            isready(in_channel) && push!(answers, take!(in_channel))
-        end
-        if length(answers) > 0
-            Threads.@spawn put!(out_channel, transaction_client_msg(answers))
+        Threads.@spawn begin
+            sleeper(controller)
+            answers = []
+            while controller.running
+                yield()
+                if isready(in_channel)
+                    push!(answers, take!(in_channel))
+                end
+            end
+            if length(answers) > 0
+                Threads.@spawn put!(out_channel, TransactionRequestBuilder.client_msg(answers))
+            end
         end
     end
 

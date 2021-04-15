@@ -12,7 +12,7 @@ function ResponseCollector(transact_result_channel::Channel{Proto.Transaction_Se
     collectors = Dict{Bytes,Channel{Proto.ProtoType}}()
     access_lock = ReentrantLock()
     resp_col = ResponseCollector(collectors, transact_result_channel, access_lock)
-    response_worker(resp_col)
+    res_task = @async response_worker(resp_col)
     return resp_col
 end
 
@@ -55,22 +55,17 @@ end
 
 function response_worker(response_collector::ResponseCollector)
     resp_chan = response_collector.transact_result_channel
-    @async begin
-        while isopen(resp_chan)
-            yield()
-            try
-                sleep(0.1)
-                @info "response_worker works"
-                if isready(resp_chan)
-                    req_result = take!(resp_chan)
-                    @info "result taken"
-                end
-            catch ex
-                @info "response_worker shows an error"
-            finally
+    @info "response worker in"
+    while isopen(resp_chan)
+        yield()
+        try
+            if isready(resp_chan)
+                req_result = take!(resp_chan)
             end
+        catch ex
+            @info "response_worker shows an error"
+        finally
         end
-        @info "quit response_worker for transaction"
     end
 end
 
