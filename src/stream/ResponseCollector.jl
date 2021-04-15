@@ -7,10 +7,12 @@ mutable struct ResponseCollector
 end
 
 
-function ResponseCollector(transact_result_channel::Channel)
+function ResponseCollector(transact_result_channel::Channel{Proto.Transaction_Server})
+    @info "ResponseCollector aktiviert"
     collectors = Dict{Bytes,Channel{Proto.ProtoType}}()
     access_lock = ReentrantLock()
     resp_col = ResponseCollector(collectors, transact_result_channel, access_lock)
+    response_worker(resp_col)
     return resp_col
 end
 
@@ -20,15 +22,15 @@ newId_result_channel(resp_collector::ResponsCollector, request::T) where {T<:Pro
     will be collected.
     Attention! Don't put a new Id manually on the ResponsCollector. It wouldn't be thread safe
 """
-function newId_result_channel(resp_collector::ResponseCollector, request::T) where {T<:Proto.ProtoType}
-    res_channel = Channel{T}(10)
+function newId_result_channel(resp_collector::ResponseCollector, request::Proto.ProtoType)
+    res_channel = Channel{Transaction_Res_All}(10)
     id = request.req_id
     try
-        lock(resp_collector.acces_lock)
+        lock(resp_collector.access_lock)
         resp_collector.collectors[id] = res_channel
     catch
     finally
-        unlock(resp_collector.acces_lock)
+        unlock(resp_collector.access_lock)
     end
     return res_channel
 end
@@ -53,22 +55,65 @@ end
 
 function response_worker(response_collector::ResponseCollector)
     resp_chan = response_collector.transact_result_channel
-    while isopen(resp_chan)
-        if isready(resp_chan)
-            result_srv = take!(resp_chan)
-            which_result = Proto.which_oneof(result_srv, :server)
-            tmp_result = getproperty(result_srv, which_result)
-            id = tmp_result.req_id
-
-            if haskey(response_collector.collectors, id)
-                Threads.@spawn put!(response_collector[id], tmp_result)
-            else
-                throw(GraknClientException(CLIENT_UNKNOWN_REQUEST_ID, id, "function response_worker"))
+    @async begin
+        while isopen(resp_chan)
+            yield()
+            try
+                sleep(0.1)
+                @info "response_worker works"
+                if isready(resp_chan)
+                    req_result = take!(resp_chan)
+                    @info "result taken"
+                end
+            catch ex
+                @info "response_worker shows an error"
+            finally
             end
-
         end
+        @info "quit response_worker for transaction"
     end
 end
+
+function close(res_collector::ResponseCollector)
+    #close the resul channels which are open
+    close.(values(res_collector.collectors))
+end
+
+
+
+# function response_worker(response_collector::ResponseCollector)
+#     resp_chan = response_collector.transact_result_channel
+#     debug_int = 0
+#     debug_while = 0
+#     Threads.@spawn while isopen(resp_chan)
+#         try
+#             yield()
+#             if debug_int == 0
+#                 @info "First going response worker"
+#                 debug_int += 1
+#             end
+#             if isready(resp_chan)
+#                 if debug_while == 0
+#                     @info "First going inside while repsons worker"
+#                     debug_while += 1
+#                 end
+#                 result_srv = take!(resp_chan)
+#                 which_result = Proto.which_oneof(result_srv, :server)
+#                 tmp_result = getproperty(result_srv, which_result)
+#                 id = tmp_result.req_id
+
+#                 if haskey(response_collector.collectors, id)
+#                     Threads.@spawn put!(response_collector[id], tmp_result)
+#                 else
+#                     throw(GraknClientException(CLIENT_UNKNOWN_REQUEST_ID, id, "function response_worker"))
+#                 end
+#             end
+#         catch
+#             @info "Fehler in process worker"
+#             throw(ArgumentError("Fehler in procss worker"))
+#         end
+#     end
+# end
 
 #
 # package grakn.client.stream;

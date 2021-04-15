@@ -97,7 +97,7 @@ export contains_database
 
 Base.show(io::IO, blocking_stub::GraknCoreBlockingStub) = Base.print(io,blocking_stub)
 function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
-    Base.print(io, "GraknCoreBlockingStub(open: $(!blocking_stub.impl.channel.session.closed))")
+    print(io, "GraknCoreBlockingStub($(blocking_stub.impl.channel))")
     return nothing
 end
 
@@ -118,7 +118,7 @@ function Base.print(io::IO, item::T) where {T<:ProtoType}
         end
     end
     out_string = string(nameof(typeof(item))) * " ($str_item)"
-    Base.print(io, out_string)
+    print(io, out_string)
 
     return nothing
 end

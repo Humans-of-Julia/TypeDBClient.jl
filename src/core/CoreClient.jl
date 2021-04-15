@@ -10,8 +10,8 @@ mutable struct CoreClient <: AbstractCoreClient
     sessions::Dict{String, Union{<:AbstractCoreSession, Nothing}}
 end
 
-Base.show(io::IO, core_client::CoreClient) = Base.print(io,core_client)
-Base.print(io::IO, core_client::CoreClient) = Base.print(io, "CoreClient($(print(core_client.channel))")
+Base.show(io::IO, core_client::CoreClient) = print(io,core_client)
+Base.print(io::IO, core_client::CoreClient) = print(io, "CoreClient(address: $(core_client.address):$(core_client.port))")
 
 function CoreClient(address::String, port::Int)
     channel = gRPCChannel(address * ":" * string(port))

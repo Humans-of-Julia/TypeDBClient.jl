@@ -38,8 +38,8 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, nothing)
 
         cb(timer) = (make_pulse_request(result))
-        delay = (PULSE_INTERVAL_MILLIS / 1000) - 1
-        t = Timer(cb,delay, interval= delay)
+        delay = (PULSE_INTERVAL_MILLIS / 1000) - 2
+        t = Timer(cb,delay - 1, interval= delay)
 
         @info "Time: $(Dates.now())"
 
@@ -51,27 +51,22 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
     # end
 end
 
-function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}
-    Threads.@spawn begin
-        while session.isOpen
-            yield()
-            make_pulse_request(session)
-            sleep(pulse_time - 1)
-        end
-        @info "$session is closed"
-    end
-end
 
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
-    pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
-    req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
-    result = grpc_result_or_error(req_result,status, result->result)
+    try
+        pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
+        req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+        result = grpc_result_or_error(req_result,status, result->result)
 
-    @info "Time: $(Dates.now())"
-    if result.alive === false
-        session.isOpen = false
-        close(session.timer)
-        @info "$session is closed"
+        @info "Time: $(Dates.now())"
+        if result.alive === false
+            session.isOpen = false
+            close(session.timer)
+            @info "$session is closed"
+        end
+    catch ex
+        @info "make_pulse_request show's an error"
+    finally
     end
 end
 
@@ -99,21 +94,22 @@ function close(session::T) where {T<:AbstractCoreSession}
     try
         lock(session.accessLock)
         if session.isOpen
-            for trans in session.transactions
+            for (uuid,trans) in session.transactions
                 close(trans)
-                delete!(session.tranactions, trans.transaction_id)
+                delete!(session.transactions, trans.transaction_id)
             end
             remove_session(session.client, session)
+            close(session.timer)
+
+            req = SessionRequestBuilder.close_req(session.sessionID)
+            stub = session.client.core_stub.blockingStub
+            session_close(stub, gRPCController(), req )
+
             session.isOpen = false
-
-            req_result, status == session_close(session.core_stub.blockingStub, gRPCController(), SessionRequestBuilder.close_req close_req(session.sessionID))
-
-            # A reaction to the result is not necessary because if the session isn't there
-            # the grpc_result_or_error function will throw an error
-            grpc_result_or_error(req_result, status, result->result.contains)
         end
     catch  ex
         throw(GraknClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
+        @info ex
     finally
         unlock(session.accessLock)
     end

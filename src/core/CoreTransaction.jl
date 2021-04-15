@@ -8,6 +8,12 @@ struct CoreTransaction <: AbstractCoreTransaction
     session_id::Array{UInt8,1}
 end
 
+Base.show(io::IO, transaction::AbstractCoreTransaction) = Base.print(io, transaction)
+function Base.print(io::IO, transaction::AbstractCoreTransaction)
+    res_string = "Transaction $(transaction.transaction_id) with session_id: $(transaction.session_id)"
+    print(io, res_string)
+end
+
 
 function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int32, options::GraknOptions)
     #try
@@ -23,6 +29,7 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
         trans_id = uuid4()
         result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId)
         open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
+        open_req.req_id = bytes(uuid4())
         open_res = execute(result, open_req, false)
 
         return result
@@ -45,7 +52,6 @@ end
 
 function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
         !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED))
-
         result = single_request(transaction.bidirectional_stream, request, batch)
         return result
 end

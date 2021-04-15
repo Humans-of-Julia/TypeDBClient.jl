@@ -2,7 +2,7 @@
 
 mutable struct GraknClientException <: Exception
     error_message::T where {T<:Union{<:AbstractGeneralError,<:Nothing}}
-    params::Tuple
+    params::Optional{Tuple}
     individual_message::Union{Nothing, String}
     cause::R where {R<:Union{Nothing, Exception}}
 end
@@ -10,17 +10,21 @@ end
 Base.show(io::IO, grakn_excption::GraknClientException) = Base.print(io,grakn_excption)
 function Base.print(io::IO, grakn_excption::GraknClientException)
     err_message = string(grakn_excption.error_message)
-    if !isempty(grakn_excption.params)
-        replace_item = "_error_item"
-        err_message = replace(err_message, replace_item=>string(grakn_excption.params[1]))
+    joined_params = ""
+    if grakn_excption.params !== nothing
+        if !isempty(grakn_excption.params)
+            replace_item = "_error_item"
+            err_message = replace(err_message, replace_item=>string(grakn_excption.params[1]))
+            joined_params = join(grakn_excption.params, "\n")
+        end
     end
     str = "GraknClientException:
         message: $(err_message)
-        params: $(join(grakn_excption.params, "\n"))
+        params: $(joined_params)
         remark: $(grakn_excption.individual_message)
         cause: $(Base.show(grakn_excption.cause))"
 
-    Base.print(io,str)
+    print(io,str)
     return nothing
 end
 

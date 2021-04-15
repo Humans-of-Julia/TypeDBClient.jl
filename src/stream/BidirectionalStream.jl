@@ -4,6 +4,8 @@ mutable struct  BidirectionalStream
     resCollector::ResponseCollector
     dispatcher::Dispatcher
     is_open::Threads.Atomic{Bool}
+    input_channel::Channel{Proto.Transaction_Client}
+    output_channel::Channel{Proto.Transaction_Server}
 end
 
 function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
@@ -13,7 +15,7 @@ function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
 
     dispatcher = Dispatcher(input_channel)
 
-    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true))
+    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel)
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: Proto.ProtoType}
@@ -21,24 +23,31 @@ function single_request(bidirect_stream::BidirectionalStream, request::T) where 
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
-
-    # get the channel which stores the result of the request
-    res_channel = newId_result_channel(bidirect_stream.resCollector, request)
+    # @info "single_request in"
+    # # get the channel which stores the result of the request
+    # res_channel = newId_result_channel(bidirect_stream.resCollector, request)
 
     # direct the request to the right channel direct or batched processing
     if batch
         Threads.@spawn put!(bidirect_stream.dispatcher.dispatch_channel, request)
     else
-        Threads.@spawn put!(bidirect_stream.dispatcher.direct_dispatch_channel, request)
+        @info "single request direct put"
+        # Threads.@spawn put!(bidirect_stream.dispatcher.direct_dispatch_channel, request)
+        put!(bidirect_stream.dispatcher.direct_dispatch_channel, request)
     end
-    # start a task to collect the results asynchronusly
-    task = Threads.@spawn collect_result(res_channel)
 
-    # wait until the result is back
-    result = fetch(task)
+    @info "single request nach put"
+    result = true
+    # # start a task to collect the results asynchronusly
+    # task = Threads.@spawn collect_result(res_channel)
+
+    # # wait until the result is back
+    # result = fetch(task)
+
+    # result = collect_result(res_channel)
 
     # remove the result channel from the respons collector.
-    remove_Id(bidirect_stream, request.req_id)
+    # remove_Id(bidirect_stream, request.req_id)
 
     return result
 end
@@ -53,6 +62,7 @@ function collect_result(res_channel::Channel{T}) where {T<:Proto.ProtoType}
     while true
         yield()
         if isready(res_channel)
+            @info "collect result in"
             tmp_result = take!(res_channel)
             push!(answers, tmp_result)
             if typeof(tmp_result) == Proto.Transaction_Res || typeof(tmp_result) == Proto.Transaction_Stream_ResPart
@@ -65,7 +75,11 @@ end
 
 
 function close(stream::BidirectionalStream)
-    @info "BidirectionalStream close function not implemented yet"
+    close(stream.input_channel)
+    close(stream.output_channel)
+    close(stream.dispatcher)
+    close(stream.resCollector)
+    return true
 end
 
 #

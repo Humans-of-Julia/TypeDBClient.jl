@@ -26,17 +26,45 @@ mutable struct Controller
 end
 
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
-   Threads.@spawn while !isopen(in_channel)
-        yield()
-        if isready(in_channel)
-            trans_client = transaction_client_msg([take!(in_channel)])
-            put!(out_channel, trans_client)
+    # debug_while = 0
+    # Threads.@spawn while !isopen(in_channel)
+    #     if debug_while == 0
+    #        @info "process direct request in while "
+    #        debug_while += 1
+    #     end
+    #     yield()
+    #     if isready(in_channel)
+    #         @info "process direct request in"
+    #         trans_client = TransactionRequestBuilder.client_msg([take!(in_channel)])
+    #         put!(out_channel, trans_client)
+    #     end
+    # end
+    @info "First in process_direct_requests"
+    Threads.@spawn begin
+        @info "Enter the Thread process_direct_requests"
+        while isopen(in_channel)
+            yield()
+            try
+                if isready(in_channel)
+                    tmp_res = take!(in_channel)
+                    client_res = TransactionRequestBuilder.client_msg([tmp_res])
+                    Threads.@spawn put!(out_channel,client_res)
+                    @info "Dispatched one request package"
+                end
+            catch ex
+                @info "process_direct_requests shows an error"
+            finally
+            end
         end
+        @info "process_direct_requests was closed"
     end
+    @info "process_direct_requests startet"
 end
 
 function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
     time_to_run = BATCH_WINDOW_SMALL_MILLIS / 1000
+
+    @info "batch request entry"
 
     function sleeper(controller::Controller)
         sleep(controller.duration_in_seconds)
@@ -60,6 +88,7 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
     t = Timer(cb,time_to_run, interval = time_to_run)
     wait(t)
 
+    @info "batch request exit"
     return t
 end
 
