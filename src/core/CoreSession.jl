@@ -38,7 +38,7 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, nothing)
 
         cb(timer) = (make_pulse_request(result))
-        delay = (PULSE_INTERVAL_MILLIS / 1000) - 2
+        delay = (PULSE_INTERVAL_MILLIS / 1000) - 3
         t = Timer(cb,delay - 1, interval= delay)
 
         @info "Time: $(Dates.now())"

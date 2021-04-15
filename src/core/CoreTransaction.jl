@@ -28,9 +28,14 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
         bidirectionalStream = BidirectionalStream(input_channel, output_channel)
         trans_id = uuid4()
         result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId)
+
         open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
         open_req.req_id = bytes(uuid4())
-        open_res = execute(result, open_req, false)
+        req_result = execute(result, open_req, false)
+        tmp_result = req_result[1]
+
+        kind_of_result = which_oneof(req_result, :res)
+        open_req_res = getproperty(req_result, kind_of_result)
 
         return result
     # catch ex
