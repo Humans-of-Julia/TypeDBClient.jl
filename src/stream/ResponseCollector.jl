@@ -63,8 +63,6 @@ function response_worker(response_collector::ResponseCollector)
                 req_result = take!(resp_chan)
                 tmp_result = _process_Transaction_Server(req_result)
                 put!(collectors[tmp_result.req_id], tmp_result)
-                sleep(0.5)
-                @info "Ergebnis ist da"
             end
         catch ex
             @info "response_worker shows an error \n

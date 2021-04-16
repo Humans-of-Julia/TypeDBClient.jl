@@ -41,8 +41,6 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         delay = (PULSE_INTERVAL_MILLIS / 1000) - 3
         t = Timer(cb,delay - 1, interval= delay)
 
-        @info "Time: $(Dates.now())"
-
         result.timer = t
 
         return result
@@ -58,7 +56,6 @@ function make_pulse_request(session::T) where {T<:AbstractCoreSession}
         req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
         result = grpc_result_or_error(req_result,status, result->result)
 
-        @info "Time: $(Dates.now())"
         if result.alive === false
             session.isOpen = false
             close(session.timer)

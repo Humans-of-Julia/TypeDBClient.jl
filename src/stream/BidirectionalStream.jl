@@ -59,25 +59,39 @@ function collect_result(res_channel::Channel{Transaction_Res_All})
         yield()
         if isready(res_channel)
             tmp_result = take!(res_channel)
+            req_push, loop_break = _is_stream_respart_done(tmp_result)
 
-            if typeof(tmp_result) == Proto.Transaction_ResPart
-                push!(answers, tmp_result)
-            end
-            if typeof(tmp_result) == Proto.Transaction_Res
-                push!(answers, tmp_result)
-                break
-            end
-            if typeof(tmp_result) == Proto.Transaction_Stream_ResPart
-                if tmp_result.state == Proto.Transaction_Stream_State[:DONE]
-                    push!(answers, tmp_result)
-                    break
-                else
-                    push!(answers, tmp_result)
-                end
-            end
+            req_push && push!(answers, tmp_result)
+            loop_break && break
         end
     end
     return answers
+end
+
+function _is_stream_respart_done(req_result::Proto.ProtoType)
+    kind_of_content = which_oneof(req_result, :res)
+    request_content = getproperty(req_result, kind_of_content)
+    type_of_result = typeof(request_content)
+    req_push = false
+    loop_break = false
+
+    if type_of_result == Proto.Transaction_Stream_ResPart
+        if request_content.state == Proto.Transaction_Stream_State[:DONE]
+            req_push = false
+            loop_break = true
+        else
+            req_push = true
+            loop_break = false
+        end
+    elseif typeof(req_result) == Proto.Transaction_Res
+            req_push = true
+            loop_break = true
+    elseif typeof(req_result) == Proto.Transaction_ResPart
+        req_push = true
+        loop_break = false
+    end
+
+    return req_push, loop_break
 end
 
 
