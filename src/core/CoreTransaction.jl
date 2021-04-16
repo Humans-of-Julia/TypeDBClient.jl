@@ -16,31 +16,32 @@ end
 
 
 function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int32, options::GraknOptions)
-    #try
-        type = type
-        options = options
-        input_channel = Channel{Proto.Transaction_Client}(10)
-        proto_options = copy_to_proto(options, Proto.Options)
+    type = type
+    options = options
+    input_channel = Channel{Proto.Transaction_Client}(10)
+    proto_options = copy_to_proto(options, Proto.Options)
 
-        req_result, status = transaction(session.client.core_stub.blockingStub, gRPCController(), input_channel)
-        output_channel = grpc_result_or_error(req_result, status, result->result)
+    req_result, status = transaction(session.client.core_stub.blockingStub, gRPCController(), input_channel)
+    output_channel = grpc_result_or_error(req_result, status, result->result)
 
-        bidirectionalStream = BidirectionalStream(input_channel, output_channel)
-        trans_id = uuid4()
-        result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId)
+    bidirectionalStream = BidirectionalStream(input_channel, output_channel)
+    trans_id = uuid4()
+    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId)
 
-        open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
-        open_req.req_id = bytes(uuid4())
+    open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
+    open_req.req_id = bytes(uuid4())
+
+    try
         req_result = execute(result, open_req, false)
         tmp_result = req_result[1]
 
-        kind_of_result = which_oneof(tmp_result, :res)
-        open_req_res = getproperty(tmp_result, kind_of_result)
 
-        return result
-    # catch ex
-    #     throw(GraknClientException("Error while building transaction", ex))
-    # end
+    kind_of_result = which_oneof(tmp_result, :res)
+    open_req_res = getproperty(tmp_result, kind_of_result)
+    catch ex
+        throw(GraknClientException("Open Transaction failed", ex))
+    end
+    return result
 end
 
 function execute(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}

@@ -20,11 +20,6 @@ function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
     return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
 
-mutable struct Controller
-    running::Bool
-    duration_in_seconds::Number
-end
-
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
     @info "First in process_direct_requests"
     @async begin
@@ -59,18 +54,21 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
     end
 
     function runner(controller)
-        Threads.@spawn begin
-            sleeper(controller)
-            answers = []
+        @async sleeper(controller)
+        answers = Proto.Transaction_Req[]
+        try
             while controller.running
                 yield()
                 if isready(in_channel)
-                    push!(answers, take!(in_channel))
+                    tmp_res = take!(in_channel)
+                    push!(answers, tmp_res)
                 end
             end
             if length(answers) > 0
-                Threads.@spawn put!(out_channel, TransactionRequestBuilder.client_msg(answers))
+                put!(out_channel, TransactionRequestBuilder.client_msg(answers))
             end
+        catch ex
+            throw(GraknClientException("batch_requests runner failure",ex))
         end
     end
 
@@ -78,7 +76,7 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
     t = Timer(cb,time_to_run, interval = time_to_run)
     wait(t)
 
-    @info "batch request exit"
+    @info "exit batch runner"
     return t
 end
 

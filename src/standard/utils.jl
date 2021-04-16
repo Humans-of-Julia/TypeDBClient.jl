@@ -1,3 +1,8 @@
+mutable struct Controller
+    running::Bool
+    duration_in_seconds::Number
+end
+
 """
     bytes(x)
 
