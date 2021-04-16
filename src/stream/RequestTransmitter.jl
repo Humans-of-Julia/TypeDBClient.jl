@@ -20,6 +20,10 @@ function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
     return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
 
+"""
+function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
+    This function process the incoming request directly to the server
+"""
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
     @info "First in process_direct_requests"
     @async begin
@@ -42,10 +46,13 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
     @info "process_direct_requests startet"
 end
 
+"""
+function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
+    This function contains the whole logic for batching incomming requests. The inner runner function will be
+    called every x ms and will send the collected request in one Transaction_Client message to teh server.
+"""
 function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
     time_to_run = BATCH_WINDOW_SMALL_MILLIS / 1000
-
-    @info "batch request entry"
 
     function sleeper(controller::Controller)
         sleep(controller.duration_in_seconds)
@@ -76,7 +83,6 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
     t = Timer(cb,time_to_run, interval = time_to_run)
     wait(t)
 
-    @info "exit batch runner"
     return t
 end
 
@@ -84,6 +90,7 @@ function close(dispatcher::Dispatcher)
     close(dispatcher.direct_dispatch_channel)
     close(dispatcher.dispatch_channel)
     close(dispatcher.dispatch_timer)
+    return true
 end
 
 #

@@ -12,35 +12,34 @@ function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
                              output_channel::Channel{Proto.Transaction_Server})
 
     dispatcher = Dispatcher(input_channel)
-
     res_collector = ResponseCollector(output_channel)
 
     return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel)
 end
 
-
 function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: Proto.ProtoType}
     return single_request(bidirect_stream, request, true)
 end
 
-
+"""
+function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
+    This function process one single request and give back the results from the server to the calling functions. It is an intern
+    function.
+"""
 function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
 
-    # # get the channel which stores the result of the request
+    # get the channel which stores the result of the request
     res_channel = newId_result_channel(bidirect_stream.resCollector, request.req_id)
 
     # direct the request to the right channel direct or batched processing
     if batch
-        Threads.@spawn put!(bidirect_stream.dispatcher.dispatch_channel, request)
+        put!(bidirect_stream.dispatcher.dispatch_channel, request)
     else
         put!(bidirect_stream.dispatcher.direct_dispatch_channel, request)
     end
 
-    # # start a task to collect the results asynchronusly
+    # start a task to collect the results asynchronusly
     result = collect_result(res_channel)
-
-    # wait until the result is back
-    # result = fetch(task)
 
     # remove the result channel from the respons collector.
     remove_Id(bidirect_stream.resCollector, request.req_id)
@@ -68,6 +67,11 @@ function collect_result(res_channel::Channel{Transaction_Res_All})
     return answers
 end
 
+"""
+function _is_stream_respart_done(req_result::Proto.ProtoType)
+    This function decides how to treat the result. It returns whether it should push the
+    request to the answers and if it should break the retrieving loop.
+"""
 function _is_stream_respart_done(req_result::Proto.ProtoType)
     kind_of_content = which_oneof(req_result, :res)
     request_content = getproperty(req_result, kind_of_content)

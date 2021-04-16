@@ -19,11 +19,13 @@ Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, se
 Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
 
 function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions = GraknOptions()) where {T<:AbstractCoreClient}
-    # try
+    try
         options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS
+        #building open_request
         open_req = SessionRequestBuilder.open_req(
             database, type , copy_to_proto(options, grakn.protocol.Options)
         )
+        # open the session
         startTime = now()
         req_result, status  = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
         res_id = grpc_result_or_error(req_result, status, result->result.session_id)
@@ -37,19 +39,26 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
 
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, nothing)
 
+        # prepare the pulse_request function with a timer
         cb(timer) = (make_pulse_request(result))
+        # don't touch the delay formula except you know what you are doing
+        # the delay is crucial for session keep alive
         delay = (PULSE_INTERVAL_MILLIS / 1000) - 3
         t = Timer(cb,delay - 1, interval= delay)
 
+        # keep the timer in the transaction to close the timer later
         result.timer = t
 
         return result
-    # catch ex
-    #     throw(GraknClientException("Error construct a CoreSession",ex))
-    # end
+    catch ex
+        throw(GraknClientException("Error construct a CoreSession",ex))
+    end
 end
 
-
+"""
+function make_pulse_request(session::T) where {T<:AbstractCoreSession}
+    This function make a pulse request to keep the session alive.
+"""
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
     try
         pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
@@ -72,8 +81,8 @@ function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
 end
 
 function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
-    # try
-    #     lock(session.accessLock)
+    try
+        lock(session.accessLock)
         if !session.isOpen
             throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionID)))
         end
@@ -82,9 +91,9 @@ function transaction(session::T, type::Int32, options::GraknOptions) where {T<:A
         session.transactions[transactionRPC.transaction_id] = transactionRPC
 
         return transactionRPC
-    # finally
-    #    unlock(session.accessLock)
-    # end
+    finally
+       unlock(session.accessLock)
+    end
 end
 
 function close(session::T) where {T<:AbstractCoreSession}
