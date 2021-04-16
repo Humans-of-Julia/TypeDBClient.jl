@@ -34,8 +34,8 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
         req_result = execute(result, open_req, false)
         tmp_result = req_result[1]
 
-        kind_of_result = which_oneof(req_result, :res)
-        open_req_res = getproperty(req_result, kind_of_result)
+        kind_of_result = which_oneof(tmp_result, :res)
+        open_req_res = getproperty(tmp_result, kind_of_result)
 
         return result
     # catch ex

@@ -56,7 +56,7 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
 function collect_result(res_channel::Channel{Transaction_Res_All})
     answers = Vector{Proto.ProtoType}()
     while isopen(res_channel)
-        # yield()
+        yield()
         if isready(res_channel)
             tmp_result = take!(res_channel)
 
