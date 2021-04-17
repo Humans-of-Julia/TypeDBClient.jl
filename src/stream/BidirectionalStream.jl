@@ -83,8 +83,8 @@ function collect_result(res_channel::Channel{Transaction_Res_All})
     return answers
 end
 
-precompile(which_oneof, (Proto.Transaction_ResPart, Symbol))
-precompile(which_oneof, (Proto.Transaction_Res, Symbol))
+@assert precompile(which_oneof, (Proto.Transaction_ResPart, Symbol))
+@assert precompile(which_oneof, (Proto.Transaction_Res, Symbol))
 """
 function _is_stream_respart_done(req_result::Proto.ProtoType)
     This function decides how to treat the result. It returns whether it should push the
@@ -116,10 +116,11 @@ function _is_stream_respart_done(req_result::Transaction_Res_All)
     return req_push, loop_break
 end
 
-precompile(single_request, (BidirectionalStream, Proto.Transaction_Req, Bool,))
-precompile(_open_result_channel, (BidirectionalStream, Proto.Transaction_Req, Bool,))
-precompile(collect_result,(Channel{Transaction_Res_All},))
-precompile(_is_stream_respart_done, (Proto.Transaction_Req,))
+@assert precompile(single_request, (BidirectionalStream, Proto.Transaction_Req, Bool))
+@assert precompile(_open_result_channel, (BidirectionalStream, Proto.Transaction_Req, Bool))
+@assert precompile(collect_result, (Channel{Union{Proto.Transaction_Res,Proto.Transaction_ResPart}}, ))
+@assert precompile(_is_stream_respart_done, (Proto.Transaction_Res, ))
+@assert precompile(_is_stream_respart_done, (Proto.Transaction_ResPart, ))
 
 
 function close(stream::BidirectionalStream)

@@ -123,4 +123,8 @@ function Base.print(io::IO, item::T) where {T<:ProtoType}
     return nothing
 end
 
+@assert precompile(meta, (Type{Proto.Type_Res}, ))
+@assert precompile(meta, (Type{Proto.Type_Req}, ))
+@assert precompile(meta, (Type{Proto.Transaction_Res}, ))
+@assert precompile(meta, (Type{Proto.Transaction_ResPart}, ))
 end #module

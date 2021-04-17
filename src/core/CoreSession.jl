@@ -44,7 +44,8 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         # don't touch the delay formula except you know what you are doing
         # the delay is crucial for session keep alive
         delay = (PULSE_INTERVAL_MILLIS / 1000) - 3
-        t = Timer(cb,delay - 1, interval= delay)
+        t = Timer(cb,0.1, interval= delay)
+        wait(t)
 
         # keep the timer in the transaction to close the timer later
         result.timer = t
@@ -67,8 +68,7 @@ function make_pulse_request(session::T) where {T<:AbstractCoreSession}
         @info "Time: $(Dates.now())"
 
         if result.alive === false
-            session.isOpen = false
-            close(session.timer)
+            close(session)
             @info "$session is closed"
         end
     catch ex
