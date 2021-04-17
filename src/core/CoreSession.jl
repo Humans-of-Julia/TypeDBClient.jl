@@ -64,6 +64,7 @@ function make_pulse_request(session::T) where {T<:AbstractCoreSession}
         pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
         req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
         result = grpc_result_or_error(req_result,status, result->result)
+        @info "Time: $(Dates.now())"
 
         if result.alive === false
             session.isOpen = false

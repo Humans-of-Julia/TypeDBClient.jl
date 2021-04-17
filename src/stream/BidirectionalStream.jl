@@ -26,17 +26,9 @@ function single_request(bidirect_stream::BidirectionalStream, request::T, batch:
     This function process one single request and give back the results from the server to the calling functions. It is an intern
     function.
 """
-function single_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
+function single_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
 
-    # get the channel which stores the result of the request
-    res_channel = newId_result_channel(bidirect_stream.resCollector, request.req_id)
-
-    # direct the request to the right channel direct or batched processing
-    if batch
-        put!(bidirect_stream.dispatcher.dispatch_channel, request)
-    else
-        put!(bidirect_stream.dispatcher.direct_dispatch_channel, request)
-    end
+    res_channel = _open_result_channel(bidirect_stream, request, batch)
 
     # start a task to collect the results asynchronusly
     result = collect_result(res_channel)
@@ -48,12 +40,36 @@ function single_request(bidirect_stream::BidirectionalStream, request::T, batch:
 end
 
 """
+function stream_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
+    Here we let the user decide what to do with the result channel. The returned value is the pure result_channel.
+"""
+function stream_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
+    res_channel = _open_result_channel(bidirect_stream, request, batch)
+    return res_channel
+end
+
+function _open_result_channel(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
+    # This function serves as the opener for the result channel for both single- and stream request
+
+    # get the channel which stores the result of the request
+    res_channel = newId_result_channel(bidirect_stream.resCollector, request.req_id)
+
+    # direct the request to the right channel direct or batched processing
+    if batch
+        put!(bidirect_stream.dispatcher.dispatch_channel, request)
+    else
+        put!(bidirect_stream.dispatcher.direct_dispatch_channel, request)
+    end
+    return res_channel
+end
+
+"""
 function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
 function collect_result(res_channel::Channel{Transaction_Res_All})
-    answers = Vector{Proto.ProtoType}()
+    answers = Vector{Transaction_Res_All}()
     while isopen(res_channel)
         yield()
         if isready(res_channel)
@@ -67,12 +83,14 @@ function collect_result(res_channel::Channel{Transaction_Res_All})
     return answers
 end
 
+precompile(which_oneof, (Proto.Transaction_ResPart, Symbol))
+precompile(which_oneof, (Proto.Transaction_Res, Symbol))
 """
 function _is_stream_respart_done(req_result::Proto.ProtoType)
     This function decides how to treat the result. It returns whether it should push the
     request to the answers and if it should break the retrieving loop.
 """
-function _is_stream_respart_done(req_result::Proto.ProtoType)
+function _is_stream_respart_done(req_result::Transaction_Res_All)
     kind_of_content = which_oneof(req_result, :res)
     request_content = getproperty(req_result, kind_of_content)
     type_of_result = typeof(request_content)
@@ -97,6 +115,11 @@ function _is_stream_respart_done(req_result::Proto.ProtoType)
 
     return req_push, loop_break
 end
+
+precompile(single_request, (BidirectionalStream, Proto.Transaction_Req, Bool,))
+precompile(_open_result_channel, (BidirectionalStream, Proto.Transaction_Req, Bool,))
+precompile(collect_result,(Channel{Transaction_Res_All},))
+precompile(_is_stream_respart_done, (Proto.Transaction_Req,))
 
 
 function close(stream::BidirectionalStream)

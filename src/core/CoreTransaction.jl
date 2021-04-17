@@ -32,12 +32,12 @@ function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type:
     open_req.req_id = bytes(uuid4())
 
     try
+        @info "Execute open time: $(Dates.now())"
         req_result = execute(result, open_req, false)
+        @info "Execute open time done: $(Dates.now())"
         tmp_result = req_result[1]
-
-
-    kind_of_result = which_oneof(tmp_result, :res)
-    open_req_res = getproperty(tmp_result, kind_of_result)
+        kind_of_result = which_oneof(tmp_result, :res)
+        open_req_res = getproperty(tmp_result, kind_of_result)
     catch ex
         throw(GraknClientException("Open Transaction failed", ex))
     end
