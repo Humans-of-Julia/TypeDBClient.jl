@@ -1,6 +1,6 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-struct Attribute{S, T} <: AbstractThing
+struct Attribute{S, T} <: AbstractAttribute
     iid::String
     type::AttributeType{S}
     value::T

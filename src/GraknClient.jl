@@ -66,7 +66,13 @@ include("concept/type/AttributeType.jl")
 include("concept/type/EntityType.jl")
 include("concept/type/RelationType.jl")
 
+include("concept/thing/Attribute.jl")
+include("concept/thing/Entity.jl")
 include("concept/thing/Relation.jl")
+include("concept/thing/Thing.jl")
+
+include("concept/answer/ConceptMap.jl")
+
 
 #api section
 include("api/GraknOptions.jl")

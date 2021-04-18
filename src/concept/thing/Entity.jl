@@ -1,6 +1,6 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-struct Entity <: AbstractThing
+struct Entity <: AbstractEntity
     iid::String
     type::EntityType
 end
