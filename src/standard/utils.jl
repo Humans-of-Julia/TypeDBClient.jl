@@ -3,6 +3,10 @@ mutable struct Controller
     duration_in_seconds::Number
 end
 
+function close(controller::Controller)
+    controller.running = false
+end
+
 """
     bytes(x)
 

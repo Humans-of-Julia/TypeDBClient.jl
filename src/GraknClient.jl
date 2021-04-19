@@ -127,4 +127,5 @@ end
 @assert precompile(meta, (Type{Proto.Type_Req}, ))
 @assert precompile(meta, (Type{Proto.Transaction_Res}, ))
 @assert precompile(meta, (Type{Proto.Transaction_ResPart}, ))
+# @assert precompile(Ref{Proto.ProtoMeta} , Tuple{Nothing}(nothing,nothing))
 end #module

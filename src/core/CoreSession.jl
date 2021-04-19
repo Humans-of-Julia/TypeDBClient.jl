@@ -12,7 +12,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     options::GraknOptions
     isOpen::Bool
     networkLatencyMillis::Int
-    timer::Optional{Timer}
+    timer::Optional{Controller}
 end
 
 Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, session)
@@ -37,18 +37,20 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
         transactions = Dict{UUID,AbstractCoreTransaction}()
         is_open = true
 
+        t = Controller(true, 0.5)
+
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, nothing)
 
-        # prepare the pulse_request function with a timer
-        cb(timer) = (make_pulse_request(result))
-        # don't touch the delay formula except you know what you are doing
-        # the delay is crucial for session keep alive
-        delay = (PULSE_INTERVAL_MILLIS / 1000) - 3
-        t = Timer(cb,0.1, interval= delay)
-        wait(t)
+        make_pulse_request(result, t)
 
-        # keep the timer in the transaction to close the timer later
-        result.timer = t
+        # the following transaction is useless for the construction of the the Session
+        # and is only to initialize the first compilation of the ProtoBuf machinary
+        # underneath the transaction. In the environment here it is possible to control
+        # the tick of the pulse request a close as can be. If somebody find a way to
+        # avoid the long starting time of the transaction this can be removed.
+        trans = transaction(result, Proto.Transaction_Type[:READ])
+
+        t.duration_in_seconds =  (PULSE_INTERVAL_MILLIS / 1000) - 0.5
 
         return result
     catch ex
@@ -60,22 +62,31 @@ end
 function make_pulse_request(session::T) where {T<:AbstractCoreSession}
     This function make a pulse request to keep the session alive.
 """
-function make_pulse_request(session::T) where {T<:AbstractCoreSession}
-    try
-        pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
-        req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
-        result = grpc_result_or_error(req_result,status, result->result)
-        @info "Time: $(Dates.now())"
+function make_pulse_request(session::T, controller::Controller) where {T<:AbstractCoreSession}
 
-        if result.alive === false
-            close(session)
-            @info "$session is closed"
+    @async begin
+            while controller.running
+                    try
+                        pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
+                        req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+                        result = grpc_result_or_error(req_result,status, result->result)
+                        @info "Time: $(Dates.now())"
+
+                        if result.alive === false
+                            close(session)
+                            @info "$session is closed"
+                        end
+                    catch ex
+                        @info "make_pulse_request show's an error \n
+                        $ex "
+                        close(session)
+                    finally
+                    end
+                    sleep(controller.duration_in_seconds)
+            end
         end
-    catch ex
-        @info "make_pulse_request show's an error"
-    finally
-    end
 end
+
 
 function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
         return transaction(session, type, grakn_options_core())

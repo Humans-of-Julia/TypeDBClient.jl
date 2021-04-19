@@ -11,11 +11,11 @@ mutable struct Dispatcher
 end
 
 
-function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
+function Dispatcher(input_channel::Channel{Proto.Transaction_Client}, grpc_status::Task)
     direct_dispatch_channel = Channel{Proto.ProtoType}(10)
     dispatch_channel = Channel{Proto.ProtoType}(10)
-    disp_timer = batch_requests(dispatch_channel,input_channel)
-    process_direct_requests(direct_dispatch_channel, input_channel)
+    disp_timer = batch_requests(dispatch_channel,input_channel, grpc_status)
+    process_direct_requests(direct_dispatch_channel, input_channel, grpc_status)
 
     return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
@@ -24,12 +24,13 @@ end
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
     This function process the incoming request directly to the server
 """
-function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
-    @info "First in process_direct_requests"
+function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client}, grpc_status::Task)
     @async begin
-        @info "Enter the Thread process_direct_requests"
         while isopen(in_channel)
             yield()
+            # if the grpc connection shows an error or is terminated for the channel
+            # the loop will exited
+            istaskdone(grpc_status) && break
             try
                 if isready(in_channel)
                     tmp_res = take!(in_channel)
@@ -43,7 +44,6 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
         end
         @info "process_direct_requests was closed"
     end
-    @info "process_direct_requests startet"
 end
 
 """
@@ -51,7 +51,7 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
     This function contains the whole logic for batching incomming requests. The inner runner function will be
     called every x ms and will send the collected request in one Transaction_Client message to teh server.
 """
-function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
+function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client}, grpc_status::Task)
     time_to_run = BATCH_WINDOW_SMALL_MILLIS / 1000
 
     function sleeper(controller::Controller)
@@ -66,10 +66,14 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
         try
             while controller.running
                 yield()
+                istaskdone(grpc_status) && break
                 if isready(in_channel)
                     tmp_res = take!(in_channel)
                     push!(answers, tmp_res)
                 end
+            end
+            if istaskdone(grpc_status)
+                @info "break in batch request \n $(fetch(grpc_status))"
             end
             if length(answers) > 0
                 put!(out_channel, TransactionRequestBuilder.client_msg(answers))

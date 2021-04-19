@@ -6,15 +6,17 @@ mutable struct  BidirectionalStream
     is_open::Threads.Atomic{Bool}
     input_channel::Channel{Proto.Transaction_Client}
     output_channel::Channel{Proto.Transaction_Server}
+    grpc_status::Task
 end
 
 function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
-                             output_channel::Channel{Proto.Transaction_Server})
+                             output_channel::Channel{Proto.Transaction_Server},
+                             grpc_status::Task)
 
-    dispatcher = Dispatcher(input_channel)
-    res_collector = ResponseCollector(output_channel)
+    dispatcher = Dispatcher(input_channel, grpc_status)
+    res_collector = ResponseCollector(output_channel, grpc_status)
 
-    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel)
+    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel, grpc_status)
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: Proto.ProtoType}
@@ -31,7 +33,8 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     res_channel = _open_result_channel(bidirect_stream, request, batch)
 
     # start a task to collect the results asynchronusly
-    result = collect_result(res_channel)
+    task = @async collect_result(res_channel, bidirect_stream.grpc_status)
+    result = fetch(task)
 
     # remove the result channel from the respons collector.
     remove_Id(bidirect_stream.resCollector, request.req_id)
@@ -51,6 +54,8 @@ end
 function _open_result_channel(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
     # This function serves as the opener for the result channel for both single- and stream request
 
+    # put the needed request_id on the request
+    request.req_id = bytes(uuid4())
     # get the channel which stores the result of the request
     res_channel = newId_result_channel(bidirect_stream.resCollector, request.req_id)
 
@@ -68,16 +73,22 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
-function collect_result(res_channel::Channel{Transaction_Res_All})
+function collect_result(res_channel::Channel{Transaction_Res_All}, grpc_status::Task)
     answers = Vector{Transaction_Res_All}()
     while isopen(res_channel)
         yield()
-        if isready(res_channel)
+        if isready(res_channel) && !istaskdone(grpc_status)
             tmp_result = take!(res_channel)
             req_push, loop_break = _is_stream_respart_done(tmp_result)
 
             req_push && push!(answers, tmp_result)
             loop_break && break
+        end
+        if istaskdone(grpc_status)
+            @info "collect_result is done \n
+            The grpc_status is: $(fetch(grpc_status))
+            "
+            break
         end
     end
     return answers
@@ -118,7 +129,7 @@ end
 
 @assert precompile(single_request, (BidirectionalStream, Proto.Transaction_Req, Bool))
 @assert precompile(_open_result_channel, (BidirectionalStream, Proto.Transaction_Req, Bool))
-@assert precompile(collect_result, (Channel{Union{Proto.Transaction_Res,Proto.Transaction_ResPart}}, ))
+@assert precompile(collect_result, (Channel{Union{Proto.Transaction_Res,Proto.Transaction_ResPart}}, Task))
 @assert precompile(_is_stream_respart_done, (Proto.Transaction_Res, ))
 @assert precompile(_is_stream_respart_done, (Proto.Transaction_ResPart, ))
 
@@ -130,140 +141,3 @@ function close(stream::BidirectionalStream)
     close(stream.resCollector)
     return true
 end
-
-#
-# package grakn.client.stream;
-#
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.client.common.rpc.GraknStub;
-# import grakn.protocol.TransactionProto.Transaction.Req;
-# import grakn.protocol.TransactionProto.Transaction.Res;
-# import grakn.protocol.TransactionProto.Transaction.ResPart;
-# import grakn.protocol.TransactionProto.Transaction.Server;
-# import io.grpc.StatusRuntimeException;
-# import io.grpc.stub.StreamObserver;
-#
-# import javax.annotation.Nullable;
-# import java.util.UUID;
-# import java.util.concurrent.atomic.AtomicBoolean;
-# import java.util.stream.Stream;
-# import java.util.stream.StreamSupport;
-#
-# import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-# import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
-# import static java.util.Spliterator.IMMUTABLE;
-# import static java.util.Spliterator.ORDERED;
-# import static java.util.Spliterators.spliteratorUnknownSize;
-#
-# public class BidirectionalStream implements AutoCloseable {
-#
-#     private final ResponseCollector<Res> resCollector;
-#     private final ResponseCollector<ResPart> resPartCollector;
-#     private final RequestTransmitter.Dispatcher dispatcher;
-#     private final AtomicBoolean isOpen;
-#
-#     public BidirectionalStream(GraknStub.Core stub, RequestTransmitter transmitter) {
-#         resPartCollector = new ResponseCollector<>();
-#         resCollector = new ResponseCollector<>();
-#         isOpen = new AtomicBoolean(false);
-#         dispatcher = transmitter.dispatcher(stub.transaction(new ResponseObserver()));
-#         isOpen.set(true);
-#     }
-#
-#     public Single<Res> single(Req.Builder request, boolean batch) {
-#         UUID requestID = UUID.randomUUID();
-#         Req req = request.setReqId(requestID.toString()).build();
-#         ResponseCollector.Queue<Res> queue = resCollector.queue(requestID);
-#         if (batch) dispatcher.dispatch(req);
-#         else dispatcher.dispatchNow(req);
-#         return new Single<>(queue);
-#     }
-#
-#     public Stream<ResPart> stream(Req.Builder request) {
-#         UUID requestID = UUID.randomUUID();
-#         ResponseCollector.Queue<ResPart> collector = resPartCollector.queue(requestID);
-#         dispatcher.dispatch(request.setReqId(requestID.toString()).build());
-#         ResponseIterator iterator = new ResponseIterator(requestID, collector, dispatcher);
-#         return StreamSupport.stream(spliteratorUnknownSize(iterator, ORDERED | IMMUTABLE), false);
-#     }
-#
-#     public boolean isOpen() {
-#         return isOpen.get();
-#     }
-#
-#     private void collect(Res res) {
-#         UUID requestID = UUID.fromString(res.getReqId());
-#         ResponseCollector.Queue<Res> collector = resCollector.get(requestID);
-#         if (collector != null) collector.put(res);
-#         else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
-#     }
-#
-#     private void collect(ResPart resPart) {
-#         UUID requestID = UUID.fromString(resPart.getReqId());
-#         ResponseCollector.Queue<ResPart> collector = resPartCollector.get(requestID);
-#         if (collector != null) collector.put(resPart);
-#         else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
-#     }
-#
-#     @Override
-#     public void close() {
-#         close(null);
-#     }
-#
-#     private void close(@Nullable StatusRuntimeException error) {
-#         if (isOpen.compareAndSet(true, false)) {
-#             resCollector.close(error);
-#             resPartCollector.close(error);
-#             try {
-#                 dispatcher.close();
-#             } catch (StatusRuntimeException e) {
-#                 throw GraknClientException.of(e);
-#             }
-#         }
-#     }
-#
-#     public static class Single<T> {
-#
-#         private final ResponseCollector.Queue<T> queue;
-#
-#         public Single(ResponseCollector.Queue<T> queue) {
-#             this.queue = queue;
-#         }
-#
-#         public T get() {
-#             return queue.take();
-#         }
-#     }
-#
-#     private class ResponseObserver implements StreamObserver<Server> {
-#
-#         @Override
-#         public void onNext(Server serverMsg) {
-#             if (!isOpen.get()) return;
-#
-#             switch (serverMsg.getServerCase()) {
-#                 case RES:
-#                     collect(serverMsg.getRes());
-#                     break;
-#                 case RES_PART:
-#                     collect(serverMsg.getResPart());
-#                     break;
-#                 default:
-#                 case SERVER_NOT_SET:
-#                     throw new GraknClientException(ILLEGAL_ARGUMENT);
-#             }
-#         }
-#
-#         @Override
-#         public void onError(Throwable t) {
-#             assert t instanceof StatusRuntimeException : "The server sent an exception of unexpected type " + t.getClass();
-#             // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
-#             close((StatusRuntimeException) t);
-#         }
-#
-#         @Override
-#         public void onCompleted() {
-#             close();
-#         }
-#     }
-# }
