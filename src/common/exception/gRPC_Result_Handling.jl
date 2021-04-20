@@ -10,9 +10,9 @@ function grpc_result_or_error(result::T,
     if ok == true && result !== nothing
         return f(result)
     elseif ok === false
-        throw(GraknClientException(intern_status.message, gRPCException(intern_status.message)))
+        throw(GraknClientException(intern_status.message, gRPCServiceCallException(intern_status.message)))
     else
-        throw(GraknClientException("something went wrong in gRPC", gRPCException("Error not defined by gRPC")))
+        throw(GraknClientException("something went wrong in gRPC", gRPCServiceCallException("Error not defined by gRPC")))
     end
 
 end

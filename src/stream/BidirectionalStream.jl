@@ -6,17 +6,15 @@ mutable struct  BidirectionalStream
     is_open::Threads.Atomic{Bool}
     input_channel::Channel{Proto.Transaction_Client}
     output_channel::Channel{Proto.Transaction_Server}
-    grpc_status::Task
 end
 
 function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
-                             output_channel::Channel{Proto.Transaction_Server},
-                             grpc_status::Task)
+                             output_channel::Channel{Proto.Transaction_Server})
 
-    dispatcher = Dispatcher(input_channel, grpc_status)
-    res_collector = ResponseCollector(output_channel, grpc_status)
+    dispatcher = Dispatcher(input_channel)
+    res_collector = ResponseCollector(output_channel)
 
-    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel, grpc_status)
+    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel)
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: Proto.ProtoType}
@@ -33,11 +31,26 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     res_channel = _open_result_channel(bidirect_stream, request, batch)
 
     # start a task to collect the results asynchronusly
-    task = @async collect_result(res_channel, bidirect_stream.grpc_status)
-    result = fetch(task)
+    result_taks = @async collect_result(res_channel)
 
+    # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
+    # dependent solutionresult = nothing
+    result = nothing
+    contr = Controller(true,5)
+    @async sleeper(contr)
+    while contr.running
+        yield()
+        if istaskdone(result_taks)
+            result = fetch(result_taks)
+            break
+        end
+    end
     # remove the result channel from the respons collector.
     remove_Id(bidirect_stream.resCollector, request.req_id)
+
+    if !istaskdone(result_taks)
+        throw(gRPCServiceCallException("The server don't deliver a answer. Please check the server log"))
+    end
 
     return result
 end
@@ -73,29 +86,21 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
-function collect_result(res_channel::Channel{Transaction_Res_All}, grpc_status::Task)
+function collect_result(res_channel::Channel{Transaction_Res_All})
     answers = Vector{Transaction_Res_All}()
     while isopen(res_channel)
         yield()
-        if isready(res_channel) && !istaskdone(grpc_status)
+        if isready(res_channel)
             tmp_result = take!(res_channel)
             req_push, loop_break = _is_stream_respart_done(tmp_result)
 
             req_push && push!(answers, tmp_result)
             loop_break && break
         end
-        if istaskdone(grpc_status)
-            @info "collect_result is done \n
-            The grpc_status is: $(fetch(grpc_status))
-            "
-            break
-        end
     end
     return answers
 end
 
-@assert precompile(which_oneof, (Proto.Transaction_ResPart, Symbol))
-@assert precompile(which_oneof, (Proto.Transaction_Res, Symbol))
 """
 function _is_stream_respart_done(req_result::Proto.ProtoType)
     This function decides how to treat the result. It returns whether it should push the
@@ -126,12 +131,6 @@ function _is_stream_respart_done(req_result::Transaction_Res_All)
 
     return req_push, loop_break
 end
-
-@assert precompile(single_request, (BidirectionalStream, Proto.Transaction_Req, Bool))
-@assert precompile(_open_result_channel, (BidirectionalStream, Proto.Transaction_Req, Bool))
-@assert precompile(collect_result, (Channel{Union{Proto.Transaction_Res,Proto.Transaction_ResPart}}, Task))
-@assert precompile(_is_stream_respart_done, (Proto.Transaction_Res, ))
-@assert precompile(_is_stream_respart_done, (Proto.Transaction_ResPart, ))
 
 
 function close(stream::BidirectionalStream)

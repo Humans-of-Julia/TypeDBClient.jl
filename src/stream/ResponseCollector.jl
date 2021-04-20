@@ -4,14 +4,13 @@ struct ResponseCollector
     collectors::Dict{Bytes,Channel{Transaction_Res_All}}
     transact_result_channel::Channel{Proto.Transaction_Server}
     access_lock::ReentrantLock
-    grpc_status::Task
 end
 
 
-function ResponseCollector(transact_result_channel::Channel{Proto.Transaction_Server}, grpc_status::Task)
+function ResponseCollector(transact_result_channel::Channel{Proto.Transaction_Server})
     collectors = Dict{Bytes,Channel{Transaction_Res_All}}()
     access_lock = ReentrantLock()
-    resp_col = ResponseCollector(collectors, transact_result_channel, access_lock, grpc_status)
+    resp_col = ResponseCollector(collectors, transact_result_channel, access_lock)
     res_task = @async response_worker(resp_col)
     return resp_col
 end
@@ -55,10 +54,8 @@ end
 function response_worker(response_collector::ResponseCollector)
     resp_chan = response_collector.transact_result_channel
     collectors = response_collector.collectors
-    grpc_status = response_collector.grpc_status
     while isopen(resp_chan)
         yield()
-        istaskdone(grpc_status) && break
         try
             if isready(resp_chan)
                 req_result = take!(resp_chan)

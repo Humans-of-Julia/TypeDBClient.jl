@@ -7,6 +7,12 @@ function close(controller::Controller)
     controller.running = false
 end
 
+function sleeper(controller::Controller)
+    sleep(controller.duration_in_seconds)
+    controller.running = false
+    return nothing
+end
+
 """
     bytes(x)
 

@@ -107,7 +107,7 @@ Base.print(io::IO, id::Array{UInt8,1}) = Base.print(io, string(bytes2hex(id)))
 
 ## Printing each request in a shorter form except they have speicalized
 ## printing options.
-Base.show(io::IO, item::T) where {T<:ProtoType} = Base.print(io, item)
+Base.show(io::IO, item::T) where {T<:ProtoType} = print(io, item)
 function Base.print(io::IO, item::T) where {T<:ProtoType}
     erg  = collect(keys(meta(typeof(item)).symdict))
     str_item = ""
@@ -123,9 +123,19 @@ function Base.print(io::IO, item::T) where {T<:ProtoType}
     return nothing
 end
 
+########## precompiling section
+
 @assert precompile(meta, (Type{Proto.Type_Res}, ))
 @assert precompile(meta, (Type{Proto.Type_Req}, ))
 @assert precompile(meta, (Type{Proto.Transaction_Res}, ))
 @assert precompile(meta, (Type{Proto.Transaction_ResPart}, ))
-# @assert precompile(Ref{Proto.ProtoMeta} , Tuple{Nothing}(nothing,nothing))
+
+@assert precompile(which_oneof, (Proto.Transaction_ResPart, Symbol))
+@assert precompile(which_oneof, (Proto.Transaction_Res, Symbol))
+@assert precompile(single_request, (BidirectionalStream, Proto.Transaction_Req, Bool))
+@assert precompile(_open_result_channel, (BidirectionalStream, Proto.Transaction_Req, Bool))
+@assert precompile(collect_result, (Channel{Union{Proto.Transaction_Res,Proto.Transaction_ResPart}}, ))
+@assert precompile(_is_stream_respart_done, (Proto.Transaction_Res, ))
+@assert precompile(_is_stream_respart_done, (Proto.Transaction_ResPart, ))
+
 end #module

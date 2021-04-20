@@ -6,29 +6,36 @@ struct CoreTransaction <: AbstractCoreTransaction
     bidirectional_stream::BidirectionalStream
     transaction_id::Union{Nothing,UUID}
     session_id::Array{UInt8,1}
+    request_timout::Real
 end
 
-Base.show(io::IO, transaction::AbstractCoreTransaction) = Base.print(io, transaction)
+Base.show(io::IO, transaction::AbstractCoreTransaction) = print(io, transaction)
 function Base.print(io::IO, transaction::AbstractCoreTransaction)
     res_string = "Transaction $(transaction.transaction_id) with session_id: $(transaction.session_id)"
     print(io, res_string)
 end
 
 
-function CoreTransaction(session::CoreSession , sessionId::Array{UInt8,1}, type::Int32, options::GraknOptions)
+function CoreTransaction(session::CoreSession ,
+                        sessionId::Array{UInt8,1},
+                        type::Int32,
+                        options::GraknOptions;
+                        request_timout::Real=session.request_timeout)
     type = type
     options = options
     input_channel = Channel{Proto.Transaction_Client}(10)
     proto_options = copy_to_proto(options, Proto.Options)
 
-    req_result, status = transaction(session.client.core_stub.blockingStub, gRPCController(), input_channel)
+    grpc_controller = gRPCController(request_timeout=request_timout)
+
+    req_result, status = transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
     output_channel = grpc_result_or_error(req_result, status, result->result)
 
     open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
 
-    bidirectionalStream = BidirectionalStream(input_channel, output_channel, status)
+    bidirectionalStream = BidirectionalStream(input_channel, output_channel)
     trans_id = uuid4()
-    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId)
+    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout)
 
     req_result = execute(result, open_req, false)
     tmp_result = req_result[1]
