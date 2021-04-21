@@ -418,6 +418,110 @@ function meta(::Type{QueryManager_MatchGroupAggregate})
     end
 end
 
+mutable struct QueryManager_Explain_Req <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function QueryManager_Explain_Req(; kwargs...)
+        obj = new(meta(QueryManager_Explain_Req), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct QueryManager_Explain_Req
+const __meta_QueryManager_Explain_Req = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Explain_Req})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_QueryManager_Explain_Req)
+            __meta_QueryManager_Explain_Req[] = target = ProtoMeta(QueryManager_Explain_Req)
+            allflds = Pair{Symbol,Union{Type,String}}[:explainable_id => Int64]
+            meta(target, QueryManager_Explain_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_QueryManager_Explain_Req[]
+    end
+end
+function Base.getproperty(obj::QueryManager_Explain_Req, name::Symbol)
+    if name === :explainable_id
+        return (obj.__protobuf_jl_internal_values[name])::Int64
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct QueryManager_Explain_ResPart <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function QueryManager_Explain_ResPart(; kwargs...)
+        obj = new(meta(QueryManager_Explain_ResPart), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct QueryManager_Explain_ResPart
+const __meta_QueryManager_Explain_ResPart = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Explain_ResPart})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_QueryManager_Explain_ResPart)
+            __meta_QueryManager_Explain_ResPart[] = target = ProtoMeta(QueryManager_Explain_ResPart)
+            allflds = Pair{Symbol,Union{Type,String}}[:explanations => Base.Vector{Explanation}]
+            meta(target, QueryManager_Explain_ResPart, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_QueryManager_Explain_ResPart[]
+    end
+end
+function Base.getproperty(obj::QueryManager_Explain_ResPart, name::Symbol)
+    if name === :explanations
+        return (obj.__protobuf_jl_internal_values[name])::Base.Vector{Explanation}
+    else
+        getfield(obj, name)
+    end
+end
+
+mutable struct QueryManager_Explain <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function QueryManager_Explain(; kwargs...)
+        obj = new(meta(QueryManager_Explain), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct QueryManager_Explain
+const __meta_QueryManager_Explain = Ref{ProtoMeta}()
+function meta(::Type{QueryManager_Explain})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_QueryManager_Explain)
+            __meta_QueryManager_Explain[] = target = ProtoMeta(QueryManager_Explain)
+            allflds = Pair{Symbol,Union{Type,String}}[]
+            meta(target, QueryManager_Explain, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_QueryManager_Explain[]
+    end
+end
+
 mutable struct QueryManager_Insert_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -716,9 +820,9 @@ function meta(::Type{QueryManager_ResPart})
     ProtoBuf.metalock() do
         if !isassigned(__meta_QueryManager_ResPart)
             __meta_QueryManager_ResPart[] = target = ProtoMeta(QueryManager_ResPart)
-            fnum = Int[100,101,102,103,104]
-            allflds = Pair{Symbol,Union{Type,String}}[:match_res_part => QueryManager_Match_ResPart, :match_group_res_part => QueryManager_MatchGroup_ResPart, :match_group_aggregate_res_part => QueryManager_MatchGroupAggregate_ResPart, :insert_res_part => QueryManager_Insert_ResPart, :update_res_part => QueryManager_Update_ResPart]
-            oneofs = Int[1,1,1,1,1]
+            fnum = Int[100,101,102,103,104,105]
+            allflds = Pair{Symbol,Union{Type,String}}[:match_res_part => QueryManager_Match_ResPart, :match_group_res_part => QueryManager_MatchGroup_ResPart, :match_group_aggregate_res_part => QueryManager_MatchGroupAggregate_ResPart, :insert_res_part => QueryManager_Insert_ResPart, :update_res_part => QueryManager_Update_ResPart, :explain_res_part => QueryManager_Explain_ResPart]
+            oneofs = Int[1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
             meta(target, QueryManager_ResPart, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -736,6 +840,8 @@ function Base.getproperty(obj::QueryManager_ResPart, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::QueryManager_Insert_ResPart
     elseif name === :update_res_part
         return (obj.__protobuf_jl_internal_values[name])::QueryManager_Update_ResPart
+    elseif name === :explain_res_part
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Explain_ResPart
     else
         getfield(obj, name)
     end
@@ -928,9 +1034,9 @@ function meta(::Type{QueryManager_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_QueryManager_Req)
             __meta_QueryManager_Req[] = target = ProtoMeta(QueryManager_Req)
-            fnum = Int[1,100,101,102,103,104,105,106,107,108]
-            allflds = Pair{Symbol,Union{Type,String}}[:options => Options, :define_req => QueryManager_Define_Req, :undefine_req => QueryManager_Undefine_Req, :match_req => QueryManager_Match_Req, :match_aggregate_req => QueryManager_MatchAggregate_Req, :match_group_req => QueryManager_MatchGroup_Req, :match_group_aggregate_req => QueryManager_MatchGroupAggregate_Req, :insert_req => QueryManager_Insert_Req, :delete_req => QueryManager_Delete_Req, :update_req => QueryManager_Update_Req]
-            oneofs = Int[0,1,1,1,1,1,1,1,1,1]
+            fnum = Int[1,100,101,102,103,104,105,106,107,108,109]
+            allflds = Pair{Symbol,Union{Type,String}}[:options => Options, :define_req => QueryManager_Define_Req, :undefine_req => QueryManager_Undefine_Req, :match_req => QueryManager_Match_Req, :match_aggregate_req => QueryManager_MatchAggregate_Req, :match_group_req => QueryManager_MatchGroup_Req, :match_group_aggregate_req => QueryManager_MatchGroupAggregate_Req, :insert_req => QueryManager_Insert_Req, :delete_req => QueryManager_Delete_Req, :update_req => QueryManager_Update_Req, :explain_req => QueryManager_Explain_Req]
+            oneofs = Int[0,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("req")]
             meta(target, QueryManager_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -958,6 +1064,8 @@ function Base.getproperty(obj::QueryManager_Req, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::QueryManager_Delete_Req
     elseif name === :update_req
         return (obj.__protobuf_jl_internal_values[name])::QueryManager_Update_Req
+    elseif name === :explain_req
+        return (obj.__protobuf_jl_internal_values[name])::QueryManager_Explain_Req
     else
         getfield(obj, name)
     end
@@ -1099,4 +1207,4 @@ function meta(::Type{QueryManager})
     end
 end
 
-export QueryManager_Req, QueryManager_Res, QueryManager_ResPart, QueryManager_Match_Req, QueryManager_Match_ResPart, QueryManager_Match, QueryManager_MatchAggregate_Req, QueryManager_MatchAggregate_Res, QueryManager_MatchAggregate, QueryManager_MatchGroup_Req, QueryManager_MatchGroup_ResPart, QueryManager_MatchGroup, QueryManager_MatchGroupAggregate_Req, QueryManager_MatchGroupAggregate_ResPart, QueryManager_MatchGroupAggregate, QueryManager_Insert_Req, QueryManager_Insert_ResPart, QueryManager_Insert, QueryManager_Delete_Req, QueryManager_Delete_Res, QueryManager_Delete, QueryManager_Update_Req, QueryManager_Update_ResPart, QueryManager_Update, QueryManager_Define_Req, QueryManager_Define_Res, QueryManager_Define, QueryManager_Undefine_Req, QueryManager_Undefine_Res, QueryManager_Undefine, QueryManager
+export QueryManager_Req, QueryManager_Res, QueryManager_ResPart, QueryManager_Match_Req, QueryManager_Match_ResPart, QueryManager_Match, QueryManager_MatchAggregate_Req, QueryManager_MatchAggregate_Res, QueryManager_MatchAggregate, QueryManager_MatchGroup_Req, QueryManager_MatchGroup_ResPart, QueryManager_MatchGroup, QueryManager_MatchGroupAggregate_Req, QueryManager_MatchGroupAggregate_ResPart, QueryManager_MatchGroupAggregate, QueryManager_Explain_Req, QueryManager_Explain_ResPart, QueryManager_Explain, QueryManager_Insert_Req, QueryManager_Insert_ResPart, QueryManager_Insert, QueryManager_Delete_Req, QueryManager_Delete_Res, QueryManager_Delete, QueryManager_Update_Req, QueryManager_Update_ResPart, QueryManager_Update, QueryManager_Define_Req, QueryManager_Define_Res, QueryManager_Define, QueryManager_Undefine_Req, QueryManager_Undefine_Res, QueryManager_Undefine, QueryManager

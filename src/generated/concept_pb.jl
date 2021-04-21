@@ -1868,103 +1868,6 @@ function meta(::Type{Thing_Delete})
     end
 end
 
-mutable struct Thing_IsInferred_Req <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_IsInferred_Req(; kwargs...)
-        obj = new(meta(Thing_IsInferred_Req), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_IsInferred_Req
-const __meta_Thing_IsInferred_Req = Ref{ProtoMeta}()
-function meta(::Type{Thing_IsInferred_Req})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_IsInferred_Req)
-            __meta_Thing_IsInferred_Req[] = target = ProtoMeta(Thing_IsInferred_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_IsInferred_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_IsInferred_Req[]
-    end
-end
-
-mutable struct Thing_IsInferred_Res <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_IsInferred_Res(; kwargs...)
-        obj = new(meta(Thing_IsInferred_Res), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_IsInferred_Res
-const __meta_Thing_IsInferred_Res = Ref{ProtoMeta}()
-function meta(::Type{Thing_IsInferred_Res})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_IsInferred_Res)
-            __meta_Thing_IsInferred_Res[] = target = ProtoMeta(Thing_IsInferred_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:inferred => Bool]
-            meta(target, Thing_IsInferred_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_IsInferred_Res[]
-    end
-end
-function Base.getproperty(obj::Thing_IsInferred_Res, name::Symbol)
-    if name === :inferred
-        return (obj.__protobuf_jl_internal_values[name])::Bool
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Thing_IsInferred <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Thing_IsInferred(; kwargs...)
-        obj = new(meta(Thing_IsInferred), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Thing_IsInferred
-const __meta_Thing_IsInferred = Ref{ProtoMeta}()
-function meta(::Type{Thing_IsInferred})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Thing_IsInferred)
-            __meta_Thing_IsInferred[] = target = ProtoMeta(Thing_IsInferred)
-            allflds = Pair{Symbol,Union{Type,String}}[]
-            meta(target, Thing_IsInferred, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Thing_IsInferred[]
-    end
-end
-
 mutable struct Thing_GetType_Req <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -2288,7 +2191,7 @@ function meta(::Type{Thing})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Thing)
             __meta_Thing[] = target = ProtoMeta(Thing)
-            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :_type => _Type, :value => Attribute_Value]
+            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :_type => _Type, :value => Attribute_Value, :inferred => Bool]
             meta(target, Thing, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Thing[]
@@ -2301,6 +2204,8 @@ function Base.getproperty(obj::Thing, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::_Type
     elseif name === :value
         return (obj.__protobuf_jl_internal_values[name])::Attribute_Value
+    elseif name === :inferred
+        return (obj.__protobuf_jl_internal_values[name])::Bool
     else
         getfield(obj, name)
     end
@@ -2514,9 +2419,9 @@ function meta(::Type{Thing_Res})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Thing_Res)
             __meta_Thing_Res[] = target = ProtoMeta(Thing_Res)
-            fnum = Int[100,101,102,103,104,200,201]
-            allflds = Pair{Symbol,Union{Type,String}}[:thing_delete_res => Thing_Delete_Res, :thing_get_type_res => Thing_GetType_Res, :thing_is_inferred_res => Thing_IsInferred_Res, :thing_set_has_res => Thing_SetHas_Res, :thing_unset_has_res => Thing_UnsetHas_Res, :relation_add_player_res => Relation_AddPlayer_Res, :relation_remove_player_res => Relation_RemovePlayer_Res]
-            oneofs = Int[1,1,1,1,1,1,1]
+            fnum = Int[100,101,102,103,200,201]
+            allflds = Pair{Symbol,Union{Type,String}}[:thing_delete_res => Thing_Delete_Res, :thing_get_type_res => Thing_GetType_Res, :thing_set_has_res => Thing_SetHas_Res, :thing_unset_has_res => Thing_UnsetHas_Res, :relation_add_player_res => Relation_AddPlayer_Res, :relation_remove_player_res => Relation_RemovePlayer_Res]
+            oneofs = Int[1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("res")]
             meta(target, Thing_Res, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -2528,8 +2433,6 @@ function Base.getproperty(obj::Thing_Res, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Thing_Delete_Res
     elseif name === :thing_get_type_res
         return (obj.__protobuf_jl_internal_values[name])::Thing_GetType_Res
-    elseif name === :thing_is_inferred_res
-        return (obj.__protobuf_jl_internal_values[name])::Thing_IsInferred_Res
     elseif name === :thing_set_has_res
         return (obj.__protobuf_jl_internal_values[name])::Thing_SetHas_Res
     elseif name === :thing_unset_has_res
@@ -3022,9 +2925,9 @@ function meta(::Type{Thing_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Thing_Req)
             __meta_Thing_Req[] = target = ProtoMeta(Thing_Req)
-            fnum = Int[1,100,101,102,103,104,105,106,107,200,201,202,203,204,300]
-            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :thing_delete_req => Thing_Delete_Req, :thing_get_type_req => Thing_GetType_Req, :thing_is_inferred_req => Thing_IsInferred_Req, :thing_get_has_req => Thing_GetHas_Req, :thing_set_has_req => Thing_SetHas_Req, :thing_unset_has_req => Thing_UnsetHas_Req, :thing_get_relations_req => Thing_GetRelations_Req, :thing_get_playing_req => Thing_GetPlaying_Req, :relation_add_player_req => Relation_AddPlayer_Req, :relation_remove_player_req => Relation_RemovePlayer_Req, :relation_get_players_req => Relation_GetPlayers_Req, :relation_get_players_by_role_type_req => Relation_GetPlayersByRoleType_Req, :relation_get_relating_req => Relation_GetRelating_Req, :attribute_get_owners_req => Attribute_GetOwners_Req]
-            oneofs = Int[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            fnum = Int[1,100,101,102,103,104,105,106,200,201,202,203,204,300]
+            allflds = Pair{Symbol,Union{Type,String}}[:iid => Array{UInt8,1}, :thing_delete_req => Thing_Delete_Req, :thing_get_type_req => Thing_GetType_Req, :thing_get_has_req => Thing_GetHas_Req, :thing_set_has_req => Thing_SetHas_Req, :thing_unset_has_req => Thing_UnsetHas_Req, :thing_get_relations_req => Thing_GetRelations_Req, :thing_get_playing_req => Thing_GetPlaying_Req, :relation_add_player_req => Relation_AddPlayer_Req, :relation_remove_player_req => Relation_RemovePlayer_Req, :relation_get_players_req => Relation_GetPlayers_Req, :relation_get_players_by_role_type_req => Relation_GetPlayersByRoleType_Req, :relation_get_relating_req => Relation_GetRelating_Req, :attribute_get_owners_req => Attribute_GetOwners_Req]
+            oneofs = Int[0,1,1,1,1,1,1,1,1,1,1,1,1,1]
             oneof_names = Symbol[Symbol("req")]
             meta(target, Thing_Req, allflds, ProtoBuf.DEF_REQ, fnum, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, oneofs, oneof_names)
         end
@@ -3038,8 +2941,6 @@ function Base.getproperty(obj::Thing_Req, name::Symbol)
         return (obj.__protobuf_jl_internal_values[name])::Thing_Delete_Req
     elseif name === :thing_get_type_req
         return (obj.__protobuf_jl_internal_values[name])::Thing_GetType_Req
-    elseif name === :thing_is_inferred_req
-        return (obj.__protobuf_jl_internal_values[name])::Thing_IsInferred_Req
     elseif name === :thing_get_has_req
         return (obj.__protobuf_jl_internal_values[name])::Thing_GetHas_Req
     elseif name === :thing_set_has_req
@@ -5584,7 +5485,9 @@ mutable struct AttributeType_SetRegex_Res <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -5951,4 +5854,4 @@ function meta(::Type{AttributeType})
     end
 end
 
-export ConceptManager_Req, ConceptManager_Res, ConceptManager_GetThingType_Req, ConceptManager_GetThingType_Res, ConceptManager_GetThingType, ConceptManager_GetThing_Req, ConceptManager_GetThing_Res, ConceptManager_GetThing, ConceptManager_PutEntityType_Req, ConceptManager_PutEntityType_Res, ConceptManager_PutEntityType, ConceptManager_PutAttributeType_Req, ConceptManager_PutAttributeType_Res, ConceptManager_PutAttributeType, ConceptManager_PutRelationType_Req, ConceptManager_PutRelationType_Res, ConceptManager_PutRelationType, ConceptManager, Concept, Thing_Req, Thing_Res, Thing_ResPart, Thing_Delete_Req, Thing_Delete_Res, Thing_Delete, Thing_IsInferred_Req, Thing_IsInferred_Res, Thing_IsInferred, Thing_GetType_Req, Thing_GetType_Res, Thing_GetType, Thing_SetHas_Req, Thing_SetHas_Res, Thing_SetHas, Thing_UnsetHas_Req, Thing_UnsetHas_Res, Thing_UnsetHas, Thing_GetHas_Req, Thing_GetHas_ResPart, Thing_GetHas, Thing_GetPlaying_Req, Thing_GetPlaying_ResPart, Thing_GetPlaying, Thing_GetRelations_Req, Thing_GetRelations_ResPart, Thing_GetRelations, Thing, Relation_AddPlayer_Req, Relation_AddPlayer_Res, Relation_AddPlayer, Relation_RemovePlayer_Req, Relation_RemovePlayer_Res, Relation_RemovePlayer, Relation_GetPlayers_Req, Relation_GetPlayers_ResPart, Relation_GetPlayers, Relation_GetPlayersByRoleType_RoleTypeWithPlayer, Relation_GetPlayersByRoleType_Req, Relation_GetPlayersByRoleType_ResPart, Relation_GetPlayersByRoleType, Relation_GetRelating_Req, Relation_GetRelating_ResPart, Relation_GetRelating, Relation, Attribute_Value, Attribute_GetOwners_Req, Attribute_GetOwners_ResPart, Attribute_GetOwners, Attribute, Type_Encoding, Type_Req, Type_Res, Type_ResPart, Type_Delete_Req, Type_Delete_Res, Type_Delete, Type_SetLabel_Req, Type_SetLabel_Res, Type_SetLabel, Type_IsAbstract_Req, Type_IsAbstract_Res, Type_IsAbstract, Type_GetSupertype_Req, Type_GetSupertype_Res, Type_GetSupertype, Type_SetSupertype_Req, Type_SetSupertype_Res, Type_SetSupertype, Type_GetSupertypes_Req, Type_GetSupertypes_ResPart, Type_GetSupertypes, Type_GetSubtypes_Req, Type_GetSubtypes_ResPart, Type_GetSubtypes, _Type, RoleType_GetRelationTypes_Req, RoleType_GetRelationTypes_ResPart, RoleType_GetRelationTypes, RoleType_GetPlayers_Req, RoleType_GetPlayers_ResPart, RoleType_GetPlayers, RoleType, ThingType_SetAbstract_Req, ThingType_SetAbstract_Res, ThingType_SetAbstract, ThingType_UnsetAbstract_Req, ThingType_UnsetAbstract_Res, ThingType_UnsetAbstract, ThingType_GetInstances_Req, ThingType_GetInstances_ResPart, ThingType_GetInstances, ThingType_GetOwns_Req, ThingType_GetOwns_ResPart, ThingType_GetOwns, ThingType_GetPlays_Req, ThingType_GetPlays_ResPart, ThingType_GetPlays, ThingType_SetOwns_Req, ThingType_SetOwns_Res, ThingType_SetOwns, ThingType_SetPlays_Req, ThingType_SetPlays_Res, ThingType_SetPlays, ThingType_UnsetOwns_Req, ThingType_UnsetOwns_Res, ThingType_UnsetOwns, ThingType_UnsetPlays_Req, ThingType_UnsetPlays_Res, ThingType_UnsetPlays, ThingType, EntityType_Create_Req, EntityType_Create_Res, EntityType_Create, EntityType, RelationType_Create_Req, RelationType_Create_Res, RelationType_Create, RelationType_GetRelates_Req, RelationType_GetRelates_ResPart, RelationType_GetRelates, RelationType_GetRelatesForRoleLabel_Req, RelationType_GetRelatesForRoleLabel_Res, RelationType_GetRelatesForRoleLabel, RelationType_SetRelates_Req, RelationType_SetRelates_Res, RelationType_SetRelates, RelationType_UnsetRelates_Req, RelationType_UnsetRelates_Res, RelationType_UnsetRelates, RelationType, AttributeType_ValueType, AttributeType_Put_Req, AttributeType_Put_Res, AttributeType_Put, AttributeType_Get_Req, AttributeType_Get_Res, AttributeType_Get, AttributeType_GetOwners_Req, AttributeType_GetOwners_ResPart, AttributeType_GetOwners, AttributeType_GetRegex_Req, AttributeType_GetRegex_Res, AttributeType_GetRegex, AttributeType_SetRegex_Req, AttributeType_SetRegex_Res, AttributeType_SetRegex, AttributeType_GetSubtypes_Req, AttributeType_GetSubtypes_ResPart, AttributeType_GetSubtypes, AttributeType_GetInstances_Req, AttributeType_GetInstances_ResPart, AttributeType_GetInstances, AttributeType
+export ConceptManager_Req, ConceptManager_Res, ConceptManager_GetThingType_Req, ConceptManager_GetThingType_Res, ConceptManager_GetThingType, ConceptManager_GetThing_Req, ConceptManager_GetThing_Res, ConceptManager_GetThing, ConceptManager_PutEntityType_Req, ConceptManager_PutEntityType_Res, ConceptManager_PutEntityType, ConceptManager_PutAttributeType_Req, ConceptManager_PutAttributeType_Res, ConceptManager_PutAttributeType, ConceptManager_PutRelationType_Req, ConceptManager_PutRelationType_Res, ConceptManager_PutRelationType, ConceptManager, Concept, Thing_Req, Thing_Res, Thing_ResPart, Thing_Delete_Req, Thing_Delete_Res, Thing_Delete, Thing_GetType_Req, Thing_GetType_Res, Thing_GetType, Thing_SetHas_Req, Thing_SetHas_Res, Thing_SetHas, Thing_UnsetHas_Req, Thing_UnsetHas_Res, Thing_UnsetHas, Thing_GetHas_Req, Thing_GetHas_ResPart, Thing_GetHas, Thing_GetPlaying_Req, Thing_GetPlaying_ResPart, Thing_GetPlaying, Thing_GetRelations_Req, Thing_GetRelations_ResPart, Thing_GetRelations, Thing, Relation_AddPlayer_Req, Relation_AddPlayer_Res, Relation_AddPlayer, Relation_RemovePlayer_Req, Relation_RemovePlayer_Res, Relation_RemovePlayer, Relation_GetPlayers_Req, Relation_GetPlayers_ResPart, Relation_GetPlayers, Relation_GetPlayersByRoleType_RoleTypeWithPlayer, Relation_GetPlayersByRoleType_Req, Relation_GetPlayersByRoleType_ResPart, Relation_GetPlayersByRoleType, Relation_GetRelating_Req, Relation_GetRelating_ResPart, Relation_GetRelating, Relation, Attribute_Value, Attribute_GetOwners_Req, Attribute_GetOwners_ResPart, Attribute_GetOwners, Attribute, Type_Encoding, Type_Req, Type_Res, Type_ResPart, Type_Delete_Req, Type_Delete_Res, Type_Delete, Type_SetLabel_Req, Type_SetLabel_Res, Type_SetLabel, Type_IsAbstract_Req, Type_IsAbstract_Res, Type_IsAbstract, Type_GetSupertype_Req, Type_GetSupertype_Res, Type_GetSupertype, Type_SetSupertype_Req, Type_SetSupertype_Res, Type_SetSupertype, Type_GetSupertypes_Req, Type_GetSupertypes_ResPart, Type_GetSupertypes, Type_GetSubtypes_Req, Type_GetSubtypes_ResPart, Type_GetSubtypes, _Type, RoleType_GetRelationTypes_Req, RoleType_GetRelationTypes_ResPart, RoleType_GetRelationTypes, RoleType_GetPlayers_Req, RoleType_GetPlayers_ResPart, RoleType_GetPlayers, RoleType, ThingType_SetAbstract_Req, ThingType_SetAbstract_Res, ThingType_SetAbstract, ThingType_UnsetAbstract_Req, ThingType_UnsetAbstract_Res, ThingType_UnsetAbstract, ThingType_GetInstances_Req, ThingType_GetInstances_ResPart, ThingType_GetInstances, ThingType_GetOwns_Req, ThingType_GetOwns_ResPart, ThingType_GetOwns, ThingType_GetPlays_Req, ThingType_GetPlays_ResPart, ThingType_GetPlays, ThingType_SetOwns_Req, ThingType_SetOwns_Res, ThingType_SetOwns, ThingType_SetPlays_Req, ThingType_SetPlays_Res, ThingType_SetPlays, ThingType_UnsetOwns_Req, ThingType_UnsetOwns_Res, ThingType_UnsetOwns, ThingType_UnsetPlays_Req, ThingType_UnsetPlays_Res, ThingType_UnsetPlays, ThingType, EntityType_Create_Req, EntityType_Create_Res, EntityType_Create, EntityType, RelationType_Create_Req, RelationType_Create_Res, RelationType_Create, RelationType_GetRelates_Req, RelationType_GetRelates_ResPart, RelationType_GetRelates, RelationType_GetRelatesForRoleLabel_Req, RelationType_GetRelatesForRoleLabel_Res, RelationType_GetRelatesForRoleLabel, RelationType_SetRelates_Req, RelationType_SetRelates_Res, RelationType_SetRelates, RelationType_UnsetRelates_Req, RelationType_UnsetRelates_Res, RelationType_UnsetRelates, RelationType, AttributeType_ValueType, AttributeType_Put_Req, AttributeType_Put_Res, AttributeType_Put, AttributeType_Get_Req, AttributeType_Get_Res, AttributeType_Get, AttributeType_GetOwners_Req, AttributeType_GetOwners_ResPart, AttributeType_GetOwners, AttributeType_GetRegex_Req, AttributeType_GetRegex_Res, AttributeType_GetRegex, AttributeType_SetRegex_Req, AttributeType_SetRegex_Res, AttributeType_SetRegex, AttributeType_GetSubtypes_Req, AttributeType_GetSubtypes_ResPart, AttributeType_GetSubtypes, AttributeType_GetInstances_Req, AttributeType_GetInstances_ResPart, AttributeType_GetInstances, AttributeType
