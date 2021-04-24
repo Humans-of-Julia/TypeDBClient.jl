@@ -5,6 +5,104 @@
 end
 
 
+
+#=
+@then("connection has database: alice") do context
+    @fail "Implement me"
+end
+
+
+@when("connection create databases:") do context
+    @fail "Implement me"
+end
+
+
+@then("connection has databases:") do context
+    @fail "Implement me"
+end
+
+
+@when("connection create databases in parallel:") do context
+    @fail "Implement me"
+end
+
+
+@when("connection delete database: alice") do context
+    @fail "Implement me"
+end
+
+
+@then("connection does not have database: alice") do context
+    @fail "Implement me"
+end
+
+
+@then("connection does not have any database") do context
+    @fail "Implement me"
+end
+
+
+@when("connection delete databases:") do context
+    @fail "Implement me"
+end
+
+
+@then("connection does not have databases:") do context
+    @fail "Implement me"
+end
+
+
+@when("connection delete databases in parallel:") do context
+    @fail "Implement me"
+end
+
+
+@when("connection create database: grakn") do context
+    @fail "Implement me"
+end
+
+
+@when("connection open session for database: grakn") do context
+    @fail "Implement me"
+end
+
+
+@when("connection delete database: grakn") do context
+    @fail "Implement me"
+end
+
+
+@then("connection does not have database: grakn") do context
+    @fail "Implement me"
+end
+
+
+@then("session open transaction of type; throws exception: write") do context
+    @fail "Implement me"
+end
+
+
+@when("session opens transaction of type: write") do context
+    @fail "Implement me"
+end
+
+
+@then("graql define; throws exception containing \"transaction has been closed\"") do context
+    @fail "Implement me"
+end
+
+
+@when("connection delete database; throws exception: grakn") do context
+    @fail "Implement me"
+end
+
+
+@given("connection has been opened") do context
+    @fail "Implement me"
+end
+
+=#
+
 #=
 
 #
