@@ -33,6 +33,8 @@ function open_req(database::String, _type::EnumType, options::Proto.Options)
     return Proto.Session_Open_Req(; database, _type, options)
 end
 
+close_req(session_id::Bytes) = Proto.Session_Close_Req(; session_id)
+
 pulse_req(session_id::Bytes) = Proto.Session_Pulse_Req(; session_id)
 
 end

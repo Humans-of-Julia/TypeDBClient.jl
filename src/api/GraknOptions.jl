@@ -1,14 +1,14 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
 mutable struct GraknOptions
-    infer::Union{Nothing, Bool}
-    trace_inference::Union{Nothing, Bool}
-    explain::Union{Nothing, Bool}
-    parallel::Union{Nothing, Bool}
-    batch_size::Union{Nothing, Int}
-    prefetch::Union{Nothing, Bool}
-    session_idle_timeout_millis::Union{Nothing, Int}
-    schema_lock_acquire_timeout_millis::Union{Nothing, Int}
+    infer::Optional{Bool}
+    trace_inference::Optional{Bool}
+    explain::Optional{Bool}
+    parallel::Optional{Bool}
+    batch_size::Optional{Int}
+    prefetch::Optional{Bool}
+    session_idle_timeout_millis::Optional{Int}
+    schema_lock_acquire_timeout_millis::Optional{Int}
 end
 
 function GraknOptions()
