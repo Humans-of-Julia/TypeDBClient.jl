@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Concept Entity Type
   Background:
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
   Scenario: Entity types can be created
@@ -66,12 +66,12 @@ Feature: Concept Entity Type
     When put entity type: person
     When transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $x = entity(person) create new instance
     When transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then delete entity type: person; throws exception
 
@@ -258,30 +258,30 @@ Feature: Concept Entity Type
     When entity(person) set owns key type: username
     Then transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $a = entity(person) create new instance with key(username): alice
     When $b = entity(person) create new instance with key(username): bob
     Then transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     When entity(person) set owns key type: email; throws exception
     When session opens transaction of type: write
     When entity(person) set owns attribute type: email
     Then transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $a = entity(person) get instance with key(username): alice
-    When $alice = attribute(email) as(string) put: alice@grakn.ai
+    When $alice = attribute(email) as(string) put: alice@typedb.ai
     When entity $a set has: $alice
     When $b = entity(person) get instance with key(username): bob
-    When $bob = attribute(email) as(string) put: bob@grakn.ai
+    When $bob = attribute(email) as(string) put: bob@typedb.ai
     When entity $b set has: $bob
     Then transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     When entity(person) set owns key type: email
     Then entity(person) get owns key types contain:
@@ -363,14 +363,14 @@ Feature: Concept Entity Type
     When entity(person) set owns attribute type: name
     Then transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $a = entity(person) create new instance
     When $alice = attribute(name) as(string) put: alice
     When entity $a set has: $alice
     Then transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then entity(person) unset owns attribute type: name; throws exception
 
@@ -972,14 +972,14 @@ Feature: Concept Entity Type
     When entity(person) set plays role: marriage:wife
     Then transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $m = relation(marriage) create new instance
     When $a = entity(person) create new instance
     When relation $m add player for role(wife): $a
     Then transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then entity(person) unset plays role: marriage:wife; throws exception
 

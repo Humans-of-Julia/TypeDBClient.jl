@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Graql Match Query
   Background: Open connection and create a simple extensible schema
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
     Given graql define
@@ -139,7 +139,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -339,7 +339,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -436,7 +436,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -588,7 +588,7 @@ Feature: Graql Match Query
 
   Scenario: 'isa' gets any thing for any type
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -629,7 +629,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -664,7 +664,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -688,7 +688,7 @@ Feature: Graql Match Query
 
   Scenario: 'iid' matches the instance with the specified internal iid
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -745,7 +745,7 @@ Feature: Graql Match Query
 
   Scenario: when one entity exists, and we match two variables both of that entity type, the entity is returned
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -802,7 +802,7 @@ Feature: Graql Match Query
 
   Scenario: a relation is matchable from role players without specifying relation type
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -833,7 +833,7 @@ Feature: Graql Match Query
 
   Scenario: relations are matchable from roleplayers without specifying any roles
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -857,7 +857,7 @@ Feature: Graql Match Query
 
   Scenario: all combinations of players in a relation can be retrieved
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -893,7 +893,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -921,7 +921,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -941,7 +941,7 @@ Feature: Graql Match Query
 
   Scenario: a mixture of variable and explicit roles can retrieve relations
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -964,7 +964,7 @@ Feature: Graql Match Query
 
   Scenario: relations between distinct concepts are not retrieved when matching concepts that relate to themselves
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -998,7 +998,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1047,7 +1047,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1146,7 +1146,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1234,7 +1234,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1285,7 +1285,7 @@ Feature: Graql Match Query
 
   Scenario: 'contains' matches strings that contain the specified substring
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1309,7 +1309,7 @@ Feature: Graql Match Query
 
   Scenario: 'contains' performs a case-insensitive match
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1333,7 +1333,7 @@ Feature: Graql Match Query
 
   Scenario: 'like' matches strings that match the specified regex
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1374,7 +1374,7 @@ Feature: Graql Match Query
   #       containing a new set of scenarios that test: traversal structure, plan and procedure
   Scenario: Traversal planner can handle "loops" in the traversal structure
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1398,14 +1398,14 @@ Feature: Graql Match Query
 
   Scenario: 'has' can be used to match things that own any instance of the specified attribute
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
       $x isa person, has name "Leila", has ref 0;
       $y isa person, has ref 1;
-      $c isa company, has name "Grakn", has ref 2;
+      $c isa company, has name "TypeDB", has ref 2;
       $d isa company, has ref 3;
       """
     Given transaction commits
@@ -1431,7 +1431,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1464,7 +1464,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1500,7 +1500,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1528,7 +1528,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1588,7 +1588,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1613,7 +1613,7 @@ Feature: Graql Match Query
 
   Scenario: 'has $attr = $x' matches owners of any instance '$y' of '$attr' where '$y' and '$x' are equal by value
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1636,7 +1636,7 @@ Feature: Graql Match Query
 
   Scenario: 'has $attr > $x' matches owners of any instance '$y' of '$attr' where '$y > $x'
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1659,7 +1659,7 @@ Feature: Graql Match Query
 
   Scenario: 'has $attr < $x' matches owners of any instance '$y' of '$attr' where '$y < $x'
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1682,7 +1682,7 @@ Feature: Graql Match Query
 
   Scenario: 'has $attr != $x' matches owners of any instance '$y' of '$attr' where '$y != $x'
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1714,7 +1714,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1779,7 +1779,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1800,7 +1800,7 @@ Feature: Graql Match Query
 
   Scenario: an attribute variable used in both '=' and '>=' predicates is correctly resolved
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1835,7 +1835,7 @@ Feature: Graql Match Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1862,7 +1862,7 @@ Feature: Graql Match Query
 
   Scenario: when one entity exists, and we match two variables with concept inequality, an empty answer is returned
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1893,7 +1893,7 @@ Feature: Graql Match Query
 
   Scenario: disjunctions return the union of composing query statements
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1924,7 +1924,7 @@ Feature: Graql Match Query
 
   Scenario: negations can be applied to filtered variables
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1949,7 +1949,7 @@ Feature: Graql Match Query
 
   Scenario: all instances and their types can be retrieved
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1988,7 +1988,7 @@ Feature: Graql Match Query
 
   Scenario: all relations and their types can be retrieved
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """

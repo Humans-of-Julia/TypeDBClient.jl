@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 #=
 In root folder run $ bash setup.sh to genrate the proto files
@@ -13,7 +13,7 @@ Pkg.add(url="https://github.com/erikedin/Behavior.jl")
 ] dev Behavior
 ] dev gRPCClient
 =#
-module GraknClient
+module TypeDBClient
 
 using Dates
 using DataStructures
@@ -46,7 +46,7 @@ abstract type AbstractQueryManager end
 ########################################
 
 #generated section
-include("generated/grakn.jl")
+include("generated/typedb.jl")
 include("generated/core_service_pb.jl")
 
 #standard julia sources
@@ -56,8 +56,8 @@ include("standard/utils.jl")
 #common section
 include("common/Label.jl")
 include("common/exception/ErrorMessage.jl")
-include("common/exception/GraknClientException.jl")
-include("common/rpc/GraknStub.jl")
+include("common/exception/TypeDBClientException.jl")
+include("common/rpc/TypeDBStub.jl")
 include("common/rpc/RequestBuilder.jl")
 
 #concepts
@@ -79,7 +79,7 @@ include("concept/answer/ConceptMap.jl")
 
 
 #api section
-include("api/GraknOptions.jl")
+include("api/TypeDBOptions.jl")
 
 #stream section
 include("stream/RequestTransmitter.jl")
@@ -97,7 +97,7 @@ include("core/CoreTransaction.jl")
 include("common/exception/gRPC_Result_Handling.jl")
 
 
-export GraknCoreBlockingClient, GraknClientException
+export TypeDBBlockingClient, TypeDBClientException
 export contains_database
 
 
@@ -105,9 +105,9 @@ export contains_database
 
 ####### pretty printing sectoin ##################
 
-Base.show(io::IO, blocking_stub::GraknCoreBlockingStub) = Base.print(io,blocking_stub)
-function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
-    print(io, "GraknCoreBlockingStub($(blocking_stub.impl.channel))")
+Base.show(io::IO, blocking_stub::TypeDBBlockingStub) = Base.print(io,blocking_stub)
+function Base.print(io::IO, blocking_stub::TypeDBBlockingStub)
+    print(io, "TypeDBBlockingStub($(blocking_stub.impl.channel))")
     return nothing
 end
 

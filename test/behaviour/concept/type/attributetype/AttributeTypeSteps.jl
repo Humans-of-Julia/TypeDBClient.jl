@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 
 @given("put attribute type: is-alive, with value type: boolean") do context
@@ -39,7 +39,7 @@ end
 from behave import *
 from hamcrest import *
 
-from grakn.api.concept.type.attribute_type import AttributeType
+from typedb.api.concept.type.attribute_type import AttributeType
 from tests.behaviour.config.parameters import parse_value_type, parse_list, parse_label
 from tests.behaviour.context import Context
 

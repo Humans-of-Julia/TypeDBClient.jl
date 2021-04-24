@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct Entity <: AbstractEntity
     iid::String
@@ -7,6 +7,6 @@ end
 
 function Entity(t::Proto.Thing)
     iid = bytes2hex(t.iid)
-    isempty(iid) && throw(GraknClientException(CONCEPT_MISSING_IID))
+    isempty(iid) && throw(TypeDBClientException(CONCEPT_MISSING_IID))
     return Entity(iid, instantiate(t._type))
 end

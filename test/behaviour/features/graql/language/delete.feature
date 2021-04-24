@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Graql Delete Query
   Background: Open connection and create a simple extensible schema
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
     Given graql define
@@ -40,7 +40,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
 
 
@@ -330,7 +330,7 @@ Feature: Graql Delete Query
 
   Scenario: deleting a relation instance using a too-specific (downcasting) type throws
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -340,7 +340,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -698,7 +698,7 @@ Feature: Graql Delete Query
 
   Scenario: deleting a role player with a too-specific (downcasting) role throws
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -709,7 +709,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -747,7 +747,7 @@ Feature: Graql Delete Query
 #  So, if the user does not specify a specific-enough roles, we may throw.
   Scenario: deleting a role player with a variable role throws if the role selector has multiple distinct matches
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -758,7 +758,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -799,7 +799,7 @@ Feature: Graql Delete Query
   @ignore
   Scenario: when deleting repeated role players with a single variable role, both repetitions are removed
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -810,7 +810,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -852,7 +852,7 @@ Feature: Graql Delete Query
 
   Scenario: deleting an attribute instance also deletes its ownerships
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -863,7 +863,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -899,7 +899,7 @@ Feature: Graql Delete Query
 
   Scenario: attempting to delete an attribute ownership with a derived isa throws
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -910,7 +910,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given get answers of graql insert
       """
@@ -938,7 +938,7 @@ Feature: Graql Delete Query
 
   Scenario: deleting an attribute ownership using 'thing' as a label throws an error
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -950,7 +950,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1019,7 +1019,7 @@ Feature: Graql Delete Query
 
   Scenario: deleting the owner of an attribute also deletes the attribute ownership
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1030,7 +1030,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1068,7 +1068,7 @@ Feature: Graql Delete Query
 
   Scenario: deleting the last roleplayer in a relation deletes both the relation and its attribute ownerships
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1079,7 +1079,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1135,7 +1135,7 @@ Feature: Graql Delete Query
 
   Scenario: deletion of a complex pattern
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1146,7 +1146,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1207,7 +1207,7 @@ Feature: Graql Delete Query
 
   Scenario: deleting everything in a complex pattern
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1218,7 +1218,7 @@ Feature: Graql Delete Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """

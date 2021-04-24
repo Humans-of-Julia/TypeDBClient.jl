@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Concept Attribute
   Background:
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     # Write schema for the test scenarios
     Given put attribute type: is-alive, with value type: boolean
@@ -41,7 +41,7 @@ Feature: Concept Attribute
     Given entity(person) set owns attribute type: birth-date
     Given transaction commits
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
 
   Scenario: Attribute with value type boolean can be created

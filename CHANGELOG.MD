@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## [vX.X.X](https://github.com/Humans-of-Julia/GraknClient.jl) - DATE
+## [vX.X.X](https://github.com/Humans-of-Julia/TypeDBClient.jl) - DATE
 
 ### Fixed
 
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - This is for a template purpose
 
-## [v0.1.0](https://github.com/Humans-of-Julia/GraknClient.jl) - DATE
+## [v0.1.0](https://github.com/Humans-of-Julia/TypeDBClient.jl) - DATE
 
 We first introduce this `CHANGELOG` after release `v0.1.0`, so please refer to the GitHub release
 notes for this and earlier releases.

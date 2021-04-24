@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -129,21 +129,21 @@ Feature: Connection Database
   # TODO: currently throws in @After; re-enable when we are able to check if sessions are alive (see client-java#225)
   @ignore
   Scenario: delete a database causes open sessions to fail
-    When connection create database: grakn
-    When connection open session for database: grakn
-    When connection delete database: grakn
-    Then connection does not have database: grakn
+    When connection create database: typedb
+    When connection open session for database: typedb
+    When connection delete database: typedb
+    Then connection does not have database: typedb
     Then session open transaction of type; throws exception: write
 
 
   # TODO: currently throws in @After; re-enable when we are able to check if sessions are alive (see client-java#225)
   @ignore
   Scenario: delete a database causes open transactions to fail
-    When connection create database: grakn
-    When connection open session for database: grakn
+    When connection create database: typedb
+    When connection open session for database: typedb
     When session opens transaction of type: write
-    When connection delete database: grakn
-    Then connection does not have database: grakn
+    When connection delete database: typedb
+    Then connection does not have database: typedb
     Then graql define; throws exception containing "transaction has been closed"
       """
       define person sub entity;
@@ -153,4 +153,4 @@ Feature: Connection Database
   # TODO: re-enable in Cluster once fully fault-tolerant database deletion is implemented
   @ignore-cluster
   Scenario: delete a nonexistent database throws an error
-    When connection delete database; throws exception: grakn
+    When connection delete database; throws exception: typedb

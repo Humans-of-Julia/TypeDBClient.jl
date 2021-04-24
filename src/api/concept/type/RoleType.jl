@@ -1,9 +1,9 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api.concept.type;
+# package typedb.client.api.concept.type;
 # 
-# import grakn.client.api.GraknTransaction;
+# import typedb.client.api.TypeDBTransaction;
 # 
 # import java.util.stream.Stream;
 # 
@@ -15,7 +15,7 @@
 #     }
 # 
 #     @Override
-#     RoleType.Remote asRemote(GraknTransaction transaction);
+#     RoleType.Remote asRemote(TypeDBTransaction transaction);
 # 
 #     interface Remote extends Type.Remote, RoleType {
 # 

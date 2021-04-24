@@ -1,79 +1,79 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-mutable struct GraknClientException <: Exception
+mutable struct TypeDBClientException <: Exception
     error_message::T where {T<:Union{<:AbstractGeneralError,<:Nothing}}
     params::Optional{Tuple}
     individual_message::Union{Nothing, String}
     cause::R where {R<:Union{Nothing, Exception}}
 end
 
-Base.show(io::IO, grakn_excption::GraknClientException) = Base.print(io,grakn_excption)
-function Base.print(io::IO, grakn_excption::GraknClientException)
-    err_message = string(grakn_excption.error_message)
+Base.show(io::IO, typedb_excption::TypeDBClientException) = Base.print(io,typedb_excption)
+function Base.print(io::IO, typedb_excption::TypeDBClientException)
+    err_message = string(typedb_excption.error_message)
     joined_params = ""
-    if grakn_excption.params !== nothing
-        if !isempty(grakn_excption.params)
+    if typedb_excption.params !== nothing
+        if !isempty(typedb_excption.params)
             replace_item = "_error_item"
-            err_message = replace(err_message, replace_item=>string(grakn_excption.params[1]))
-            joined_params = join(grakn_excption.params, "\n")
+            err_message = replace(err_message, replace_item=>string(typedb_excption.params[1]))
+            joined_params = join(typedb_excption.params, "\n")
         end
     end
-    str = "GraknClientException:
+    str = "TypeDBClientException:
         message: $(err_message)
         params: $(joined_params)
-        remark: $(grakn_excption.individual_message)
-        cause: $(Base.show(grakn_excption.cause))"
+        remark: $(typedb_excption.individual_message)
+        cause: $(Base.show(typedb_excption.cause))"
 
     print(io,str)
     return nothing
 end
 
-function GraknClientException(err::Type{T}, parameters...) where {T<:AbstractGeneralError}
+function TypeDBClientException(err::Type{T}, parameters...) where {T<:AbstractGeneralError}
     err = _build_error_messages(err)
     _params = parameters === nothing && Tuple{}()
-    return GraknClientException(err, parameters, nothing, nothing)
+    return TypeDBClientException(err, parameters, nothing, nothing)
 end
 
-function GraknClientException(message::String, cause::T) where {T<:Exception}
+function TypeDBClientException(message::String, cause::T) where {T<:Exception}
     err = _build_error_messages(GENERAL_UNKOWN_ERROR)
-    return GraknClientException(err,nothing,message,cause)
+    return TypeDBClientException(err,nothing,message,cause)
 end
 
 
 #
-# package grakn.client.common.exception;
+# package typedb.client.common.exception;
 #
 # import io.grpc.Status;
 # import io.grpc.StatusRuntimeException;
 #
 # import javax.annotation.Nullable;
 #
-# public class GraknClientException extends RuntimeException {
+# public class TypeDBClientException extends RuntimeException {
 #
 #     @Nullable
 #     private final ErrorMessage errorMessage;
 #
-#     public GraknClientException(ErrorMessage error, Object... parameters) {
+#     public TypeDBClientException(ErrorMessage error, Object... parameters) {
 #         super(error.message(parameters));
 #         assert !getMessage().contains("%s");
 #         this.errorMessage = error;
 #     }
 #
-#     public GraknClientException(String message, Throwable cause) {
+#     public TypeDBClientException(String message, Throwable cause) {
 #         super(message, cause);
 #         this.errorMessage = null;
 #     }
 #
-#     public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
+#     public static TypeDBClientException of(StatusRuntimeException statusRuntimeException) {
 #         // "Received Rst Stream" occurs if the server is in the process of shutting down.
 #         if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE
 #                 || statusRuntimeException.getStatus().getCode() == Status.Code.UNKNOWN
 #                 || statusRuntimeException.getMessage().contains("Received Rst Stream")) {
-#             return new GraknClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
+#             return new TypeDBClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
 #         } else if (isReplicaNotPrimaryException(statusRuntimeException)) {
-#             return new GraknClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
+#             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
 #         }
-#         return new GraknClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
+#         return new TypeDBClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
 #     }
 #
 #     public String getName() {

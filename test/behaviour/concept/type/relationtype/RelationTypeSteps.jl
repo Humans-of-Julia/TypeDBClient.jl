@@ -1,19 +1,19 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.test.behaviour.concept.type.relationtype;
+# package typedb.client.test.behaviour.concept.type.relationtype;
 # 
-# import grakn.client.api.concept.type.RoleType;
-# import grakn.client.api.concept.type.Type;
-# import grakn.client.common.Label;
+# import typedb.client.api.concept.type.RoleType;
+# import typedb.client.api.concept.type.Type;
+# import typedb.client.common.Label;
 # import io.cucumber.java.en.Then;
 # import io.cucumber.java.en.When;
 # 
 # import java.util.List;
 # import java.util.Set;
 # 
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static grakn.client.test.behaviour.util.Util.assertThrows;
+# import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+# import static typedb.client.test.behaviour.util.Util.assertThrows;
 # import static java.util.Objects.isNull;
 # import static java.util.stream.Collectors.toSet;
 # import static org.junit.Assert.assertEquals;

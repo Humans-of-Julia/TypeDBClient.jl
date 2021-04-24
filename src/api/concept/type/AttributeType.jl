@@ -1,19 +1,19 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api.concept.type;
+# package typedb.client.api.concept.type;
 # 
-# import grakn.client.api.GraknTransaction;
-# import grakn.client.api.concept.thing.Attribute;
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.protocol.ConceptProto;
+# import typedb.client.api.TypeDBTransaction;
+# import typedb.client.api.concept.thing.Attribute;
+# import typedb.client.common.exception.TypeDBClientException;
+# import typedb.protocol.ConceptProto;
 # 
 # import javax.annotation.CheckReturnValue;
 # import javax.annotation.Nullable;
 # import java.time.LocalDateTime;
 # import java.util.stream.Stream;
 # 
-# import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+# import static typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 # 
 # public interface AttributeType extends ThingType {
 # 
@@ -58,7 +58,7 @@
 # 
 #     @Override
 #     @CheckReturnValue
-#     AttributeType.Remote asRemote(GraknTransaction transaction);
+#     AttributeType.Remote asRemote(TypeDBTransaction transaction);
 # 
 #     @CheckReturnValue
 #     AttributeType.Boolean asBoolean();
@@ -101,7 +101,7 @@
 #                     return t;
 #                 }
 #             }
-#             throw new GraknClientException(BAD_VALUE_TYPE);
+#             throw new TypeDBClientException(BAD_VALUE_TYPE);
 #         }
 # 
 #         @CheckReturnValue
@@ -199,7 +199,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         AttributeType.Boolean.Remote asRemote(GraknTransaction transaction);
+#         AttributeType.Boolean.Remote asRemote(TypeDBTransaction transaction);
 # 
 #         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 # 
@@ -237,7 +237,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         AttributeType.Long.Remote asRemote(GraknTransaction transaction);
+#         AttributeType.Long.Remote asRemote(TypeDBTransaction transaction);
 # 
 #         interface Remote extends AttributeType.Long, AttributeType.Remote {
 # 
@@ -275,7 +275,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         AttributeType.Double.Remote asRemote(GraknTransaction transaction);
+#         AttributeType.Double.Remote asRemote(TypeDBTransaction transaction);
 # 
 #         interface Remote extends AttributeType.Double, AttributeType.Remote {
 # 
@@ -313,7 +313,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         AttributeType.String.Remote asRemote(GraknTransaction transaction);
+#         AttributeType.String.Remote asRemote(TypeDBTransaction transaction);
 # 
 #         interface Remote extends AttributeType.String, AttributeType.Remote {
 # 
@@ -357,7 +357,7 @@
 # 
 #         @Override
 #         @CheckReturnValue
-#         AttributeType.DateTime.Remote asRemote(GraknTransaction transaction);
+#         AttributeType.DateTime.Remote asRemote(TypeDBTransaction transaction);
 # 
 #         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 # 

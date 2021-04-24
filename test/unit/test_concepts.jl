@@ -1,13 +1,13 @@
 using Pretend: Pretend, apply
 using Test
 
-using GraknClient:
+using TypeDBClient:
     AbstractCoreTransaction, EntityType, RelationType, RoleType, AttributeType,
     Label, AbstractEntity, AbstractRoleType,
     ConceptMap,
     as_remote, create, execute, instantiate, proto, is_writable, is_keyable
 
-import GraknClient.grakn.protocol as Proto
+import TypeDBClient.typedb.protocol as Proto
 
 # Turn on mocking framework
 Pretend.activate()

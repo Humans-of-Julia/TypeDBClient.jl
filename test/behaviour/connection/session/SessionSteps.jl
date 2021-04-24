@@ -1,4 +1,4 @@
-@given("connection open schema session for database: grakn") do context
+@given("connection open schema session for database: typedb") do context
     @fail "Implement me"
 end
 
@@ -7,7 +7,7 @@ end
 end
 
 
-@given("connection open data session for database: grakn") do context
+@given("connection open data session for database: typedb") do context
     @fail "Implement me"
 end
 
@@ -20,7 +20,7 @@ from typing import List
 from behave import *
 from hamcrest import *
 
-from grakn.api.session import SessionType
+from typedb.api.session import SessionType
 from tests.behaviour.config.parameters import parse_bool, parse_list
 from tests.behaviour.context import Context
 

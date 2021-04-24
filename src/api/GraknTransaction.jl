@@ -1,18 +1,18 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api;
+# package typedb.client.api;
 # 
-# import grakn.client.api.concept.ConceptManager;
-# import grakn.client.api.logic.LogicManager;
-# import grakn.client.api.query.QueryFuture;
-# import grakn.client.api.query.QueryManager;
-# import grakn.protocol.TransactionProto;
+# import typedb.client.api.concept.ConceptManager;
+# import typedb.client.api.logic.LogicManager;
+# import typedb.client.api.query.QueryFuture;
+# import typedb.client.api.query.QueryManager;
+# import typedb.protocol.TransactionProto;
 # 
 # import javax.annotation.CheckReturnValue;
 # import java.util.stream.Stream;
 # 
-# public interface GraknTransaction extends AutoCloseable {
+# public interface TypeDBTransaction extends AutoCloseable {
 # 
 #     @CheckReturnValue
 #     boolean isOpen();
@@ -21,7 +21,7 @@
 #     Type type();
 # 
 #     @CheckReturnValue
-#     GraknOptions options();
+#     TypeDBOptions options();
 # 
 #     @CheckReturnValue
 #     ConceptManager concepts();
@@ -70,7 +70,7 @@
 #         }
 #     }
 # 
-#     interface Extended extends GraknTransaction {
+#     interface Extended extends TypeDBTransaction {
 # 
 #         TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request);
 # 

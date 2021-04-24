@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct AttributeType{V} <: AbstractAttributeType
     label::Label
@@ -17,7 +17,7 @@ end
 let
     function _as_something(value_type::EnumType)
         return function(t::AttributeType{V}) where {V}
-            t.is_root || throw(GraknClientException(INVALID_CONCEPT_CASTING, V))
+            t.is_root || throw(TypeDBClientException(INVALID_CONCEPT_CASTING, V))
             return AttributeType(Label("attribute"), true, value_type)
         end
     end

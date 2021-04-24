@@ -1,13 +1,13 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api;
+# package typedb.client.api;
 # 
-# import grakn.client.api.database.DatabaseManager;
+# import typedb.client.api.database.DatabaseManager;
 # 
 # import javax.annotation.CheckReturnValue;
 # 
-# public interface GraknClient extends AutoCloseable {
+# public interface TypeDBClient extends AutoCloseable {
 # 
 #     @CheckReturnValue
 #     boolean isOpen();
@@ -16,20 +16,20 @@
 #     DatabaseManager databases();
 # 
 #     @CheckReturnValue
-#     GraknSession session(String database, GraknSession.Type type);
+#     TypeDBSession session(String database, TypeDBSession.Type type);
 # 
 #     @CheckReturnValue
-#     GraknSession session(String database, GraknSession.Type type, GraknOptions options);
+#     TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
 # 
 #     @CheckReturnValue
 #     boolean isCluster();
 # 
 #     @CheckReturnValue
-#     GraknClient.Cluster asCluster();
+#     TypeDBClient.Cluster asCluster();
 # 
 #     void close();
 # 
-#     interface Cluster extends GraknClient {
+#     interface Cluster extends TypeDBClient {
 # 
 #         @Override
 #         @CheckReturnValue

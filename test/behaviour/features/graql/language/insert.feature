@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Graql Insert Query
   Background: Open connection and create a simple extensible schema
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
     Given graql define
@@ -57,7 +57,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
 
 
@@ -138,7 +138,7 @@ Feature: Graql Insert Query
 
   Scenario: when running multiple identical insert queries in series, new things get created each time
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -149,7 +149,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given get answers of graql match
       """
@@ -207,7 +207,7 @@ Feature: Graql Insert Query
 
   Scenario: attempting to insert an instance of an abstract type throws an error
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -218,7 +218,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Then graql insert; throws exception
       """
@@ -329,7 +329,7 @@ Feature: Graql Insert Query
 
   Scenario: after inserting a new owner for every existing ownership of an attribute, its number of owners doubles
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -339,7 +339,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -353,7 +353,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When get answers of graql match
       """
@@ -379,7 +379,7 @@ Feature: Graql Insert Query
 
   Scenario Outline: an insert can attach multiple distinct values of the same <type> attribute to a single owner
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -390,7 +390,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -501,7 +501,7 @@ Feature: Graql Insert Query
 
   Scenario: when an attribute owns an attribute, an instance of that attribute can be inserted onto it
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -512,7 +512,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -548,7 +548,7 @@ Feature: Graql Insert Query
 
   Scenario: when inserting an additional attribute ownership on an attribute, the owner type can be optionally specified
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -559,7 +559,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -595,7 +595,7 @@ Feature: Graql Insert Query
 
   Scenario: when linking an attribute that doesn't exist yet to a relation, the attribute gets created
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -612,7 +612,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -652,7 +652,7 @@ Feature: Graql Insert Query
   @ignore
   Scenario: an attribute ownership currently inferred by a rule can be explicitly inserted
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -667,7 +667,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -727,7 +727,7 @@ Feature: Graql Insert Query
 
   Scenario: when inserting a relation that owns an attribute and has an attribute roleplayer, both attributes are created
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -744,7 +744,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -899,7 +899,7 @@ Feature: Graql Insert Query
 
   Scenario: parent types are not necessarily allowed to play the roles that their children play
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -912,7 +912,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Then graql insert; throws exception
       """
@@ -946,7 +946,7 @@ Feature: Graql Insert Query
   @ignore
   Scenario: a relation currently inferred by a rule can be explicitly inserted
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -963,7 +963,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -1006,7 +1006,7 @@ Feature: Graql Insert Query
 
   Scenario Outline: inserting an attribute of type '<type>' creates an instance of it
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1015,7 +1015,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given get answers of graql match
       """
@@ -1048,7 +1048,7 @@ Feature: Graql Insert Query
 
   Scenario: insert a regex attribute throws error if not conforming to regex
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1062,7 +1062,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Then graql insert; throws exception
       """
@@ -1094,7 +1094,7 @@ Feature: Graql Insert Query
 
   Scenario: inserting two 'double' attribute values with the same integer value creates a single concept
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1104,7 +1104,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -1127,7 +1127,7 @@ Feature: Graql Insert Query
 
   Scenario: inserting the same integer twice as a 'double' in separate transactions creates a single concept
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1137,7 +1137,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -1167,7 +1167,7 @@ Feature: Graql Insert Query
 
   Scenario: inserting attribute values [2] and [2.0] with the same attribute type creates a single concept
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1177,7 +1177,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -1197,7 +1197,7 @@ Feature: Graql Insert Query
 
   Scenario Outline: a '<type>' inserted as [<insert>] is retrieved when matching [<match>]
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1206,7 +1206,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When get answers of graql insert
       """
@@ -1242,7 +1242,7 @@ Feature: Graql Insert Query
 
   Scenario Outline: inserting [<value>] as a '<type>' throws an error
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1251,7 +1251,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Then graql insert; throws exception
       """
@@ -1374,7 +1374,7 @@ Feature: Graql Insert Query
 
   Scenario: an error is thrown when inserting a second key on an attribute that already has one
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1384,7 +1384,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When graql insert
       """
@@ -1433,7 +1433,7 @@ Feature: Graql Insert Query
 
   Scenario: match-insert triggers one insert per answer of the match clause
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1444,7 +1444,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1501,7 +1501,7 @@ Feature: Graql Insert Query
 
   Scenario: match-insert can take an attribute's value and copy it to an attribute of a different type
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1512,7 +1512,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1547,7 +1547,7 @@ Feature: Graql Insert Query
 
   Scenario: if match-insert matches nothing, then nothing is inserted
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1558,7 +1558,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given get answers of graql match
       """
@@ -1765,7 +1765,7 @@ Feature: Graql Insert Query
 
   Scenario: inserting a new type on an existing instance that is a subtype of its existing type throws
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1774,7 +1774,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1793,7 +1793,7 @@ Feature: Graql Insert Query
 
   Scenario: inserting a new type on an existing instance that is a supertype of its existing type throws
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1802,7 +1802,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1821,7 +1821,7 @@ Feature: Graql Insert Query
 
   Scenario: inserting a new type on an existing instance that is unrelated to its existing type throws
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1831,7 +1831,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1857,7 +1857,7 @@ Feature: Graql Insert Query
   @ignore
   Scenario: when inserting a thing that has inferred concepts, those concepts are not automatically materialised
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1875,7 +1875,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1913,7 +1913,7 @@ Feature: Graql Insert Query
   @ignore
   Scenario: when inserting a thing with an inferred attribute ownership, the ownership is not automatically persisted
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -1932,7 +1932,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1983,7 +1983,7 @@ Feature: Graql Insert Query
   By explicitly inserting (x,y) is a relation, we are making explicit the fact that x and y both exist.
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -2011,7 +2011,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -2078,7 +2078,7 @@ Feature: Graql Insert Query
   @ignore
   Scenario: when inserting things connected to an inferred relation, the inferred relation gets materialised
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql undefine
       """
@@ -2111,7 +2111,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -2139,7 +2139,7 @@ Feature: Graql Insert Query
     Then transaction commits
 
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     When graql undefine
       """
@@ -2166,7 +2166,7 @@ Feature: Graql Insert Query
   @ignore
   Scenario: when inserting things connected to a chain of inferred concepts, the whole chain is materialised
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -2216,7 +2216,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -2285,7 +2285,7 @@ Feature: Graql Insert Query
 
   Scenario: when matching two disjoint instances of distinct types but only selecting one to insert a pattern, inserts will only happen for the selected instance
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql undefine
       """
@@ -2297,7 +2297,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -2418,7 +2418,7 @@ Feature: Graql Insert Query
 
   Scenario: if any insert in a transaction fails with a semantic error, none of the inserts are performed
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -2428,7 +2428,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -2473,9 +2473,9 @@ Feature: Graql Insert Query
   # EDGE CASES #
   ##############
 
-  Scenario: the 'iid' property is used internally by Grakn and cannot be manually assigned
+  Scenario: the 'iid' property is used internally by TypeDB and cannot be manually assigned
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -2485,7 +2485,7 @@ Feature: Graql Insert Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     When session opens transaction of type: write
     Then graql insert; throws exception
       """
