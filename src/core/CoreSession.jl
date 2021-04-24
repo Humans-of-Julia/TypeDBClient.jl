@@ -104,7 +104,7 @@ end
 
 
 function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
-        return transaction(session, type, grakn_options_core())
+    return transaction(session, type, grakn_options_core())
 end
 
 function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
