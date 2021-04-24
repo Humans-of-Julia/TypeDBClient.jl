@@ -33,6 +33,8 @@ function open_req(database::String, _type::EnumType, options::Proto.Options)
     return Proto.Session_Open_Req(; database, _type, options)
 end
 
+close_req(session_id::Bytes) = Proto.Session_Close_Req(; session_id)
+
 pulse_req(session_id::Bytes) = Proto.Session_Pulse_Req(; session_id)
 
 end
@@ -237,6 +239,7 @@ module RoleTypeRequestBuilder
 using ..GraknClient: Proto, EnumType, Label
 using ..TypeRequestBuilder: _treq
 
+# TODO to be deprecated, see porting note at RoleType.jl
 function proto_role_type(label::Label, encoding::EnumType)
     @assert label.scope !== nothing
     return Proto._Type(
@@ -266,6 +269,7 @@ module ThingTypeRequestBuilder
 using ..GraknClient: Proto, EnumType, Label, Optional
 using ..TypeRequestBuilder: _treq
 
+# TODO to be deprecated, see porting note at RoleType.jl
 function proto_thing_type(label::Label, encoding::EnumType)
     return Proto._Type(
         label = label.name,

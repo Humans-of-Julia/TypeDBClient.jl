@@ -23,31 +23,48 @@ abstract type AbstractType  <: AbstractConcept end
 # Things
 abstract type AbstractRelation     <: AbstractThing end
 abstract type AbstractEntity       <: AbstractThing end
-abstract type AbstractAttribute{T} <: AbstractThing end
+abstract type AbstractAttribute    <: AbstractThing end
 
 # Types
 abstract type AbstractThingType     <: AbstractType end
 abstract type AbstractRoleType      <: AbstractType end
 
 # Thing types
-abstract type AbstractRelatioinType <: AbstractThingType end
+abstract type AbstractRelationType  <: AbstractThingType end
 abstract type AbstractEntityType    <: AbstractThingType end
 abstract type AbstractAttributeType <: AbstractThingType end
 
-# Remote objects are wrapper for regular concept types
-
-struct Remote{T}
-    data::T
-    transaction  # TODO specify type when it's ready
+function instantiate(concept::Proto.Concept)
+    if hasproperty(concept, :thing)
+        return instantiate(concept.thing)
+    else
+        return instantiate(concept._type)
+    end
 end
 
 """
-    as_remote(x, t)
+    Remote
 
-Wrap a concept with a `GraknTransaction`.
+Wrapper type that encapsulates a concept and transaction.
 """
 as_remote(x::T, t) where {T <: AbstractConcept} = Remote{T}(x, t)
 
 # TODO check with Frank about the transaction API
 # execute(x::Remote{T}, request::Proto.Transaction_Req) = execute(x.transaction, request).type_res
 # stream(x::Remote{T}, request::Proto.Transaction_Req) = execute(x.transaction, request)  # iterator?
+struct Remote{D <: AbstractConcept, T <: AbstractCoreTransaction}
+    concept::D
+    transaction::T
+end
+
+"""
+    as_remote(x, t)
+
+Create a `Remote`(@ref) object for a concept `x` with a
+transaction `t`.
+"""
+function as_remote(x::D, t::T) where {
+    D<: AbstractConcept, T <: AbstractCoreTransaction
+}
+    return Remote{D, T}(x, t)
+end

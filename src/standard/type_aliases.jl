@@ -1,9 +1,11 @@
-# Convenient types
-
-const Optional{T} = Union{T,Nothing}
 
 # quick reference to commonly used modules
 const Proto = grakn.protocol
+
+# Convenient types
+
+const Optional{T} = Union{T,Nothing}
+const Transaction_Res_All = Union{Proto.Transaction_Res, Proto.Transaction_ResPart}
 
 # protobuf types
 const EnumType = Int32
