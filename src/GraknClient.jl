@@ -102,8 +102,8 @@ function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
 end
 
 ## Printing UUId stored in Vector in a more readable way
-Base.show(io::IO, id::Array{UInt8,1}) = Base.print(io, id)
-Base.print(io::IO, id::Array{UInt8,1}) = Base.print(io, string(bytes2hex(id)))
+Base.show(io::IO, id::Array{UInt8,1}) = print(io, id)
+Base.print(io::IO, id::Array{UInt8,1}) = print(io, string(bytes2hex(id)))
 
 ## Printing each request in a shorter form except they have speicalized
 ## printing options.
