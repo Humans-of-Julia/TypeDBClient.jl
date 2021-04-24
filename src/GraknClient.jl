@@ -6,8 +6,12 @@ In root folder run $ bash setup.sh to genrate the proto files
 then install the packages from GitHub
 Pkg.rm("gRPCClient")
 Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
-] dev gRPCClient
 
+
+Pkg.rm("ExecutableSpecifications")
+Pkg.add(url="https://github.com/erikedin/Behavior.jl")
+] dev Behavior
+] dev gRPCClient
 =#
 module GraknClient
 

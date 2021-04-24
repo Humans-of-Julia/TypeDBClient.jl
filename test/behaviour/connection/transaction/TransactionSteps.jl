@@ -1,262 +1,282 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-# 
-# package grakn.client.test.behaviour.connection.transaction;
-# 
-# import grakn.client.api.GraknSession;
-# import grakn.client.api.GraknTransaction;
-# import graql.lang.Graql;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# import org.hamcrest.Matchers;
-# 
-# import java.util.ArrayList;
-# import java.util.Iterator;
-# import java.util.List;
-# import java.util.concurrent.CompletableFuture;
-# import java.util.function.Consumer;
-# 
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessions;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallelToTransactionsParallel;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactions;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactionsParallel;
-# import static grakn.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
-# import static grakn.client.test.behaviour.util.Util.assertThrows;
-# import static grakn.client.test.behaviour.util.Util.assertThrowsWithMessage;
-# import static grakn.common.collection.Collections.list;
-# import static java.util.Objects.isNull;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertThat;
-# import static org.junit.Assert.assertTrue;
-# import static org.junit.Assert.fail;
-# 
-# @SuppressWarnings("CheckReturnValue")
-# public class TransactionSteps {
-# 
-#     // =============================================//
-#     // sequential sessions, sequential transactions //
-#     // =============================================//
-# 
-#     @When("(for each )session(,) open(s) transaction(s) of type: {transaction_type}")
-#     public void session_opens_transaction_of_type(GraknTransaction.Type type) {
-#         for_each_session_open_transactions_of_type(list(type));
-#     }
-# 
-#     @When("(for each )session(,) open transaction(s) of type:")
-#     public void for_each_session_open_transactions_of_type(List<GraknTransaction.Type> types) {
-#         for (GraknSession session : sessions) {
-#             List<GraknTransaction> transactions = new ArrayList<>();
-#             for (GraknTransaction.Type type : types) {
-#                 GraknTransaction transaction = session.transaction(type);
-#                 transactions.add(transaction);
-#             }
-#             sessionsToTransactions.put(session, transactions);
-#         }
-#     }
-# 
-#     @When("(for each )session(,) open transaction(s) of type; throws exception: {transaction_type}")
-#     public void for_each_session_open_transactions_of_type_throws_exception(GraknTransaction.Type type) {
-#         for_each_session_open_transactions_of_type_throws_exception(list(type));
-#     }
-# 
-#     @Then("(for each )session(,) open transaction(s) of type; throws exception")
-#     public void for_each_session_open_transactions_of_type_throws_exception(List<GraknTransaction.Type> types) {
-#         for (GraknSession session : sessions) {
-#             for (GraknTransaction.Type type : types) {
-#                 assertThrows(() -> session.transaction(type));
-#             }
-#         }
-#     }
-# 
-#     @Then("(for each )session(,) transaction(s) is/are null: {bool}")
-#     public void for_each_session_transactions_are_null(boolean isNull) {
-#         for_each_session_transactions_are(transaction -> assertEquals(isNull, isNull(transaction)));
-#     }
-# 
-#     @Then("(for each )session(,) transaction(s) is/are open: {bool}")
-#     public void for_each_session_transactions_are_open(boolean isOpen) {
-#         for_each_session_transactions_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
-#     }
-# 
-#     @Then("transaction commits")
-#     public void transaction_commits() {
-#         sessionsToTransactions.get(sessions.get(0)).get(0).commit();
-#     }
-# 
-#     @Then("transaction commits; throws exception")
-#     public void transaction_commits_throws_exception() {
-#         assertThrows(() -> sessionsToTransactions.get(sessions.get(0)).get(0).commit());
-#     }
-# 
-#     @Then("transaction commits; throws exception containing {string}")
-#     public void transaction_commits_throws_exception(String exception) {
-#         assertThrowsWithMessage(() -> sessionsToTransactions.get(sessions.get(0)).get(0).commit(), exception);
-#     }
-# 
-#     @Then("(for each )session(,) transaction(s) commit(s)")
-#     public void for_each_session_transactions_commit() {
-#         for (GraknSession session : sessions) {
-#             for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
-#                 transaction.commit();
-#             }
-#         }
-#     }
-# 
-#     @Then("(for each )session(,) transaction(s) commit(s); throws exception")
-#     public void for_each_session_transactions_commits_throws_exception() {
-#         for (GraknSession session : sessions) {
-#             for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
-#                 assertThrows(transaction::commit);
-#             }
-#         }
-#     }
-# 
-#     @Then("(for each )session(,) transaction close(s)")
-#     public void for_each_session_transaction_closes() {
-#         for (GraknSession session : sessions) {
-#             for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
-#                 transaction.close();
-#             }
-#         }
-#     }
-# 
-#     private void for_each_session_transactions_are(Consumer<GraknTransaction> assertion) {
-#         for (GraknSession session : sessions) {
-#             for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
-#                 assertion.accept(transaction);
-#             }
-#         }
-#     }
-# 
-#     @Then("(for each )session(,) transaction(s) has/have type: {transaction_type}")
-#     public void for_each_session_transactions_have_type(GraknTransaction.Type type) {
-#         for_each_session_transactions_have_type(list(type));
-#     }
-# 
-#     @Then("(for each )session(,) transaction(s) has/have type:")
-#     public void for_each_session_transactions_have_type(List<GraknTransaction.Type> types) {
-#         for (GraknSession session : sessions) {
-#             List<GraknTransaction> transactions = sessionsToTransactions.get(session);
-#             assertEquals(types.size(), transactions.size());
-# 
-#             Iterator<GraknTransaction.Type> typesIterator = types.iterator();
-#             Iterator<GraknTransaction> transactionIterator = transactions.iterator();
-#             while (typesIterator.hasNext()) {
-#                 assertEquals(typesIterator.next(), transactionIterator.next().type());
-#             }
-#         }
-#     }
-# 
-#     // ===========================================//
-#     // sequential sessions, parallel transactions //
-#     // ===========================================//
-# 
-#     @When("for each session, open transaction(s) in parallel of type:")
-#     public void for_each_session_open_transactions_in_parallel_of_type(List<GraknTransaction.Type> types) {
-#         assertTrue(THREAD_POOL_SIZE >= types.size());
-#         for (GraknSession session : sessions) {
-#             List<CompletableFuture<GraknTransaction>> transactionsParallel = new ArrayList<>();
-#             for (GraknTransaction.Type type : types) {
-#                 transactionsParallel.add(CompletableFuture.supplyAsync(() -> session.transaction(type), threadPool));
-#             }
-#             sessionsToTransactionsParallel.put(session, transactionsParallel);
-#         }
-#     }
-# 
-#     @Then("for each session, transactions in parallel are null: {bool}")
-#     public void for_each_session_transactions_in_parallel_are_null(boolean isNull) {
-#         for_each_session_transactions_in_parallel_are(transaction -> assertEquals(isNull, isNull(transaction)));
-#     }
-# 
-#     @Then("for each session, transactions in parallel are open: {bool}")
-#     public void for_each_session_transactions_in_parallel_are_open(boolean isOpen) {
-#         for_each_session_transactions_in_parallel_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
-#     }
-# 
-#     private void for_each_session_transactions_in_parallel_are(Consumer<GraknTransaction> assertion) {
-#         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-#         for (GraknSession session : sessions) {
-#             for (CompletableFuture<GraknTransaction> futureTransaction :
-#                     sessionsToTransactionsParallel.get(session)) {
-# 
-#                 assertions.add(futureTransaction.thenApply(transaction -> {
-#                     assertion.accept(transaction);
-#                     return null;
-#                 }));
-#             }
-#         }
-#         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
-#     }
-# 
-#     @Then("for each session, transactions in parallel have type:")
-#     public void for_each_session_transactions_in_parallel_have_type(List<GraknTransaction.Type> types) {
-#         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-#         for (GraknSession session : sessions) {
-#             List<CompletableFuture<GraknTransaction>> futureTxs =
-#                     sessionsToTransactionsParallel.get(session);
-# 
-#             assertEquals(types.size(), futureTxs.size());
-# 
-#             Iterator<GraknTransaction.Type> typesIter = types.iterator();
-#             Iterator<CompletableFuture<GraknTransaction>> futureTxsIter = futureTxs.iterator();
-# 
-#             while (typesIter.hasNext()) {
-#                 GraknTransaction.Type type = typesIter.next();
-#                 futureTxsIter.next().thenApplyAsync(tx -> {
-#                     assertEquals(type, tx.type());
-#                     return null;
-#                 });
-#             }
-#         }
-# 
-#         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
-#     }
-# 
-#     // =========================================//
-#     // parallel sessions, parallel transactions //
-#     // =========================================//
-# 
-#     @Then("for each session in parallel, transactions in parallel are null: {bool}")
-#     public void for_each_session_in_parallel_transactions_in_parallel_are_null(boolean isNull) {
-#         for_each_session_in_parallel_transactions_in_parallel_are(transaction -> assertEquals(isNull, isNull(transaction)));
-#     }
-# 
-#     @Then("for each session in parallel, transactions in parallel are open: {bool}")
-#     public void for_each_session_in_parallel_transactions_in_parallel_are_open(boolean isOpen) {
-#         for_each_session_in_parallel_transactions_in_parallel_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
-#     }
-# 
-#     private void for_each_session_in_parallel_transactions_in_parallel_are(Consumer<GraknTransaction> assertion) {
-#         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-#         for (CompletableFuture<GraknSession> futureSession : sessionsParallel) {
-#             for (CompletableFuture<GraknTransaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
-#                 assertions.add(futureTransaction.thenApply(transaction -> {
-#                     assertion.accept(transaction);
-#                     return null;
-#                 }));
-#             }
-#         }
-#         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
-#     }
-# 
-# 
-#     // ===================================//
-#     // transaction behaviour with queries //
-#     // ===================================//
-# 
-#     @Then("for each transaction, define query; throws exception containing {string}")
-#     public void for_each_transaction_execute_define_throws_exception(String expectedException, String defineQueryStatements) {
-#         for (GraknSession session : sessions) {
-#             for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
-#                 try {
-#                     transaction.query().define(Graql.parseQuery(defineQueryStatements).asDefine()).get();
-#                     fail();
-#                 } catch (Exception e) {
-#                     assertThat(e.getMessage(), Matchers.containsString(expectedException));
-#                 }
-#             }
-#         }
-#     }
-# }
+@when("transaction commits") do context
+    @fail "Implement me"
+end
+
+
+@when("session opens transaction of type: read") do context
+    @fail "Implement me"
+end
+
+
+@when("session opens transaction of type: write") do context
+    @fail "Implement me"
+end
+
+
+#=
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+
+from concurrent.futures.thread import ThreadPoolExecutor
+from functools import partial
+from typing import Callable, List
+
+from behave import *
+from hamcrest import *
+
+from grakn.api.transaction import GraknTransaction, TransactionType
+from grakn.common.exception import GraknClientException
+from tests.behaviour.config.parameters import parse_transaction_type, parse_list, parse_bool
+from tests.behaviour.context import Context
+step = step
+
+def for_each_session_open_transaction_of_type(context: Context, transaction_types: List[TransactionType]):
+    for session in context.sessions:
+        transactions = []
+        for transaction_type in transaction_types:
+            transaction = session.transaction(transaction_type)
+            transactions.append(transaction)
+        context.sessions_to_transactions[session] = transactions
+
+
+# TODO: this is implemented as open(s) in some clients - get rid of that, simplify them
+@step("session opens transaction of type: {transaction_type}")
+@step("for each session, open transaction of type: {transaction_type}")
+def step_impl(context: Context, transaction_type: str):
+    transaction_type = parse_transaction_type(transaction_type)
+    for_each_session_open_transaction_of_type(context, [transaction_type])
+
+
+@step("for each session, open transaction of type")
+@step("for each session, open transactions of type")
+def step_impl(context: Context):
+    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
+    for_each_session_open_transaction_of_type(context, transaction_types)
+
+
+def open_transactions_of_type_throws_exception(context: Context, transaction_types: List[TransactionType]):
+    for session in context.sessions:
+        for transaction_type in transaction_types:
+            try:
+                session.transaction(transaction_type)
+                assert False
+            except GraknClientException:
+                pass
+
+
+@step("session open transaction of type; throws exception: {transaction_type}")
+def step_impl(context: Context, transaction_type):
+    print("Running step: session open transaction of type; throws exception")
+    transaction_type = parse_transaction_type(transaction_type)
+    open_transactions_of_type_throws_exception(context, [transaction_type])
+
+
+# TODO: transaction(s) in other implementations, simplify
+@step("for each session, open transactions of type; throws exception")
+def step_impl(context: Context):
+    open_transactions_of_type_throws_exception(context, list(map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
+
+
+def for_each_session_transactions_are(context: Context, assertion: Callable[[GraknTransaction], None]):
+    for session in context.sessions:
+        for transaction in context.sessions_to_transactions[session]:
+            assertion(transaction)
+
+
+def assert_transaction_null(transaction: GraknTransaction, is_null: bool):
+    assert_that(transaction is None, is_(is_null))
+
+
+@step("session transaction is null: {is_null}")
+@step("for each session, transaction is null: {is_null}")
+@step("for each session, transactions are null: {is_null}")
+def step_impl(context: Context, is_null):
+    is_null = parse_bool(is_null)
+    for_each_session_transactions_are(context, lambda tx: assert_transaction_null(tx, is_null))
+
+
+def assert_transaction_open(transaction: GraknTransaction, is_open: bool):
+    assert_that(transaction.is_open(), is_(is_open))
+
+
+@step("session transaction is open: {is_open}")
+@step("for each session, transaction is open: {is_open}")
+@step("for each session, transactions are open: {is_open}")
+def step_impl(context: Context, is_open):
+    is_open = parse_bool(is_open)
+    for_each_session_transactions_are(context, lambda tx: assert_transaction_open(tx, is_open))
+
+
+@step("session transaction commits")
+@step("transaction commits")
+def step_impl(context: Context):
+    context.tx().commit()
+
+
+@step("session transaction commits; throws exception")
+@step("transaction commits; throws exception")
+def step_impl(context: Context):
+    try:
+        context.tx().commit()
+        assert False
+    except GraknClientException:
+        pass
+
+
+@step("transaction commits; throws exception containing \"{exception}\"")
+def step_impl(context: Context, exception: str):
+    assert_that(calling(context.tx().commit), raises(GraknClientException, exception))
+
+
+@step("for each session, transaction commits")
+@step("for each session, transactions commit")
+def step_impl(context: Context):
+    for session in context.sessions:
+        for transaction in context.sessions_to_transactions[session]:
+            transaction.commit()
+
+
+@step("for each session, transaction commits; throws exception")
+@step("for each session, transactions commit; throws exception")
+def step_impl(context: Context):
+    for session in context.sessions:
+        for transaction in context.sessions_to_transactions[session]:
+            try:
+                transaction.commit()
+                assert False
+            except GraknClientException:
+                pass
+
+
+# TODO: close(s) in other implementations - simplify
+@step("for each session, transaction closes")
+def step_impl(context: Context):
+    for session in context.sessions:
+        for transaction in context.sessions_to_transactions[session]:
+            transaction.close()
+
+
+def for_each_session_transaction_has_type(context: Context, transaction_types: list):
+    for session in context.sessions:
+        transactions = context.sessions_to_transactions[session]
+        assert_that(transactions, has_length(len(transaction_types)))
+        transactions_iterator = iter(transactions)
+        for transaction_type in transaction_types:
+            assert_that(next(transactions_iterator).transaction_type(), is_(transaction_type))
+
+
+# NOTE: behave ignores trailing colons in feature files
+@step("for each session, transaction has type")
+@step("for each session, transactions have type")
+def step_impl(context: Context):
+    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
+    for_each_session_transaction_has_type(context, transaction_types)
+
+
+# TODO: this is overcomplicated in some clients (has/have, transaction(s))
+@step("for each session, transaction has type: {transaction_type}")
+@step("session transaction has type: {transaction_type}")
+def step_impl(context: Context, transaction_type):
+    transaction_type = parse_transaction_type(transaction_type)
+    for_each_session_transaction_has_type(context, [transaction_type])
+
+
+##############################################
+# sequential sessions, parallel transactions #
+##############################################
+
+# TODO: transaction(s) in other implementations - simplify
+@step("for each session, open transactions in parallel of type")
+def step_impl(context: Context):
+    types = list(map(parse_transaction_type, parse_list(context.table)))
+    assert_that(len(types), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
+    with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
+        for session in context.sessions:
+            context.sessions_to_transactions_parallel[session] = []
+            for type_ in types:
+                context.sessions_to_transactions_parallel[session].append(executor.submit(partial(session.transaction, type_)))
+
+
+def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[GraknTransaction], None]):
+    for session in context.sessions:
+        for future_transaction in context.sessions_to_transactions_parallel[session]:
+            assertion(future_transaction.result())
+
+
+@step("for each session, transactions in parallel are null: {is_null}")
+def step_impl(context: Context, is_null):
+    is_null = parse_bool(is_null)
+    for_each_session_transactions_in_parallel_are(context, lambda tx: assert_transaction_null(tx, is_null))
+
+
+@step("for each session, transactions in parallel are open: {is_open}")
+def step_impl(context: Context, is_open):
+    is_open = parse_bool(is_open)
+    for_each_session_transactions_in_parallel_are(context, lambda tx: assert_transaction_open(tx, is_open))
+
+
+@step("for each session, transactions in parallel have type")
+def step_impl(context: Context):
+    types = list(map(parse_transaction_type, parse_list(context.table)))
+    for session in context.sessions:
+        future_transactions = context.sessions_to_transactions_parallel[session]
+        assert_that(future_transactions, has_length(len(types)))
+        future_transactions_iter = iter(future_transactions)
+        for type_ in types:
+            assert_that(next(future_transactions_iter).result().transaction_type(), is_(type_))
+
+
+############################################
+# parallel sessions, parallel transactions #
+############################################
+
+def for_each_session_in_parallel_transactions_in_parallel_are(context: Context, assertion):
+    for future_session in context.sessions_parallel:
+        for future_transaction in context.sessions_parallel_to_transactions_parallel[future_session]:
+            assertion(future_transaction)
+
+
+@step("for each session in parallel, transactions in parallel are null: {is_null}")
+def step_impl(context: Context, is_null):
+    is_null = parse_bool(is_null)
+    for_each_session_in_parallel_transactions_in_parallel_are(context, lambda tx: assert_transaction_null(tx, is_null))
+
+
+@step("for each session in parallel, transactions in parallel are open: {is_open}")
+def step_impl(context: Context, is_open):
+    is_open = parse_bool(is_open)
+    for_each_session_in_parallel_transactions_in_parallel_are(context, lambda tx: assert_transaction_open(tx, is_open))
+
+
+######################################
+# transaction behaviour with queries #
+######################################
+
+@step("for each transaction, define query; throws exception containing \"{exception}\"")
+def step_impl(context: Context, exception: str):
+    for session in context.sessions:
+        for transaction in context.sessions_to_transactions[session]:
+            try:
+                next(transaction.query().define(context.text), default=None)
+                assert False
+            except GraknClientException as e:
+                assert_that(exception, is_in(str(e)))

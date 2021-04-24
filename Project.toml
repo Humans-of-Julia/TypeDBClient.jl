@@ -4,6 +4,7 @@ authors = ["Humans of Julia"]
 version = "0.1.0"
 
 [deps]
+Behavior = "7a129280-419d-58e9-81ef-4f6801251892"
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Pretend = "8ad1c615-040c-41b0-a18f-ae9e9fd09b5b"
