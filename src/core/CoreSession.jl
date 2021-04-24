@@ -5,39 +5,67 @@ const PULSE_INTERVAL_MILLIS = 5000
 mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
-    sessionID::Array{UInt8,1}
-    transactions::Array{Union{Nothing,<:AbstractCoreTransaction},1}
+    sessionID::Bytes
+    transactions::Dict{UUID,T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
     type::Int
+    accessLock::ReentrantLock
     options::GraknOptions
-# Timer pulse
-# ReadWriteLock accessLock
     isOpen::Bool
     networkLatencyMillis::Int
+    timer::Optional{Controller}
+    request_timeout::Real
 end
 
-Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, session)
-Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = Base.print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
+Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, session)
+Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
 
-function CoreSession(client::T, database::String , type::Int32 , options::GraknOptions) where {T<:AbstractCoreClient}
-    # try
-        options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS
-        open_req = session_open_req(database, type , copy_to_proto(options, grakn.protocol.Options))
+function CoreSession(client::T,
+                     database::String,
+                     type::Int32,
+                     options::GraknOptions = GraknOptions();
+                     request_timout::Real=6) where {T<:AbstractCoreClient}
+   # try
+        options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS + 1000
+        #building open_request
+        open_req = SessionRequestBuilder.open_req(
+            database, type , copy_to_proto(options, grakn.protocol.Options)
+        )
+        # open the session
         startTime = now()
-        res, tes = session_open(client.core_stub.blockingStub, gRPCController(), open_req)
-        if res === nothing
-            throw("no session returned")
-        end
+        grpc_controller = gRPCController(request_timeout=request_timout)
+        req_result, status  = session_open(client.core_stub.blockingStub, grpc_controller, open_req)
+        res_id = grpc_result_or_error(req_result, status, result->result.session_id)
         endTime = now()
 
         database = CoreDatabase(database)
         networkLatencyMillis = (endTime - startTime).value
-        session_id = res.session_id
-        transactions = Array{Union{Nothing,<:AbstractCoreTransaction},1}(nothing,0)
+        session_id =  res_id
+        transactions = Dict{UUID,AbstractCoreTransaction}()
         is_open = true
 
-        result = CoreSession(client, database, session_id, transactions, type, options, is_open, networkLatencyMillis)
+        t = Controller(true, 0.5)
 
-        @async start_pulse(result, (PULSE_INTERVAL_MILLIS / 1000))
+        result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, t, request_timout)
+
+        make_pulse_request(result, t)
+
+        # the following transaction is useless for the construction of the the Session
+        # and is only to initialize the first compilation of the ProtoBuf machinary
+        # underneath the transaction. In the environment here it is possible to control
+        # the tick of the pulse request a close as can be. If somebody find a way to
+        # avoid the long starting time of the transaction this can be removed.
+        trans = nothing
+        try
+            trans = transaction(result, Proto.Transaction_Type[:READ])
+        catch ex
+            @info "First attempt for transaction done and not successful"
+        finally
+        end
+        if trans !== nothing
+            close(trans)
+        end
+
+        t.duration_in_seconds =  (PULSE_INTERVAL_MILLIS / 1000) - 0.5
 
         return result
     # catch ex
@@ -45,19 +73,78 @@ function CoreSession(client::T, database::String , type::Int32 , options::GraknO
     # end
 end
 
-function start_pulse(session::T, pulse_time::Number) where {T<:AbstractCoreSession}
-    while session.isOpen
-        make_pulse_request(session)
-        sleep(pulse_time - 1)
-    end
-    @info "$session is closed"
+"""
+function make_pulse_request(session::T) where {T<:AbstractCoreSession}
+    This function make a pulse request to keep the session alive.
+"""
+function make_pulse_request(session::T, controller::Controller) where {T<:AbstractCoreSession}
+
+    @async begin
+            while controller.running
+                    try
+                        pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
+                        req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+                        result = grpc_result_or_error(req_result,status, result->result)
+                        @info "Time: $(Dates.now())"
+
+                        if result.alive === false
+                            close(session)
+                            @info "$session is closed"
+                        end
+                    catch ex
+                        @info "make_pulse_request show's an error \n
+                        $ex "
+                        close(session)
+                    finally
+                    end
+                    sleep(controller.duration_in_seconds)
+            end
+        end
 end
 
-function make_pulse_request(session::T) where {T<:AbstractCoreSession}
-    pulsreq = session_pulse_req(session.sessionID)
-    result, tes = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
-    if result.alive === false
-        session.isOpen = false
+
+function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
+    return transaction(session, type, grakn_options_core())
+end
+
+function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
+    try
+        lock(session.accessLock)
+        if !session.isOpen
+            throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionID)))
+        end
+
+        transactionRPC = CoreTransaction(session, session.sessionID, type, options)
+        session.transactions[transactionRPC.transaction_id] = transactionRPC
+
+        return transactionRPC
+    finally
+       unlock(session.accessLock)
+    end
+end
+
+function close(session::T) where {T<:AbstractCoreSession}
+    try
+        lock(session.accessLock)
+        if session.isOpen
+            for (uuid,trans) in session.transactions
+                close(trans)
+                delete!(session.transactions, trans.transaction_id)
+            end
+            remove_session(session.client, session)
+            close(session.timer)
+
+            req = SessionRequestBuilder.close_req(session.sessionID)
+            stub = session.client.core_stub.blockingStub
+            session_close(stub, gRPCController(), req )
+
+            session.isOpen = false
+        end
+    catch  ex
+        throw(GraknClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
+        @info ex
+    finally
+        unlock(session.accessLock)
     end
 end
 

@@ -51,6 +51,13 @@ for (T,A) in ERROR_STRUCTS
     end
 end
 
+Base.show(io::IO, err_struct::T) where {T<:AbstractGeneralError} = Base.print(io, err_struct)
+function Base.print(io::IO, err_struct::T) where {T<:AbstractGeneralError}
+    str = "[$(err_struct.code_prefix)$(lpad(err_struct.code_number,3,"0"))] $(err_struct.message_body)"
+    Base.print(io,str)
+    return nothing
+end
+
 # All structs represent a unique number in a section of errors and the description. Both of them are
 # assigned on the right side pair
 const error_messages = Dict([
@@ -113,6 +120,8 @@ function _build_error_messages(class::Type{T}) where {T<:AbstractInternalError}
     items = error_messages[class]
     class("INT",items[1], "Internal Error", items[2])
 end
+
+
 
 
 #

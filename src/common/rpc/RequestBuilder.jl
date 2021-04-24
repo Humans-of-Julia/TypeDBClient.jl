@@ -1,717 +1,581 @@
 # This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
 
-function database_contains_req(name::String)
-    return CoreDatabaseManager_Contains_Req().name = name
+# ---------------------------------------------------------------------------------
+module DatabaseManagerRequestBuilder
+
+using ..GraknClient: Proto
+
+create_req(name::String) = Proto.CoreDatabaseManager_Create_Req(; name)
+
+contains_req(name::String) = Proto.CoreDatabaseManager_Contains_Req(; name)
+
+all_req() = Proto.CoreDatabaseManager_All_Req()
+
 end
 
-function database_schema_req(name::String)
-    return CoreDatabase_Schema_Req().name = name
+# ---------------------------------------------------------------------------------
+module DatabaseRequestBuilder
+
+using ..GraknClient: Proto
+
+schema_req(name::String) = Proto.CoreDatabase_Schema_Req(; name)
+
+delete_req(name::String) = Proto.CoreDatabase_Delete_Req(; name)
+
 end
 
-function session_open_req(database_name::String, type::Int32, options::grakn.protocol.Options)
-    open_req = grakn.protocol.Session_Open_Req()
-    open_req.database = database_name
-    open_req._type = type
-    open_req.options = options
+# ---------------------------------------------------------------------------------
+module SessionRequestBuilder
 
-    return open_req
+using ..GraknClient: Proto, EnumType, Bytes
+
+function open_req(database::String, _type::EnumType, options::Proto.Options)
+    return Proto.Session_Open_Req(; database, _type, options)
 end
 
-function session_pulse_req(session_id::Array{UInt8,1})
-    puls_req = grakn.protocol.Session_Pulse_Req()
-    puls_req.session_id = session_id
-    return puls_req
+close_req(session_id::Bytes) = Proto.Session_Close_Req(; session_id)
+
+pulse_req(session_id::Bytes) = Proto.Session_Pulse_Req(; session_id)
+
 end
 
+# ---------------------------------------------------------------------------------
+module TransactionRequestBuilder
 
+using ..GraknClient: Proto, EnumType, Bytes
+using UUIDs: UUID
 
-# package grakn.client.common.rpc;
-#
-# import com.google.protobuf.ByteString;
-# import grabl.tracing.client.GrablTracingThreadStatic;
-# import grakn.client.common.Label;
-# import grakn.protocol.ClusterDatabaseProto;
-# import grakn.protocol.ClusterServerProto;
-# import grakn.protocol.ConceptProto;
-# import grakn.protocol.CoreDatabaseProto;
-# import grakn.protocol.LogicProto;
-# import grakn.protocol.OptionsProto;
-# import grakn.protocol.QueryProto;
-# import grakn.protocol.SessionProto;
-# import grakn.protocol.TransactionProto;
-# import graql.lang.query.GraqlDefine;
-# import graql.lang.query.GraqlDelete;
-# import graql.lang.query.GraqlInsert;
-# import graql.lang.query.GraqlMatch;
-# import graql.lang.query.GraqlUndefine;
-#
-# import java.time.LocalDateTime;
-# import java.time.ZoneId;
-# import java.util.HashMap;
-# import java.util.List;
-# import java.util.Map;
-# import java.util.UUID;
-#
-# import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
-# import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
-# import static grakn.client.common.rpc.RequestBuilder.Thing.byteString;
-# import static grakn.common.collection.Bytes.hexStringToBytes;
-# import static java.util.Collections.emptyMap;
-#
-# public class RequestBuilder {
-#
-#     public static Map<String, String> tracingData() {
-#         if (isTracingEnabled()) {
-#             GrablTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
-#             if (threadTrace == null) return emptyMap();
-#             if (threadTrace.getId() == null || threadTrace.getRootId() == null) return emptyMap();
-#
-#             Map<String, String> metadata = new HashMap<>(2);
-#             metadata.put("traceParentId", threadTrace.getId().toString());
-#             metadata.put("traceRootId", threadTrace.getRootId().toString());
-#             return metadata;
-#         } else {
-#             return emptyMap();
-#         }
-#     }
-#
-#     public static class Core {
-#
-#         public static class DatabaseManager {
-#
-#             public static CoreDatabaseProto.CoreDatabaseManager.Create.Req createReq(String name) {
-#                 return CoreDatabaseProto.CoreDatabaseManager.Create.Req.newBuilder().setName(name).build();
-#             }
-#
-#             public static CoreDatabaseProto.CoreDatabaseManager.Contains.Req containsReq(String name) {
-#                 return CoreDatabaseProto.CoreDatabaseManager.Contains.Req.newBuilder().setName(name).build();
-#             }
-#
-#             public static CoreDatabaseProto.CoreDatabaseManager.All.Req allReq() {
-#                 return CoreDatabaseProto.CoreDatabaseManager.All.Req.getDefaultInstance();
-#             }
-#         }
-#
-#         public static class Database {
-#
-#             public static CoreDatabaseProto.CoreDatabase.Schema.Req schemaReq(String name) {
-#                 return CoreDatabaseProto.CoreDatabase.Schema.Req.newBuilder().setName(name).build();
-#             }
-#
-#             public static CoreDatabaseProto.CoreDatabase.Delete.Req deleteReq(String name) {
-#                 return CoreDatabaseProto.CoreDatabase.Delete.Req.newBuilder().setName(name).build();
-#             }
-#         }
-#     }
-#
-#     public static class Cluster {
-#
-#         public static class Server {
-#
-#             public static ClusterServerProto.ServerManager.All.Req allReq() {
-#                 return ClusterServerProto.ServerManager.All.Req.newBuilder().build();
-#             }
-#         }
-#
-#         public static class DatabaseManager {
-#
-#             public static ClusterDatabaseProto.ClusterDatabaseManager.Get.Req getReq(String name) {
-#                 return ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(name).build();
-#             }
-#
-#             public static ClusterDatabaseProto.ClusterDatabaseManager.All.Req allReq() {
-#                 return ClusterDatabaseProto.ClusterDatabaseManager.All.Req.getDefaultInstance();
-#             }
-#         }
-#
-#         public static class Database {
-#
-#         }
-#     }
-#
-#     public static class Session {
-#
-#         public static SessionProto.Session.Open.Req openReq(
-#                 String database, SessionProto.Session.Type type, OptionsProto.Options options) {
-#             return SessionProto.Session.Open.Req.newBuilder().setDatabase(database)
-#                     .setType(type).setOptions(options).build();
-#         }
-#
-#         public static SessionProto.Session.Pulse.Req pulseReq(ByteString sessionID) {
-#             return SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionID).build();
-#         }
-#
-#         public static SessionProto.Session.Close.Req closeReq(ByteString sessionID) {
-#             return SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionID).build();
-#         }
-#     }
-#
-#     public static class Transaction {
-#
-#         public static TransactionProto.Transaction.Client clientMsg(List<TransactionProto.Transaction.Req> reqs) {
-#             return TransactionProto.Transaction.Client.newBuilder().addAllReqs(reqs).build();
-#         }
-#
-#         public static TransactionProto.Transaction.Req streamReq(UUID reqID) {
-#             return TransactionProto.Transaction.Req.newBuilder().setReqId(reqID.toString()).setStreamReq(
-#                     TransactionProto.Transaction.Stream.Req.getDefaultInstance()
-#             ).build();
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder openReq(
-#                 ByteString sessionID, TransactionProto.Transaction.Type type, OptionsProto.Options options, int networkLatencyMillis) {
-#             return TransactionProto.Transaction.Req.newBuilder().setOpenReq(
-#                     TransactionProto.Transaction.Open.Req.newBuilder().setSessionId(sessionID)
-#                             .setType(type).setOptions(options).setNetworkLatencyMillis(networkLatencyMillis)
-#             );
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder commitReq() {
-#             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(tracingData())
-#                     .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder rollbackReq() {
-#             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(tracingData())
-#                     .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance());
-#         }
-#     }
-#
-#     public static class QueryManager {
-#
-#         private static TransactionProto.Transaction.Req.Builder queryManagerReq(
-#                 QueryProto.QueryManager.Req.Builder queryReq, OptionsProto.Options options) {
-#             return TransactionProto.Transaction.Req.newBuilder().setQueryManagerReq(queryReq.setOptions(options));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder defineReq(GraqlDefine query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDefineReq(
-#                     QueryProto.QueryManager.Define.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder undefineReq(GraqlUndefine query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setUndefineReq(
-#                     QueryProto.QueryManager.Undefine.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder matchReq(GraqlMatch query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchReq(
-#                     QueryProto.QueryManager.Match.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder matchAggregateReq(
-#                 GraqlMatch.Aggregate query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchAggregateReq(
-#                     QueryProto.QueryManager.MatchAggregate.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder matchGroupReq(
-#                 GraqlMatch.Group query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupReq(
-#                     QueryProto.QueryManager.MatchGroup.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder matchGroupAggregateReq(
-#                 GraqlMatch.Group.Aggregate query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupAggregateReq(
-#                     QueryProto.QueryManager.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder insertReq(GraqlInsert query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setInsertReq(
-#                     QueryProto.QueryManager.Insert.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder deleteReq(GraqlDelete query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDeleteReq(
-#                     QueryProto.QueryManager.Delete.Req.newBuilder().setQuery(query.toString())
-#             ), options);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder updateReq(String query, OptionsProto.Options options) {
-#             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setUpdateReq(
-#                     QueryProto.QueryManager.Update.Req.newBuilder().setQuery(query)
-#             ), options);
-#         }
-#     }
-#
-#     public static class ConceptManager {
-#
-#         public static TransactionProto.Transaction.Req.Builder conceptManagerReq(
-#                 ConceptProto.ConceptManager.Req.Builder req) {
-#             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(tracingData()).setConceptManagerReq(req);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder putEntityTypeReq(String label) {
-#             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setPutEntityTypeReq(
-#                     ConceptProto.ConceptManager.PutEntityType.Req.newBuilder().setLabel(label))
-#             );
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder putRelationTypeReq(String label) {
-#             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setPutRelationTypeReq(
-#                     ConceptProto.ConceptManager.PutRelationType.Req.newBuilder().setLabel(label))
-#             );
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder putAttributeTypeReq(
-#                 String label, ConceptProto.AttributeType.ValueType valueType) {
-#             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setPutAttributeTypeReq(
-#                     ConceptProto.ConceptManager.PutAttributeType.Req.newBuilder().setLabel(label).setValueType(valueType)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getThingTypeReq(String label) {
-#             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setGetThingTypeReq(
-#                     ConceptProto.ConceptManager.GetThingType.Req.newBuilder().setLabel(label)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getThingReq(String iid) {
-#             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setGetThingReq(
-#                     ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(byteString(iid))
-#             ));
-#         }
-#     }
-#
-#     public static class LogicManager {
-#
-#         private static TransactionProto.Transaction.Req.Builder logicManagerReq(
-#                 LogicProto.LogicManager.Req.Builder logicReq) {
-#             return TransactionProto.Transaction.Req.newBuilder()
-#                     .putAllMetadata(tracingData()).setLogicManagerReq(logicReq);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder putRuleReq(String label, String whenStr, String thenStr) {
-#             return logicManagerReq(LogicProto.LogicManager.Req.newBuilder().setPutRuleReq(
-#                     LogicProto.LogicManager.PutRule.Req.newBuilder()
-#                             .setLabel(label).setWhen(whenStr).setThen(thenStr)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getRuleReq(String label) {
-#             return logicManagerReq(LogicProto.LogicManager.Req.newBuilder().setGetRuleReq(
-#                     LogicProto.LogicManager.GetRule.Req.newBuilder().setLabel(label)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getRulesReq() {
-#             return logicManagerReq(LogicProto.LogicManager.Req.newBuilder().setGetRulesReq(
-#                     LogicProto.LogicManager.GetRules.Req.getDefaultInstance()
-#             ));
-#         }
-#     }
-#
-#     public static class Type {
-#
-#         private static TransactionProto.Transaction.Req.Builder typeReq(ConceptProto.Type.Req.Builder req) {
-#             return TransactionProto.Transaction.Req.newBuilder().setTypeReq(req);
-#         }
-#
-#         private static ConceptProto.Type.Req.Builder newReqBuilder(Label label) {
-#             ConceptProto.Type.Req.Builder builder = ConceptProto.Type.Req.newBuilder().setLabel(label.name());
-#             if (label.scope().isPresent()) builder.setScope(label.scope().get());
-#             return builder;
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder isAbstractReq(Label label) {
-#             return typeReq(newReqBuilder(label).setTypeIsAbstractReq(
-#                     ConceptProto.Type.IsAbstract.Req.getDefaultInstance()
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder setLabelReq(Label label, String newLabel) {
-#             return typeReq(newReqBuilder(label).setTypeSetLabelReq(
-#                     ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(newLabel)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getSupertypesReq(Label label) {
-#             return typeReq(newReqBuilder(label).setTypeGetSupertypesReq(
-#                     ConceptProto.Type.GetSupertypes.Req.getDefaultInstance()
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getSubtypesReq(Label label) {
-#             return typeReq(newReqBuilder(label).setTypeGetSubtypesReq(
-#                     ConceptProto.Type.GetSubtypes.Req.getDefaultInstance()
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getSupertypeReq(Label label) {
-#             return typeReq(newReqBuilder(label).setTypeGetSupertypeReq(
-#                     ConceptProto.Type.GetSupertype.Req.getDefaultInstance()
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder deleteReq(Label label) {
-#             return typeReq(newReqBuilder(label).setTypeDeleteReq(
-#                     ConceptProto.Type.Delete.Req.getDefaultInstance()
-#             ));
-#         }
-#
-#         public static class RoleType {
-#
-#             public static ConceptProto.Type protoRoleType(Label label, ConceptProto.Type.Encoding encoding) {
-#                 assert label.scope().isPresent();
-#                 return ConceptProto.Type.newBuilder().setScope(label.scope().get())
-#                         .setLabel(label.name()).setEncoding(encoding).build();
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getRelationTypesReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setRoleTypeGetRelationTypesReq(
-#                         ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getPlayersReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setRoleTypeGetPlayersReq(
-#                         ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()
-#                 ));
-#             }
-#         }
-#
-#         public static class ThingType {
-#
-#             public static ConceptProto.Type protoThingType(Label label, ConceptProto.Type.Encoding encoding) {
-#                 return ConceptProto.Type.newBuilder().setLabel(label.name()).setEncoding(encoding).build();
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setAbstractReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setThingTypeSetAbstractReq(
-#                         ConceptProto.ThingType.SetAbstract.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder unsetAbstractReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setThingTypeUnsetAbstractReq(
-#                         ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setSupertypeReq(Label label, ConceptProto.Type supertype) {
-#                 return typeReq(newReqBuilder(label).setTypeSetSupertypeReq(
-#                         ConceptProto.Type.SetSupertype.Req.newBuilder().setType(supertype)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getPlaysReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setThingTypeGetPlaysReq(
-#                         ConceptProto.ThingType.GetPlays.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setPlaysReq(Label label, ConceptProto.Type roleType) {
-#                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-#                         ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setPlaysReq(
-#                     Label label, ConceptProto.Type roleType, ConceptProto.Type overriddenRoleType) {
-#                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-#                         ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
-#                                 .setOverriddenRole(overriddenRoleType)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder unsetPlaysReq(Label label, ConceptProto.Type roleType) {
-#                 return typeReq(newReqBuilder(label).setThingTypeUnsetPlaysReq(
-#                         ConceptProto.ThingType.UnsetPlays.Req.newBuilder().setRole(roleType)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getOwnsReq(Label label, boolean keysOnly) {
-#                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-#                         ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getOwnsReq(
-#                     Label label, ConceptProto.AttributeType.ValueType valueType, boolean keysOnly) {
-#                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-#                         ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
-#                                 .setValueType(valueType)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setOwnsReq(
-#                     Label label, ConceptProto.Type attributeType, boolean isKey) {
-#                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
-#                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
-#                                 .setAttributeType(attributeType)
-#                                 .setIsKey(isKey)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setOwnsReq(
-#                     Label label, ConceptProto.Type attributeType, ConceptProto.Type overriddenType, boolean isKey) {
-#                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
-#                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
-#                                 .setAttributeType(attributeType)
-#                                 .setOverriddenType(overriddenType)
-#                                 .setIsKey(isKey)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder unsetOwnsReq(
-#                     Label label, ConceptProto.Type attributeType) {
-#                 return typeReq(newReqBuilder(label).setThingTypeUnsetOwnsReq(
-#                         ConceptProto.ThingType.UnsetOwns.Req.newBuilder().setAttributeType(attributeType)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getInstancesReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setThingTypeGetInstancesReq(
-#                         ConceptProto.ThingType.GetInstances.Req.getDefaultInstance()
-#                 ));
-#             }
-#         }
-#
-#         public static class EntityType {
-#
-#             public static TransactionProto.Transaction.Req.Builder createReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setEntityTypeCreateReq(
-#                         ConceptProto.EntityType.Create.Req.getDefaultInstance()
-#                 ));
-#             }
-#         }
-#
-#         public static class RelationType {
-#
-#             public static TransactionProto.Transaction.Req.Builder createReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setRelationTypeCreateReq(
-#                         ConceptProto.RelationType.Create.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getRelatesReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesReq(
-#                         ConceptProto.RelationType.GetRelates.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getRelatesReq(Label label, String roleLabel) {
-#                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesForRoleLabelReq(
-#                         ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setRelatesReq(Label label, String roleLabel) {
-#                 return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
-#                         ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setRelatesReq(
-#                     Label label, String roleLabel, String overriddenLabel) {
-#                 return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
-#                         ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel)
-#                                 .setOverriddenLabel(overriddenLabel)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder unsetRelatesReq(Label label, String roleLabel) {
-#                 return typeReq(newReqBuilder(label).setRelationTypeUnsetRelatesReq(
-#                         ConceptProto.RelationType.UnsetRelates.Req.newBuilder().setLabel(roleLabel)
-#                 ));
-#             }
-#         }
-#
-#         public static class AttributeType {
-#
-#             public static TransactionProto.Transaction.Req.Builder getOwnersReq(Label label, boolean onlyKey) {
-#                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
-#                         ConceptProto.AttributeType.GetOwners.Req.newBuilder().setOnlyKey(onlyKey)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder putReq(Label label, ConceptProto.Attribute.Value value) {
-#                 return typeReq(newReqBuilder(label).setAttributeTypePutReq(
-#                         ConceptProto.AttributeType.Put.Req.newBuilder().setValue(value)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getReq(Label label, ConceptProto.Attribute.Value value) {
-#                 return typeReq(newReqBuilder(label).setAttributeTypeGetReq(
-#                         ConceptProto.AttributeType.Get.Req.newBuilder().setValue(value)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getRegexReq(Label label) {
-#                 return typeReq(newReqBuilder(label).setAttributeTypeGetRegexReq(
-#                         ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder setRegexReq(Label label, String regex) {
-#                 return typeReq(newReqBuilder(label).setAttributeTypeSetRegexReq(
-#                         ConceptProto.AttributeType.SetRegex.Req.newBuilder().setRegex(regex)
-#                 ));
-#             }
-#         }
-#     }
-#
-#     public static class Thing {
-#
-#         static ByteString byteString(String iid) {
-#             return ByteString.copyFrom(hexStringToBytes(iid));
-#         }
-#
-#         public static ConceptProto.Thing protoThing(String iid) {
-#             return ConceptProto.Thing.newBuilder().setIid(byteString(iid)).build();
-#         }
-#
-#         private static TransactionProto.Transaction.Req.Builder thingReq(ConceptProto.Thing.Req.Builder req) {
-#             return TransactionProto.Transaction.Req.newBuilder().setThingReq(req);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder isInferredReq(String iid) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingIsInferredReq(
-#                     ConceptProto.Thing.IsInferred.Req.getDefaultInstance())
-#             );
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getHasReq(
-#                 String iid, List<ConceptProto.Type> attributeTypes) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetHasReq(
-#                     ConceptProto.Thing.GetHas.Req.newBuilder().addAllAttributeTypes(attributeTypes)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getHasReq(String iid, boolean onlyKey) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetHasReq(
-#                     ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder setHasReq(String iid, ConceptProto.Thing attribute) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingSetHasReq(
-#                     ConceptProto.Thing.SetHas.Req.newBuilder().setAttribute(attribute)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder unsetHasReq(String iid, ConceptProto.Thing attribute) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingUnsetHasReq(
-#                     ConceptProto.Thing.UnsetHas.Req.newBuilder().setAttribute(attribute)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getPlayingReq(String iid) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetPlayingReq(
-#                     ConceptProto.Thing.GetPlaying.Req.getDefaultInstance()
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder getRelationsReq(
-#                 String iid, List<ConceptProto.Type> roleTypes) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetRelationsReq(
-#                     ConceptProto.Thing.GetRelations.Req.newBuilder().addAllRoleTypes(roleTypes)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder deleteReq(String iid) {
-#             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingDeleteReq(
-#                     ConceptProto.Thing.Delete.Req.getDefaultInstance()
-#             ));
-#         }
-#
-#         public static class Relation {
-#
-#             public static TransactionProto.Transaction.Req.Builder addPlayerReq(
-#                     String iid, ConceptProto.Type roleType, ConceptProto.Thing player) {
-#                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationAddPlayerReq(
-#                         ConceptProto.Relation.AddPlayer.Req.newBuilder().setRoleType(roleType).setPlayer(player)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder removePlayerReq(
-#                     String iid, ConceptProto.Type roleType, ConceptProto.Thing player) {
-#                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationRemovePlayerReq(
-#                         ConceptProto.Relation.RemovePlayer.Req.newBuilder().setRoleType(roleType).setPlayer(player)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getPlayersReq(
-#                     String iid, List<ConceptProto.Type> roleTypes) {
-#                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersReq(
-#                         ConceptProto.Relation.GetPlayers.Req.newBuilder().addAllRoleTypes(roleTypes)
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getPlayersByRoleTypeReq(String iid) {
-#                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersByRoleTypeReq(
-#                         ConceptProto.Relation.GetPlayersByRoleType.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getRelatingReq(String iid) {
-#                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetRelatingReq(
-#                         ConceptProto.Relation.GetRelating.Req.getDefaultInstance()
-#                 ));
-#             }
-#         }
-#
-#         public static class Attribute {
-#
-#             public static TransactionProto.Transaction.Req.Builder getOwnersReq(String iid) {
-#                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setAttributeGetOwnersReq(
-#                         ConceptProto.Attribute.GetOwners.Req.getDefaultInstance()
-#                 ));
-#             }
-#
-#             public static TransactionProto.Transaction.Req.Builder getOwnersReq(String iid, ConceptProto.Type ownerType) {
-#                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setAttributeGetOwnersReq(
-#                         ConceptProto.Attribute.GetOwners.Req.newBuilder().setThingType(ownerType)
-#                 ));
-#             }
-#
-#             public static ConceptProto.Attribute.Value attributeValueBooleanReq(boolean value) {
-#                 return ConceptProto.Attribute.Value.newBuilder().setBoolean(value).build();
-#             }
-#
-#             public static ConceptProto.Attribute.Value attributeValueLongReq(long value) {
-#                 return ConceptProto.Attribute.Value.newBuilder().setLong(value).build();
-#             }
-#
-#             public static ConceptProto.Attribute.Value attributeValueDoubleReq(double value) {
-#                 return ConceptProto.Attribute.Value.newBuilder().setDouble(value).build();
-#             }
-#
-#             public static ConceptProto.Attribute.Value attributeValueStringReq(String value) {
-#                 return ConceptProto.Attribute.Value.newBuilder().setString(value).build();
-#             }
-#
-#             public static ConceptProto.Attribute.Value attributeValueDateTimeReq(LocalDateTime value) {
-#                 long epochMillis = value.atZone(ZoneId.of("Z")).toInstant().toEpochMilli();
-#                 return ConceptProto.Attribute.Value.newBuilder().setDateTime(epochMillis).build();
-#             }
-#         }
-#     }
-#
-#     public static class Rule {
-#
-#         private static TransactionProto.Transaction.Req.Builder ruleReq(LogicProto.Rule.Req.Builder req) {
-#             return TransactionProto.Transaction.Req.newBuilder().setRuleReq(req);
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder setLabelReq(String currentLabel, String newLabel) {
-#             return ruleReq(LogicProto.Rule.Req.newBuilder().setLabel(currentLabel).setRuleSetLabelReq(
-#                     LogicProto.Rule.SetLabel.Req.newBuilder().setLabel(newLabel)
-#             ));
-#         }
-#
-#         public static TransactionProto.Transaction.Req.Builder deleteReq(String label) {
-#             return ruleReq(LogicProto.Rule.Req.newBuilder().setLabel(label).setRuleDeleteReq(
-#                     LogicProto.Rule.Delete.Req.getDefaultInstance()
-#             ));
-#         }
-#     }
-# }
+function client_msg(reqs::AbstractVector{Proto.Transaction_Req})
+    return Proto.Transaction_Client(; reqs)
+end
+
+function stream_req(req_id::UUID)
+    req_id = string(req_id) # TODO will be changed to Vector{UInt}
+    stream_req = Proto.Transaction_Stream_Req()
+    return Proto.Transaction_Req(; req_id, stream_req)
+end
+
+function open_req(
+    session_id::Bytes,
+    _type::EnumType,
+    options::Proto.Options,
+    network_latency_millis::Int
+)
+    open_req = Proto.Transaction_Open_Req(;
+        session_id, _type, options, network_latency_millis
+    )
+    return Proto.Transaction_Req(; open_req)
+end
+
+function commit_req()
+    # metadata = tracing_data()
+    commit_req = Proto.Transaction_Commit_Req()
+    return Proto.Transaction_Req(; commit_req)
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module QueryManagerRequestBuilder
+
+using ..GraknClient: Proto
+
+for (f, t) in (
+    (:define_req,                :Define_Req),
+    (:undefine_req,              :Undefine_Req),
+    (:match_req,                 :Match_Req),
+    (:match_aggregate_req,       :MatchAggregate_Req),
+    (:match_group_req,           :MatchGroup_Req),
+    (:match_group_aggregate_req, :MatchGroupAggregate_Req),
+    (:insert_req,                :Insert_Req),
+    (:delete_req,                :Delete_Req),
+    (:update_req,                :Update_Req),
+)
+    func = Symbol("$f")
+    type = Symbol("QueryManager_$t")
+    @eval begin
+        function $func(query::String, options::Proto.Options = Proto.Options())
+            $f = Proto.$type(; query)
+            query_manager_req = Proto.QueryManager_Req(; $f, options)
+            return Proto.Transaction_Req(; query_manager_req)
+        end
+    end
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module ConceptManagerRequestBuilder
+
+using ..GraknClient: Proto, EnumType, bytes
+
+function _treq(; kwargs...)
+    return Proto.Transaction_Req(
+        concept_manager_req = Proto.ConceptManager_Req(; kwargs...)
+    )
+end
+
+function put_entity_type_req(label::String)
+    return _treq(
+        put_entity_type_req = Proto.ConceptManager_PutEntityType_Req(; label)
+    )
+end
+
+function put_relation_type_req(label::String)
+    return _treq(
+        put_relation_type_req = Proto.ConceptManager_PutRelationType_Req(; label)
+    )
+end
+
+function put_attribute_type_req(label::String, value_type::EnumType)
+    return _treq(
+        put_attribute_type_req =
+            Proto.ConceptManager_PutAttributeType_Req(; label, value_type)
+    )
+end
+
+function get_thing_type_req(label::String)
+    return _treq(
+        get_thing_type_req = Proto.ConceptManager_GetThingType_Req(; label)
+    )
+end
+
+function get_thing_req(iid::String)
+    return _treq(
+        get_thing_req = Proto.ConceptManager_GetThing_Req(; iid = bytes(iid))
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module LogicManagerRequestBuilder
+
+using ..GraknClient: Proto
+
+function _treq(; kwargs...)
+    return Proto.Transaction_Req(
+        logic_manager_req = Proto.LogicManager_Req(
+            ; kwargs...
+        )
+    )
+end
+
+function put_rule_req(label::String, when::String, then::String)
+    return _treq(
+        put_rule_req = Proto.LogicManager_PutRule_Req(; label, when, then)
+    )
+end
+
+function get_rule_req(label::String)
+    return _treq(
+        get_rule_req = Proto.LogicManager_GetRule_Req(; label)
+    )
+end
+
+function get_rules_req()
+    return _treq(
+        get_rules_req = Proto.LogicManager_GetRules_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module TypeRequestBuilder
+
+using ..GraknClient: Proto, Label
+
+# Ignore linter error here
+function _treq(label, scope; kwargs...)
+    return Proto.Transaction_Req(
+        type_req = Proto.Type_Req(; label, scope, kwargs...)
+    )
+end
+
+function is_abstract_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_is_abstract_req = Proto.Type_IsAbstract_Req()
+    )
+end
+
+function set_label_req(label::Label, new_label::String)
+    return _treq(label.name, label.scope;
+        type_set_label_req = Proto.Type_SetLabel_Req(
+            label = new_label
+        )
+    )
+end
+
+function get_supertypes_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_get_supertypes_req = Proto.Type_GetSupertypes_Req()
+    )
+end
+
+function get_subtypes_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_get_subtypes_req = Proto.Type_GetSubtypes_Req()
+    )
+end
+
+function get_supertype_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_get_supertype_req = Proto.Type_GetSupertype_Req()
+    )
+end
+
+function delete_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_delete_req = Proto.Type_Delete_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RoleTypeRequestBuilder
+
+using ..GraknClient: Proto, EnumType, Label
+using ..TypeRequestBuilder: _treq
+
+# TODO to be deprecated, see porting note at RoleType.jl
+function proto_role_type(label::Label, encoding::EnumType)
+    @assert label.scope !== nothing
+    return Proto._Type(
+        scope = label.scope,
+        label = label.name,
+        encoding = encoding,
+    )
+end
+
+function get_relation_types_req(label::Label)
+    return _treq(label.name, label.scope;
+        role_type_get_relation_types_req = Proto.RoleType_GetRelationTypes_Req()
+    )
+end
+
+function get_players_req(label::Label)
+    return _treq(label.name, label.scope;
+        role_type_get_players_req = Proto.RoleType_GetPlayers_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module ThingTypeRequestBuilder
+
+using ..GraknClient: Proto, EnumType, Label, Optional
+using ..TypeRequestBuilder: _treq
+
+# TODO to be deprecated, see porting note at RoleType.jl
+function proto_thing_type(label::Label, encoding::EnumType)
+    return Proto._Type(
+        label = label.name,
+        encoding = encoding
+    )
+end
+
+function set_abstract_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_set_abstract_req = Proto.ThingType_SetAbstract_Req()
+    )
+end
+
+function unset_abstract_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_unset_abstract_req = Proto.ThingType_UnsetAbstract_Req()
+    )
+end
+
+function set_supertype_req(label::Label)
+    return _treq(label.name, label.scope;
+        type_set_supertype_req = Proto.Type_SetSupertype_Req()
+    )
+end
+
+function get_plays_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_get_plays_req = Proto.ThingType_GetPlays_Req()
+    )
+end
+
+function set_plays_req(
+    label::Label,
+    role_type::Proto.RoleType,
+    overridden_role_type::Optional{Proto.RoleType} = nothing
+)
+    return _treq(label.name, label.scope;
+        thing_type_set_plays_req = Proto.ThingType_SetPlays_Req(
+            role = role_type,
+            overridden_role = overridden_role_type
+        )
+    )
+end
+
+function unset_plays_req(
+    label::Label, role_type::Proto.RoleType
+)
+    return _treq(label.name, label.scope;
+        thing_type_unset_plays_req = Proto.ThingType_UnsetPlays_Req(
+            role = role_type,
+        )
+    )
+end
+
+# Porting note: the order of `keys_only` and `value_type` are swapped
+function get_owns_req(
+    label::Label,
+    keys_only::Bool,
+    value_type::Optional{EnumType} = nothing
+)
+    return _treq(label.name, label.scope;
+        thing_type_get_owns_req = Proto.ThingType_GetOwns_Req(; keys_only, value_type)
+    )
+end
+
+# Porting note: the order of `is_key` is moved upfront
+function set_owns_req(
+    label::Label,
+    is_key::Bool,
+    attribute_type::Proto.AttributeType,
+    overridden_type::Optional{Proto.AttributeType} = nothing
+)
+    return _treq(label.name, label.scope;
+        thing_type_set_owns_req = Proto.ThingType_SetOwns_Req(;
+            is_key, attribute_type, overridden_type
+        )
+    )
+end
+
+function unset_owns_req(label::Label, attribute_type::Proto.AttributeType)
+    return _treq(label.name, label.scope;
+        thing_type_unset_owns_req = Proto.ThingType_UnsetOwns_Req(; attribute_type)
+    )
+end
+
+function get_instances_req(label::Label)
+    return _treq(label.name, label.scope;
+        thing_type_get_instances_req = Proto.ThingType_GetInstances_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module EntityTypeRequestBuilder
+
+using ..GraknClient: Proto, Label
+using ..TypeRequestBuilder: _treq
+
+function create_req(label::Label)
+    return _treq(label.name, label.scope;
+        entity_type_create_req = Proto.EntityType_Create_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RelationTypeRequestBuilder
+
+using ..GraknClient: Proto, Label, Optional
+using ..TypeRequestBuilder: _treq
+
+function create_req(label::Label)
+    return _treq(label.name, label.scope;
+        relation_type_create_req = Proto.RelationType_Create_Req()
+    )
+end
+
+function get_relates_req(label::Label, role_label::Optional{String})
+    return _treq(label.name, label.scope;
+        relation_type_get_relates_req = Proto.RelationType_GetRelates_Req(;
+            label = role_label
+        )
+    )
+end
+
+function set_relates_req(
+    label::Label, role_label::String, overridden_label::Optional{String}
+)
+    return _treq(label.name, label.scope;
+        relation_type_set_relates_req = Proto.RelationType_SetRelates_Req(;
+            label = role_label,
+            overridden_label
+        )
+    )
+end
+
+function unset_relates_req(label::Label, role_label::Optional{String})
+    return _treq(label.name, label.scope;
+        relation_type_unset_relates_req = Proto.RelationType_UnsetRelates_Req(;
+            label = role_label
+        )
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module ThingRequestBuilder
+
+using ..GraknClient: Proto, Label, Bytes, bytes
+
+proto_thing(iid::Bytes) = Proto.Thing(; iid)
+proto_thing(iid::String) = proto_thing(bytes(iid))
+
+function _thing_req(iid::String; kwargs...)
+    return Proto.Transaction_Req(
+        thing_req = Proto.Thing_Req(
+            ; iid = bytes(iid), kwargs...
+        )
+    )
+end
+
+function is_inferred_req(iid::String)
+    return _thing_req(iid;
+        thing_is_inferred_req = Proto.Thing_IsInferred_Req()
+    )
+end
+
+function get_has_req(iid::String, attribute_types::AbstractVector{Proto.Type})
+    return _thing_req(iid;
+        thing_get_has_req = Proto.Thing_GetHas_Req(; attribute_types)
+    )
+end
+
+function get_has_req(iid::String, only_key::Bool)
+    return _thing_req(iid;
+        thing_get_has_req = Proto.Thing_GetHas_Req(; only_key)
+    )
+end
+
+function set_has_req(iid::String, attribute::Proto.Thing)
+    return _thing_req(iid;
+        thing_set_has_req = Proto.Thing_SetHas_Req(; attribute)
+    )
+end
+
+function unset_has_req(iid::String, attribute::Proto.Thing)
+    return _thing_req(iid;
+        thing_unset_has_req = Proto.Thing_UnsetHas_Req(; attribute)
+    )
+end
+
+function get_playing_req(iid::String)
+    return _thing_req(iid;
+        thing_get_playing_req = Proto.Thing_GetPlaying_Req()
+    )
+end
+
+function get_relations_req(iid::String, role_types::AbstractVector{Proto._Type})
+    return _thing_req(iid;
+        thing_get_relations_req = Proto.Thing_GetRelations_Req(; role_types)
+    )
+end
+
+function delete_req(iid::String)
+    return _thing_req(iid;
+        thing_delete_req = Proto.Thing_Delete_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RelationRequestBuilder
+
+using ..GraknClient: Proto
+using ..ThingRequestBuilder: _thing_req
+
+function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
+    return _thing_req(iid;
+        relation_add_player_req = Proto.Relation_AddPlayer_Req(;
+            role_type,
+            player
+        )
+    )
+end
+
+function remove_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
+    return _thing_req(iid;
+        relation_remove_player_req = Proto.Relation_RemovePlayer_Req(;
+            role_type,
+            player
+        )
+    )
+end
+
+function get_players_req(iid::String, role_types::AbstractVector{Proto._Type})
+    return _thing_req(iid;
+        relation_get_players_req = Proto.Relation_GetPlayers_Req(; role_types)
+    )
+end
+
+function get_players_by_role_type_req(iid::String)
+    return _thing_req(iid;
+        relation_get_players_by_role_type_req = Proto.Relation_GetPlayersByRoleType_Req()
+    )
+end
+
+function get_relating_req(iid::String)
+    return _thing_req(iid;
+        relation_get_players_req = Proto.Relation_GetRelating_Req()
+    )
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module AttributeRequestBuilder
+
+using ..GraknClient: Proto, Optional
+using ..ThingRequestBuilder: _thing_req
+using TimeZones: ZonedDateTime
+
+function get_owners_req(iid::String, owner_type::Optional{Proto._Type})
+    return _thing_req(iid;
+        relation_get_owners_req = Proto.Relation_GetOwners_Req(),
+        thing_type = owner_type
+    )
+end
+
+proto_boolean_attribute_value(value::Bool) = Proto.Attribute_Value(; boolean = value)
+proto_long_attribute_value(value::Int64) = Proto.Attribute_Value(; long = value)
+proto_double_attribute_value(value::Float64) = Proto.Attribute_Value(; double = value)
+proto_string_attribute_value(value::String) = Proto.Attribute_Value(; string = value)
+
+function proto_date_time_attribute_value(value::ZonedDateTime)
+    epoch_millis = value.utc_datetime.instant
+    Proto.Attribute_Value(; date_time = epoch_millis)
+end
+
+end
+
+# ---------------------------------------------------------------------------------
+module RuleRequestBuilder
+
+using ..GraknClient: Proto
+
+function set_label_req(current_label::String, new_label::String)
+    return Proto.Transaction_Req(
+        rule_req = Proto.Rule_Req(
+            label = current_label,
+            rule_set_label_req = Proto.Rule_SetLabel_Req(
+                label = new_label
+            )
+        )
+    )
+end
+
+function delete_req(label::String)
+    return Proto.Transaction_Req(
+        rule_req = Proto.Rule_Req(
+            rule_delete_req = Proto.Rule_Delete_Req()
+        )
+    )
+end
+
+end

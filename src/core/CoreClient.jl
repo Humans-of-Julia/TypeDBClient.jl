@@ -4,26 +4,30 @@ mutable struct CoreClient <: AbstractCoreClient
     #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc"
     channel::gRPCClient.gRPCChannel
     address::String
-    Port::Int
+    port::Int
     core_stub::Core_GraknStub
-    transmitter::RequestTransmitter
     databaseMgr::CoreDatabaseManager
     sessions::Dict{String, Union{<:AbstractCoreSession, Nothing}}
 end
 
-Base.show(io::IO, core_client::CoreClient) = Base.print(io,core_client)
-Base.print(io::IO, core_client::CoreClient) = Base.print(io, "CoreClient($(print(core_client.channel))")
+Base.show(io::IO, core_client::CoreClient) = print(io,core_client)
+Base.print(io::IO, core_client::CoreClient) = print(io, "CoreClient(address: $(core_client.address):$(core_client.port))")
 
 function CoreClient(address::String, port::Int)
-    # NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
     channel = gRPCChannel(address * ":" * string(port))
     stub = Core_GraknStub(channel)
-    transmitter = RequestTransmitter()
     databaseMgr = CoreDatabaseManager()
     sessions = Dict{String, Union{<:AbstractCoreSession, Nothing}}()
-    return CoreClient(channel,address, port, stub,transmitter,databaseMgr,sessions)
+    return CoreClient(channel,address, port, stub, databaseMgr,sessions)
 end
 
+function is_cluster(client::T) where {T<:AbstractCoreClient}
+    return false
+end
+
+function remove_session(client::T, session::R) where {T<:AbstractCoreClient, R<:AbstractCoreSession}
+    delete!(client.sessions, session.sessionID)
+end
 
 
 #

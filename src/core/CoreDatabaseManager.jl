@@ -5,6 +5,7 @@ mutable struct CoreDatabaseManager <: AbstractCoreDatabaseManager
 end
 
 function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractCoreClient}
+    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
     if contains_database(client, name)
         return CoreDatabase(name)
     else
@@ -12,11 +13,36 @@ function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractC
     end
 end
 
-function contains_database(client::T, name::String)::Bool where {T<:AbstractCoreClient}
-
-    return databases_contains(client.core_stub, gRPCController() , contains_req(name)).contains
+function contains_database(client::T, name::String) where {T<:AbstractCoreClient}
+    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
+    let db = DatabaseManagerRequestBuilder
+        req_result, status = databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
+        return grpc_result_or_error(req_result, status, result->result.contains)
+    end
 end
-#
+
+function get_all_databases(client::T)::Vector{CoreDatabase} where {T<:AbstractCoreClient}
+    let db = DatabaseManagerRequestBuilder
+        req_result, status = databases_all(client.core_stub.blockingStub, gRPCController(), db.all_req())
+        return grpc_result_or_error(req_result, status, result -> [CoreDatabase(db_name) for db_name in result.names])
+    end
+end
+
+function create_database(client::T, name::String) where {T<:AbstractCoreClient}
+    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
+    let db = DatabaseManagerRequestBuilder
+        req_result, status =  databases_create(client.core_stub.blockingStub, gRPCController(), db.create_req(name))
+        return grpc_result_or_error(req_result, status, result->true)
+    end
+end
+
+function delete_database(client::T, name::String) where {T<:AbstractCoreClient}
+    db = get_database(client, name)
+    let db = DatabaseRequestBuilder
+        req_result, status =  database_delete(client.core_stub.blockingStub, gRPCController(), db.delete_req(name))
+        return grpc_result_or_error(req_result, status, result->true)
+    end
+end
 # package grakn.client.core;
 #
 # import grakn.client.api.database.Database;
