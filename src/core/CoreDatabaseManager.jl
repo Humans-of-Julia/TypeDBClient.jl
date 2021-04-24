@@ -24,7 +24,7 @@ end
 function get_all_databases(client::T)::Vector{CoreDatabase} where {T<:AbstractCoreClient}
     let db = DatabaseManagerRequestBuilder
         req_result, status = databases_all(client.core_stub.blockingStub, gRPCController(), db.all_req())
-        return grpc_result_or_error(req_result, status, result->[CoreDatabase(db_name) for db_name in result.names])
+        return grpc_result_or_error(req_result, status, result -> [CoreDatabase(db_name) for db_name in result.names])
     end
 end
 
