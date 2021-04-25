@@ -1,8 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
+abstract type AbstractTypeDBStub end
 
-abstract type TypeDBStub end
-
-mutable struct Core_TypeDBStub <: TypeDBStub
+mutable struct Core_TypeDBStub <: AbstractTypeDBStub
     blockingStub::TypeDBBlockingStub
     asyncStub::TypeDBStub
 end
@@ -13,7 +12,7 @@ function Core_TypeDBStub(channel::gRPCClient.gRPCChannel)
     return Core_TypeDBStub(blockingStub,asyncStub)
 end
 
-mutable struct Cluster_TypeDBStub <: TypeDBStub
+mutable struct Cluster_TypeDBStub <: AbstractTypeDBStub
     blockingStub::TypeDBBlockingStub
 end
 
