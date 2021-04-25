@@ -1,6 +1,6 @@
 
 # quick reference to commonly used modules
-const Proto = typedb.protocol
+const Proto = grakn.protocol
 
 # Convenient types
 

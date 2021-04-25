@@ -25,14 +25,14 @@ function CoreSession(client::T,
                      options::TypeDBOptions = TypeDBOptions();
                      request_timout::Real=6) where {T<:AbstractCoreClient}
    # try
-        options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS + 1000
+        #options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS + 1000
         #building open_request
         open_req = SessionRequestBuilder.open_req(
-            database, type , copy_to_proto(options, typedb.protocol.Options)
+            database, type , copy_to_proto(options, Proto.Options)
         )
         # open the session
         startTime = now()
-        grpc_controller = gRPCController(request_timeout=request_timout)
+        grpc_controller = gRPCController()
         req_result, status  = session_open(client.core_stub.blockingStub, grpc_controller, open_req)
         res_id = grpc_result_or_error(req_result, status, result->result.session_id)
         endTime = now()

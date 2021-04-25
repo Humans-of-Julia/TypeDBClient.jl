@@ -2,26 +2,26 @@
 abstract type AbstractTypeDBStub end
 
 mutable struct Core_TypeDBStub <: AbstractTypeDBStub
-    blockingStub::TypeDBBlockingStub
-    asyncStub::TypeDBStub
+    blockingStub::GraknCoreBlockingStub
+    asyncStub::GraknCoreStub
 end
 
 function Core_TypeDBStub(channel::gRPCClient.gRPCChannel)
-    blockingStub = TypeDBBlockingStub(channel)
-    asyncStub = TypeDBStub(channel)
+    blockingStub = GraknCoreBlockingStub(channel)
+    asyncStub = GraknCoreStub(channel)
     return Core_TypeDBStub(blockingStub,asyncStub)
 end
 
 mutable struct Cluster_TypeDBStub <: AbstractTypeDBStub
-    blockingStub::TypeDBBlockingStub
+    blockingStub::GraknCoreBlockingStub
 end
 
 function Cluster_TypeDBStub(channel::gRPCClient.gRPCChannel)
-    blockingStub = TypeDBBlockingStub(channel)
+    blockingStub = GraknCoreBlockingStub(channel)
     return Cluster_TypeDBStub(blockingStub)
 end
 
-function ensure_connected(stub::T) where {T<:TypeDBStub}
+function ensure_connected(stub::T) where {T<:AbstractTypeDBStub}
     throw(TypeDBClientException(GENERAL_UNKOWN_ERROR,"function TypeDBStub.jl/ensure_onnected isn't implemented yet"))
 end
 #

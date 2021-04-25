@@ -46,7 +46,7 @@ abstract type AbstractQueryManager end
 ########################################
 
 #generated section
-include("generated/typedb.jl")
+include("generated/grakn.jl")
 include("generated/core_service_pb.jl")
 
 #standard julia sources
@@ -105,8 +105,8 @@ export contains_database
 
 ####### pretty printing sectoin ##################
 
-Base.show(io::IO, blocking_stub::TypeDBBlockingStub) = Base.print(io,blocking_stub)
-function Base.print(io::IO, blocking_stub::TypeDBBlockingStub)
+Base.show(io::IO, blocking_stub::GraknCoreBlockingStub) = Base.print(io,blocking_stub)
+function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
     print(io, "TypeDBBlockingStub($(blocking_stub.impl.channel))")
     return nothing
 end
