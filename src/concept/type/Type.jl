@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 """
     instantiate(p)
@@ -19,7 +19,7 @@ function instantiate(t::Proto._Type)
     elseif t.encoding == Proto.Type_Encoding.THING_TYPE
         return ThingType(label, t.root)
     else
-        throw(GraknClientException(CONCEPT_BAD_ENCODING, t.encoding))
+        throw(TypeDBClientException(CONCEPT_BAD_ENCODING, t.encoding))
     end
 end
 

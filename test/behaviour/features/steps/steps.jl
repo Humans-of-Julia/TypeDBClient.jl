@@ -1,8 +1,8 @@
 
 
-@given("connection open schema session for database: grakn") do context
-    grakn_session = GraknClient.CoreSession(client, "grakn" , GraknClient.grakn.protocol.Session_Type[:SCHEMA] , GraknClient.GraknOptions())
-    context[:session] = grakn_session
+@given("connection open schema session for database: typedb") do context
+    typedb_session = TypeDBClient.CoreSession(client, "typedb" , TypeDBClient.typedb.protocol.Session_Type[:SCHEMA] , TypeDBClient.TypeDBOptions())
+    context[:session] = typedb_session
     @expect context[:session] !== nothing
 end
 

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Graql Get Clause
   Background: Open connection and create a simple extensible schema
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
     Given graql define
@@ -52,7 +52,7 @@ Feature: Graql Get Clause
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
 
 
@@ -96,7 +96,7 @@ Feature: Graql Get Clause
 
   Scenario Outline: the answers of a match can be sorted by an attribute of type '<type>'
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -106,7 +106,7 @@ Feature: Graql Get Clause
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -462,7 +462,7 @@ Feature: Graql Get Clause
 
   Scenario Outline: the <agg_type> of an answer set of '<type>' values can be retrieved
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -473,7 +473,7 @@ Feature: Graql Get Clause
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -508,7 +508,7 @@ Feature: Graql Get Clause
 
   Scenario: the sample standard deviation can be retrieved for an answer set of 'double' values
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -519,7 +519,7 @@ Feature: Graql Get Clause
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -611,7 +611,7 @@ Feature: Graql Get Clause
 
   Scenario Outline: when an answer set is empty, calling '<agg_type>' on it returns an empty answer
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -674,7 +674,7 @@ Feature: Graql Get Clause
 
   Scenario Outline: an error is thrown when getting the '<agg_type>' of attributes that have the inapplicable type, '<type>'
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql define
       """
@@ -685,7 +685,7 @@ Feature: Graql Get Clause
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """

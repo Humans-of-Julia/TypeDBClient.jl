@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Graql Undefine Query
   Background: Open connection and create a simple extensible schema
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
     Given graql define
@@ -234,16 +234,16 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
-      insert $x isa person, has name "Victor", has email "victor@grakn.ai";
+      insert $x isa person, has name "Victor", has email "victor@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     When session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -251,7 +251,7 @@ Feature: Graql Undefine Query
       """
 
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When graql delete
       """
@@ -263,7 +263,7 @@ Feature: Graql Undefine Query
     Then transaction commits
 
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     When graql undefine
       """
@@ -411,18 +411,18 @@ Feature: Graql Undefine Query
 
   Scenario: undefining a relation type throws on commit if it has existing instances
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $p isa person, has name "Harald", has email "harald@grakn.ai";
+      $p isa person, has name "Harald", has email "harald@typedb.ai";
       $r (employee: $p) isa employment;
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -444,18 +444,18 @@ Feature: Graql Undefine Query
       | label:employment |
       | label:relation   |
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $p isa person, has name "Harald", has email "harald@grakn.ai";
+      $p isa person, has name "Harald", has email "harald@typedb.ai";
       $r (employee: $p) isa employment;
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -463,7 +463,7 @@ Feature: Graql Undefine Query
       """
 
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When graql delete
       """
@@ -475,7 +475,7 @@ Feature: Graql Undefine Query
     Then transaction commits
 
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     When graql undefine
       """
@@ -566,12 +566,12 @@ Feature: Graql Undefine Query
   @ignore
   Scenario: after removing a role from a relation type, relation instances can no longer be created with that role
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $p isa person, has email "ganesh@grakn.ai";
+      $p isa person, has email "ganesh@typedb.ai";
       $r (employee: $p) isa employment;
       """
     Given transaction commits
@@ -587,7 +587,7 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql undefine
       """
@@ -598,7 +598,7 @@ Feature: Graql Undefine Query
     Then transaction commits
 
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When get answers of graql match
       """
@@ -608,7 +608,7 @@ Feature: Graql Undefine Query
     Then graql insert; throws exception
       """
       match
-        $p isa person, has email "ganesh@grakn.ai";
+        $p isa person, has email "ganesh@typedb.ai";
       insert
         $r (employee: $p) isa employment;
       """
@@ -659,19 +659,19 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $p isa person, has name "Ada", has email "ada@grakn.ai";
+      $p isa person, has name "Ada", has email "ada@typedb.ai";
       $c isa company, has name "IBM";
       $r (employee: $p, employer: $c) isa employment;
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -681,18 +681,18 @@ Feature: Graql Undefine Query
 
   Scenario: a role that is not played in any existing instance of its relation type can be safely removed
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $p isa person, has name "Vijay", has email "vijay@grakn.ai";
+      $p isa person, has name "Vijay", has email "vijay@typedb.ai";
       $r (employee: $p) isa employment;
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql undefine
       """
@@ -746,12 +746,12 @@ Feature: Graql Undefine Query
 
   Scenario: after undefining a playable role from a type, the type can no longer play the role
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $p isa person, has email "ganesh@grakn.ai";
+      $p isa person, has email "ganesh@typedb.ai";
       $r (employee: $p) isa employment;
       """
     Given transaction commits
@@ -767,7 +767,7 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql undefine
       """
@@ -776,7 +776,7 @@ Feature: Graql Undefine Query
     Then transaction commits
 
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When get answers of graql match
       """
@@ -786,7 +786,7 @@ Feature: Graql Undefine Query
     Then graql insert; throws exception
       """
       match
-        $p isa person, has email "ganesh@grakn.ai";
+        $p isa person, has email "ganesh@typedb.ai";
       insert
         $r (employee: $p) isa employment;
       """
@@ -808,18 +808,18 @@ Feature: Graql Undefine Query
 
   Scenario: removing a playable role throws an error if it is played by existing instances
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $p isa person, has email "ganesh@grakn.ai";
+      $p isa person, has email "ganesh@typedb.ai";
       $r (employee: $p) isa employment;
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -873,7 +873,7 @@ Feature: Graql Undefine Query
     Then transaction commits
 
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When graql insert
       """
@@ -1032,7 +1032,7 @@ Feature: Graql Undefine Query
       | label:email     |
       | label:attribute |
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1041,7 +1041,7 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -1049,7 +1049,7 @@ Feature: Graql Undefine Query
       """
 
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When graql delete
       """
@@ -1061,7 +1061,7 @@ Feature: Graql Undefine Query
     Then transaction commits
 
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     When graql undefine
       """
@@ -1171,16 +1171,16 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
-      insert $x isa person, has email "anon@grakn.ai";
+      insert $x isa person, has email "anon@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql undefine
       """
@@ -1198,16 +1198,16 @@ Feature: Graql Undefine Query
 
   Scenario: removing an attribute ownership throws an error if it is owned by existing instances
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
-      insert $x isa person, has name "Tomas", has email "tomas@grakn.ai";
+      insert $x isa person, has name "Tomas", has email "tomas@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -1217,16 +1217,16 @@ Feature: Graql Undefine Query
 
   Scenario: undefining a key ownership throws an error if it is owned by existing instances
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
-      insert $x isa person, has name "Daniel", has email "daniel@grakn.ai";
+      insert $x isa person, has name "Daniel", has email "daniel@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql undefine; throws exception
       """
@@ -1269,7 +1269,7 @@ Feature: Graql Undefine Query
       define
       rule samuel-email-rule:
       when {
-        $x has email "samuel@grakn.ai";
+        $x has email "samuel@typedb.ai";
       } then {
         $x has name "Samuel";
       };
@@ -1277,11 +1277,11 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
-      insert $x isa person, has email "samuel@grakn.ai";
+      insert $x isa person, has email "samuel@typedb.ai";
       """
     Given transaction commits
 
@@ -1296,7 +1296,7 @@ Feature: Graql Undefine Query
       | n                 |
       | value:name:Samuel |
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql undefine
       """
@@ -1322,7 +1322,7 @@ Feature: Graql Undefine Query
       define
       rule samuel-email-rule:
       when {
-        $x has email "samuel@grakn.ai";
+        $x has email "samuel@typedb.ai";
       } then {
         $x has name "Samuel";
       };
@@ -1330,16 +1330,16 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
-      insert $x isa person, has email "samuel@grakn.ai";
+      insert $x isa person, has email "samuel@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given get answers of graql match
       """
@@ -1379,7 +1379,7 @@ Feature: Graql Undefine Query
       """
     Given answer size is: 0
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert; throws exception
       """
@@ -1387,7 +1387,7 @@ Feature: Graql Undefine Query
       """
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Given graql undefine
       """
@@ -1396,7 +1396,7 @@ Feature: Graql Undefine Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     When get answers of graql match
       """

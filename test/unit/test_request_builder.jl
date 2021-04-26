@@ -1,23 +1,23 @@
-import GraknClient.grakn.protocol as Proto
-using GraknClient: Label, bytes
+import TypeDBClient.typedb.protocol as Proto
+using TypeDBClient: Label, bytes
 using UUIDs: uuid4
 
 @testset "RequestBuilder" begin
 
 no_option = Proto.Options()
 
-let b = GraknClient.DatabaseManagerRequestBuilder
+let b = TypeDBClient.DatabaseManagerRequestBuilder
     @test b.create_req("a").name == "a"
     @test b.contains_req("a").name == "a"
     @test_nowarn b.all_req()
 end
 
-let b = GraknClient.DatabaseRequestBuilder
+let b = TypeDBClient.DatabaseRequestBuilder
     @test b.schema_req("a").name == "a"
     @test b.delete_req("a").name == "a"
 end
 
-let b = GraknClient.SessionRequestBuilder
+let b = TypeDBClient.SessionRequestBuilder
     let r = b.open_req("a", Int32(0), no_option)
         @test r.database == "a"
         @test r._type == Int32(0)
@@ -26,7 +26,7 @@ let b = GraknClient.SessionRequestBuilder
     @test b.pulse_req([0x01]).session_id == [0x01]
 end
 
-let b = GraknClient.TransactionRequestBuilder
+let b = TypeDBClient.TransactionRequestBuilder
     let ts = [Proto.Transaction_Req()]
         @test b.client_msg(ts).reqs == ts
     end
@@ -43,7 +43,7 @@ let b = GraknClient.TransactionRequestBuilder
     end
 end
 
-let b = GraknClient.QueryManagerRequestBuilder
+let b = TypeDBClient.QueryManagerRequestBuilder
     for f in (
         :define_req, :undefine_req, :match_req, :match_aggregate_req,
         :match_group_req, :match_group_aggregate_req,
@@ -57,7 +57,7 @@ let b = GraknClient.QueryManagerRequestBuilder
     end
 end
 
-let b = GraknClient.ConceptManagerRequestBuilder
+let b = TypeDBClient.ConceptManagerRequestBuilder
     @test b.put_entity_type_req("a").concept_manager_req.put_entity_type_req.label == "a"
     @test b.put_relation_type_req("a").concept_manager_req.put_relation_type_req.label == "a"
     @test b.put_attribute_type_req("a", Int32(0)).concept_manager_req.put_attribute_type_req.label == "a"
@@ -66,7 +66,7 @@ let b = GraknClient.ConceptManagerRequestBuilder
     @test b.get_thing_req("a").concept_manager_req.get_thing_req.iid == bytes("a")
 end
 
-let b = GraknClient.LogicManagerRequestBuilder
+let b = TypeDBClient.LogicManagerRequestBuilder
     let r = b.put_rule_req("a", "b", "c")
         @test r.logic_manager_req.put_rule_req.label == "a"
         @test r.logic_manager_req.put_rule_req.when == "b"
@@ -80,7 +80,7 @@ end
 label = Label("a")
 scoped_label = Label("s","a")
 
-let b = GraknClient.TypeRequestBuilder
+let b = TypeDBClient.TypeRequestBuilder
 
     # For simplicity, conditional scope settting is tested here (`is_abstract_req1)
     # and will be excluded for other tests below.
@@ -103,7 +103,7 @@ let b = GraknClient.TypeRequestBuilder
     @test hasproperty(b.delete_req(label).type_req, :type_delete_req)
 end
 
-let b = GraknClient.RoleTypeRequestBuilder
+let b = TypeDBClient.RoleTypeRequestBuilder
 
     let r = b.proto_role_type(scoped_label, Proto.Type_Encoding.THING_TYPE)
         @test r.label == "a"

@@ -1,14 +1,14 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.test.integration;
+# package typedb.client.test.integration;
 # 
-# import grakn.client.Grakn;
-# import grakn.client.api.GraknClient;
-# import grakn.client.api.GraknSession;
-# import grakn.client.api.GraknTransaction;
-# import grakn.client.api.answer.ConceptMap;
-# import grakn.common.test.server.GraknCoreRunner;
+# import typedb.client.TypeDB;
+# import typedb.client.api.TypeDBClient;
+# import typedb.client.api.TypeDBSession;
+# import typedb.client.api.TypeDBTransaction;
+# import typedb.client.api.answer.ConceptMap;
+# import typedb.common.test.server.TypeDBRunner;
 # import graql.lang.Graql;
 # import graql.lang.common.GraqlArg;
 # import graql.lang.query.GraqlDefine;
@@ -26,8 +26,8 @@
 # import java.util.function.Consumer;
 # import java.util.stream.Stream;
 # 
-# import static grakn.client.api.GraknSession.Type.DATA;
-# import static grakn.client.api.GraknTransaction.Type.WRITE;
+# import static typedb.client.api.TypeDBSession.Type.DATA;
+# import static typedb.client.api.TypeDBTransaction.Type.WRITE;
 # import static graql.lang.Graql.and;
 # import static graql.lang.Graql.rel;
 # import static graql.lang.Graql.rule;
@@ -38,29 +38,29 @@
 # @SuppressWarnings("Duplicates")
 # public class ClientQueryTest {
 #     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
-#     private static GraknCoreRunner grakn;
-#     private static GraknClient graknClient;
+#     private static TypeDBRunner typedb;
+#     private static TypeDBClient typedbClient;
 # 
 #     @BeforeClass
 #     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-#         grakn = new GraknCoreRunner();
-#         grakn.start();
-#         graknClient = Grakn.coreClient(grakn.address());
-#         if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
-#         graknClient.databases().create("grakn");
+#         typedb = new TypeDBRunner();
+#         typedb.start();
+#         typedbClient = TypeDB.coreClient(typedb.address());
+#         if (typedbClient.databases().contains("typedb")) typedbClient.databases().get("typedb").delete();
+#         typedbClient.databases().create("typedb");
 #     }
 # 
 #     @AfterClass
 #     public static void closeSession() throws Exception {
-#         graknClient.close();
-#         grakn.stop();
+#         typedbClient.close();
+#         typedb.stop();
 #     }
 # 
 #     @Test
 #     public void applicationTest() {
 #         LOG.info("clientJavaE2E() - starting client-java E2E...");
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             GraqlDefine defineQuery = Graql.define(
 #                     type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
 #                     type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("child-bearing", "child-bearer"),
@@ -82,10 +82,10 @@
 #             tx.query().define(ruleQuery);
 #             tx.commit();
 #             LOG.info("clientJavaE2E() - done.");
-#         }, GraknSession.Type.SCHEMA);
+#         }, TypeDBSession.Type.SCHEMA);
 # 
 #         // TODO: re-enable when match is implemented
-# //        localhostGraknTx(tx -> {
+# //        localhostTypeDBTx(tx -> {
 # //            final GraqlMatch getThingQuery = Graql.match(var("t").sub("thing"));
 # //            LOG.info("clientJavaE2E() - assert if schema defined...");
 # //            LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
@@ -97,7 +97,7 @@
 # //            LOG.info("clientJavaE2E() - done.");
 # //        });
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             String[] names = lionNames();
 #             GraqlInsert insertLionQuery = Graql.insert(
 #                     var().isa("lion").has("name", names[0]),
@@ -112,7 +112,7 @@
 #         });
 # 
 #         // TODO: uncomment when match is implemented
-# //        localhostGraknTx(tx -> {
+# //        localhostTypeDBTx(tx -> {
 # //            final String[] familyMembers = lionNames();
 # //            LOG.info("clientJavaE2E() - inserting mating relations...");
 # //            final GraqlInsert insertMatingQuery = Graql.match(
@@ -141,7 +141,7 @@
 # //        });
 # //
 # //
-# //        localhostGraknTx(tx -> {
+# //        localhostTypeDBTx(tx -> {
 # //            LOG.info("clientJavaE2E() - execute match get on the lion instances...");
 # //            final GraqlMatch getLionQuery = Graql.match(var("p").isa("lion").has("name", var("n")));
 # //            LOG.info("clientJavaE2E() - '" + getLionQuery + "'");
@@ -163,7 +163,7 @@
 # //            LOG.info("clientJavaE2E() - done.");
 # //        });
 # //
-# //        localhostGraknTx(tx -> {
+# //        localhostTypeDBTx(tx -> {
 # //            LOG.info("clientJavaE2E() - match get inferred relations...");
 # //            final GraqlMatch getParentship = Graql.match(
 # //                    var("parentship")
@@ -178,7 +178,7 @@
 # //        });
 # 
 #         // TODO: uncomment when aggregate is implemented
-# //        localhostGraknTx(tx -> {
+# //        localhostTypeDBTx(tx -> {
 # //            LOG.info("clientJavaE2E() - match aggregate...");
 # //            GraqlMatch.Aggregate aggregateQuery = Graql.match(var("p").isa("lion")).count();
 # //            LOG.info("clientJavaE2E() - '" + aggregateQuery + "'");
@@ -188,7 +188,7 @@
 # //        });
 # 
 #         // TODO: uncomment when compute is implemented
-# //        localhostGraknTx(tx -> {
+# //        localhostTypeDBTx(tx -> {
 # //            LOG.info("clientJavaE2E() - compute count...");
 # //            final GraqlCompute.Statistics computeQuery = Graql.compute().count().in("lion");
 # //            LOG.info("clientJavaE2E() - '" + computeQuery + "'");
@@ -198,7 +198,7 @@
 # //        });
 # 
 #         // TODO: uncomment when match is implemented
-# //        localhostGraknTx(tx -> {
+# //        localhostTypeDBTx(tx -> {
 # //            LOG.info("clientJavaE2E() - match delete...");
 # //            GraqlDelete deleteQuery = Graql.match(var("m").isa("mating")).delete(var("m").isa("mating"));
 # //            LOG.info("clientJavaE2E() - '" + deleteQuery + "'");
@@ -230,7 +230,7 @@
 # 
 #     @Test
 #     public void parallelQueriesInTransactionTest() {
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             GraqlDefine defineQuery = Graql.define(
 #                     type("symbol").sub("attribute").value(GraqlArg.ValueType.STRING),
 #                     type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
@@ -262,10 +262,10 @@
 #             tx.query().define(defineQuery);
 #             tx.commit();
 #             LOG.info("clientJavaE2E() - done.");
-#         }, GraknSession.Type.SCHEMA);
+#         }, TypeDBSession.Type.SCHEMA);
 # 
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             String[] commits = commitSHAs();
 #             GraqlInsert insertCommitQuery = Graql.insert(
 #                     var().isa("commit").has("symbol", commits[0]),
@@ -286,7 +286,7 @@
 #             LOG.info("clientJavaE2E() - done.");
 #         });
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             GraqlInsert insertWorkflowQuery = Graql.insert(
 #                     var().isa("workflow")
 #                             .has("name", "workflow-A")
@@ -305,7 +305,7 @@
 #             LOG.info("clientJavaE2E() - done.");
 #         });
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             GraqlInsert insertPipelineQuery = Graql.insert(
 #                     var().isa("pipeline")
 #                             .has("name", "pipeline-A")
@@ -322,7 +322,7 @@
 #             LOG.info("clientJavaE2E() - done.");
 #         });
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             String[] commitShas = commitSHAs();
 #             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 # 
@@ -356,7 +356,7 @@
 #             LOG.info("clientJavaE2E() - done.");
 #         });
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 # 
 #             GraqlInsert insertPipelineWorkflowQuery = Graql.match(
@@ -429,7 +429,7 @@
 #                         "get $pipeline-name, $workflow-name, $workflow-status;"
 #         };
 # 
-#         localhostGraknTx(tx -> {
+#         localhostTypeDBTx(tx -> {
 #             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 # 
 #             Stream.of(queries).parallel().forEach(x -> {
@@ -445,19 +445,19 @@
 #         return new String[]{"male-partner", "female-partner", "young-lion"};
 #     }
 # 
-#     private void localhostGraknTx(Consumer<GraknTransaction> fn) {
-#         String database = "grakn";
-#         try (GraknSession session = graknClient.session(database, DATA)) {
-#             try (GraknTransaction transaction = session.transaction(WRITE)) {
+#     private void localhostTypeDBTx(Consumer<TypeDBTransaction> fn) {
+#         String database = "typedb";
+#         try (TypeDBSession session = typedbClient.session(database, DATA)) {
+#             try (TypeDBTransaction transaction = session.transaction(WRITE)) {
 #                 fn.accept(transaction);
 #             }
 #         }
 #     }
 # 
-#     private void localhostGraknTx(Consumer<GraknTransaction> fn, GraknSession.Type sessionType) {
-#         String database = "grakn";
-#         try (GraknSession session = graknClient.session(database, sessionType)) {
-#             try (GraknTransaction transaction = session.transaction(WRITE)) {
+#     private void localhostTypeDBTx(Consumer<TypeDBTransaction> fn, TypeDBSession.Type sessionType) {
+#         String database = "typedb";
+#         try (TypeDBSession session = typedbClient.session(database, sessionType)) {
+#             try (TypeDBTransaction transaction = session.transaction(WRITE)) {
 #                 fn.accept(transaction);
 #             }
 #         }

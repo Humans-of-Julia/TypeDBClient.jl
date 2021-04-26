@@ -1,11 +1,11 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.test.behaviour.config;
+# package typedb.client.test.behaviour.config;
 # 
-# import grakn.client.api.GraknTransaction;
-# import grakn.client.api.concept.type.AttributeType.ValueType;
-# import grakn.client.common.Label;
+# import typedb.client.api.TypeDBTransaction;
+# import typedb.client.api.concept.type.AttributeType.ValueType;
+# import typedb.client.common.Label;
 # import io.cucumber.java.DataTableType;
 # import io.cucumber.java.ParameterType;
 # 
@@ -15,8 +15,8 @@
 # import java.util.Iterator;
 # import java.util.List;
 # 
-# import static grakn.client.api.GraknTransaction.Type.READ;
-# import static grakn.client.api.GraknTransaction.Type.WRITE;
+# import static typedb.client.api.TypeDBTransaction.Type.READ;
+# import static typedb.client.api.TypeDBTransaction.Type.WRITE;
 # import static org.junit.Assert.assertNotNull;
 # import static org.junit.Assert.fail;
 # 
@@ -92,7 +92,7 @@
 #     }
 # 
 #     @ParameterType("read|write")
-#     public GraknTransaction.Type transaction_type(String type) {
+#     public TypeDBTransaction.Type transaction_type(String type) {
 #         if (type.equals("read")) {
 #             return READ;
 #         } else if (type.equals("write")) {
@@ -102,10 +102,10 @@
 #     }
 # 
 #     @DataTableType
-#     public List<GraknTransaction.Type> transaction_types(List<String> values) {
-#         List<GraknTransaction.Type> typeList = new ArrayList<>();
+#     public List<TypeDBTransaction.Type> transaction_types(List<String> values) {
+#         List<TypeDBTransaction.Type> typeList = new ArrayList<>();
 #         for (String value : values) {
-#             GraknTransaction.Type type = transaction_type(value);
+#             TypeDBTransaction.Type type = transaction_type(value);
 #             assertNotNull(type);
 #             typeList.add(type);
 #         }

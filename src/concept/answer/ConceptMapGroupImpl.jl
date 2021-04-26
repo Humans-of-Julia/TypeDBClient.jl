@@ -1,13 +1,13 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.concept.answer;
+# package typedb.client.concept.answer;
 # 
-# import grakn.client.api.answer.ConceptMap;
-# import grakn.client.api.answer.ConceptMapGroup;
-# import grakn.client.api.concept.Concept;
-# import grakn.client.concept.ConceptImpl;
-# import grakn.protocol.AnswerProto;
+# import typedb.client.api.answer.ConceptMap;
+# import typedb.client.api.answer.ConceptMapGroup;
+# import typedb.client.api.concept.Concept;
+# import typedb.client.concept.ConceptImpl;
+# import typedb.protocol.AnswerProto;
 # 
 # import java.util.List;
 # import java.util.Objects;

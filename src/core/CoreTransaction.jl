@@ -1,8 +1,8 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct CoreTransaction <: AbstractCoreTransaction
     type::Union{Nothing,Int32}
-    options::Union{Nothing,GraknOptions}
+    options::Union{Nothing,TypeDBOptions}
     bidirectional_stream::BidirectionalStream
     transaction_id::Union{Nothing,UUID}
     session_id::Array{UInt8,1}
@@ -19,7 +19,7 @@ end
 function CoreTransaction(session::CoreSession ,
                         sessionId::Array{UInt8,1},
                         type::Int32,
-                        options::GraknOptions;
+                        options::TypeDBOptions;
                         request_timout::Real=session.request_timeout)
     type = type
     options = options
@@ -58,7 +58,7 @@ function query(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<
 end
 
 function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
-        !is_open(transaction) && throw(GraknClientException(CLIENT_TRANSACTION_CLOSED))
+        !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
         result = single_request(transaction.bidirectional_stream, request, batch)
         return result
 end

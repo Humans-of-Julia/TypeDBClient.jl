@@ -1,6 +1,6 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-@given("connection create database: grakn") do context
+@given("connection create database: typedb") do context
     @fail "Implement me"
 end
 
@@ -57,22 +57,22 @@ end
 end
 
 
-@when("connection create database: grakn") do context
+@when("connection create database: typedb") do context
     @fail "Implement me"
 end
 
 
-@when("connection open session for database: grakn") do context
+@when("connection open session for database: typedb") do context
     @fail "Implement me"
 end
 
 
-@when("connection delete database: grakn") do context
+@when("connection delete database: typedb") do context
     @fail "Implement me"
 end
 
 
-@then("connection does not have database: grakn") do context
+@then("connection does not have database: typedb") do context
     @fail "Implement me"
 end
 
@@ -92,7 +92,7 @@ end
 end
 
 
-@when("connection delete database; throws exception: grakn") do context
+@when("connection delete database; throws exception: typedb") do context
     @fail "Implement me"
 end
 
@@ -131,7 +131,7 @@ from typing import List
 from behave import *
 from hamcrest import *
 
-from grakn.common.exception import GraknClientException
+from typedb.common.exception import TypeDBClientException
 from tests.behaviour.config.parameters import parse_list
 from tests.behaviour.context import Context
 from tests.behaviour.util import assert_collections_equal
@@ -183,7 +183,7 @@ def delete_databases_throws_exception(context: Context, names: List[str]):
         try:
             context.client.databases().get(name).delete()
             assert False
-        except GraknClientException as e:
+        except TypeDBClientException as e:
             pass
 
 

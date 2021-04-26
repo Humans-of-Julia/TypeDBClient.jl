@@ -61,8 +61,8 @@ end
 from behave import *
 from hamcrest import *
 
-from grakn.common.exception import GraknClientException
-from grakn.common.label import Label
+from typedb.common.exception import TypeDBClientException
+from typedb.common.label import Label
 from tests.behaviour.config.parameters import parse_bool, parse_list, RootLabel, parse_label
 from tests.behaviour.context import Context
 
@@ -82,7 +82,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str):
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).delete()
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -130,21 +130,21 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, super_la
         try:
             context.tx().concepts().get_entity_type(type_label).as_remote(context.tx()).set_supertype(entity_supertype)
             assert False
-        except GraknClientException:
+        except TypeDBClientException:
             pass
     elif root_label == RootLabel.ATTRIBUTE:
         attribute_supertype = context.tx().concepts().get_attribute_type(super_label)
         try:
             context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).set_supertype(attribute_supertype)
             assert False
-        except GraknClientException:
+        except TypeDBClientException:
             pass
     elif root_label == RootLabel.RELATION:
         relation_supertype = context.tx().concepts().get_relation_type(super_label)
         try:
             context.tx().concepts().get_relation_type(type_label).as_remote(context.tx()).set_supertype(relation_supertype)
             assert False
-        except GraknClientException:
+        except TypeDBClientException:
             pass
     else:
         raise ValueError("Unrecognised value")
@@ -210,7 +210,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, overridden_type, is_key=True)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -220,7 +220,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, is_key=True)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -244,7 +244,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).unset_owns(attribute_type)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -278,7 +278,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type, overridden_type)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -288,7 +288,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_owns(attribute_type)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -328,7 +328,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, role_lab
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_plays(role_type, overridden_type)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -345,7 +345,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, role_lab
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).set_plays(role_type)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 
@@ -361,7 +361,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, role_lab
     try:
         context.get_thing_type(root_label, type_label).as_remote(context.tx()).unset_plays(role_type)
         assert False
-    except GraknClientException:
+    except TypeDBClientException:
         pass
 
 

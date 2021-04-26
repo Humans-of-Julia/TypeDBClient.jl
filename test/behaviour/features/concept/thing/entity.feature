@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Concept Entity
   Background:
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     # Write schema for the test scenarios
     Given put attribute type: username, with value type: string
@@ -32,7 +32,7 @@ Feature: Concept Entity
     Given entity(person) set owns attribute type: email
     Given transaction commits
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
 
   Scenario: Entity can be created

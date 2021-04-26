@@ -61,9 +61,9 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using GraknClient
-            DocMeta.setdocmeta!(GraknClient, :DocTestSetup, :(using GraknClient); recursive=true)
-            doctest(GraknClient)'
+            using TypeDBClient
+            DocMeta.setdocmeta!(TypeDBClient, :DocTestSetup, :(using TypeDBClient); recursive=true)
+            doctest(TypeDBClient)'
       - run: julia --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

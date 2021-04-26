@@ -1,5 +1,5 @@
 ```@meta
-CurrentModule = GraknClient
+CurrentModule = TypeDBClient
 ```
 
 # API reference to be filled

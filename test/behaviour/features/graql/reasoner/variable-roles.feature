@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# TODO: re-enable all steps in file when Grakn is faster
+# TODO: re-enable all steps in file when TypeDB is faster
 #noinspection CucumberUndefinedStep
 Feature: Variable Role Resolution
 

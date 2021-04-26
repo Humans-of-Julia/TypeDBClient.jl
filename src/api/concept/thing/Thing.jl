@@ -1,13 +1,13 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api.concept.thing;
+# package typedb.client.api.concept.thing;
 # 
-# import grakn.client.api.GraknTransaction;
-# import grakn.client.api.concept.Concept;
-# import grakn.client.api.concept.type.AttributeType;
-# import grakn.client.api.concept.type.RoleType;
-# import grakn.client.api.concept.type.ThingType;
+# import typedb.client.api.TypeDBTransaction;
+# import typedb.client.api.concept.Concept;
+# import typedb.client.api.concept.type.AttributeType;
+# import typedb.client.api.concept.type.RoleType;
+# import typedb.client.api.concept.type.ThingType;
 # 
 # import javax.annotation.CheckReturnValue;
 # import java.util.stream.Stream;
@@ -28,7 +28,7 @@
 # 
 #     @Override
 #     @CheckReturnValue
-#     Thing.Remote asRemote(GraknTransaction transaction);
+#     Thing.Remote asRemote(TypeDBTransaction transaction);
 # 
 #     interface Remote extends Concept.Remote, Thing {
 # 

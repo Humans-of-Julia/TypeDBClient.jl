@@ -1,9 +1,9 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api.logic;
+# package typedb.client.api.logic;
 # 
-# import grakn.client.api.GraknTransaction;
+# import typedb.client.api.TypeDBTransaction;
 # import graql.lang.pattern.Pattern;
 # 
 # import javax.annotation.CheckReturnValue;
@@ -20,7 +20,7 @@
 #     Pattern getThen();
 # 
 #     @CheckReturnValue
-#     Rule.Remote asRemote(GraknTransaction transaction);
+#     Rule.Remote asRemote(TypeDBTransaction transaction);
 # 
 #     @CheckReturnValue
 #     boolean isRemote();

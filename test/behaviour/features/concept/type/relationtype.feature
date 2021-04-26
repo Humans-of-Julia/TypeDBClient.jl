@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Concept Relation Type and Role Type
   Background:
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
   Scenario: Relation and role types can be created
@@ -99,14 +99,14 @@ Feature: Concept Relation Type and Role Type
     When entity(person) set plays role: marriage:wife
     When transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $m = relation(marriage) create new instance
     When $a = entity(person) create new instance
     When relation $m add player for role(wife): $a
     When transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then delete relation type: marriage; throws exception
 
@@ -118,14 +118,14 @@ Feature: Concept Relation Type and Role Type
     When entity(person) set plays role: marriage:wife
     When transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $m = relation(marriage) create new instance
     When $a = entity(person) create new instance
     When relation $m add player for role(wife): $a
     When transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then relation(marriage) unset related role: wife; throws exception
     When session opens transaction of type: write

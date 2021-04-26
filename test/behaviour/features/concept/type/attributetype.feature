@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Concept Attribute Type
   Background:
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
   Scenario: Attribute types can be created
@@ -109,12 +109,12 @@ Feature: Concept Attribute Type
     When put attribute type: name, with value type: string
     When transaction commits
     When connection close all sessions
-    When connection open data session for database: grakn
+    When connection open data session for database: typedb
     When session opens transaction of type: write
     When $x = attribute(name) as(string) put: alice
     When transaction commits
     When connection close all sessions
-    When connection open schema session for database: grakn
+    When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then delete attribute type: name; throws exception
 

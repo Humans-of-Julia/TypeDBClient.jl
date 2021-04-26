@@ -1,16 +1,16 @@
-using GraknClient
+using TypeDBClient
 using Documenter
 
 
 @info "Makeing documentation..."
 makedocs(;
-    modules=[GraknClient],
+    modules=[TypeDBClient],
     authors="Humas-of-Julia",
-    repo="https://github.com/Humans-of-Julia/GraknClient.jl/blob/{commit}{path}#L{line}",
-    sitename="GraknClient.jl",
+    repo="https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/{commit}{path}#L{line}",
+    sitename="TypeDBClient.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://Humans-of-Julia.github.io/GraknClient.jl",
+        canonical="https://Humans-of-Julia.github.io/TypeDBClient.jl",
         assets = ["assets/favicon.ico"; "assets/github_buttons.js"; "assets/custom.css"],
     ),
     pages=[
@@ -23,6 +23,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/Humans-of-Julia/GraknClient.jl.git",
+    repo="github.com/Humans-of-Julia/TypeDBClient.jl.git",
     devbranch="main",
 )

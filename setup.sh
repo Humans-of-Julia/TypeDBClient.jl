@@ -70,7 +70,7 @@ notify_user() {
     esac
 }
 
-notify_user y "Please ensure you are at the root level of your GraknClient directory.  Starting script..."
+notify_user y "Please ensure you are at the root level of your TypeDBClient directory.  Starting script..."
 sleep 5
 [[ "$(uname -s)" == "Darwin" ]] && notify_user w "Attempting to install GNU Sed" && $PACMAN gnu-sed > /dev/null 2>&1
 notify_user w "Attempting to install ProtoBuf"
@@ -79,8 +79,8 @@ julia -E 'import Pkg; Pkg.add("ProtoBuf")' > /dev/null 2>&1
 git switch protoc-gen > /dev/null 2>&1
 notify_user w "Creating generated directories"
 mkdir -p src/generated/protobuf/
-notify_user w "Obtaining official GraknLabs protocol files"
-git clone https://github.com/graknlabs/protocol.git/ > /dev/null 2>&1
+notify_user w "Obtaining official TypeDBLabs protocol files"
+git clone https://github.com/typedblabs/protocol.git/ > /dev/null 2>&1
 mv protocol/protobuf/* src/generated/protobuf/ && rm -rf protocol
 cd src/generated/
 notify_user w "Installing additional ProtoBuf dependencies"

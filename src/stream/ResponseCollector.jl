@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct ResponseCollector
     collectors::Dict{Bytes,Channel{Transaction_Res_All}}
@@ -86,10 +86,10 @@ end
 
 
 #
-# package grakn.client.stream;
+# package typedb.client.stream;
 #
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.common.collection.Either;
+# import typedb.client.common.exception.TypeDBClientException;
+# import typedb.common.collection.Either;
 # import io.grpc.StatusRuntimeException;
 #
 # import javax.annotation.Nullable;
@@ -100,8 +100,8 @@ end
 # import java.util.concurrent.ConcurrentMap;
 # import java.util.concurrent.LinkedBlockingQueue;
 #
-# import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-# import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+# import static typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+# import static typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 #
 # public class ResponseCollector<R> {
 #
@@ -138,10 +138,10 @@ end
 #             try {
 #                 Either<Response<R>, Done> response = responseQueue.take();
 #                 if (response.isFirst()) return response.first().message();
-#                 else if (!response.second().error().isPresent()) throw new GraknClientException(TRANSACTION_CLOSED);
-#                 else throw GraknClientException.of(response.second().error().get());
+#                 else if (!response.second().error().isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+#                 else throw TypeDBClientException.of(response.second().error().get());
 #             } catch (InterruptedException e) {
-#                 throw new GraknClientException(UNEXPECTED_INTERRUPTION);
+#                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
 #             }
 #         }
 #

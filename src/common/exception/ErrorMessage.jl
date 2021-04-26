@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 # Devide the ErrorClassification Client, Concept, Query and Internal is possible
 # with the following abstrat types.
@@ -65,14 +65,14 @@ const error_messages = Dict([
     CLIENT_CLIENT_CLOSED=>(1, "The client has been closed and no further operation is allowed."),
     CLIENT_SESSION_CLOSED=>( 2, "The session has been closed and no further operation is allowed."),
     CLIENT_TRANSACTION_CLOSED=>( 3, "The transaction has been closed and no further operation is allowed."),
-    CLIENT_UNABLE_TO_CONNECT=>(4, "Unable to connect to Grakn server."),
+    CLIENT_UNABLE_TO_CONNECT=>(4, "Unable to connect to TypeDB server."),
     CLIENT_NEGATIVE_VALUE_NOT_ALLOWED=>(5, "Value cannot be less than 1, was: _error_item."),
     CLIENT_MISSING_DB_NAME=>(6,  "Database name cannot be null."),
     CLIENT_DB_DOES_NOT_EXIST=>(7,  "The database _error_item does not exist."),
     CLIENT_MISSING_RESPONSE=>(8,  "Unexpected empty response for request ID _error_item."),
     CLIENT_UNKNOWN_REQUEST_ID=>(9,  "Received a response with unknown request id _error_item."),
     CLIENT_CLUSTER_NO_PRIMARY_REPLICA_YET=>(10,  "No replica has been marked as the primary replica for latest known term _error_item."),
-    CLIENT_CLUSTER_UNABLE_TO_CONNECT=>(11,  "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: _error_item."),
+    CLIENT_CLUSTER_UNABLE_TO_CONNECT=>(11,  "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: _error_item."),
     CLIENT_CLUSTER_REPLICA_NOT_PRIMARY=>(12,  "The replica is not the primary replica."),
     CLIENT_CLUSTER_ALL_NODES_FAILED=>(13,  "Attempted connecting to all cluster members, but the following errors occurred: \n%s"),
     ### Conept Error Section
@@ -125,9 +125,9 @@ end
 
 
 #
-# package grakn.client.common.exception;
+# package typedb.client.common.exception;
 #
-# public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
+# public abstract class ErrorMessage extends typedb.common.exception.ErrorMessage {
 #
 #     private ErrorMessage(String codePrefix, int codeNumber, String messagePrefix, String messageBody) {
 #         super(codePrefix, codeNumber, messagePrefix, messageBody);
@@ -141,7 +141,7 @@ end
 #         public static final Client TRANSACTION_CLOSED =
 #                 new Client(3, "The transaction has been closed and no further operation is allowed.");
 #         public static final Client UNABLE_TO_CONNECT =
-#                 new Client(4, "Unable to connect to Grakn server.");
+#                 new Client(4, "Unable to connect to TypeDB server.");
 #         public static final Client NEGATIVE_VALUE_NOT_ALLOWED =
 #                 new Client(5, "Value cannot be less than 1, was: '%d'.");
 #         public static final Client MISSING_DB_NAME =
@@ -155,7 +155,7 @@ end
 #         public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
 #                 new Client(10, "No replica has been marked as the primary replica for latest known term '%d'.");
 #         public static final Client CLUSTER_UNABLE_TO_CONNECT =
-#                 new Client(11, "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: $error_item.");
+#                 new Client(11, "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: $error_item.");
 #         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
 #                 new Client(12, "The replica is not the primary replica.");
 #         public static final Client CLUSTER_ALL_NODES_FAILED =

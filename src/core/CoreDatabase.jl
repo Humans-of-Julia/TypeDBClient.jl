@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 mutable struct CoreDatabase <: AbstractCoreDatabaseManager
     name::String
@@ -13,14 +13,14 @@ end
 
 
 #
-# package grakn.client.core;
+# package typedb.client.core;
 #
-# import grakn.client.api.database.Database;
-# import grakn.client.common.rpc.GraknStub;
+# import typedb.client.api.database.Database;
+# import typedb.client.common.rpc.TypeDBStub;
 #
-# import static grakn.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
-# import static grakn.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
-# import static grakn.client.core.CoreDatabaseManager.nonNull;
+# import static typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
+# import static typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
+# import static typedb.client.core.CoreDatabaseManager.nonNull;
 #
 # public class CoreDatabase implements Database {
 #
@@ -32,7 +32,7 @@ end
 #         this.name = nonNull((name));
 #     }
 #
-#     private GraknStub.Core stub() {
+#     private TypeDBStub.Core stub() {
 #         return databaseMgr.stub();
 #     }
 #

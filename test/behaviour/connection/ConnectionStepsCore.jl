@@ -1,12 +1,12 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.test.behaviour.connection;
+# package typedb.client.test.behaviour.connection;
 # 
-# import grakn.client.Grakn;
-# import grakn.client.api.GraknClient;
-# import grakn.common.test.server.GraknCoreRunner;
-# import grakn.common.test.server.GraknSingleton;
+# import typedb.client.TypeDB;
+# import typedb.client.api.TypeDBClient;
+# import typedb.common.test.server.TypeDBRunner;
+# import typedb.common.test.server.TypeDBSingleton;
 # import io.cucumber.java.After;
 # import io.cucumber.java.Before;
 # import io.cucumber.java.en.Given;
@@ -15,17 +15,17 @@
 # import java.util.concurrent.TimeoutException;
 # 
 # public class ConnectionStepsCore extends ConnectionStepsBase {
-#     private GraknCoreRunner server;
+#     private TypeDBRunner server;
 # 
 #     @Override
 #     void beforeAll() {
 #         try {
-#             server = new GraknCoreRunner();
+#             server = new TypeDBRunner();
 #         } catch (InterruptedException | TimeoutException | IOException e) {
 #             throw new RuntimeException(e);
 #         }
 #         server.start();
-#         GraknSingleton.setGraknRunner(server);
+#         TypeDBSingleton.setTypeDBRunner(server);
 #     }
 # 
 #     @Before
@@ -39,8 +39,8 @@
 #     }
 # 
 #     @Override
-#     GraknClient createGraknClient(String address) {
-#         return Grakn.coreClient(address);
+#     TypeDBClient createTypeDBClient(String address) {
+#         return TypeDB.coreClient(address);
 #     }
 # 
 #     @Given("connection has been opened")

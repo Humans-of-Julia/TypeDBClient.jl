@@ -1,10 +1,10 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.cluster;
+# package typedb.client.cluster;
 # 
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.protocol.ClusterDatabaseProto;
+# import typedb.client.common.exception.TypeDBClientException;
+# import typedb.protocol.ClusterDatabaseProto;
 # import io.grpc.StatusRuntimeException;
 # import org.slf4j.Logger;
 # import org.slf4j.LoggerFactory;
@@ -12,11 +12,11 @@
 # import java.util.ArrayList;
 # import java.util.List;
 # 
-# import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-# import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-# import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
-# import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
-# import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
+# import static typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+# import static typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+# import static typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
+# import static typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+# import static typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
 # 
 # abstract class FailsafeTask<RESULT> {
 # 
@@ -49,7 +49,7 @@
 #         while (true) {
 #             try {
 #                 return retries == 0 ? run(replica) : rerun(replica);
-#             } catch (GraknClientException e) {
+#             } catch (TypeDBClientException e) {
 #                 if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())
 #                         || UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
 #                     LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
@@ -76,7 +76,7 @@
 #         for (ClusterDatabase.Replica replica : replicas) {
 #             try {
 #                 return retries == 0 ? run(replica) : rerun(replica);
-#             } catch (GraknClientException e) {
+#             } catch (TypeDBClientException e) {
 #                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
 #                     LOG.debug("Unable to open a session or transaction to " + replica.id() +
 #                                       ". Attempting next replica.", e);
@@ -111,7 +111,7 @@
 #                 ClusterDatabase databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), client.databases());
 #                 client.databaseByName().put(database, databaseClusterRPC);
 #                 return databaseClusterRPC;
-#             } catch (GraknClientException e) {
+#             } catch (TypeDBClientException e) {
 #                 if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
 #                     LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
 #                             serverAddress + ". Attempting next server.", e);
@@ -127,11 +127,11 @@
 #         try {
 #             Thread.sleep(WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS);
 #         } catch (InterruptedException e) {
-#             throw new GraknClientException(UNEXPECTED_INTERRUPTION);
+#             throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
 #         }
 #     }
 # 
-#     private GraknClientException clusterNotAvailableException() {
-#         return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterMembers()));
+#     private TypeDBClientException clusterNotAvailableException() {
+#         return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterMembers()));
 #     }
 # }

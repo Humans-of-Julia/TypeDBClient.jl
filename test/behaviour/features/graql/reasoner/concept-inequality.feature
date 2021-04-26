@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -445,7 +445,7 @@ Feature: Concept Inequality Resolution
 
   # TODO enable when we can resolve repeated concludables
   @ignore
-  # TODO: re-enable once grakn#5821 is fixed (in some answers, $typeof_ax is 'base-attribute' which is incorrect)
+  # TODO: re-enable once typedb#5821 is fixed (in some answers, $typeof_ax is 'base-attribute' which is incorrect)
   # TODO: re-enable all steps once implicit attribute variables are resolvable
   # TODO: migrate to concept-inequality.feature
   Scenario: when restricting concept types of a pair of inferred attributes with '!=', the answers have distinct types

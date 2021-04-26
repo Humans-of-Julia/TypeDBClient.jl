@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 const BATCH_WINDOW_SMALL_MILLIS = 1
 const BATCH_WINDOW_LARGE_MILLIS = 3
@@ -68,7 +68,7 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
                 put!(out_channel, TransactionRequestBuilder.client_msg(answers))
             end
         catch ex
-            throw(GraknClientException("batch_requests runner failure",ex))
+            throw(TypeDBClientException("batch_requests runner failure",ex))
         end
     end
 
@@ -87,13 +87,13 @@ function close(dispatcher::Dispatcher)
 end
 
 #
-# package grakn.client.stream;
+# package typedb.client.stream;
 #
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.client.common.rpc.RequestBuilder;
-# import grakn.common.collection.ConcurrentSet;
-# import grakn.common.concurrent.NamedThreadFactory;
-# import grakn.protocol.TransactionProto;
+# import typedb.client.common.exception.TypeDBClientException;
+# import typedb.client.common.rpc.RequestBuilder;
+# import typedb.common.collection.ConcurrentSet;
+# import typedb.common.concurrent.NamedThreadFactory;
+# import typedb.protocol.TransactionProto;
 # import io.grpc.stub.StreamObserver;
 # import org.slf4j.Logger;
 # import org.slf4j.LoggerFactory;
@@ -107,7 +107,7 @@ end
 # import java.util.concurrent.locks.ReadWriteLock;
 # import java.util.concurrent.locks.StampedLock;
 #
-# import static grakn.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
+# import static typedb.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
 #
 # public class RequestTransmitter implements AutoCloseable {
 #
@@ -139,7 +139,7 @@ end
 #     public Dispatcher dispatcher(StreamObserver<TransactionProto.Transaction.Client> requestObserver) {
 #         try {
 #             accessLock.readLock().lock();
-#             if (!isOpen) throw new GraknClientException(CLIENT_CLOSED);
+#             if (!isOpen) throw new TypeDBClientException(CLIENT_CLOSED);
 #             Executor executor = nextExecutor();
 #             Dispatcher dispatcher = new Dispatcher(executor, requestObserver);
 #             executor.dispatchers.add(dispatcher);
@@ -228,7 +228,7 @@ end
 #         public void dispatch(TransactionProto.Transaction.Req requestProto) {
 #             try {
 #                 accessLock.readLock().lock();
-#                 if (!isOpen) throw new GraknClientException(CLIENT_CLOSED);
+#                 if (!isOpen) throw new TypeDBClientException(CLIENT_CLOSED);
 #                 requestQueue.add(requestProto);
 #                 executor.mayStartRunning();
 #             } finally {
@@ -239,7 +239,7 @@ end
 #         public void dispatchNow(TransactionProto.Transaction.Req requestProto) {
 #             try {
 #                 accessLock.readLock().lock();
-#                 if (!isOpen) throw new GraknClientException(CLIENT_CLOSED);
+#                 if (!isOpen) throw new TypeDBClientException(CLIENT_CLOSED);
 #                 requestQueue.add(requestProto);
 #                 sendBatchedRequests();
 #             } finally {

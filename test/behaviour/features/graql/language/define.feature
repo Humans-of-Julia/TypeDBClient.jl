@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 TypeDB Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,8 +21,8 @@ Feature: Graql Define Query
   Background: Open connection and create a simple extensible schema
     Given connection has been opened
     Given connection does not have any database
-    Given connection create database: grakn
-    Given connection open schema session for database: grakn
+    Given connection create database: typedb
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
     Given graql define
@@ -1087,7 +1087,7 @@ Feature: Graql Define Query
       """
       define
       exception sub entity;
-      grakn-exception sub exception, abstract;
+      typedb-exception sub exception, abstract;
       """
     Then transaction commits
 
@@ -1098,7 +1098,7 @@ Feature: Graql Define Query
       """
     Then uniquely identify answer concepts
       | x                     |
-      | label:grakn-exception |
+      | label:typedb-exception |
 
 
   Scenario: an abstract relation type can be defined
@@ -1361,7 +1361,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1372,7 +1372,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql define
       """
@@ -1401,7 +1401,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1412,7 +1412,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql define; throws exception
       """
@@ -1432,7 +1432,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1443,7 +1443,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql define; throws exception
       """
@@ -1474,17 +1474,17 @@ Feature: Graql Define Query
 
   Scenario: a regex constraint can be added to an existing attribute type if all its instances satisfy it
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $x isa person, has name "Alice", has email "alice@grakn.ai";
+      $x isa person, has name "Alice", has email "alice@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql define
       """
@@ -1504,17 +1504,17 @@ Feature: Graql Define Query
 
   Scenario: a regex cannot be added to an existing attribute type if there is an instance that doesn't satisfy it
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $x isa person, has name "Maria", has email "maria@grakn.ai";
+      $x isa person, has name "Maria", has email "maria@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql define; throws exception
       """
@@ -1688,17 +1688,17 @@ Feature: Graql Define Query
 
   Scenario: an existing entity type cannot be converted to abstract if it has existing instances
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $x isa person, has name "Jeremy", has email "jeremy@grakn.ai";
+      $x isa person, has name "Jeremy", has email "jeremy@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql define; throws exception
       """
@@ -1709,18 +1709,18 @@ Feature: Graql Define Query
 
   Scenario: an existing relation type cannot be converted to abstract if it has existing instances
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $x isa person, has name "Jeremy", has email "jeremy@grakn.ai";
+      $x isa person, has name "Jeremy", has email "jeremy@typedb.ai";
       $r (employee: $x) isa employment, has employment-reference-code "J123123";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql define; throws exception
       """
@@ -1730,17 +1730,17 @@ Feature: Graql Define Query
 
   Scenario: an existing attribute type cannot be converted to abstract if it has existing instances
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
       insert
-      $x isa person, has name "Jeremy", has email "jeremy@grakn.ai";
+      $x isa person, has name "Jeremy", has email "jeremy@typedb.ai";
       """
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     Then graql define; throws exception
       """
@@ -1805,7 +1805,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1814,7 +1814,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql define
       """
@@ -1876,7 +1876,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1885,7 +1885,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql define
       """
@@ -1916,7 +1916,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1925,7 +1925,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql define
       """
@@ -1956,7 +1956,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open data session for database: grakn
+    Given connection open data session for database: typedb
     Given session opens transaction of type: write
     Given graql insert
       """
@@ -1965,7 +1965,7 @@ Feature: Graql Define Query
     Given transaction commits
 
     Given connection close all sessions
-    Given connection open schema session for database: grakn
+    Given connection open schema session for database: typedb
     Given session opens transaction of type: write
     When graql define
       """
