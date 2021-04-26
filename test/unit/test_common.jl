@@ -1,5 +1,5 @@
-using GraknClient: Label, scoped_name, RelationType, Remote
-using GraknClient.grakn.protocol: _Type
+using TypeDBClient: Label, scoped_name, RelationType, Remote
+using TypeDBClient.typedb.protocol: _Type
 using Test
 
 @testset "Common" begin

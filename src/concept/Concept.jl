@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 # The following abstract types mimics the Concept type hierarchy:
 #
@@ -23,7 +23,7 @@ abstract type AbstractType  <: AbstractConcept end
 # Things
 abstract type AbstractRelation     <: AbstractThing end
 abstract type AbstractEntity       <: AbstractThing end
-abstract type AbstractAttribute{T} <: AbstractThing end
+abstract type AbstractAttribute    <: AbstractThing end
 
 # Types
 abstract type AbstractThingType     <: AbstractType end
@@ -33,6 +33,14 @@ abstract type AbstractRoleType      <: AbstractType end
 abstract type AbstractRelationType  <: AbstractThingType end
 abstract type AbstractEntityType    <: AbstractThingType end
 abstract type AbstractAttributeType <: AbstractThingType end
+
+function instantiate(concept::Proto.Concept)
+    if hasproperty(concept, :thing)
+        return instantiate(concept.thing)
+    else
+        return instantiate(concept._type)
+    end
+end
 
 """
     Remote

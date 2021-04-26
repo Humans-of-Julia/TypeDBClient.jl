@@ -1,14 +1,14 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api;
+# package typedb.client.api;
 # 
-# import grakn.client.api.database.Database;
-# import grakn.protocol.SessionProto;
+# import typedb.client.api.database.Database;
+# import typedb.protocol.SessionProto;
 # 
 # import javax.annotation.CheckReturnValue;
 # 
-# public interface GraknSession extends AutoCloseable {
+# public interface TypeDBSession extends AutoCloseable {
 # 
 #     @CheckReturnValue
 #     boolean isOpen();
@@ -20,13 +20,13 @@
 #     Database database();
 # 
 #     @CheckReturnValue
-#     GraknOptions options();
+#     TypeDBOptions options();
 # 
 #     @CheckReturnValue
-#     GraknTransaction transaction(GraknTransaction.Type type);
+#     TypeDBTransaction transaction(TypeDBTransaction.Type type);
 # 
 #     @CheckReturnValue
-#     GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options);
+#     TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options);
 # 
 #     void close();
 # 

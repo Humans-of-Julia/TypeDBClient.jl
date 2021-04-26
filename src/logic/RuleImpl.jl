@@ -1,12 +1,12 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.logic;
+# package typedb.client.logic;
 # 
-# import grakn.client.api.GraknTransaction;
-# import grakn.client.api.logic.Rule;
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.protocol.LogicProto;
+# import typedb.client.api.TypeDBTransaction;
+# import typedb.client.api.logic.Rule;
+# import typedb.client.common.exception.TypeDBClientException;
+# import typedb.protocol.LogicProto;
 # import graql.lang.Graql;
 # import graql.lang.pattern.Conjunction;
 # import graql.lang.pattern.Pattern;
@@ -14,11 +14,11 @@
 # 
 # import java.util.Objects;
 # 
-# import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
-# import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
-# import static grakn.client.common.rpc.RequestBuilder.Rule.deleteReq;
-# import static grakn.client.common.rpc.RequestBuilder.Rule.setLabelReq;
-# import static grakn.common.util.Objects.className;
+# import static typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
+# import static typedb.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+# import static typedb.client.common.rpc.RequestBuilder.Rule.deleteReq;
+# import static typedb.client.common.rpc.RequestBuilder.Rule.setLabelReq;
+# import static typedb.common.util.Objects.className;
 # 
 # public class RuleImpl implements Rule {
 # 
@@ -28,7 +28,7 @@
 #     private final int hash;
 # 
 #     RuleImpl(String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
-#         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
+#         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
 #         this.label = label;
 #         this.when = when;
 #         this.then = then;
@@ -59,7 +59,7 @@
 #     }
 # 
 #     @Override
-#     public RuleImpl.Remote asRemote(GraknTransaction transaction) {
+#     public RuleImpl.Remote asRemote(TypeDBTransaction transaction) {
 #         return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
 #     }
 # 
@@ -89,16 +89,16 @@
 # 
 #     public static class Remote implements Rule.Remote {
 # 
-#         final GraknTransaction.Extended transactionRPC;
+#         final TypeDBTransaction.Extended transactionRPC;
 #         private String label;
 #         private final Conjunction<? extends Pattern> when;
 #         private final ThingVariable<?> then;
 #         private final int hash;
 # 
-#         public Remote(GraknTransaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
-#             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-#             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
-#             this.transactionRPC = (GraknTransaction.Extended) transaction;
+#         public Remote(TypeDBTransaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
+#             if (transaction == null) throw new TypeDBClientException(MISSING_TRANSACTION);
+#             if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+#             this.transactionRPC = (TypeDBTransaction.Extended) transaction;
 #             this.label = label;
 #             this.when = when;
 #             this.then = then;
@@ -137,7 +137,7 @@
 #         }
 # 
 #         @Override
-#         public Remote asRemote(GraknTransaction transaction) {
+#         public Remote asRemote(TypeDBTransaction transaction) {
 #             return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
 #         }
 # 

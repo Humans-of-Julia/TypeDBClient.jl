@@ -1,9 +1,9 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.test.behaviour.concept.thing.relation;
+# package typedb.client.test.behaviour.concept.thing.relation;
 # 
-# import grakn.core.test.behaviour.BehaviourTest;
+# import typedb.core.test.behaviour.BehaviourTest;
 # import io.cucumber.junit.Cucumber;
 # import io.cucumber.junit.CucumberOptions;
 # import org.junit.runner.RunWith;
@@ -12,9 +12,9 @@
 # @CucumberOptions(
 #         strict = true,
 #         plugin = "pretty",
-#         glue = "grakn.client.test.behaviour",
-#         features = "external/graknlabs_behaviour/concept/thing/relation.feature",
-#         tags = "not @ignore and not @ignore-grakn"
+#         glue = "typedb.client.test.behaviour",
+#         features = "external/typedblabs_behaviour/concept/thing/relation.feature",
+#         tags = "not @ignore and not @ignore-typedb"
 # )
 # public class RelationTest extends BehaviourTest {
 #     // ATTENTION:
@@ -28,7 +28,7 @@
 #     // 4) Ensure 'Target Expression' is set correctly: '//<this>/<package>/<name>:test'
 #     //
 #     // 5) Update 'Bazel Flags':
-#     //    a) Remove the line that says: '--test_filter=grakn.core.*'
+#     //    a) Remove the line that says: '--test_filter=typedb.core.*'
 #     //    b) Use the following Bazel flags:
 #     //       --cache_test_results=no : to make sure you're not using cache
 #     //       --test_output=streamed : to make sure all output is printed

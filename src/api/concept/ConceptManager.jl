@@ -1,13 +1,13 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.api.concept;
+# package typedb.client.api.concept;
 # 
-# import grakn.client.api.concept.thing.Thing;
-# import grakn.client.api.concept.type.AttributeType;
-# import grakn.client.api.concept.type.EntityType;
-# import grakn.client.api.concept.type.RelationType;
-# import grakn.client.api.concept.type.ThingType;
+# import typedb.client.api.concept.thing.Thing;
+# import typedb.client.api.concept.type.AttributeType;
+# import typedb.client.api.concept.type.EntityType;
+# import typedb.client.api.concept.type.RelationType;
+# import typedb.client.api.concept.type.ThingType;
 # 
 # import javax.annotation.CheckReturnValue;
 # import javax.annotation.Nullable;

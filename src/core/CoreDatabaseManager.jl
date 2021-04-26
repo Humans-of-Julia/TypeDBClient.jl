@@ -1,20 +1,20 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 mutable struct CoreDatabaseManager <: AbstractCoreDatabaseManager
 
 end
 
 function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractCoreClient}
-    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
+    isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     if contains_database(client, name)
         return CoreDatabase(name)
     else
-        throw(GraknClientException(CLIENT_DB_DOES_NOT_EXIST, name))
+        throw(TypeDBClientException(CLIENT_DB_DOES_NOT_EXIST, name))
     end
 end
 
 function contains_database(client::T, name::String) where {T<:AbstractCoreClient}
-    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
+    isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     let db = DatabaseManagerRequestBuilder
         req_result, status = databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
         return grpc_result_or_error(req_result, status, result->result.contains)
@@ -29,7 +29,7 @@ function get_all_databases(client::T)::Vector{CoreDatabase} where {T<:AbstractCo
 end
 
 function create_database(client::T, name::String) where {T<:AbstractCoreClient}
-    isempty(name) && throw(GraknClientException(CLIENT_MISSING_DB_NAME))
+    isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     let db = DatabaseManagerRequestBuilder
         req_result, status =  databases_create(client.core_stub.blockingStub, gRPCController(), db.create_req(name))
         return grpc_result_or_error(req_result, status, result->true)
@@ -43,20 +43,20 @@ function delete_database(client::T, name::String) where {T<:AbstractCoreClient}
         return grpc_result_or_error(req_result, status, result->true)
     end
 end
-# package grakn.client.core;
+# package typedb.client.core;
 #
-# import grakn.client.api.database.Database;
-# import grakn.client.api.database.DatabaseManager;
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.client.common.rpc.GraknStub;
+# import typedb.client.api.database.Database;
+# import typedb.client.api.database.DatabaseManager;
+# import typedb.client.common.exception.TypeDBClientException;
+# import typedb.client.common.rpc.TypeDBStub;
 #
 # import java.util.List;
 #
-# import static grakn.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
-# import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-# import static grakn.client.common.rpc.RequestBuilder.Core.DatabaseManager.allReq;
-# import static grakn.client.common.rpc.RequestBuilder.Core.DatabaseManager.containsReq;
-# import static grakn.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
+# import static typedb.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
+# import static typedb.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
+# import static typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.allReq;
+# import static typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.containsReq;
+# import static typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
 # import static java.util.stream.Collectors.toList;
 #
 # public class CoreDatabaseManager implements DatabaseManager {
@@ -70,7 +70,7 @@ end
 #     @Override
 #     public Database get(String name) {
 #         if (contains(name)) return new CoreDatabase(this, name);
-#         else throw new GraknClientException(DB_DOES_NOT_EXIST, name);
+#         else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
 #     }
 #
 #     @Override
@@ -89,12 +89,12 @@ end
 #         return databases.stream().map(name -> new CoreDatabase(this, name)).collect(toList());
 #     }
 #
-#     GraknStub.Core stub() {
+#     TypeDBStub.Core stub() {
 #         return client.stub();
 #     }
 #
 #     static String nonNull(String name) {
-#         if (name == null) throw new GraknClientException(MISSING_DB_NAME);
+#         if (name == null) throw new TypeDBClientException(MISSING_DB_NAME);
 #         return name;
 #     }
 # }

@@ -1,12 +1,12 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
 # 
-# package grakn.client.cluster;
+# package typedb.client.cluster;
 # 
-# import grakn.client.api.database.Database;
-# import grakn.client.core.CoreDatabase;
-# import grakn.client.core.CoreDatabaseManager;
-# import grakn.protocol.ClusterDatabaseProto;
+# import typedb.client.api.database.Database;
+# import typedb.client.core.CoreDatabase;
+# import typedb.client.core.CoreDatabaseManager;
+# import typedb.protocol.ClusterDatabaseProto;
 # import org.slf4j.Logger;
 # import org.slf4j.LoggerFactory;
 # 

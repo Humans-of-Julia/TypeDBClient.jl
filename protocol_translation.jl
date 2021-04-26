@@ -1,11 +1,11 @@
 using Pkg
 using ProtoBuf
 
-root_dir_java = "/Users/frank/Documents/JuliaProjects/JuliaSource/GraknClient/client-java"
-root_dir = "/Users/frank/Documents/JuliaProjects/JuliaSource/GraknClient/GraknClient.jl/src"
+root_dir_java = "/Users/frank/Documents/JuliaProjects/JuliaSource/TypeDBClient/client-java"
+root_dir = "/Users/frank/Documents/JuliaProjects/JuliaSource/TypeDBClient/TypeDBClient.jl/src"
 
 
-license_text = "# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE \n"
+license_text = "# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE \n"
 
 reg_license = r"( \*.+\n)|(\/\*\n)|( \*\n)"
 
@@ -13,7 +13,7 @@ reg_license = r"( \*.+\n)|(\/\*\n)|( \*\n)"
 mkdir(root_dir * "/generated")
 
 #get the actual proto files
-command_split = string.(split("git clone -b master https://github.com/graknlabs/protocol.git", " "))
+command_split = string.(split("git clone -b master https://github.com/typedblabs/protocol.git", " "))
 push!(command_split, joinpath(root_dir,"generated","protocol"))
 command = Cmd(command_split)
 run(command)
@@ -58,8 +58,8 @@ function prepare_proto_file(filepath::String)
     for i in 1:length(text)
         #replacing the extension protobuf
         text[i]=replace(text[i], reg_proto=>"import \"")
-        if basename(filepath) == "grakn.proto"
-            text[i] = replace(text[i], "option java_outer_classname = \"GraknProto\";" => "option java_outer_classname = \"GraknProto\"; \noption java_generic_services = true;")
+        if basename(filepath) == "typedb.proto"
+            text[i] = replace(text[i], "option java_outer_classname = \"TypeDBProto\";" => "option java_outer_classname = \"TypeDBProto\"; \noption java_generic_services = true;")
         end
     end
     result = join(text,"","")
@@ -94,10 +94,10 @@ cmd = Cmd(command_arr)
 run(ProtoBuf.protoc(cmd))
 
 #Reading the core_service_pb.jl and change the clasnames to
-regex_change = r"(grakn\.protocol\.)(\w+\.){2}(\w+)|(?<=\{)(grakn\.protocol\.)(\w+\.){1}(\w+)(?=\})"
-text_grakn_pb = open(f->read(f,String) ,joinpath(root_dir,"generated","core_service_pb.jl"))
-text_copy = deepcopy(text_grakn_pb)
-matches_to_change = collect(eachmatch(regex_change,text_grakn_pb))
+regex_change = r"(typedb\.protocol\.)(\w+\.){2}(\w+)|(?<=\{)(typedb\.protocol\.)(\w+\.){1}(\w+)(?=\})"
+text_typedb_pb = open(f->read(f,String) ,joinpath(root_dir,"generated","core_service_pb.jl"))
+text_copy = deepcopy(text_typedb_pb)
+matches_to_change = collect(eachmatch(regex_change,text_typedb_pb))
 dict_Result = Dict{String,String}()
 
 for mat in matches_to_change
@@ -106,7 +106,7 @@ for mat in matches_to_change
     result_string = ""
     temp_word = String[]
     for word in splits
-        if word == "grakn" || word == "protocol"
+        if word == "typedb" || word == "protocol"
             result_string *= word * "."
         else
             push!(temp_word, word)
@@ -120,13 +120,13 @@ for (key, value) in dict_Result
     text_copy = replace(text_copy, key=>value)
 end
 
-#write back grakn_pb.jl
+#write back typedb_pb.jl
 write(joinpath(root_dir,"generated","core_service_pb.jl"), text_copy)
 
-#removing the grakn_pb.jl line in grakn.jl because it givs some trouble with including
-grakn_jl_text = open(f->read(f,String), joinpath(root_dir,"generated","grakn.jl"))
+#removing the typedb_pb.jl line in typedb.jl because it givs some trouble with including
+typedb_jl_text = open(f->read(f,String), joinpath(root_dir,"generated","typedb.jl"))
 reg_tex = r".*include\(\"core_service_pb.jl\"\).*\s+"
-matches_to_change = collect(eachmatch(reg_tex, grakn_jl_text))
-grakn_jl_text = replace(grakn_jl_text, matches_to_change[1].match=>"")
+matches_to_change = collect(eachmatch(reg_tex, typedb_jl_text))
+typedb_jl_text = replace(typedb_jl_text, matches_to_change[1].match=>"")
 
-write(joinpath(root_dir,"generated","grakn.jl"), grakn_jl_text)
+write(joinpath(root_dir,"generated","typedb.jl"), typedb_jl_text)

@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 const PULSE_INTERVAL_MILLIS = 5000
 
@@ -9,7 +9,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     transactions::Dict{UUID,T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
     type::Int
     accessLock::ReentrantLock
-    options::GraknOptions
+    options::TypeDBOptions
     isOpen::Bool
     networkLatencyMillis::Int
     timer::Optional{Controller}
@@ -22,17 +22,17 @@ Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Sessi
 function CoreSession(client::T,
                      database::String,
                      type::Int32,
-                     options::GraknOptions = GraknOptions();
+                     options::TypeDBOptions = TypeDBOptions();
                      request_timout::Real=6) where {T<:AbstractCoreClient}
    # try
-        options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS + 1000
+        #options.session_idle_timeout_millis = PULSE_INTERVAL_MILLIS + 1000
         #building open_request
         open_req = SessionRequestBuilder.open_req(
-            database, type , copy_to_proto(options, grakn.protocol.Options)
+            database, type , copy_to_proto(options, Proto.Options)
         )
         # open the session
         startTime = now()
-        grpc_controller = gRPCController(request_timeout=request_timout)
+        grpc_controller = gRPCController()
         req_result, status  = session_open(client.core_stub.blockingStub, grpc_controller, open_req)
         res_id = grpc_result_or_error(req_result, status, result->result.session_id)
         endTime = now()
@@ -69,7 +69,7 @@ function CoreSession(client::T,
 
         return result
     # catch ex
-    #     throw(GraknClientException("Error construct a CoreSession",ex))
+    #     throw(TypeDBClientException("Error construct a CoreSession",ex))
     # end
 end
 
@@ -85,7 +85,7 @@ function make_pulse_request(session::T, controller::Controller) where {T<:Abstra
                         pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
                         req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
                         result = grpc_result_or_error(req_result,status, result->result)
-                        @info "Time: $(Dates.now())"
+                        @debug "Time: $(Dates.now())"
 
                         if result.alive === false
                             close(session)
@@ -104,14 +104,14 @@ end
 
 
 function transaction(session::T, type::Int32) where {T<:AbstractCoreSession}
-    return transaction(session, type, grakn_options_core())
+    return transaction(session, type, typedb_options_core())
 end
 
-function transaction(session::T, type::Int32, options::GraknOptions) where {T<:AbstractCoreSession}
+function transaction(session::T, type::Int32, options::TypeDBOptions) where {T<:AbstractCoreSession}
     try
         lock(session.accessLock)
         if !session.isOpen
-            throw(GraknClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionID)))
+            throw(TypeDBClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionID)))
         end
 
         transactionRPC = CoreTransaction(session, session.sessionID, type, options)
@@ -141,7 +141,7 @@ function close(session::T) where {T<:AbstractCoreSession}
             session.isOpen = false
         end
     catch  ex
-        throw(GraknClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
+        throw(TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
         @info ex
     finally
         unlock(session.accessLock)
@@ -151,17 +151,17 @@ end
 
 
 #
-# package grakn.client.core;
+# package typedb.client.core;
 #
 # import com.google.protobuf.ByteString;
-# import grakn.client.api.GraknOptions;
-# import grakn.client.api.GraknSession;
-# import grakn.client.api.GraknTransaction;
-# import grakn.client.common.exception.GraknClientException;
-# import grakn.client.common.rpc.GraknStub;
-# import grakn.client.stream.RequestTransmitter;
-# import grakn.common.collection.ConcurrentSet;
-# import grakn.protocol.SessionProto;
+# import typedb.client.api.TypeDBOptions;
+# import typedb.client.api.TypeDBSession;
+# import typedb.client.api.TypeDBTransaction;
+# import typedb.client.common.exception.TypeDBClientException;
+# import typedb.client.common.rpc.TypeDBStub;
+# import typedb.client.stream.RequestTransmitter;
+# import typedb.common.collection.ConcurrentSet;
+# import typedb.protocol.SessionProto;
 # import io.grpc.StatusRuntimeException;
 #
 # import java.time.Duration;
@@ -172,27 +172,27 @@ end
 # import java.util.concurrent.locks.ReadWriteLock;
 # import java.util.concurrent.locks.StampedLock;
 #
-# import static grakn.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
-# import static grakn.client.common.rpc.RequestBuilder.Session.closeReq;
-# import static grakn.client.common.rpc.RequestBuilder.Session.openReq;
-# import static grakn.client.common.rpc.RequestBuilder.Session.pulseReq;
+# import static typedb.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
+# import static typedb.client.common.rpc.RequestBuilder.Session.closeReq;
+# import static typedb.client.common.rpc.RequestBuilder.Session.openReq;
+# import static typedb.client.common.rpc.RequestBuilder.Session.pulseReq;
 #
-# public class CoreSession implements GraknSession {
+# public class CoreSession implements TypeDBSession {
 #
 #     private static final int PULSE_INTERVAL_MILLIS = 5_000;
 #
 #     private final CoreClient client;
 #     private final CoreDatabase database;
 #     private final ByteString sessionID;
-#     private final ConcurrentSet<GraknTransaction.Extended> transactions;
+#     private final ConcurrentSet<TypeDBTransaction.Extended> transactions;
 #     private final Type type;
-#     private final GraknOptions options;
+#     private final TypeDBOptions options;
 #     private final Timer pulse;
 #     private final ReadWriteLock accessLock;
 #     private final AtomicBoolean isOpen;
 #     private final int networkLatencyMillis;
 #
-#     public CoreSession(CoreClient client, String database, Type type, GraknOptions options) {
+#     public CoreSession(CoreClient client, String database, Type type, TypeDBOptions options) {
 #         try {
 #             this.client = client;
 #             this.type = type;
@@ -211,7 +211,7 @@ end
 #             pulse = new Timer();
 #             pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
 #         } catch (StatusRuntimeException e) {
-#             throw GraknClientException.of(e);
+#             throw TypeDBClientException.of(e);
 #         }
 #     }
 #
@@ -225,19 +225,19 @@ end
 #     public CoreDatabase database() { return database; }
 #
 #     @Override
-#     public GraknOptions options() { return options; }
+#     public TypeDBOptions options() { return options; }
 #
 #     @Override
-#     public GraknTransaction transaction(GraknTransaction.Type type) {
-#         return transaction(type, GraknOptions.core());
+#     public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
+#         return transaction(type, TypeDBOptions.core());
 #     }
 #
 #     @Override
-#     public GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options) {
+#     public TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options) {
 #         try {
 #             accessLock.readLock().lock();
-#             if (!isOpen.get()) throw new GraknClientException(SESSION_CLOSED);
-#             GraknTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options);
+#             if (!isOpen.get()) throw new TypeDBClientException(SESSION_CLOSED);
+#             TypeDBTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options);
 #             transactions.add(transactionRPC);
 #             return transactionRPC;
 #         } finally {
@@ -247,7 +247,7 @@ end
 #
 #     ByteString id() { return sessionID; }
 #
-#     GraknStub.Core stub() {
+#     TypeDBStub.Core stub() {
 #         return client.stub();
 #     }
 #
@@ -262,7 +262,7 @@ end
 #         try {
 #             accessLock.writeLock().lock();
 #             if (isOpen.compareAndSet(true, false)) {
-#                 transactions.forEach(GraknTransaction.Extended::close);
+#                 transactions.forEach(TypeDBTransaction.Extended::close);
 #                 client.removeSession(this);
 #                 pulse.cancel();
 #                 try {
@@ -272,7 +272,7 @@ end
 #                 }
 #             }
 #         } catch (StatusRuntimeException e) {
-#             throw GraknClientException.of(e);
+#             throw TypeDBClientException.of(e);
 #         } finally {
 #             accessLock.writeLock().unlock();
 #         }

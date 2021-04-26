@@ -1,4 +1,4 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 #=
 In root folder run $ bash setup.sh to genrate the proto files
@@ -6,10 +6,14 @@ In root folder run $ bash setup.sh to genrate the proto files
 then install the packages from GitHub
 Pkg.rm("gRPCClient")
 Pkg.add(url="https://github.com/JuliaComputing/gRPCClient.jl")
-] dev gRPCClient
 
+
+Pkg.rm("ExecutableSpecifications")
+Pkg.add(url="https://github.com/erikedin/Behavior.jl")
+] dev Behavior
+] dev gRPCClient
 =#
-module GraknClient
+module TypeDBClient
 
 using Dates
 using DataStructures
@@ -52,8 +56,8 @@ include("standard/utils.jl")
 #common section
 include("common/Label.jl")
 include("common/exception/ErrorMessage.jl")
-include("common/exception/GraknClientException.jl")
-include("common/rpc/GraknStub.jl")
+include("common/exception/TypeDBClientException.jl")
+include("common/rpc/TypeDBStub.jl")
 include("common/rpc/RequestBuilder.jl")
 
 #concepts
@@ -66,10 +70,16 @@ include("concept/type/AttributeType.jl")
 include("concept/type/EntityType.jl")
 include("concept/type/RelationType.jl")
 
+include("concept/thing/Attribute.jl")
+include("concept/thing/Entity.jl")
 include("concept/thing/Relation.jl")
+include("concept/thing/Thing.jl")
+
+include("concept/answer/ConceptMap.jl")
+
 
 #api section
-include("api/GraknOptions.jl")
+include("api/TypeDBOptions.jl")
 
 #stream section
 include("stream/RequestTransmitter.jl")
@@ -87,7 +97,7 @@ include("core/CoreTransaction.jl")
 include("common/exception/gRPC_Result_Handling.jl")
 
 
-export GraknCoreBlockingClient, GraknClientException
+export TypeDBBlockingClient, TypeDBClientException
 export contains_database
 
 
@@ -97,7 +107,7 @@ export contains_database
 
 Base.show(io::IO, blocking_stub::GraknCoreBlockingStub) = Base.print(io,blocking_stub)
 function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
-    print(io, "GraknCoreBlockingStub($(blocking_stub.impl.channel))")
+    print(io, "TypeDBBlockingStub($(blocking_stub.impl.channel))")
     return nothing
 end
 

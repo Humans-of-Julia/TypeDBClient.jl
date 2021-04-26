@@ -1,9 +1,9 @@
-# This file is a part of GraknClient.  License is MIT: https://github.com/Humans-of-Julia/GraknClient.jl/blob/main/LICENSE
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 # ---------------------------------------------------------------------------------
 module DatabaseManagerRequestBuilder
 
-using ..GraknClient: Proto
+using ..TypeDBClient: Proto
 
 create_req(name::String) = Proto.CoreDatabaseManager_Create_Req(; name)
 
@@ -16,7 +16,7 @@ end
 # ---------------------------------------------------------------------------------
 module DatabaseRequestBuilder
 
-using ..GraknClient: Proto
+using ..TypeDBClient: Proto
 
 schema_req(name::String) = Proto.CoreDatabase_Schema_Req(; name)
 
@@ -27,7 +27,7 @@ end
 # ---------------------------------------------------------------------------------
 module SessionRequestBuilder
 
-using ..GraknClient: Proto, EnumType, Bytes
+using ..TypeDBClient: Proto, EnumType, Bytes
 
 function open_req(database::String, _type::EnumType, options::Proto.Options)
     return Proto.Session_Open_Req(; database, _type, options)
@@ -42,7 +42,7 @@ end
 # ---------------------------------------------------------------------------------
 module TransactionRequestBuilder
 
-using ..GraknClient: Proto, EnumType, Bytes
+using ..TypeDBClient: Proto, EnumType, Bytes
 using UUIDs: UUID
 
 function client_msg(reqs::AbstractVector{Proto.Transaction_Req})
@@ -78,7 +78,7 @@ end
 # ---------------------------------------------------------------------------------
 module QueryManagerRequestBuilder
 
-using ..GraknClient: Proto
+using ..TypeDBClient: Proto
 
 for (f, t) in (
     (:define_req,                :Define_Req),
@@ -107,7 +107,7 @@ end
 # ---------------------------------------------------------------------------------
 module ConceptManagerRequestBuilder
 
-using ..GraknClient: Proto, EnumType, bytes
+using ..TypeDBClient: Proto, EnumType, bytes
 
 function _treq(; kwargs...)
     return Proto.Transaction_Req(
@@ -151,7 +151,7 @@ end
 # ---------------------------------------------------------------------------------
 module LogicManagerRequestBuilder
 
-using ..GraknClient: Proto
+using ..TypeDBClient: Proto
 
 function _treq(; kwargs...)
     return Proto.Transaction_Req(
@@ -184,7 +184,7 @@ end
 # ---------------------------------------------------------------------------------
 module TypeRequestBuilder
 
-using ..GraknClient: Proto, Label
+using ..TypeDBClient: Proto, Label
 
 # Ignore linter error here
 function _treq(label, scope; kwargs...)
@@ -236,7 +236,7 @@ end
 # ---------------------------------------------------------------------------------
 module RoleTypeRequestBuilder
 
-using ..GraknClient: Proto, EnumType, Label
+using ..TypeDBClient: Proto, EnumType, Label
 using ..TypeRequestBuilder: _treq
 
 # TODO to be deprecated, see porting note at RoleType.jl
@@ -266,7 +266,7 @@ end
 # ---------------------------------------------------------------------------------
 module ThingTypeRequestBuilder
 
-using ..GraknClient: Proto, EnumType, Label, Optional
+using ..TypeDBClient: Proto, EnumType, Label, Optional
 using ..TypeRequestBuilder: _treq
 
 # TODO to be deprecated, see porting note at RoleType.jl
@@ -366,7 +366,7 @@ end
 # ---------------------------------------------------------------------------------
 module EntityTypeRequestBuilder
 
-using ..GraknClient: Proto, Label
+using ..TypeDBClient: Proto, Label
 using ..TypeRequestBuilder: _treq
 
 function create_req(label::Label)
@@ -380,7 +380,7 @@ end
 # ---------------------------------------------------------------------------------
 module RelationTypeRequestBuilder
 
-using ..GraknClient: Proto, Label, Optional
+using ..TypeDBClient: Proto, Label, Optional
 using ..TypeRequestBuilder: _treq
 
 function create_req(label::Label)
@@ -421,7 +421,7 @@ end
 # ---------------------------------------------------------------------------------
 module ThingRequestBuilder
 
-using ..GraknClient: Proto, Label, Bytes, bytes
+using ..TypeDBClient: Proto, Label, Bytes, bytes
 
 proto_thing(iid::Bytes) = Proto.Thing(; iid)
 proto_thing(iid::String) = proto_thing(bytes(iid))
@@ -487,7 +487,7 @@ end
 # ---------------------------------------------------------------------------------
 module RelationRequestBuilder
 
-using ..GraknClient: Proto
+using ..TypeDBClient: Proto
 using ..ThingRequestBuilder: _thing_req
 
 function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
@@ -531,7 +531,7 @@ end
 # ---------------------------------------------------------------------------------
 module AttributeRequestBuilder
 
-using ..GraknClient: Proto, Optional
+using ..TypeDBClient: Proto, Optional
 using ..ThingRequestBuilder: _thing_req
 using TimeZones: ZonedDateTime
 
@@ -557,7 +557,7 @@ end
 # ---------------------------------------------------------------------------------
 module RuleRequestBuilder
 
-using ..GraknClient: Proto
+using ..TypeDBClient: Proto
 
 function set_label_req(current_label::String, new_label::String)
     return Proto.Transaction_Req(
