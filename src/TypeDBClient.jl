@@ -96,56 +96,35 @@ include("core/CoreTransaction.jl")
 # part of common section -- place because of general grpc resulthandling
 include("common/exception/gRPC_Result_Handling.jl")
 
+# precompiling section
+include("precompile.jl")
 
-export TypeDBBlockingClient, TypeDBClientException
 export contains_database
-
 
 # export  Session, Transaction
 
-####### pretty printing sectoin ##################
+####### pretty printing section ##################
 
-Base.show(io::IO, blocking_stub::GraknCoreBlockingStub) = Base.print(io,blocking_stub)
-function Base.print(io::IO, blocking_stub::GraknCoreBlockingStub)
+function Base.show(io::IO, blocking_stub::GraknCoreBlockingStub)
     print(io, "TypeDBBlockingStub($(blocking_stub.impl.channel))")
     return nothing
 end
 
 ## Printing UUId stored in Vector in a more readable way
-Base.show(io::IO, id::Array{UInt8,1}) = print(io, id)
-Base.print(io::IO, id::Array{UInt8,1}) = print(io, string(bytes2hex(id)))
+Base.show(io::IO, id::Bytes) = print(io, string(bytes2hex(id)))
 
-## Printing each request in a shorter form except they have speicalized
+## Printing each request in a shorter form except they have specialized
 ## printing options.
-Base.show(io::IO, item::T) where {T<:ProtoType} = print(io, item)
-function Base.print(io::IO, item::T) where {T<:ProtoType}
+function Base.show(io::IO, item::ProtoType)
     erg  = collect(keys(meta(typeof(item)).symdict))
-    str_item = ""
+    print(io, string(nameof(typeof(item))))
     for attr in erg
         if hasproperty(item, attr)
-            str_item *= string(attr) * ": " * string(getproperty(item,attr))
+            print(io, " ", string(attr, ": " , string(getproperty(item,attr))))
             break
         end
     end
-    out_string = string(nameof(typeof(item))) * " ($str_item)"
-    print(io, out_string)
-
     return nothing
 end
-
-########## precompiling section
-
-@assert precompile(meta, (Type{Proto.Type_Res}, ))
-@assert precompile(meta, (Type{Proto.Type_Req}, ))
-@assert precompile(meta, (Type{Proto.Transaction_Res}, ))
-@assert precompile(meta, (Type{Proto.Transaction_ResPart}, ))
-
-@assert precompile(which_oneof, (Proto.Transaction_ResPart, Symbol))
-@assert precompile(which_oneof, (Proto.Transaction_Res, Symbol))
-@assert precompile(single_request, (BidirectionalStream, Proto.Transaction_Req, Bool))
-@assert precompile(_open_result_channel, (BidirectionalStream, Proto.Transaction_Req, Bool))
-@assert precompile(collect_result, (Channel{Union{Proto.Transaction_Res,Proto.Transaction_ResPart}}, ))
-@assert precompile(_is_stream_respart_done, (Proto.Transaction_Res, ))
-@assert precompile(_is_stream_respart_done, (Proto.Transaction_ResPart, ))
 
 end #module

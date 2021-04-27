@@ -5,19 +5,18 @@ struct CoreTransaction <: AbstractCoreTransaction
     options::Union{Nothing,TypeDBOptions}
     bidirectional_stream::BidirectionalStream
     transaction_id::Union{Nothing,UUID}
-    session_id::Array{UInt8,1}
+    session_id::Bytes
     request_timout::Real
 end
 
-Base.show(io::IO, transaction::AbstractCoreTransaction) = print(io, transaction)
-function Base.print(io::IO, transaction::AbstractCoreTransaction)
+function Base.show(io::IO, transaction::AbstractCoreTransaction)
     res_string = "Transaction $(transaction.transaction_id) with session_id: $(transaction.session_id)"
     print(io, res_string)
 end
 
 
 function CoreTransaction(session::CoreSession ,
-                        sessionId::Array{UInt8,1},
+                        sessionId::Bytes,
                         type::Int32,
                         options::TypeDBOptions;
                         request_timout::Real=session.request_timeout)

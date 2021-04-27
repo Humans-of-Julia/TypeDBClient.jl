@@ -16,8 +16,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     request_timeout::Real
 end
 
-Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, session)
-Base.print(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
+Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
 
 function CoreSession(client::T,
                      database::String,
