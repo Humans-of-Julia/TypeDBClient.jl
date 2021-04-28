@@ -1,10 +1,10 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct CoreTransaction <: AbstractCoreTransaction
-    type::Union{Nothing,Int32}
-    options::Union{Nothing,TypeDBOptions}
+    type::Optional{Int32}
+    options::Optional{TypeDBOptions}
     bidirectional_stream::BidirectionalStream
-    transaction_id::Union{Nothing,UUID}
+    transaction_id::Optional{UUID}
     session_id::Bytes
     request_timout::Real
 end

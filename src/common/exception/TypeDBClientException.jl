@@ -17,17 +17,17 @@ function Base.show(io::IO, typedb_excption::TypeDBClientException)
             joined_params = join(typedb_excption.params, "\n")
         end
     end
-    str = "TypeDBClientException:
-        message: $(err_message)
-        params: $(joined_params)
-        remark: $(typedb_excption.individual_message)
-        cause: $(Base.show(typedb_excption.cause))"
+    println(io,"TypeDBClientException:")
+    println(io,"message: ", err_message)
+    println(io,"params: ",joined_params)
+    println(io,"remark: ",typedb_excption.individual_message)
+    print(io,"cause: ")
+    print(io,typedb_excption.cause)
 
-    print(io,str)
     return nothing
 end
 
-function TypeDBClientException(err::Type{T}, parameters...) where {T<:AbstractGeneralError}
+function TypeDBClientException(err::Type{AbstractGeneralError}, parameters...)
     err = _build_error_messages(err)
     _params = parameters === nothing && Tuple{}()
     return TypeDBClientException(err, parameters, nothing, nothing)
