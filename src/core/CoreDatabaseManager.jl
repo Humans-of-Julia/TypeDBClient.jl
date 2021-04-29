@@ -4,7 +4,7 @@ mutable struct CoreDatabaseManager <: AbstractCoreDatabaseManager
 
 end
 
-function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractCoreClient}
+function get_database(client::AbstractCoreClient, name::String)::CoreDatabase
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     if contains_database(client, name)
         return CoreDatabase(name)
@@ -13,88 +13,30 @@ function get_database(client::T, name::String)::CoreDatabase where {T<:AbstractC
     end
 end
 
-function contains_database(client::T, name::String) where {T<:AbstractCoreClient}
+function contains_database(client::AbstractCoreClient, name::String)
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
-    let db = DatabaseManagerRequestBuilder
-        req_result, status = databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
-        return grpc_result_or_error(req_result, status, result->result.contains)
-    end
+    db = DatabaseManagerRequestBuilder
+    req_result, status = databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
+    return grpc_result_or_error(req_result, status, result->result.contains)
+
 end
 
-function get_all_databases(client::T)::Vector{CoreDatabase} where {T<:AbstractCoreClient}
-    let db = DatabaseManagerRequestBuilder
-        req_result, status = databases_all(client.core_stub.blockingStub, gRPCController(), db.all_req())
-        return grpc_result_or_error(req_result, status, result -> [CoreDatabase(db_name) for db_name in result.names])
-    end
+function get_all_databases(client::AbstractCoreClient)::Vector{CoreDatabase}
+    db = DatabaseManagerRequestBuilder
+    req_result, status = databases_all(client.core_stub.blockingStub, gRPCController(), db.all_req())
+    return grpc_result_or_error(req_result, status, result -> [CoreDatabase(db_name) for db_name in result.names])
 end
 
-function create_database(client::T, name::String) where {T<:AbstractCoreClient}
+function create_database(client::AbstractCoreClient, name::String)
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
-    let db = DatabaseManagerRequestBuilder
-        req_result, status =  databases_create(client.core_stub.blockingStub, gRPCController(), db.create_req(name))
-        return grpc_result_or_error(req_result, status, result->true)
-    end
+    db = DatabaseManagerRequestBuilder
+    req_result, status =  databases_create(client.core_stub.blockingStub, gRPCController(), db.create_req(name))
+    return grpc_result_or_error(req_result, status, result->true)
 end
 
-function delete_database(client::T, name::String) where {T<:AbstractCoreClient}
-    db = get_database(client, name)
-    let db = DatabaseRequestBuilder
-        req_result, status =  database_delete(client.core_stub.blockingStub, gRPCController(), db.delete_req(name))
-        return grpc_result_or_error(req_result, status, result->true)
-    end
+function delete_database(client::AbstractCoreClient, name::String)
+    database = get_database(client, name)
+    db = DatabaseRequestBuilder
+    req_result, status =  database_delete(client.core_stub.blockingStub, gRPCController(), db.delete_req(database.name))
+    return grpc_result_or_error(req_result, status, result->true)
 end
-# package typedb.client.core;
-#
-# import typedb.client.api.database.Database;
-# import typedb.client.api.database.DatabaseManager;
-# import typedb.client.common.exception.TypeDBClientException;
-# import typedb.client.common.rpc.TypeDBStub;
-#
-# import java.util.List;
-#
-# import static typedb.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
-# import static typedb.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-# import static typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.allReq;
-# import static typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.containsReq;
-# import static typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
-# import static java.util.stream.Collectors.toList;
-#
-# public class CoreDatabaseManager implements DatabaseManager {
-#
-#     private final CoreClenit client;
-#
-#     public CoreDatabaseManager(CoreClient client) {
-#         this.client = client;
-#     }
-#
-#     @Override
-#     public Database get(String name) {
-#         if (contains(name)) return new CoreDatabase(this, name);
-#         else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
-#     }
-#
-#     @Override
-#     public boolean contains(String name) {
-#         return stub().databasesContains(containsReq(nonNull(name))).getContains();
-#     }
-#
-#     @Override
-#     public void create(String name) {
-#         stub().databasesCreate(createReq(nonNull(name)));
-#     }
-#
-#     @Override
-#     public List<CoreDatabase> all() {
-#         List<String> databases = stub().databasesAll(allReq()).getNamesList();
-#         return databases.stream().map(name -> new CoreDatabase(this, name)).collect(toList());
-#     }
-#
-#     TypeDBStub.Core stub() {
-#         return client.stub();
-#     }
-#
-#     static String nonNull(String name) {
-#         if (name == null) throw new TypeDBClientException(MISSING_DB_NAME);
-#         return name;
-#     }
-# }

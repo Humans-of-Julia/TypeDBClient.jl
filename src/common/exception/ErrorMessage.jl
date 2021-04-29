@@ -51,10 +51,9 @@ for (T,A) in ERROR_STRUCTS
     end
 end
 
-Base.show(io::IO, err_struct::T) where {T<:AbstractGeneralError} = Base.print(io, err_struct)
-function Base.print(io::IO, err_struct::T) where {T<:AbstractGeneralError}
+function Base.show(io::IO, err_struct::AbstractGeneralError)
     str = "[$(err_struct.code_prefix)$(lpad(err_struct.code_number,3,"0"))] $(err_struct.message_body)"
-    Base.print(io,str)
+    print(io,str)
     return nothing
 end
 

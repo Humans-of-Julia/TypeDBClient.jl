@@ -46,7 +46,7 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
         end
     end
     # remove the result channel from the respons collector.
-    remove_Id(bidirect_stream.resCollector, request.req_id)
+    delete!(bidirect_stream.resCollector, request.req_id)
 
     if !istaskdone(result_taks)
         throw(gRPCServiceCallException("The server don't deliver a answer. Please check the server log"))
@@ -70,7 +70,7 @@ function _open_result_channel(bidirect_stream::BidirectionalStream, request::Pro
     # put the needed request_id on the request
     request.req_id = bytes(uuid4())
     # get the channel which stores the result of the request
-    res_channel = newId_result_channel(bidirect_stream.resCollector, request.req_id)
+    res_channel = push!(bidirect_stream.resCollector, request.req_id)
 
     # direct the request to the right channel direct or batched processing
     if batch

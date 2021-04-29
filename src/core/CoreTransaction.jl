@@ -1,23 +1,22 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct CoreTransaction <: AbstractCoreTransaction
-    type::Union{Nothing,Int32}
-    options::Union{Nothing,TypeDBOptions}
+    type::Optional{Int32}
+    options::Optional{TypeDBOptions}
     bidirectional_stream::BidirectionalStream
-    transaction_id::Union{Nothing,UUID}
-    session_id::Array{UInt8,1}
+    transaction_id::Optional{UUID}
+    session_id::Bytes
     request_timout::Real
 end
 
-Base.show(io::IO, transaction::AbstractCoreTransaction) = print(io, transaction)
-function Base.print(io::IO, transaction::AbstractCoreTransaction)
+function Base.show(io::IO, transaction::AbstractCoreTransaction)
     res_string = "Transaction $(transaction.transaction_id) with session_id: $(transaction.session_id)"
     print(io, res_string)
 end
 
 
 function CoreTransaction(session::CoreSession ,
-                        sessionId::Array{UInt8,1},
+                        sessionId::Bytes,
                         type::Int32,
                         options::TypeDBOptions;
                         request_timout::Real=session.request_timeout)
