@@ -29,5 +29,6 @@ function ConceptMap(res::Proto.ConceptMap)
 end
 
 function ConceptMap(array_concept_maps::Vector{Proto.ConceptMap})
-    return map(entry->ConceptMap(entry), array_concept_maps)
+    # return map(entry->ConceptMap(entry), array_concept_maps)
+    return ConceptMap.(array_concept_maps)
 end

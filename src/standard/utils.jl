@@ -43,3 +43,8 @@ function copy_to_proto(from_object, to_proto_struct::Type{T}) where {T<: ProtoTy
     end
     return result_proto
 end
+
+function _read_proto_number(proto_numeric::Proto.Numeric)
+    kind_of_result = which_oneof(proto_numeric, :value)
+    return getproperty(proto_numeric, kind_of_result)
+end
