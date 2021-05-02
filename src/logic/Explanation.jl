@@ -26,7 +26,7 @@ end
 
 function _var_mapping_of(var_mapping::Dict{AbstractString,Proto.Explanation_VarList})
     mapping = Dict{String,Vector{String}}()
-    for (key, varList)in var_mapping
+    for (key, varList) in var_mapping
         mapping[key] = varList.vars
     end
     return mapping

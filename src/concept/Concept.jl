@@ -16,6 +16,7 @@
 
 abstract type AbstractConcept end
 abstract type AbstractConceptManager end
+abstract type AbstractExplainable end
 
 abstract type AbstractThing <: AbstractConcept end
 abstract type AbstractType  <: AbstractConcept end

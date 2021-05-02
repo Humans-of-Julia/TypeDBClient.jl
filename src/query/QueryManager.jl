@@ -45,9 +45,9 @@ function update(transaction::AbstractCoreTransaction, query::String, options = P
     return result
 end
 
-function explain(transaction::AbstractCoreTransaction, explainable::Explainable, options = Proto.Options())
+function explain(transaction::AbstractCoreTransaction, explainable::AbstractExplainable, options = Proto.Options())
 
-    return (_Explanation.of(ex) for rp in self.stream(query_manager_explain_req(explainable.explainable_id(), options.proto())) for ex in rp.explain_res_part.explanations)
+    # return (_Explanation.of(ex) for rp in self.stream(query_manager_explain_req(explainable.explainable_id(), options.proto())) for ex in rp.explain_res_part.explanations)
 
 end
 # function define(self, query: str, options: GraknOptions = None)
