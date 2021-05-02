@@ -21,35 +21,29 @@ function match_group(transaction::AbstractCoreTransaction, query::String, option
 end
 
 function match_group_aggregate(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result =  execute(transaction, QueryManagerRequestBuilder.match_group_req(query, options))
-    return (_NumericGroup.of(ng) for rp in self.stream(query_manager_match_group_aggregate_req(query, options.proto()))
-            for ng in rp.match_group_aggregate_res_part.answers)
-
+    db_result =  execute(transaction, QueryManagerRequestBuilder.match_group_aggregate_req(query, options))
+    maps = [NumericGroup(item.match_group_aggregate_res_part.answers) for item in db_result]
+    result = reduce(vcat, maps)
+    return result
 end
 
 function insert(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    req = TransactionRequestBuilder.commit_req()
-    req.req_id = bytes(uuid4())
-    commit_req = Proto.Transaction_Client(;reqs= [req])
     db_result = execute(transaction, QueryManagerRequestBuilder.insert_req(query, options))
-
     maps = map(x->ConceptMap(x), [entry.query_manager_res_part.insert_res_part.answers for entry in db_result])
     result = reduce(vcat, maps)
     return result
 end
 
-# function delete(self, query: str, options: GraknOptions = None)
-#     if not options:
-#         options = GraknOptions.core()
-#     return self.query_void(query_manager_delete_req(query, options.proto()))
+function delete(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
+    execute(transaction, QueryManagerRequestBuilder.delete_req(query, options))
+end
 
-# end
-# function update(self, query: str, options: GraknOptions = None)
-#     if not options:
-#         options = GraknOptions.core()
-#     return (_ConceptMap.of(cm) for rp in self.stream(query_manager_update_req(query, options.proto())) for cm in rp.update_res_part.answers)
-
-# end
+function update(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
+    db_result = execute(transaction, QueryManagerRequestBuilder.update_req(query, options))
+    maps = map(x->ConceptMap(x), [entry.query_manager_res_part.update_res_part.answers for entry in db_result])
+    result = reduce(vcat, maps)
+    return result
+end
 # function explain(self, explainable: ConceptMap.Explainable, options: GraknOptions = None)
 #     if not options:
 #         options = GraknOptions.core()
