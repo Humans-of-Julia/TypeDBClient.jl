@@ -20,7 +20,7 @@ function Base.show(io::IO, exp::Explanation)
    println(io, "\t rule: $(exp.rule)")
    println(io, "\t variable_mapping: $(exp.variable_mapping)")
    println(io, "\t then_answer: $(exp.conclusion)")
-   println(io, "\t when_answer: $(exp.condition)"
+   println(io, "\t when_answer: $(exp.condition)")
 end
 
 
