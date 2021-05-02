@@ -9,11 +9,11 @@ struct Rule <: AbstractRule
 end
 
 function Rule(rule::Proto.Rule)
-    _label = rule.label
-    _when = rule.when
-    _then = rule.then
+    label = rule.label
+    when = rule.when
+    then = rule.then
 
-    return Rule(_label, _when, _then)
+    return Rule(label, when, then)
 end
 
 """
