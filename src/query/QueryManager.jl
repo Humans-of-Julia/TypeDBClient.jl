@@ -42,37 +42,23 @@ end
 
 function update(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
     db_result = execute(transaction, QueryManagerRequestBuilder.update_req(query, options))
-    maps = map(x->ConceptMap(x), [entry.query_manager_res_part.update_res_part.answers for entry in db_result])
+    answers = [entry.query_manager_res_part.update_res_part.answers for entry in db_result]
+    maps = map(ConceptMap, answers)
     result = reduce(vcat, maps)
     return result
 end
 
 function explain(transaction::AbstractCoreTransaction, explainable::AbstractExplainable, options = Proto.Options())
-
+    @error "explain isn't implemented yet"
     # return (_Explanation.of(ex) for rp in self.stream(query_manager_explain_req(explainable.explainable_id(), options.proto())) for ex in rp.explain_res_part.explanations)
-
 end
 
-# function define(self, query: str, options: GraknOptions = None)
-#     if not options:
-#         options = GraknOptions.core()
-#     return self.query_void(query_manager_define_req(query, options.proto()))
+function define(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
+    db_result = execute(transaction, QueryManagerRequestBuilder.define_req(; define_req = query, options))
+    return nothing
+end
 
-# function undefine(self, query: str, options: GraknOptions = None)
-#     if not options:
-#         options = GraknOptions.core()
-#     return self.query_void(query_manager_undefine_req(query, options.proto()))
-#     end
-# end
-
-# function query_void(self, req: transaction_proto.Transaction.Req)
-#     return self._transaction_ext.run_query(req)
-# end
-
-# function query(self, req: transaction_proto.Transaction.Req)
-#     return self._transaction_ext.run_query(req).map(lambda res: res.query_manager_res)
-# end
-
-# function stream(self, req: transaction_proto.Transaction.Req)
-#     return (rp.query_manager_res_part for rp in self._transaction_ext.stream(req))
-# end
+function undefine(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
+    db_result = execute(transaction, QueryManagerRequestBuilder.undefine_req(; undefine_req = query, options))
+    return nothing
+end

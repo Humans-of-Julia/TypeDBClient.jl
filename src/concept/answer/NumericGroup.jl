@@ -1,14 +1,14 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-struct NumericGroup
-    owner::AbstractConcept
+struct NumericGroup{T<:AbstractConcept}
+    owner::T
     numeric::Number
 end
 
 function NumericGroup(res::Proto.NumericGroup)
-    _owner = instantiate(res.owner)
-    _numeric = _read_proto_number(res.number)
-    return NumericGroup(_owner, _numeric)
+    owner = instantiate(res.owner)
+    numeric = _read_proto_number(res.number)
+    return NumericGroup(owner, numeric)
 end
 
 function NumericGroup(res::Vector{Proto.NumericGroup})
