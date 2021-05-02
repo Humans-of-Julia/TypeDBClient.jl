@@ -1,18 +1,18 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-struct Explanation
-    rule::AbstractRule
+struct Explanation{T<:AbstractRule}
+    rule::T
     variable_mapping::Dict{String,Vector{String}}
     conclusion::ConceptMap
     condition::ConceptMap
 end
 
 function Explanation(explanation::Proto.Explanation)
-    _rule = Rule(explanation.rule)
-    _mapping = _var_mapping_of(explanation.var_mapping)
-    _conclusion = ConceptMap(explanation.conclusion)
-    _condition = ConceptMap(explanation.condition)
-    return Explanation(_rule, _mapping, _conclusion, _condition)
+    rule = Rule(explanation.rule)
+    mapping = _var_mapping_of(explanation.var_mapping)
+    conclusion = ConceptMap(explanation.conclusion)
+    condition = ConceptMap(explanation.condition)
+    return Explanation(rule, mapping, conclusion, condition)
 end
 
 function Base.show(io::IO, exp::Explanation)

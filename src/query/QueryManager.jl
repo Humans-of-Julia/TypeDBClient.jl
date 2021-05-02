@@ -29,13 +29,15 @@ end
 
 function insert(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
     db_result = execute(transaction, QueryManagerRequestBuilder.insert_req(query, options))
-    maps = map(x->ConceptMap(x), [entry.query_manager_res_part.insert_res_part.answers for entry in db_result])
+    answers = [entry.query_manager_res_part.insert_res_part.answers for entry in db_result]
+    maps = map(ConceptMap, answers)
     result = reduce(vcat, maps)
     return result
 end
 
 function delete(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
     execute(transaction, QueryManagerRequestBuilder.delete_req(query, options))
+    return nothing
 end
 
 function update(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
@@ -50,6 +52,7 @@ function explain(transaction::AbstractCoreTransaction, explainable::AbstractExpl
     # return (_Explanation.of(ex) for rp in self.stream(query_manager_explain_req(explainable.explainable_id(), options.proto())) for ex in rp.explain_res_part.explanations)
 
 end
+
 # function define(self, query: str, options: GraknOptions = None)
 #     if not options:
 #         options = GraknOptions.core()

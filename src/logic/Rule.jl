@@ -33,7 +33,7 @@ Create a `Remote`(@ref) object for a concept `x` with a
 transaction `t`.
 """
 function as_remote(x::D, t::T) where {
-    D<: AbstractRule, T <: AbstractCoreTransaction
+    D <: AbstractRule, T <: AbstractCoreTransaction
 }
     return RemoteRule{D, T}(x, t)
 end
