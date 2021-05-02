@@ -10,3 +10,7 @@ function NumericGroup(res::Proto.NumericGroup)
     _numeric = _read_proto_number(res.number)
     return NumericGroup(_owner, _numeric)
 end
+
+function NumericGroup(res::Vector{Proto.NumericGroup})
+    return NumericGroup.(res)
+end
