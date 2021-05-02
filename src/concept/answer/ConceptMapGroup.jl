@@ -1,7 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-struct ConceptMapGroup
-    owner::AbstractConcept
+struct ConceptMapGroup{T <: AbstractConcept}
+    owner::T
     concept_maps::Vector{ConceptMap}
 end
 
