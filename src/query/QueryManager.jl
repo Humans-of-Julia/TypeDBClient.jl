@@ -44,12 +44,12 @@ function update(transaction::AbstractCoreTransaction, query::String, options = P
     result = reduce(vcat, maps)
     return result
 end
-# function explain(self, explainable: ConceptMap.Explainable, options: GraknOptions = None)
-#     if not options:
-#         options = GraknOptions.core()
-#     return (_Explanation.of(ex) for rp in self.stream(query_manager_explain_req(explainable.explainable_id(), options.proto())) for ex in rp.explain_res_part.explanations)
 
-# end
+function explain(transaction::AbstractCoreTransaction, explainable::Explainable, options = Proto.Options())
+
+    return (_Explanation.of(ex) for rp in self.stream(query_manager_explain_req(explainable.explainable_id(), options.proto())) for ex in rp.explain_res_part.explanations)
+
+end
 # function define(self, query: str, options: GraknOptions = None)
 #     if not options:
 #         options = GraknOptions.core()
