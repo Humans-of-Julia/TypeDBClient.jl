@@ -16,6 +16,10 @@ function Rule(rule::Proto.Rule)
     return Rule(label, when, then)
 end
 
+function Rule(rules::Vector{Proto.Rule})
+    return Rule.(rules)
+end
+
 """
     Remote
 
@@ -40,7 +44,9 @@ end
 
 function Base.show(io::IO, rule::Rule)
     println(io, "Rule:")
-    println(io, "label: $(rule.label) when: $(rule.when) , then: $(rule.then)")
+    println(io, "label: $(rule.label)")
+    println(io, "when: $(rule.when)")
+    println(io, "then: $(rule.then)")
 end
 
 is_remote(rule::Rule) = false
