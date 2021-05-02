@@ -77,6 +77,9 @@ include("concept/thing/Thing.jl")
 
 include("concept/answer/ConceptMap.jl")
 
+#logic
+include("logic/Rule.jl")
+include("logic/Explanation.jl")
 
 #api section
 include("api/TypeDBOptions.jl")
