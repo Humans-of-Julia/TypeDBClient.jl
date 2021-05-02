@@ -17,7 +17,7 @@ function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
     return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel)
 end
 
-function single_request(bidirect_stream::BidirectionalStream, request::T) where {T<: Proto.ProtoType}
+function single_request(bidirect_stream::BidirectionalStream, request::Proto.ProtoType)
     return single_request(bidirect_stream, request, true)
 end
 
@@ -31,7 +31,7 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     res_channel = _open_result_channel(bidirect_stream, request, batch)
 
     # start a task to collect the results asynchronusly
-    result_taks = @async collect_result(res_channel)
+    result_task = @async collect_result(res_channel, bidirect_stream)
 
     # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
     # dependent solutionresult = nothing
@@ -40,16 +40,16 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     @async sleeper(contr)
     while contr.running
         yield()
-        if istaskdone(result_taks)
-            result = fetch(result_taks)
+        if istaskdone(result_task)
+            result = fetch(result_task)
             break
         end
     end
     # remove the result channel from the respons collector.
     delete!(bidirect_stream.resCollector, request.req_id)
 
-    if !istaskdone(result_taks)
-        throw(gRPCServiceCallException("The server don't deliver a answer. Please check the server log"))
+    if !istaskdone(result_task)
+        throw(gRPCServiceCallException("The server don't deliver an answer. Please check the server log"))
     end
 
     return result
@@ -86,13 +86,13 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
-function collect_result(res_channel::Channel{Transaction_Res_All})
+function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stream::BidirectionalStream)
     answers = Vector{Transaction_Res_All}()
     while isopen(res_channel)
         yield()
         if isready(res_channel)
             tmp_result = take!(res_channel)
-            req_push, loop_break = _is_stream_respart_done(tmp_result)
+            req_push, loop_break = _is_stream_respart_done(tmp_result, bidirect_stream)
 
             req_push && push!(answers, tmp_result)
             loop_break && break
@@ -106,7 +106,7 @@ function _is_stream_respart_done(req_result::Proto.ProtoType)
     This function decides how to treat the result. It returns whether it should push the
     request to the answers and if it should break the retrieving loop.
 """
-function _is_stream_respart_done(req_result::Transaction_Res_All)
+function _is_stream_respart_done(req_result::Transaction_Res_All, bidirect_stream::BidirectionalStream)
     kind_of_content = which_oneof(req_result, :res)
     request_content = getproperty(req_result, kind_of_content)
     type_of_result = typeof(request_content)
@@ -118,15 +118,20 @@ function _is_stream_respart_done(req_result::Transaction_Res_All)
             req_push = false
             loop_break = true
         else
-            req_push = true
+            req_push = false
             loop_break = false
+            # if the Stream_State is :CONTINUE put a Stream requ on the dispatch_channel
+            put!(bidirect_stream.dispatcher.direct_dispatch_channel,
+                  TransactionRequestBuilder.stream_req(req_result.req_id))
         end
     elseif typeof(req_result) == Proto.Transaction_Res
             req_push = true
             loop_break = true
+            @debug "answer to req_id: $(req_result.req_id)"
     elseif typeof(req_result) == Proto.Transaction_ResPart
         req_push = true
         loop_break = false
+        @debug "answer to req_id: $(req_result.req_id)"
     end
 
     return req_push, loop_break

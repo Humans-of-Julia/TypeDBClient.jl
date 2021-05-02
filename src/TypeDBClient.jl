@@ -76,7 +76,15 @@ include("concept/thing/Relation.jl")
 include("concept/thing/Thing.jl")
 
 include("concept/answer/ConceptMap.jl")
+include("concept/answer/ConceptMapGroup.jl")
+include("concept/answer/NumericGroup.jl")
 
+#query section
+include("query/QueryManager.jl")
+
+#logic
+include("logic/Rule.jl")
+include("logic/Explanation.jl")
 
 #api section
 include("api/TypeDBOptions.jl")

@@ -9,8 +9,8 @@ end
 const VALUE_TYPE = Proto.AttributeType_ValueType
 
 # Encode the value type (as defined in VALUE_TYPE) in the type parameter
-function AttributeType(name::String, is_root::Bool, value_type::EnumType)
-    AttributeType{value_type}(Label(name), is_root)
+function AttributeType(label::Label, is_root::Bool, value_type::EnumType)
+    AttributeType{value_type}(label, is_root)
 end
 
 # Define conversion functions
