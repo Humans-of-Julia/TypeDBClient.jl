@@ -49,8 +49,7 @@ function client_msg(reqs::AbstractVector{Proto.Transaction_Req})
     return Proto.Transaction_Client(; reqs)
 end
 
-function stream_req(req_id::UUID)
-    req_id = string(req_id) # TODO will be changed to Vector{UInt}
+function stream_req(req_id::Bytes)
     stream_req = Proto.Transaction_Stream_Req()
     return Proto.Transaction_Req(; req_id, stream_req)
 end
