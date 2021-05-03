@@ -4,10 +4,36 @@ struct ConceptMap
     data::Dict{String, AbstractConcept}
 end
 
-# Java uses "unmodifiableMap" but if that's the case I would probably hide
-# the implementation here and not expose the underlying Dict. Hence commenting
-# out the following function.
-# map(cm::ConceptMap) = cm.data
+struct Explainable
+    conjunction::String
+    explainable_id::Int64
+end
+
+mutable struct Explainables
+    relations::Optional{Dict{String,Explainable}}
+    attributes::Optional{Dict{String,Explainable}}
+    ownerships::Optional{Dict{Tuple{String},Explainable}}
+end
+
+function Explainable(explainable::Proto.Explainable)
+   return Explainable(explainable.conjunction, explainable.id)
+end
+
+Explainable() = Explainables(nothing,nothing,nothing)
+
+function Explainables(explainables::Proto.Explainables)
+    relations = Dict{String,Explainable}()
+    for (var, explainable) in explainables.relations.items
+        relations[var] = Explainable(explainable)
+    attributes = Dict{String,Explainable}()
+    for (var, explainable) in explainables.attributes.items
+        attributes[var] = Explainable(explainable)
+    ownerships = Dict{String,Explainable}()
+    for (var, owned_map) in explainables.ownerships.items
+        for (owned, explainable) in owned_map.owned.items
+            ownerships[(var, owned)] = Explainable(explainable)
+    return Explainables(relations, attributes, ownerships)
+end
 
 concepts(cm::ConceptMap) = values(cm.data)
 
