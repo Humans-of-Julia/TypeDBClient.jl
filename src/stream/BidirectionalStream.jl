@@ -36,12 +36,13 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
     # dependent solutionresult = nothing
     result = nothing
+    answer = nothing
     contr = Controller(true,5)
     @async sleeper(contr)
     while contr.running
         yield()
         if istaskdone(result_task)
-            result = fetch(result_task)
+            answer = fetch(result_task)
             break
         end
     end
@@ -50,6 +51,17 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
 
     if !istaskdone(result_task)
         throw(gRPCServiceCallException("The server don't deliver an answer. Please check the server log"))
+    end
+
+    # Determine wether a result has one Transaction_Res or not
+    # If this is the case only the result without the surrounding array
+    # wil be given back.
+    if answer !== nothing
+        if length(answer) == 1 && typeof(answer[1]) == Proto.Transaction_Res
+            result = answer[1]
+        else
+            result = answer
+        end
     end
 
     return result
