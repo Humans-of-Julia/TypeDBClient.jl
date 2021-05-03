@@ -25,17 +25,21 @@ function Explainables(explainables::Proto.Explainables)
     relations = Dict{String,Explainable}()
     for (var, explainable) in explainables.relations.items
         relations[var] = Explainable(explainable)
+    end
     attributes = Dict{String,Explainable}()
     for (var, explainable) in explainables.attributes.items
         attributes[var] = Explainable(explainable)
+    end
     ownerships = Dict{String,Explainable}()
     for (var, owned_map) in explainables.ownerships.items
         for (owned, explainable) in owned_map.owned.items
             ownerships[(var, owned)] = Explainable(explainable)
+        end
+    end
     return Explainables(relations, attributes, ownerships)
 end
 
-concepts(cm::ConceptMap) = values(cm.data)
+concepts(cm::ConceptMap) = values(cm.data)s
 
 Base.getindex(cm::ConceptMap, key::String) = cm.data[key]
 
