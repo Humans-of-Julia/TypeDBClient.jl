@@ -15,7 +15,7 @@ function get_rule(log_mgr::AbstractLogicManager, label::String)
 end
 
 function get_rules(log_mgr::AbstractLogicManager)
-    dbResult = execute(log_mgr.transaction, LogicManagerRequestBuilder.get_rules_req())
+    dbResult = stream(log_mgr.transaction, LogicManagerRequestBuilder.get_rules_req())
     answers = [res.logic_manager_res_part.get_rules_res_part.rules for res in dbResult]
     rules = map(Rule,answers)
     result = reduce(vcat, rules)
