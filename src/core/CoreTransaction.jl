@@ -32,7 +32,7 @@ function CoreTransaction(session::CoreSession ,
 
     open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
 
-    bidirectionalStream = BidirectionalStream(input_channel, output_channel)
+    bidirectionalStream = BidirectionalStream(input_channel, output_channel,status)
     trans_id = uuid4()
     result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout)
 
