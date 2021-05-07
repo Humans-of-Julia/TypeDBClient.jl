@@ -48,20 +48,16 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
             break
         end
     end
-    # remove the result channel from the respons collector.
-    delete!(bidirect_stream.resCollector, request.req_id)
 
     if !istaskdone(result_task)
-        @info "request failed"
         close(bidirect_stream.input_channel)
-        if istaskdone(bidirect_stream.status)
-            failure_stat = fetch(bidirect_stream.status)
-        else
-            failure_stat = "bidirect_stream.status not ready"
-        end
+        failure_stat = fetch(bidirect_stream.status)
+        close(bidirect_stream)
         @info "Failure: $failure_stat"
-      #  throw(gRPCServiceCallException(13,"The server don't deliver an answer. Please check the server log"))
     end
+
+    # remove the result channel from the respons collector.
+    delete!(bidirect_stream.resCollector, request.req_id)
 
     # Determine wether a result has one Transaction_Res or not
     # If this is the case only the result without the surrounding array
@@ -154,6 +150,8 @@ function _is_stream_respart_done(req_result::Transaction_Res_All, bidirect_strea
         req_push = true
         loop_break = false
         @debug "answer to req_id: $(req_result.req_id)"
+    else
+        throw(TypeDBClientException("Not known result type"))
     end
 
     return req_push, loop_break
