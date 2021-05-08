@@ -9,11 +9,11 @@ end
     @fail "Implement me"
 end
 
-
 @when("session opens transaction of type: write") do context
-    @fail "Implement me"
+    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.READ)
+    @expect transaction !== nothing
+    context[:transaction] = transaction
 end
-
 
 #=
 #
