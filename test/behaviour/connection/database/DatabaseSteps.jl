@@ -108,10 +108,18 @@ end
     try
         g.define(context[:transaction], define_string)
     catch ex
-        @info ex
+        @expect occursin("transaction has been closed", ex.message) === true
     end
 end
 
+@then("connection delete database; throws exception: typedb") do context
+    try
+        g.delete_database(context[:client], "typedb")
+    catch ex
+        # @expect (typeof(ex) == g.TypeDBClientException)
+        @info typeof(ex)
+    end
+end
 
 ##############  utility functions ########################
 function delete_all_databases(client::TypeDBClient.CoreClient)

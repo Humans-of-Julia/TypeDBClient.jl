@@ -88,9 +88,8 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
                     @info "$session is closed"
                 end
             catch ex
-                @info """make_pulse_request show's an error \n
-                $ex """
                 close(session)
+                throw(ex)
             end
             sleep(controller.duration_in_seconds)
         end
