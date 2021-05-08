@@ -56,7 +56,7 @@ function CoreSession(client::T,
         try
             trans = transaction(result, Proto.Transaction_Type[:READ])
         catch ex
-            @info "First attempt for transaction done and not successful"
+            @debug "First attempt for transaction done and not successful"
         finally
         end
         trans === nothing || close(trans)

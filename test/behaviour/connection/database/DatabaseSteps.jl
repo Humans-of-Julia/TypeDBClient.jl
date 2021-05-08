@@ -95,7 +95,7 @@ end
     @expect g.contains_database(context[:client], "typedb") === false
 end
 
-@then("session open transaction of type;throws exception: write") do context
+@then("session open transaction of type; throws exception: write") do context
     try
         transaction(context[:session], g.Proto.Transaction_Type[:READ])
     catch ex

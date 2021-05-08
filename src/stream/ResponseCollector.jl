@@ -66,7 +66,7 @@ function response_worker(response_collector::ResponseCollector)
         finally
         end
     end
-    @info "response_collector is Done"
+    @debug "response_collector is Done"
 end
 
 function _process_Transaction_Server(input::Proto.Transaction_Server)

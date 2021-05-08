@@ -41,7 +41,7 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
             finally
             end
         end
-        @info "process_direct_requests was closed"
+        @debug "process_direct_requests was closed"
     end
 end
 
