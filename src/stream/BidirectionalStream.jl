@@ -57,7 +57,7 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     # If this is the case only the result without the surrounding array
     # wil be given back.
     if answer !== nothing
-        if length(answer) == 1 && typeof(answer[1]) == Proto.Transaction_Res
+        if length(answer) == 1 && answer[1] isa Proto.Transaction_Res
             result = answer[1]
         else
             result = answer
