@@ -19,7 +19,7 @@ function Explainable(explainable::Proto.Explainable)
    return Explainable(explainable.conjunction, explainable.id)
 end
 
-Explainable() = Explainables(nothing, nothing, nothing)
+Explainables() = Explainables(nothing, nothing, nothing)
 
 function Explainables(explainables::Proto.Explainables)
     relations = Dict{String,Explainable}()
