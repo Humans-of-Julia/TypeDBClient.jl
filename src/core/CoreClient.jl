@@ -1,7 +1,6 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 mutable struct CoreClient <: AbstractCoreClient
-    #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc"
     channel::gRPCClient.gRPCChannel
     address::String
     port::Int

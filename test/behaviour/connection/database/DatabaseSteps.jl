@@ -116,13 +116,13 @@ end
     try
         g.delete_database(context[:client], "typedb")
     catch ex
-        # @expect (typeof(ex) == g.TypeDBClientException)
-        @info typeof(ex)
+        @expect (typeof(ex) == g.TypeDBClientException)
+        @expect occursin("The database typedb does not exist", string(ex))
     end
 end
 
 ##############  utility functions ########################
-function delete_all_databases(client::TypeDBClient.CoreClient)
+function delete_all_databases(client::g.CoreClient)
     all_db = g.get_all_databases(client)
     for db in all_db
         g.delete_database(client, db.name)

@@ -96,7 +96,6 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
     end
 end
 
-
 transaction(session::AbstractCoreSession, type::Int32) = transaction(session, type, typedb_options_core())
 function transaction(session::AbstractCoreSession, type::Int32, options::TypeDBOptions)
     try
@@ -137,4 +136,8 @@ function close(session::AbstractCoreSession)
     finally
         unlock(session.accessLock)
     end
+end
+
+function is_open(session::AbstractCoreSession)
+    return session.isOpen
 end
