@@ -80,8 +80,12 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
 end
 
 function close(dispatcher::Dispatcher)
-    close(dispatcher.direct_dispatch_channel)
-    close(dispatcher.dispatch_channel)
-    close(dispatcher.dispatch_timer)
+    try
+        close(dispatcher.direct_dispatch_channel)
+        close(dispatcher.dispatch_channel)
+        close(dispatcher.dispatch_timer)
+    catch ex
+        throw(TypeDBClientException("something went wrong closing Dispatcher", ex))
+    end
     return true
 end

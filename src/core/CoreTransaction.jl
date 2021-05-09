@@ -65,7 +65,11 @@ function is_open(transaction::T)::Bool where {T<:AbstractCoreTransaction}
 end
 
 function close(transaction::T)::Bool where {T<:AbstractCoreTransaction}
-    close(transaction.bidirectional_stream)
-    delete!(transaction.session, transaction.transaction_id)
+    try
+        close(transaction.bidirectional_stream)
+        delete!(transaction.session, transaction.transaction_id)
+    catch ex
+        throw(TypeDBClientException("something went wrong closing Transaction", ex))
+    end
     true
 end

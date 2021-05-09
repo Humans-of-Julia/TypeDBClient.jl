@@ -165,7 +165,7 @@ function close(stream::BidirectionalStream)
         close(stream.dispatcher)
         close(stream.resCollector)
     catch ex
-        throw(ex)
+        throw(TypeDBClientException("something went wrong closing BidirectionalStream", ex))
     end
     return true
 end
