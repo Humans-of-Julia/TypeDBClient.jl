@@ -9,7 +9,7 @@ struct Explainable
     explainable_id::Int64
 end
 
-mutable struct Explainables
+struct Explainables
     relations::Optional{Dict{String,Explainable}}
     attributes::Optional{Dict{String,Explainable}}
     ownerships::Optional{Dict{Tuple{String},Explainable}}
@@ -19,7 +19,7 @@ function Explainable(explainable::Proto.Explainable)
    return Explainable(explainable.conjunction, explainable.id)
 end
 
-Explainable() = Explainables(nothing,nothing,nothing)
+Explainable() = Explainables(nothing, nothing, nothing)
 
 function Explainables(explainables::Proto.Explainables)
     relations = Dict{String,Explainable}()
@@ -39,7 +39,7 @@ function Explainables(explainables::Proto.Explainables)
     return Explainables(relations, attributes, ownerships)
 end
 
-concepts(cm::ConceptMap) = values(cm.data)s
+concepts(cm::ConceptMap) = values(cm.data)
 
 Base.getindex(cm::ConceptMap, key::String) = cm.data[key]
 
