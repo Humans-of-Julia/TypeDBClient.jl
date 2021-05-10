@@ -43,7 +43,7 @@ function CoreTransaction(session::CoreSession ,
 end
 
 function execute(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
-        return query(transaction, request, batch)
+    return query(transaction, request, batch)
 end
 
 function execute(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
@@ -51,13 +51,19 @@ function execute(transaction::T, request::R) where {T<:AbstractCoreTransaction, 
 end
 
 function query(transaction::T, request::R) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
-        return query(transaction, request, true);
+    return query(transaction, request, true);
 end
 
 function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
-        !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
-        result = single_request(transaction.bidirectional_stream, request, batch)
-        return result
+    !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
+    result = single_request(transaction.bidirectional_stream, request, batch)
+    return result
+end
+
+function stream(transaction::T, request::R, batch::Bool = true) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
+    !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
+    result = stream_request(transaction.bidirectional_stream, request, batch)
+    return result
 end
 
 function is_open(transaction::T)::Bool where {T<:AbstractCoreTransaction}

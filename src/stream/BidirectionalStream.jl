@@ -6,12 +6,12 @@ mutable struct  BidirectionalStream
     is_open::Threads.Atomic{Bool}
     input_channel::Channel{Proto.Transaction_Client}
     output_channel::Channel{Proto.Transaction_Server}
-    status::Optional{Task}
+    status::Task
 end
 
 function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
                              output_channel::Channel{Proto.Transaction_Server},
-                             status::Optional{Task})
+                             status::Task)
 
     dispatcher = Dispatcher(input_channel)
     res_collector = ResponseCollector(output_channel)
@@ -29,15 +29,27 @@ function single_request(bidirect_stream::BidirectionalStream, request::T, batch:
     function.
 """
 function single_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
+    answer = _process_request(bidirect_stream, request, batch)
+    return answer[1]
+end
+
+"""
+function stream_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
+    Here we let the user decide what to do with the result channel. The returned value is the pure result_channel.
+"""
+function stream_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
+    answer = _process_request(bidirect_stream, request, batch)
+    return answer
+end
+
+function _process_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
 
     res_channel = _open_result_channel(bidirect_stream, request, batch)
-
     # start a task to collect the results asynchronusly
     result_task = @async collect_result(res_channel, bidirect_stream)
 
     # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
     # dependent solutionresult = nothing
-    result = nothing
     answer = nothing
     contr = Controller(true,5)
     @async sleeper(contr)
@@ -56,30 +68,7 @@ function single_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
         @info "Failure: $failure_stat"
     end
 
-    # remove the result channel from the respons collector.
-    delete!(bidirect_stream.resCollector, request.req_id)
-
-    # Determine wether a result has one Transaction_Res or not
-    # If this is the case only the result without the surrounding array
-    # wil be given back.
-    if answer !== nothing
-        if length(answer) == 1 && typeof(answer[1]) == Proto.Transaction_Res
-            result = answer[1]
-        else
-            result = answer
-        end
-    end
-
-    return result
-end
-
-"""
-function stream_request(bidirect_stream::BidirectionalStream, request::T, batch::Bool) where {T<: Proto.ProtoType}
-    Here we let the user decide what to do with the result channel. The returned value is the pure result_channel.
-"""
-function stream_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
-    res_channel = _open_result_channel(bidirect_stream, request, batch)
-    return res_channel
+    return answer
 end
 
 function _open_result_channel(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
