@@ -23,7 +23,7 @@ function CoreSession(client::T,
                      type::Int32,
                      options::TypeDBOptions = TypeDBOptions();
                      request_timout::Real=6) where {T<:AbstractCoreClient}
-    try
+    # try
         #building open_request
         open_req = SessionRequestBuilder.open_req(
             database, type , copy_to_proto(options, Proto.Options)
@@ -59,14 +59,14 @@ function CoreSession(client::T,
             @debug "First attempt for transaction done and not successful"
         finally
         end
-        trans === nothing || close(trans)
+        trans !== nothing && close(trans)
 
         t.duration_in_seconds =  (PULSE_INTERVAL_MILLIS / 1000) - 0.5
 
         return result
-    catch ex
-        throw(TypeDBClientException("Error construct a CoreSession",ex))
-    end
+    # catch ex
+    #     throw(TypeDBClientException("Error construct a CoreSession",ex))
+    # end
 end
 
 """
@@ -118,11 +118,10 @@ function close(session::AbstractCoreSession)
         lock(session.accessLock)
         if session.isOpen
             for (uuid,trans) in session.transactions
-                close(trans)
-                delete!(session.transactions, trans.transaction_id)
+                safe_close(trans)
             end
             remove_session(session.client, session)
-            close(session.timer)
+            safe_close(session.timer)
 
             req = SessionRequestBuilder.close_req(session.sessionID)
             stub = session.client.core_stub.blockingStub
@@ -131,8 +130,17 @@ function close(session::AbstractCoreSession)
             session.isOpen = false
         end
     catch  ex
-        throw(TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
-        @info ex
+        @error TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex)
+    finally
+        unlock(session.accessLock)
+    end
+    return true
+end
+
+function Base.delete!(session::AbstractCoreSession, trans_id::UUID)
+    try
+        lock(session.accessLock)
+        delete!(session.transactions, trans_id)
     finally
         unlock(session.accessLock)
     end

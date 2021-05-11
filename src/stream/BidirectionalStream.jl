@@ -60,8 +60,6 @@ function _process_request(bidirect_stream::BidirectionalStream, request::Proto.T
             break
         end
     end
-    # remove the result channel from the respons collector.
-    delete!(bidirect_stream.resCollector, request.req_id)
 
     if !istaskdone(result_task)
         close(bidirect_stream.input_channel)
@@ -141,6 +139,8 @@ function _is_stream_respart_done(req_result::Transaction_Res_All, bidirect_strea
         req_push = true
         loop_break = false
         @debug "answer to req_id: $(req_result.req_id)"
+    else
+        throw(TypeDBClientException("Not known result type"))
     end
 
     return req_push, loop_break
@@ -148,9 +148,10 @@ end
 
 
 function close(stream::BidirectionalStream)
-    close(stream.input_channel)
-    close(stream.output_channel)
-    close(stream.dispatcher)
-    close(stream.resCollector)
+
+    safe_close(stream.input_channel)
+    safe_close(stream.output_channel)
+    safe_close(stream.dispatcher)
+    safe_close(stream.resCollector)
     return true
 end
