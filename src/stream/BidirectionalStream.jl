@@ -148,13 +148,10 @@ end
 
 
 function close(stream::BidirectionalStream)
-    try
-        close(stream.input_channel)
-        close(stream.output_channel)
-        close(stream.dispatcher)
-        close(stream.resCollector)
-    catch ex
-        throw(TypeDBClientException("something went wrong closing BidirectionalStream", ex))
-    end
+
+    safe_close(stream.input_channel)
+    safe_close(stream.output_channel)
+    safe_close(stream.dispatcher)
+    safe_close(stream.resCollector)
     return true
 end

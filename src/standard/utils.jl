@@ -48,3 +48,17 @@ function _read_proto_number(proto_numeric::Proto.Numeric)
     kind_of_result = which_oneof(proto_numeric, :value)
     return getproperty(proto_numeric, kind_of_result)
 end
+
+"""
+    safe_close(source_to_close)
+Close a given resource which implementes the close functionalety
+safely and only logs potential errors
+"""
+function safe_close(source_to_close)
+    try
+        close(source_to_close)
+    catch ex
+        @error "closing $source_to_close failed. \n
+                reason: $ex"
+    end
+end

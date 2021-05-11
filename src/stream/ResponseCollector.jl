@@ -76,9 +76,5 @@ end
 
 function close(res_collector::ResponseCollector)
     #close the resul channels which are open
-    try
-        close.(values(res_collector.collectors))
-    catch ex
-        throw(TypeDBClientException("something went wrong closing ResponsCollector", ex))
-    end
+    safe_close.(values(res_collector.collectors))
 end
