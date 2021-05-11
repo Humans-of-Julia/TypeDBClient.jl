@@ -1,7 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 function match(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result =  execute(transaction, QueryManagerRequestBuilder.match_req(query, options))
+    db_result =  stream(transaction, QueryManagerRequestBuilder.match_req(query, options))
     if db_result !== nothing
         maps = map(x->ConceptMap(x), [entry.query_manager_res_part.match_res_part.answers for entry in db_result])
         result = reduce(vcat, maps)
@@ -13,16 +13,12 @@ end
 
 function match_aggregate(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
     db_result =  execute(transaction, QueryManagerRequestBuilder.match_aggregate_req(query, options))
-    if db_result !== nothing
-        result = [_read_proto_number(entry.query_manager_res.match_aggregate_res.answer) for entry in db_result]
-    else
-        result = nothing
-    end
+    result = _read_proto_number(db_result.query_manager_res.match_aggregate_res.answer)
     return result
 end
 
 function match_group(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result =  execute(transaction, QueryManagerRequestBuilder.match_group_req(query, options))
+    db_result =  stream(transaction, QueryManagerRequestBuilder.match_group_req(query, options))
     if db_result !== nothing
         maps =  [ConceptMapGroup(item.query_manager_res_part.match_group_res_part.answers) for item in db_result]
         result = reduce(vcat, maps)
@@ -33,7 +29,7 @@ function match_group(transaction::AbstractCoreTransaction, query::String, option
 end
 
 function match_group_aggregate(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result =  execute(transaction, QueryManagerRequestBuilder.match_group_aggregate_req(query, options))
+    db_result =  stream(transaction, QueryManagerRequestBuilder.match_group_aggregate_req(query, options))
     if db_result !== nothing
         maps = [NumericGroup(item.match_group_aggregate_res_part.answers) for item in db_result]
         result = reduce(vcat, maps)
@@ -44,7 +40,7 @@ function match_group_aggregate(transaction::AbstractCoreTransaction, query::Stri
 end
 
 function insert(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result = execute(transaction, QueryManagerRequestBuilder.insert_req(query, options))
+    db_result = stream(transaction, QueryManagerRequestBuilder.insert_req(query, options))
     if db_result !== nothing
         answers = [entry.query_manager_res_part.insert_res_part.answers for entry in db_result]
         maps = map(ConceptMap, answers)
@@ -61,7 +57,7 @@ function delete(transaction::AbstractCoreTransaction, query::String, options = P
 end
 
 function update(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result = execute(transaction, QueryManagerRequestBuilder.update_req(query, options))
+    db_result = stream(transaction, QueryManagerRequestBuilder.update_req(query, options))
     if db_result !== nothing
         answers = [entry.query_manager_res_part.update_res_part.answers for entry in db_result]
         maps = map(ConceptMap, answers)

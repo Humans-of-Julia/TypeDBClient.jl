@@ -119,10 +119,10 @@ function close(session::AbstractCoreSession)
         lock(session.accessLock)
         if session.isOpen
             for (uuid,trans) in session.transactions
-                close(trans)
+                safe_close(trans)
             end
             remove_session(session.client, session)
-            close(session.timer)
+            safe_close(session.timer)
 
             req = SessionRequestBuilder.close_req(session.sessionID)
             stub = session.client.core_stub.blockingStub
@@ -131,10 +131,11 @@ function close(session::AbstractCoreSession)
             session.isOpen = false
         end
     catch  ex
-        throw(TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex))
+        @error TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex)
     finally
         unlock(session.accessLock)
     end
+    return true
 end
 
 function Base.delete!(session::AbstractCoreSession, trans_id::UUID)
