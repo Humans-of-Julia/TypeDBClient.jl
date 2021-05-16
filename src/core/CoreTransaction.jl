@@ -18,7 +18,7 @@ end
 
 function CoreTransaction(session::CoreSession ,
                         sessionId::Bytes,
-                        type::Int32,
+                        type::EnumType,
                         options::TypeDBOptions;
                         request_timout::Real=session.request_timeout)
     type = type
@@ -37,7 +37,7 @@ function CoreTransaction(session::CoreSession ,
     trans_id = uuid4()
     result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout, session)
 
-    req_result = execute(result, open_req, false)
+    execute(result, open_req, false)
 
     return result
 end

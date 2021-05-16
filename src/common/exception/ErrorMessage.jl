@@ -7,6 +7,7 @@ abstract type AbstractClientError <: AbstractGeneralError end
 abstract type AbstractConceptError <: AbstractGeneralError end
 abstract type AbstractQueryError <: AbstractGeneralError end
 abstract type AbstractInternalError <: AbstractGeneralError end
+abstract type AbstractServerError <: AbstractGeneralError end
 
 # The Symbol left side is assigned to the struct which will be build bellow
 # The right side of the Pair is assigned to the abstract type representing the section of error
@@ -39,7 +40,8 @@ const ERROR_STRUCTS = (
     :INTERNAL_ILLEGAL_STATE=>:AbstractInternalError,
     :INTERNAL_ILLEGAL_ARGUMENT=>:AbstractInternalError,
     :INTERNAL_ILLEGAL_CAST=>:AbstractInternalError,
-    :GENERAL_UNKOWN_ERROR=>:AbstractInternalError)
+    :GENERAL_UNKOWN_ERROR=>:AbstractInternalError,
+    :GRPC_SERVER_ERROR=>:AbstractServerError)
 
 # building the error structs according the Pairs above with some meta programming
 for (T,A) in ERROR_STRUCTS
@@ -93,7 +95,8 @@ const error_messages = Dict([
     INTERNAL_ILLEGAL_ARGUMENT =>(3, "Illegal argument provided: _error_item"),
     INTERNAL_ILLEGAL_CAST =>(4, "Illegal casting operation to _error_item."),
     #General Error Section included in the internal section
-    GENERAL_UNKOWN_ERROR => (100, "_error_item")
+    GENERAL_UNKOWN_ERROR => (100, "_error_item"),
+    GRPC_SERVER_ERROR => (150, "_error_item")
 ])
 
 
@@ -118,6 +121,11 @@ end
 function _build_error_messages(class::Type{T}) where {T<:AbstractInternalError}
     items = error_messages[class]
     class("INT",items[1], "Internal Error", items[2])
+end
+
+function _build_error_messages(class::Type{T}) where {T<:AbstractServerError}
+    items = error_messages[class]
+    class("SRV",items[1], "ServerError", items[2])
 end
 
 

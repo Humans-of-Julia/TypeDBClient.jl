@@ -95,10 +95,11 @@ Feature: Connection Transaction
       | read |
 
   @ignore-typedb-core
+  @actual
   Scenario: one database, one session, many transactions to write
     When connection create database: typedb
     Given connection open session for database: typedb
-    When for each session, open transactions of type:
+    When for each session, open transactions of type: write
       | write |
       | write |
       | write |

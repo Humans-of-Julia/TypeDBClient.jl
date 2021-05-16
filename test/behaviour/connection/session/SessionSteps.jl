@@ -75,3 +75,44 @@ end
     end
     delete_all_databases(context[:client])
 end
+
+# Scenario: write schema in a data session throws
+@given("connection open data session for database: typedb") do context
+    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timout=Inf)
+    context[:session] = sess
+    trans = g.transaction(sess, g.Proto.Transaction_Type.WRITE)
+    context[:transaction] = trans
+end
+
+@then("graql define; throws exception containing \"session type does not allow\"") do context
+    define_string = "define person sub entity;"
+    try
+        g.define(context[:transaction], define_string)
+    catch ex
+        res_comparisson = occursin("session type does not allow", string(ex.error_message))
+        @expect res_comparisson === true
+    end
+    delete_all_databases(context[:client])
+end
+
+
+@given("connection open schema session for database: typedb") do context
+    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.SCHEMA, request_timout=Inf)
+    context[:session] = sess
+end
+
+@then("graql define") do context
+    define_string = "define person sub entity;"
+    g.define(context[:transaction], define_string)
+end
+
+@then("graql insert; throws exception containing \"session type does not allow\"") do context
+    ins_string = "insert \$x isa person;"
+    try
+        g.insert(context[:transaction], ins_string)
+    catch ex
+        res_comparisson = occursin("session type does not allow", string(ex.error_message))
+        @expect res_comparisson === true
+    end
+    delete_all_databases(context[:client])
+end

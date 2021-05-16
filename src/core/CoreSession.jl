@@ -23,7 +23,7 @@ function CoreSession(client::T,
                      type::Int32,
                      options::TypeDBOptions = TypeDBOptions();
                      request_timout::Real=6) where {T<:AbstractCoreClient}
-    # try
+    try
         #building open_request
         open_req = SessionRequestBuilder.open_req(
             database, type , copy_to_proto(options, Proto.Options)
@@ -45,7 +45,11 @@ function CoreSession(client::T,
 
         result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, t, request_timout)
 
+        # initialize the ongoing pulse request
         make_pulse_request(result, t)
+
+        # add the session to the client
+        client.sessions[session_id] = result
 
         # the following transaction is useless for the construction of the the Session
         # and is only to initialize the first compilation of the ProtoBuf machinary
@@ -57,16 +61,15 @@ function CoreSession(client::T,
             trans = transaction(result, Proto.Transaction_Type[:READ])
         catch ex
             @debug "First attempt for transaction done and not successful"
-        finally
         end
         trans !== nothing && close(trans)
 
         t.duration_in_seconds =  (PULSE_INTERVAL_MILLIS / 1000) - 0.5
 
         return result
-    # catch ex
-    #     throw(TypeDBClientException("Error construct a CoreSession",ex))
-    # end
+    catch ex
+        throw(TypeDBClientException("Error construct a CoreSession",ex))
+    end
 end
 
 """
@@ -96,8 +99,8 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
     end
 end
 
-transaction(session::AbstractCoreSession, type::Int32) = transaction(session, type, typedb_options_core())
-function transaction(session::AbstractCoreSession, type::Int32, options::TypeDBOptions)
+transaction(session::AbstractCoreSession, type::EnumType) = transaction(session, type, typedb_options_core())
+function transaction(session::AbstractCoreSession, type::EnumType, options::TypeDBOptions)
     try
         lock(session.accessLock)
         if !session.isOpen
@@ -117,7 +120,7 @@ function close(session::AbstractCoreSession)
     try
         lock(session.accessLock)
         if session.isOpen
-            for (uuid,trans) in session.transactions
+            for (_,trans) in session.transactions
                 safe_close(trans)
             end
             remove_session(session.client, session)
@@ -129,8 +132,12 @@ function close(session::AbstractCoreSession)
 
             session.isOpen = false
         end
-    catch  ex
-        @error TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex)
+    catch ex
+        if ex isa gRPCServiceCallException
+            @info "Session with id: $(session.sessionID) isn't open on the server"
+        else
+            @error TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex)
+        end
     finally
         unlock(session.accessLock)
     end

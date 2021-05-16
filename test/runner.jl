@@ -9,4 +9,4 @@ configpath = joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl")
 
 p = ParseOptions(allow_any_step_order = true)
 
-@enter runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath)
+runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="@actual")

@@ -6,7 +6,7 @@ mutable struct CoreClient <: AbstractCoreClient
     port::Int
     core_stub::Core_TypeDBStub
     databaseMgr::CoreDatabaseManager
-    sessions::Dict{String, Union{<:AbstractCoreSession, Nothing}}
+    sessions::Dict{Bytes, Optional{AbstractCoreSession}}
 end
 
 Base.show(io::IO, core_client::CoreClient) = print(io, "CoreClient(address: $(core_client.address):$(core_client.port))")

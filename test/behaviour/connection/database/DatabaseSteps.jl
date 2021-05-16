@@ -97,7 +97,7 @@ end
 
 @then("session open transaction of type; throws exception: write") do context
     try
-        transaction(context[:session], g.Proto.Transaction_Type[:READ])
+        transaction(context[:session], g.Proto.Transaction_Type.WRITE)
     catch ex
         @info "if a database isn't there a transaction can't be open"
     end

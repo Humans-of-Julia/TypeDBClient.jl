@@ -65,7 +65,11 @@ function _process_request(bidirect_stream::BidirectionalStream, request::Proto.T
         close(bidirect_stream.input_channel)
         failure_stat = fetch(bidirect_stream.status)
         close(bidirect_stream)
-        @info "Failure: $failure_stat"
+        try
+            gRPCCheck(failure_stat)
+        catch ex
+            throw(TypeDBClientException(ex))
+        end
     end
 
     return answer
