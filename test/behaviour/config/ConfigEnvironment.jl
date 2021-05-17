@@ -1,3 +1,3 @@
-# @afterscenario() do context, scenario
-#     g.delete_database(context[:client],"alice")
-# end
+@afterscenario() do context, scenario
+    delete_all_databases(context[:client])
+end

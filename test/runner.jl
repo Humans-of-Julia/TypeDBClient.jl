@@ -9,4 +9,6 @@ configpath = joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl")
 
 p = ParseOptions(allow_any_step_order = true)
 
+runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="not @ignore-typedb-core")
+
 runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="@actual")

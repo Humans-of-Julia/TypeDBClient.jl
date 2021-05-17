@@ -124,6 +124,9 @@ end
 
 ##############  utility functions ########################
 function delete_all_databases(client::g.CoreClient)
+    for (_, session) in client.sessions
+        close(session)
+    end
     all_db = g.get_all_databases(client)
     for db in all_db
         g.delete_database(client, db.name)

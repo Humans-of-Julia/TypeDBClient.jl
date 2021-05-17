@@ -95,7 +95,6 @@ Feature: Connection Transaction
       | read |
 
   @ignore-typedb-core
-  @actual
   Scenario: one database, one session, many transactions to write
     When connection create database: typedb
     Given connection open session for database: typedb
@@ -161,6 +160,7 @@ Feature: Connection Transaction
       | read  |
       | write |
 
+  @actual
   Scenario: one database, one session, many transactions in parallel to read
     When connection create database: typedb
     Given connection open session for database: typedb

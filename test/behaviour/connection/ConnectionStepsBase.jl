@@ -3,6 +3,8 @@ using Behavior
 
 using TypeDBClient
 
+include(joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl"))
+
 g = TypeDBClient
 
 @given("connection has been opened") do context
@@ -14,3 +16,10 @@ end
     all_dbs = g.get_all_databases(context[:client])
     @expect length(all_dbs) == 0
 end
+
+sessions(context) = collect(values(context[:client].sessions))
+transactions(context::Behavior.StepDefinitionContext) = collect(values(context[:session].transactions))
+transactions(session::g.CoreSession) = collect(values(session.transactions))
+
+trans_read = g.Proto.Transaction_Type.READ
+trans_write = g.Proto.Transaction_Type.WRITE

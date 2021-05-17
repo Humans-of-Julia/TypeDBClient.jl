@@ -7,25 +7,25 @@ end
 
 
 @when("session opens transaction of type: read") do context
-    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.READ)
+    transaction = g.transaction(context[:session], trans_read)
     @expect transaction !== nothing
     context[:transaction] = transaction
 end
 
 @when("session opens transaction of type: write") do context
-    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
+    transaction = g.transaction(context[:session], trans_write)
     @expect transaction !== nothing
     context[:transaction] = transaction
 end
 
 @then("session transaction is null: false") do context
-    trans_isempty = isempty(context[:session].transactions)
+    trans_isempty = isempty(transactions(context))
     @expect trans_isempty === false
 end
 
 @then("session transaction is open: true") do context
-    transactions = collect(values(context[:session].transactions))
-    is_open = map(item->g.is_open(item),transactions)
+    sess_trans = transactions(context)
+    is_open = map(item->g.is_open(item),sess_trans)
     all_open = all(is_open)
     @expect all_open === true
 end
@@ -37,8 +37,8 @@ end
 end
 
 @then("session transaction has type: write") do context
-    trans_write = context[:transaction].type
-    @expect trans_write == g.Proto.Transaction_Type.WRITE
+    transaction_write = context[:transaction].type
+    @expect transaction_write == trans_write
     delete_all_databases(context[:client])
 end
 
@@ -59,16 +59,14 @@ end
 
 # Scenario: one database, one session, re-committing transaction throws
 @when("for each session, open transaction of type: write") do context
-    sessions = collect(values(context[:client].sessions))
-    for session in sessions
-        g.transaction(session, g.Proto.Transaction_Type.WRITE)
+    for session in sessions(context)
+        g.transaction(session, trans_write)
     end
 end
 
 @then("for each session, transaction commits") do context
-    sessions = collect(values(context[:client].sessions))
-    for session in sessions
-        for trans in collect(values(session.transactions))
+    for session in sessions(context)
+        for trans in transactions(session)
             commit_trans = g.TransactionRequestBuilder.commit_req()
             g.execute(trans, commit_trans)
         end
@@ -76,9 +74,8 @@ end
 end
 
 @then("for each session, transaction commits; throws exception") do context
-    sessions = collect(values(context[:client].sessions))
-    for session in sessions
-        for trans in collect(values(session.transactions))
+    for session in sessions(context)
+        for trans in transactions(session)
             commit_trans = g.TransactionRequestBuilder.commit_req()
             try
                 g.execute(trans, commit_trans)
@@ -92,15 +89,13 @@ end
 
 # Scenario: one database, one session, transaction close is idempotent
 @then("for each session, transaction closes") do context
-    sessions = collect(values(context[:client].sessions))
-    for session in sessions
+    for session in sessions(context)
         close.(collect(values(session.transactions)))
     end
 end
 
 @then("for each session, transaction is open: false") do context
-    sessions = collect(values(context[:client].sessions))
-    for session in sessions
+    for session in sessions(context)
         @expect isempty(values(session.transactions))
     end
     delete_all_databases(context[:client])
@@ -109,7 +104,7 @@ end
 @when("for each session, open transactions of type:") do context
     read = g.Proto.Transaction_Type.READ
     types_of_read = [row[1] for row in context.datatable]
-    sessions = collect(values(context[:client].sessions))
+    sessions = sessions(context)
     for session in sessions
         for type_of_read in types_of_read
             type_of_read == "read" && g.transaction(session,read)
@@ -118,16 +113,14 @@ end
 end
 
 @then("for each session, transactions are null: false") do context
-    client_sessions = collect(values(context[:client].sessions))
-    for session in client_sessions
+    for session in sessions(context)
         transactions = collect(values(session.transactions))
         @expect isempty(transactions) === false
     end
 end
 
 @then("for each session, transactions are open: true") do context
-    client_sessions = collect(values(context[:client].sessions))
-    for session in client_sessions
+    for session in sessions(context)
         transactions = collect(values(session.transactions))
         for transaction in transactions
             @expect g.is_open(transaction) === true
@@ -136,25 +129,50 @@ end
 end
 
 @then("for each session, transactions have type:") do context
-    read = g.Proto.Transaction_Type.READ
-    write = g.Proto.Transaction_Type.WRITE
     types_of_read = [row[1] for row in context.datatable]
-    transactions = collect(values(context[:session].transactions))
+    transactions = transactions(context)
     for nr in 1:length(types_of_read)
-        type_transaction = types_of_read[nr] == "read" ? read : write
+        type_transaction = types_of_read[nr] == "read" ? trans_read : trans_write
         @expect transactions[nr].type == type_transaction
     end
     delete_all_databases(context[:client])
 end
 
-#  Scenario: one database, one session, many transactions to write
+@when("for each session, open transactions in parallel of type:") do context
+    trans_types = [row[1] for row in context.datatable]
 
-@when("for each session, open transactions of type: write") do context
-    write = g.Proto.Transaction_Type.WRITE
-    types_of_write = [row[1] for row in context.datatable]
-    types_trans = map(x->x == "write" ? write : nothing, types_of_write)
-    for type_trans in types_trans
-        g.transaction(context[:session], type_trans)
+    for session in sessions(context)
+        @sync @async for trans_type in trans_types
+            trans = trans_type == "read" ? g.transaction(session, trans_read) : nothing
+            @expect trans !== nothing
+        end
+        @expect length(session.transactions) == length(trans_types)
+    endc
+end
+
+@then("for each session, transactions in parallel are null: false") do context
+    for session in sessions(context)
+        @expect isempty(transactions(session)) === false
     end
-    @info length(context[:session].transactions)
+end
+
+
+@then("for each session, transactions in parallel are open: true") do context
+    for session in sessions(context)
+        for trans in transactions(session)
+            @expect g.is_open(trans) === true
+        end
+    end
+end
+
+@then("for each session, transactions in parallel have type:") do context
+    trans_types = [row[1] for row in context.datatable]
+    for session in sessions(context)
+        sess_trans = transactions(session)
+        for nr in 1:length(sess_trans)
+            trans_type = trans_types[nr] == "read" ? trans_read : trans_write
+            @expect sess_trans[nr].type == trans_type
+        end
+    end
+    delete_all_databases(context[:client])
 end
