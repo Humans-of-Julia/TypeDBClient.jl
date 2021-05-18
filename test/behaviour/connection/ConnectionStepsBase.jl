@@ -18,8 +18,31 @@ end
 end
 
 sessions(context) = collect(values(context[:client].sessions))
-transactions(context::Behavior.StepDefinitionContext) = collect(values(context[:session].transactions))
-transactions(session::g.CoreSession) = collect(values(session.transactions))
+
+transactions(context::Behavior.StepDefinitionContext) = ordered_transaction_result(context[:session])
+transactions(session::g.CoreSession) = ordered_transaction_result(session)
+function ordered_transaction_result(session::g.CoreSession)
+    result = g.CoreTransaction[]
+    for (_, transaction) in session.transactions
+        push!(result, transaction)
+    end
+    return result
+end
 
 trans_read = g.Proto.Transaction_Type.READ
 trans_write = g.Proto.Transaction_Type.WRITE
+
+################# Utility functions #######################
+
+function group_count_items(items::Vector)
+    unique_vector = unique(items)
+    result = Dict{Any, Number}()
+    for search in unique_vector
+        count = 0
+        for item in items
+            search == item && (count +=1)
+        end
+        result[search] = count
+    end
+    return result
+end

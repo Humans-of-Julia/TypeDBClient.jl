@@ -140,14 +140,15 @@ end
 
 @when("for each session, open transactions in parallel of type:") do context
     trans_types = [row[1] for row in context.datatable]
-
     for session in sessions(context)
-        @sync @async for trans_type in trans_types
-            trans = trans_type == "read" ? g.transaction(session, trans_read) : nothing
-            @expect trans !== nothing
+        for nr in 1:length(trans_types)
+            trans = trans_types[nr] == "read" ? g.transaction(session, trans_read) : g.transaction(session, trans_write)
+            result = trans !== nothing
+            @expect result === true
         end
-        @expect length(session.transactions) == length(trans_types)
-    endc
+        expectation = length(session.transactions) == length(trans_types)
+        @expect expectation === true
+    end
 end
 
 @then("for each session, transactions in parallel are null: false") do context
@@ -167,12 +168,31 @@ end
 
 @then("for each session, transactions in parallel have type:") do context
     trans_types = [row[1] for row in context.datatable]
+    changed_trans_types = map(x-> x=="read" ? trans_read : trans_write, trans_types)
+    res_trans_types = group_count_items(changed_trans_types)
     for session in sessions(context)
-        sess_trans = transactions(session)
-        for nr in 1:length(sess_trans)
-            trans_type = trans_types[nr] == "read" ? trans_read : trans_write
-            @expect sess_trans[nr].type == trans_type
-        end
+        sess_trans_type = [item.type for item in transactions(session)]
+        res_trans_sess = group_count_items(sess_trans_type)
+        @expect res_trans_types == res_trans_sess
     end
     delete_all_databases(context[:client])
+end
+
+
+@given("connection open sessions for database:") do context
+    dbs = [row[1] for row in context.datatable]
+    for db in dbs
+        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timout=Inf)
+    end
+    count_result = length(context[:client].sessions) == length(dbs)
+    @expect count_result === true
+end
+
+@when("for each session, open transaction of type: read") do context
+    for session in sessions(context[:client])
+        transaction(session, trans_read)
+        test_trans = length(session.transactions) == 1
+        @expect test_trans === true
+    end
+
 end

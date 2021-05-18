@@ -84,7 +84,7 @@ end
 end
 
 @when("connection open session for database: typedb") do context
-    context[:session] = g.CoreSession(context[:client], "typedb" , g.Proto.Session_Type.SCHEMA, request_timout=Inf)
+    context[:session] = g.CoreSession(context[:client], "typedb" , g.Proto.Session_Type.DATA, request_timout=Inf)
 end
 
 @when("connection delete database: typedb") do context
