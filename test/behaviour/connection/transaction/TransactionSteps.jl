@@ -189,10 +189,22 @@ end
 end
 
 @when("for each session, open transaction of type: read") do context
-    for session in sessions(context[:client])
+    for session in sessions(context)
         transaction(session, trans_read)
         test_trans = length(session.transactions) == 1
         @expect test_trans === true
     end
+end
 
+@then("for each session, transaction is null: false") do context
+    result_empty = map(x->!isempty(x.transactions) ,sessions(context))
+    result_expect = all(result_empty)
+    @expect result_expect === true
+end
+
+@then("for each session, transaction is open: true") do context
+    trans = transactions.(sessions(context))
+    sess_trans = reduce(vcat, trans)
+    result_expect = all(g.is_open.(sess_trans))
+    @expect result_expect === true
 end
