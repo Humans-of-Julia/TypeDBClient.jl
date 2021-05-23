@@ -28,7 +28,7 @@ function CoreTransaction(session::CoreSession ,
 
     grpc_controller = gRPCController(request_timeout=request_timout)
 
-    output_channel, status = transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
+    output_channel, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
     grpc_result_or_error(output_channel, status, result->result)
 
     open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)

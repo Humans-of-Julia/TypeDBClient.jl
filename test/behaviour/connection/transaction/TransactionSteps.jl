@@ -190,7 +190,7 @@ end
 
 @when("for each session, open transaction of type: read") do context
     for session in sessions(context)
-        transaction(session, trans_read)
+        g.transaction(session, trans_read)
         test_trans = length(session.transactions) == 1
         @expect test_trans === true
     end
