@@ -46,8 +46,8 @@ abstract type AbstractQueryManager end
 ########################################
 
 #generated section
-include("generated/grakn.jl")
-include("generated/core_service_pb.jl")
+include("generated/typedb.jl")
+# include("generated/core_service_pb.jl")
 
 #standard julia sources
 include("standard/type_aliases.jl")
@@ -114,7 +114,7 @@ export contains_database
 
 ####### pretty printing section ##################
 
-function Base.show(io::IO, blocking_stub::GraknCoreBlockingStub)
+function Base.show(io::IO, blocking_stub::Proto.TypeDBBlockingStub)
     print(io, "TypeDBBlockingStub($(blocking_stub.impl.channel))")
     return nothing
 end
@@ -124,8 +124,8 @@ Base.show(io::IO, id::Bytes) = print(io, string(bytes2hex(id)))
 
 ## Printing each request in a shorter form except they have specialized
 ## printing options.
-function Base.show(io::IO, item::ProtoType)
-    erg  = collect(keys(meta(typeof(item)).symdict))
+function Base.show(io::IO, item::Proto.ProtoType)
+    erg  = collect(keys(Proto.meta(typeof(item)).symdict))
     print(io, string(nameof(typeof(item))))
     for attr in erg
         if hasproperty(item, attr)

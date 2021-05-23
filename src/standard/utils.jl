@@ -34,7 +34,7 @@ copy_to_proto(from_object, to_proto_struct::Type{T}) where {T<: ProtoType}
     for this is the naming of the variable of the normal struct according to
     the proto struct which is to be built.
 """
-function copy_to_proto(from_object, to_proto_struct::Type{T}) where {T<: ProtoType}
+function copy_to_proto(from_object, to_proto_struct::Type{T}) where {T<: Proto.ProtoType}
     result_proto = to_proto_struct()
     for fname in fieldnames(typeof(from_object))
         if !hasproperty(result_proto, Symbol(fname)) && getfield(from_object,Symbol(fname)) !== nothing

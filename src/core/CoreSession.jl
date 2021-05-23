@@ -31,7 +31,7 @@ function CoreSession(client::T,
         # open the session
         startTime = now()
         grpc_controller = gRPCController()
-        req_result, status  = session_open(client.core_stub.blockingStub, grpc_controller, open_req)
+        req_result, status  = Proto.session_open(client.core_stub.blockingStub, grpc_controller, open_req)
         res_id = grpc_result_or_error(req_result, status, result->result.session_id)
         endTime = now()
 
@@ -79,7 +79,7 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
         while controller.running
             try
                 pulsreq = SessionRequestBuilder.pulse_req(session.sessionID)
-                req_result, status = session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
+                req_result, status = Proto.session_pulse(session.client.core_stub.blockingStub, gRPCController() , pulsreq)
                 result = grpc_result_or_error(req_result,status, result->result)
                 @debug "Time: $(Dates.now())"
 
@@ -128,7 +128,7 @@ function close(session::AbstractCoreSession)
 
             req = SessionRequestBuilder.close_req(session.sessionID)
             stub = session.client.core_stub.blockingStub
-            session_close(stub, gRPCController(), req )
+            Proto.session_close(stub, gRPCController(), req )
 
             session.isOpen = false
         end

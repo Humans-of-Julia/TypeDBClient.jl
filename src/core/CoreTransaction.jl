@@ -27,7 +27,7 @@ function CoreTransaction(session::CoreSession ,
 
     grpc_controller = gRPCController(request_timeout=request_timout)
 
-    req_result, status = transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
+    req_result, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
     output_channel = grpc_result_or_error(req_result, status, result->result)
 
     open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
@@ -37,7 +37,7 @@ function CoreTransaction(session::CoreSession ,
     result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout)
 
     req_result = execute(result, open_req, false)
-    kind_of_result = which_oneof(req_result, :res)
+    kind_of_result = Proto.which_oneof(req_result, :res)
     open_req_res = getproperty(req_result, kind_of_result)
 
     return result

@@ -1,4 +1,4 @@
-module grakn
+module typedb
   const _ProtoBuf_Top_ = @static isdefined(parentmodule(@__MODULE__), :_ProtoBuf_Top_) ? (parentmodule(@__MODULE__))._ProtoBuf_Top_ : parentmodule(@__MODULE__)
   module protocol
     const _ProtoBuf_Top_ = @static isdefined(parentmodule(@__MODULE__), :_ProtoBuf_Top_) ? (parentmodule(@__MODULE__))._ProtoBuf_Top_ : parentmodule(@__MODULE__)
@@ -10,5 +10,6 @@ module grakn
     include("logic_pb.jl")
     include("query_pb.jl")
     include("transaction_pb.jl")
+    include("core_service_pb.jl")
   end
 end
