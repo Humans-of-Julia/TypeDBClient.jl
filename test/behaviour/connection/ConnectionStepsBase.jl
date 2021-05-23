@@ -38,11 +38,11 @@ function group_count_items(items::Vector)
     unique_vector = unique(items)
     result = Dict{Any, Number}()
     for search in unique_vector
-        count = 0
+        count_nr = 0
         for item in items
-            search == item && (count +=1)
+            search == item && (count_nr +=1)
         end
-        result[search] = count
+        result[search] = count_nr
     end
     return result
 end
