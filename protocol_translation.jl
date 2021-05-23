@@ -2,7 +2,7 @@ using Pkg
 using ProtoBuf
 
 root_dir_java = "/Users/frank/Documents/JuliaProjects/JuliaSource/TypeDBClient/client-java"
-root_dir = "/Users/frank/Documents/JuliaProjects/JuliaSource/TypeDBClient/TypeDBClient.jl/src"
+root_dir = "/Users/frank/Documents/JuliaProjects/JuliaSource/GraknClient/TypeDBClient.jl/src"
 
 
 license_text = "# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE \n"
@@ -13,7 +13,7 @@ reg_license = r"( \*.+\n)|(\/\*\n)|( \*\n)"
 mkdir(root_dir * "/generated")
 
 #get the actual proto files
-command_split = string.(split("git clone -b master https://github.com/typedblabs/protocol.git", " "))
+command_split = string.(split("git clone -b master https://github.com/vaticle/typedb-protocol.git", " "))
 push!(command_split, joinpath(root_dir,"generated","protocol"))
 command = Cmd(command_split)
 run(command)

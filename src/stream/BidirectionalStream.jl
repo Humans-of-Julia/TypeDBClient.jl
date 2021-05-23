@@ -118,7 +118,7 @@ function _is_stream_respart_done(req_result::Proto.ProtoType)
     request to the answers and if it should break the retrieving loop.
 """
 function _is_stream_respart_done(req_result::Transaction_Res_All, bidirect_stream::BidirectionalStream)
-    kind_of_content = which_oneof(req_result, :res)
+    kind_of_content = Proto.which_oneof(req_result, :res)
     request_content = getproperty(req_result, kind_of_content)
     type_of_result = typeof(request_content)
     req_push = false

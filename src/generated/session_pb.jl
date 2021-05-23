@@ -71,7 +71,7 @@ function meta(::Type{Session_Open_Res})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Session_Open_Res)
             __meta_Session_Open_Res[] = target = ProtoMeta(Session_Open_Res)
-            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Array{UInt8,1}, :server_duration_millis => Int32]
+            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Vector{UInt8}, :server_duration_millis => Int32]
             meta(target, Session_Open_Res, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Session_Open_Res[]
@@ -79,7 +79,7 @@ function meta(::Type{Session_Open_Res})
 end
 function Base.getproperty(obj::Session_Open_Res, name::Symbol)
     if name === :session_id
-        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
+        return (obj.__protobuf_jl_internal_values[name])::Vector{UInt8}
     elseif name === :server_duration_millis
         return (obj.__protobuf_jl_internal_values[name])::Int32
     else
@@ -140,7 +140,7 @@ function meta(::Type{Session_Close_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Session_Close_Req)
             __meta_Session_Close_Req[] = target = ProtoMeta(Session_Close_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Array{UInt8,1}]
+            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Vector{UInt8}]
             meta(target, Session_Close_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Session_Close_Req[]
@@ -148,7 +148,7 @@ function meta(::Type{Session_Close_Req})
 end
 function Base.getproperty(obj::Session_Close_Req, name::Symbol)
     if name === :session_id
-        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
+        return (obj.__protobuf_jl_internal_values[name])::Vector{UInt8}
     else
         getfield(obj, name)
     end
@@ -237,7 +237,7 @@ function meta(::Type{Session_Pulse_Req})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Session_Pulse_Req)
             __meta_Session_Pulse_Req[] = target = ProtoMeta(Session_Pulse_Req)
-            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Array{UInt8,1}]
+            allflds = Pair{Symbol,Union{Type,String}}[:session_id => Vector{UInt8}]
             meta(target, Session_Pulse_Req, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
         end
         __meta_Session_Pulse_Req[]
@@ -245,7 +245,7 @@ function meta(::Type{Session_Pulse_Req})
 end
 function Base.getproperty(obj::Session_Pulse_Req, name::Symbol)
     if name === :session_id
-        return (obj.__protobuf_jl_internal_values[name])::Array{UInt8,1}
+        return (obj.__protobuf_jl_internal_values[name])::Vector{UInt8}
     else
         getfield(obj, name)
     end
