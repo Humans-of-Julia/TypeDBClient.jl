@@ -41,7 +41,7 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
             finally
             end
         end
-        @info "process_direct_requests was closed"
+        @debug "process_direct_requests was closed"
     end
 end
 
@@ -80,8 +80,7 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
 end
 
 function close(dispatcher::Dispatcher)
-    close(dispatcher.direct_dispatch_channel)
-    close(dispatcher.dispatch_channel)
-    close(dispatcher.dispatch_timer)
-    return true
+    safe_close(dispatcher.direct_dispatch_channel)
+    safe_close(dispatcher.dispatch_channel)
+    safe_close(dispatcher.dispatch_timer)
 end

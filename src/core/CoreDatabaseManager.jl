@@ -18,7 +18,6 @@ function contains_database(client::AbstractCoreClient, name::String)
     db = DatabaseManagerRequestBuilder
     req_result, status = Proto.databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
     return grpc_result_or_error(req_result, status, result->result.contains)
-
 end
 
 function get_all_databases(client::AbstractCoreClient)::Vector{CoreDatabase}

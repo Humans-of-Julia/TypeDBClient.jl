@@ -98,7 +98,7 @@ Feature: Connection Transaction
   Scenario: one database, one session, many transactions to write
     When connection create database: typedb
     Given connection open session for database: typedb
-    When for each session, open transactions of type:
+    When for each session, open transactions of type: write
       | write |
       | write |
       | write |
@@ -575,7 +575,6 @@ Feature: Connection Transaction
 #
 #  Scenario: one database, many sessions in parallel, many transactions in parallel to write
 
-
   Scenario: write in a read transaction throws
     When connection create database: typedb
     Given connection open schema session for database: typedb
@@ -584,7 +583,7 @@ Feature: Connection Transaction
       """
       define person sub entity;
       """
-
+  @actual
   Scenario: commit in a read transaction throws
     When connection create database: typedb
     Given connection open schema session for database: typedb

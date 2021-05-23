@@ -1,282 +1,247 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 @when("transaction commits") do context
-    @fail "Implement me"
+    commit_req = g.commit_req()
+    g.execute(context[:transaction], commit_req)
 end
 
 
 @when("session opens transaction of type: read") do context
-    @fail "Implement me"
+    transaction = g.transaction(context[:session], trans_read)
+    @expect transaction !== nothing
+    context[:transaction] = transaction
 end
-
 
 @when("session opens transaction of type: write") do context
-    @fail "Implement me"
+    transaction = g.transaction(context[:session], trans_write)
+    @expect transaction !== nothing
+    context[:transaction] = transaction
+end
+
+@then("session transaction is null: false") do context
+    trans_isempty = isempty(transactions(context))
+    @expect trans_isempty === false
+end
+
+@then("session transaction is open: true") do context
+    sess_trans = transactions(context)
+    is_open = map(item->g.is_open(item),sess_trans)
+    all_open = all(is_open)
+    @expect all_open === true
+end
+
+@then("session transaction has type: read") do context
+    is_open = g.is_open(context[:transaction])
+    @expect is_open === true
+    delete_all_databases(context[:client])
+end
+
+@then("session transaction has type: write") do context
+    transaction_write = context[:transaction].type
+    @expect transaction_write == trans_write
+    delete_all_databases(context[:client])
+end
+
+@then("session transaction commits") do context
+    commit_req = g.TransactionRequestBuilder.commit_req()
+    g.execute(context[:transaction], commit_req)
+end
+
+@then("session transaction commits; throws exception") do context
+    commit_req = g.TransactionRequestBuilder.commit_req()
+    try
+        g.execute(context[:transaction], commit_req)
+    catch ex
+        @expect ex !== nothing
+    end
+    delete_all_databases(context[:client])
+end
+
+# Scenario: one database, one session, re-committing transaction throws
+@when("for each session, open transaction of type: write") do context
+    for session in sessions(context)
+        g.transaction(session, trans_write)
+    end
+end
+
+@then("for each session, transaction commits") do context
+    for session in sessions(context)
+        for trans in transactions(session)
+            commit_trans = g.TransactionRequestBuilder.commit_req()
+            g.execute(trans, commit_trans)
+        end
+    end
+end
+
+@then("for each session, transaction commits; throws exception") do context
+    for session in sessions(context)
+        for trans in transactions(session)
+            commit_trans = g.TransactionRequestBuilder.commit_req()
+            try
+                g.execute(trans, commit_trans)
+            catch ex
+                @expect ex !== nothing
+            end
+        end
+    end
+    delete_all_databases(context[:client])
+end
+
+# Scenario: one database, one session, transaction close is idempotent
+@then("for each session, transaction closes") do context
+    for session in sessions(context)
+        close.(collect(values(session.transactions)))
+    end
+end
+
+@then("for each session, transaction is open: false") do context
+    for session in sessions(context)
+        @expect isempty(values(session.transactions))
+    end
+    delete_all_databases(context[:client])
+end
+
+@when("for each session, open transactions of type:") do context
+    read = g.Proto.Transaction_Type.READ
+    types_of_read = [row[1] for row in context.datatable]
+    sessions = sessions(context)
+    for session in sessions
+        for type_of_read in types_of_read
+            type_of_read == "read" && g.transaction(session,read)
+        end
+    end
+end
+
+@then("for each session, transactions are null: false") do context
+    for session in sessions(context)
+        transactions = collect(values(session.transactions))
+        @expect isempty(transactions) === false
+    end
+end
+
+@then("for each session, transactions are open: true") do context
+    for session in sessions(context)
+        transactions = collect(values(session.transactions))
+        for transaction in transactions
+            @expect g.is_open(transaction) === true
+        end
+    end
+end
+
+@then("for each session, transactions have type:") do context
+    types_of_read = [row[1] for row in context.datatable]
+    transactions = transactions(context)
+    for nr in 1:length(types_of_read)
+        type_transaction = types_of_read[nr] == "read" ? trans_read : trans_write
+        @expect transactions[nr].type == type_transaction
+    end
+    delete_all_databases(context[:client])
+end
+
+@when("for each session, open transactions in parallel of type:") do context
+    trans_types = [row[1] for row in context.datatable]
+    for session in sessions(context)
+        for nr in 1:length(trans_types)
+            trans = trans_types[nr] == "read" ? g.transaction(session, trans_read) : g.transaction(session, trans_write)
+            result = trans !== nothing
+            @expect result === true
+        end
+        expectation = length(session.transactions) == length(trans_types)
+        @expect expectation === true
+    end
+end
+
+@then("for each session, transactions in parallel are null: false") do context
+    for session in sessions(context)
+        @expect isempty(transactions(session)) === false
+    end
 end
 
 
-#=
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
-
-
-from concurrent.futures.thread import ThreadPoolExecutor
-from functools import partial
-from typing import Callable, List
-
-from behave import *
-from hamcrest import *
-
-from typedb.api.transaction import TypeDBTransaction, TransactionType
-from typedb.common.exception import TypeDBClientException
-from tests.behaviour.config.parameters import parse_transaction_type, parse_list, parse_bool
-from tests.behaviour.context import Context
-step = step
-
-def for_each_session_open_transaction_of_type(context: Context, transaction_types: List[TransactionType]):
-    for session in context.sessions:
-        transactions = []
-        for transaction_type in transaction_types:
-            transaction = session.transaction(transaction_type)
-            transactions.append(transaction)
-        context.sessions_to_transactions[session] = transactions
-
-
-# TODO: this is implemented as open(s) in some clients - get rid of that, simplify them
-@step("session opens transaction of type: {transaction_type}")
-@step("for each session, open transaction of type: {transaction_type}")
-def step_impl(context: Context, transaction_type: str):
-    transaction_type = parse_transaction_type(transaction_type)
-    for_each_session_open_transaction_of_type(context, [transaction_type])
-
-
-@step("for each session, open transaction of type")
-@step("for each session, open transactions of type")
-def step_impl(context: Context):
-    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
-    for_each_session_open_transaction_of_type(context, transaction_types)
-
-
-def open_transactions_of_type_throws_exception(context: Context, transaction_types: List[TransactionType]):
-    for session in context.sessions:
-        for transaction_type in transaction_types:
-            try:
-                session.transaction(transaction_type)
-                assert False
-            except TypeDBClientException:
-                pass
-
-
-@step("session open transaction of type; throws exception: {transaction_type}")
-def step_impl(context: Context, transaction_type):
-    print("Running step: session open transaction of type; throws exception")
-    transaction_type = parse_transaction_type(transaction_type)
-    open_transactions_of_type_throws_exception(context, [transaction_type])
-
-
-# TODO: transaction(s) in other implementations, simplify
-@step("for each session, open transactions of type; throws exception")
-def step_impl(context: Context):
-    open_transactions_of_type_throws_exception(context, list(map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
-
-
-def for_each_session_transactions_are(context: Context, assertion: Callable[[TypeDBTransaction], None]):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            assertion(transaction)
-
-
-def assert_transaction_null(transaction: TypeDBTransaction, is_null: bool):
-    assert_that(transaction is None, is_(is_null))
-
-
-@step("session transaction is null: {is_null}")
-@step("for each session, transaction is null: {is_null}")
-@step("for each session, transactions are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for_each_session_transactions_are(context, lambda tx: assert_transaction_null(tx, is_null))
-
-
-def assert_transaction_open(transaction: TypeDBTransaction, is_open: bool):
-    assert_that(transaction.is_open(), is_(is_open))
-
-
-@step("session transaction is open: {is_open}")
-@step("for each session, transaction is open: {is_open}")
-@step("for each session, transactions are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for_each_session_transactions_are(context, lambda tx: assert_transaction_open(tx, is_open))
-
-
-@step("session transaction commits")
-@step("transaction commits")
-def step_impl(context: Context):
-    context.tx().commit()
-
-
-@step("session transaction commits; throws exception")
-@step("transaction commits; throws exception")
-def step_impl(context: Context):
-    try:
-        context.tx().commit()
-        assert False
-    except TypeDBClientException:
-        pass
-
-
-@step("transaction commits; throws exception containing \"{exception}\"")
-def step_impl(context: Context, exception: str):
-    assert_that(calling(context.tx().commit), raises(TypeDBClientException, exception))
-
-
-@step("for each session, transaction commits")
-@step("for each session, transactions commit")
-def step_impl(context: Context):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            transaction.commit()
-
-
-@step("for each session, transaction commits; throws exception")
-@step("for each session, transactions commit; throws exception")
-def step_impl(context: Context):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            try:
-                transaction.commit()
-                assert False
-            except TypeDBClientException:
-                pass
-
-
-# TODO: close(s) in other implementations - simplify
-@step("for each session, transaction closes")
-def step_impl(context: Context):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            transaction.close()
-
-
-def for_each_session_transaction_has_type(context: Context, transaction_types: list):
-    for session in context.sessions:
-        transactions = context.sessions_to_transactions[session]
-        assert_that(transactions, has_length(len(transaction_types)))
-        transactions_iterator = iter(transactions)
-        for transaction_type in transaction_types:
-            assert_that(next(transactions_iterator).transaction_type(), is_(transaction_type))
-
-
-# NOTE: behave ignores trailing colons in feature files
-@step("for each session, transaction has type")
-@step("for each session, transactions have type")
-def step_impl(context: Context):
-    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
-    for_each_session_transaction_has_type(context, transaction_types)
-
-
-# TODO: this is overcomplicated in some clients (has/have, transaction(s))
-@step("for each session, transaction has type: {transaction_type}")
-@step("session transaction has type: {transaction_type}")
-def step_impl(context: Context, transaction_type):
-    transaction_type = parse_transaction_type(transaction_type)
-    for_each_session_transaction_has_type(context, [transaction_type])
-
-
-##############################################
-# sequential sessions, parallel transactions #
-##############################################
-
-# TODO: transaction(s) in other implementations - simplify
-@step("for each session, open transactions in parallel of type")
-def step_impl(context: Context):
-    types = list(map(parse_transaction_type, parse_list(context.table)))
-    assert_that(len(types), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
-    with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
-        for session in context.sessions:
-            context.sessions_to_transactions_parallel[session] = []
-            for type_ in types:
-                context.sessions_to_transactions_parallel[session].append(executor.submit(partial(session.transaction, type_)))
-
-
-def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[TypeDBTransaction], None]):
-    for session in context.sessions:
-        for future_transaction in context.sessions_to_transactions_parallel[session]:
-            assertion(future_transaction.result())
-
-
-@step("for each session, transactions in parallel are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for_each_session_transactions_in_parallel_are(context, lambda tx: assert_transaction_null(tx, is_null))
-
-
-@step("for each session, transactions in parallel are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for_each_session_transactions_in_parallel_are(context, lambda tx: assert_transaction_open(tx, is_open))
-
-
-@step("for each session, transactions in parallel have type")
-def step_impl(context: Context):
-    types = list(map(parse_transaction_type, parse_list(context.table)))
-    for session in context.sessions:
-        future_transactions = context.sessions_to_transactions_parallel[session]
-        assert_that(future_transactions, has_length(len(types)))
-        future_transactions_iter = iter(future_transactions)
-        for type_ in types:
-            assert_that(next(future_transactions_iter).result().transaction_type(), is_(type_))
-
-
-############################################
-# parallel sessions, parallel transactions #
-############################################
-
-def for_each_session_in_parallel_transactions_in_parallel_are(context: Context, assertion):
-    for future_session in context.sessions_parallel:
-        for future_transaction in context.sessions_parallel_to_transactions_parallel[future_session]:
-            assertion(future_transaction)
-
-
-@step("for each session in parallel, transactions in parallel are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for_each_session_in_parallel_transactions_in_parallel_are(context, lambda tx: assert_transaction_null(tx, is_null))
-
-
-@step("for each session in parallel, transactions in parallel are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for_each_session_in_parallel_transactions_in_parallel_are(context, lambda tx: assert_transaction_open(tx, is_open))
-
-
-######################################
-# transaction behaviour with queries #
-######################################
-
-@step("for each transaction, define query; throws exception containing \"{exception}\"")
-def step_impl(context: Context, exception: str):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            try:
-                next(transaction.query().define(context.text), default=None)
-                assert False
-            except TypeDBClientException as e:
-                assert_that(exception, is_in(str(e)))
+@then("for each session, transactions in parallel are open: true") do context
+    for session in sessions(context)
+        for trans in transactions(session)
+            @expect g.is_open(trans) === true
+        end
+    end
+end
+
+@then("for each session, transactions in parallel have type:") do context
+    trans_types = [row[1] for row in context.datatable]
+    changed_trans_types = map(x-> x=="read" ? trans_read : trans_write, trans_types)
+    res_trans_types = group_count_items(changed_trans_types)
+    for session in sessions(context)
+        sess_trans_type = [item.type for item in transactions(session)]
+        res_trans_sess = group_count_items(sess_trans_type)
+        @expect res_trans_types == res_trans_sess
+    end
+    delete_all_databases(context[:client])
+end
+
+
+@given("connection open sessions for database:") do context
+    dbs = [row[1] for row in context.datatable]
+    for db in dbs
+        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timout=Inf)
+    end
+    count_result = length(context[:client].sessions) == length(dbs)
+    @expect count_result === true
+end
+
+@when("for each session, open transaction of type: read") do context
+    for session in sessions(context)
+        g.transaction(session, trans_read)
+        test_trans = length(session.transactions) == 1
+        @expect test_trans === true
+    end
+end
+
+@then("for each session, transaction is null: false") do context
+    result_empty = map(x->!isempty(x.transactions) ,sessions(context))
+    result_expect = all(result_empty)
+    @expect result_expect === true
+end
+
+@then("for each session, transaction is open: true") do context
+    trans = transactions.(sessions(context))
+    sess_trans = reduce(vcat, trans)
+    result_expect = all(g.is_open.(sess_trans))
+    @expect result_expect === true
+end
+
+@then("for each session, transaction has type: read") do context
+    trans = transactions.(sessions(context))
+    sess_trans = reduce(vcat, trans)
+    result_expect = all([trans.type == trans_read for trans in sess_trans])
+    @expect result_expect === true
+    delete_all_databases(context[:client])
+end
+
+@then("for each session, transaction has type: write") do context
+    trans = transactions.(sessions(context))
+    sess_trans = reduce(vcat, trans)
+    result_expect = all([trans.type == trans_write for trans in sess_trans])
+    @expect result_expect === true
+    delete_all_databases(context[:client])
+end
+
+# Scenario: write in a read transaction throws
+@then("graql define; throws exception containing \"schema writes when transaction type does not allow\"") do context
+    define_string =   "define person sub entity;"
+    try
+        g.define(context[:transaction], define_string)
+    catch ex
+        res_comparisson = occursin("schema writes when transaction type does not allow", string(ex.error_message))
+        @expect res_comparisson === true
+    end
+    delete_all_databases(context[:client])
+end
+
+@then("transaction commits; throws exception") do context
+    try
+        g.commit(context[:transaction])
+    catch ex
+        @expect typeof(ex) == g.TypeDBClientException
+    end
+    delete_all_databases(context[:client])
+end
