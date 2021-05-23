@@ -6,7 +6,7 @@ end
 
 function get_database(client::AbstractCoreClient, name::String)::CoreDatabase
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
-    if Proto.contains_database(client, name)
+    if contains_database(client, name)
         return CoreDatabase(name)
     else
         throw(TypeDBClientException(CLIENT_DB_DOES_NOT_EXIST, name))
