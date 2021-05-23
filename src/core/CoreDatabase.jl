@@ -5,5 +5,5 @@ mutable struct CoreDatabase <: AbstractCoreDatabaseManager
 end
 
 function schema_database(db::T, core_client::R) where {T<:AbstractCoreDatabaseManager, R<:AbstractCoreClient}
-    return database_schema(core_client.core_stub, gRPCController(), DatabaseRequestBuilder.schema_req(db.name)).schema
+    return Proto.database_schema(core_client.core_stub, gRPCController(), DatabaseRequestBuilder.schema_req(db.name)).schema
 end

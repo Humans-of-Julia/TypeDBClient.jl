@@ -41,6 +41,45 @@ function Base.getproperty(obj::Explainable, name::Symbol)
     end
 end
 
+mutable struct Explainables_Owned_OwnedEntry <: ProtoType
+    __protobuf_jl_internal_meta::ProtoMeta
+    __protobuf_jl_internal_values::Dict{Symbol,Any}
+    __protobuf_jl_internal_defaultset::Set{Symbol}
+
+    function Explainables_Owned_OwnedEntry(; kwargs...)
+        obj = new(meta(Explainables_Owned_OwnedEntry), Dict{Symbol,Any}(), Set{Symbol}())
+        values = obj.__protobuf_jl_internal_values
+        symdict = obj.__protobuf_jl_internal_meta.symdict
+        for nv in kwargs
+            fldname, fldval = nv
+            fldtype = symdict[fldname].jtyp
+            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+        end
+        obj
+    end
+end # mutable struct Explainables_Owned_OwnedEntry (mapentry)
+const __meta_Explainables_Owned_OwnedEntry = Ref{ProtoMeta}()
+function meta(::Type{Explainables_Owned_OwnedEntry})
+    ProtoBuf.metalock() do
+        if !isassigned(__meta_Explainables_Owned_OwnedEntry)
+            __meta_Explainables_Owned_OwnedEntry[] = target = ProtoMeta(Explainables_Owned_OwnedEntry)
+            allflds = Pair{Symbol,Union{Type,String}}[:key => AbstractString, :value => Explainable]
+            meta(target, Explainables_Owned_OwnedEntry, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
+        end
+        __meta_Explainables_Owned_OwnedEntry[]
+    end
+end
+function Base.getproperty(obj::Explainables_Owned_OwnedEntry, name::Symbol)
+    if name === :key
+        return (obj.__protobuf_jl_internal_values[name])::AbstractString
+    elseif name === :value
+        return (obj.__protobuf_jl_internal_values[name])::Explainable
+    else
+        getfield(obj, name)
+    end
+end
+
 mutable struct Explainables_RelationsEntry <: ProtoType
     __protobuf_jl_internal_meta::ProtoMeta
     __protobuf_jl_internal_values::Dict{Symbol,Any}
@@ -110,45 +149,6 @@ function meta(::Type{Explainables_AttributesEntry})
     end
 end
 function Base.getproperty(obj::Explainables_AttributesEntry, name::Symbol)
-    if name === :key
-        return (obj.__protobuf_jl_internal_values[name])::AbstractString
-    elseif name === :value
-        return (obj.__protobuf_jl_internal_values[name])::Explainable
-    else
-        getfield(obj, name)
-    end
-end
-
-mutable struct Explainables_Owned_OwnedEntry <: ProtoType
-    __protobuf_jl_internal_meta::ProtoMeta
-    __protobuf_jl_internal_values::Dict{Symbol,Any}
-    __protobuf_jl_internal_defaultset::Set{Symbol}
-
-    function Explainables_Owned_OwnedEntry(; kwargs...)
-        obj = new(meta(Explainables_Owned_OwnedEntry), Dict{Symbol,Any}(), Set{Symbol}())
-        values = obj.__protobuf_jl_internal_values
-        symdict = obj.__protobuf_jl_internal_meta.symdict
-        for nv in kwargs
-            fldname, fldval = nv
-            fldtype = symdict[fldname].jtyp
-            (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-        end
-        obj
-    end
-end # mutable struct Explainables_Owned_OwnedEntry (mapentry)
-const __meta_Explainables_Owned_OwnedEntry = Ref{ProtoMeta}()
-function meta(::Type{Explainables_Owned_OwnedEntry})
-    ProtoBuf.metalock() do
-        if !isassigned(__meta_Explainables_Owned_OwnedEntry)
-            __meta_Explainables_Owned_OwnedEntry[] = target = ProtoMeta(Explainables_Owned_OwnedEntry)
-            allflds = Pair{Symbol,Union{Type,String}}[:key => AbstractString, :value => Explainable]
-            meta(target, Explainables_Owned_OwnedEntry, allflds, ProtoBuf.DEF_REQ, ProtoBuf.DEF_FNUM, ProtoBuf.DEF_VAL, ProtoBuf.DEF_PACK, ProtoBuf.DEF_WTYPES, ProtoBuf.DEF_ONEOFS, ProtoBuf.DEF_ONEOF_NAMES)
-        end
-        __meta_Explainables_Owned_OwnedEntry[]
-    end
-end
-function Base.getproperty(obj::Explainables_Owned_OwnedEntry, name::Symbol)
     if name === :key
         return (obj.__protobuf_jl_internal_values[name])::AbstractString
     elseif name === :value

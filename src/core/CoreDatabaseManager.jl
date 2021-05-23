@@ -16,27 +16,27 @@ end
 function contains_database(client::AbstractCoreClient, name::String)
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     db = DatabaseManagerRequestBuilder
-    req_result, status = databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
+    req_result, status = Proto.databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
     return grpc_result_or_error(req_result, status, result->result.contains)
 
 end
 
 function get_all_databases(client::AbstractCoreClient)::Vector{CoreDatabase}
     db = DatabaseManagerRequestBuilder
-    req_result, status = databases_all(client.core_stub.blockingStub, gRPCController(), db.all_req())
+    req_result, status = Proto.databases_all(client.core_stub.blockingStub, gRPCController(), db.all_req())
     return grpc_result_or_error(req_result, status, result -> [CoreDatabase(db_name) for db_name in result.names])
 end
 
 function create_database(client::AbstractCoreClient, name::String)
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     db = DatabaseManagerRequestBuilder
-    req_result, status =  databases_create(client.core_stub.blockingStub, gRPCController(), db.create_req(name))
+    req_result, status =  Proto.databases_create(client.core_stub.blockingStub, gRPCController(), db.create_req(name))
     return grpc_result_or_error(req_result, status, result->true)
 end
 
 function delete_database(client::AbstractCoreClient, name::String)
     database = get_database(client, name)
     db = DatabaseRequestBuilder
-    req_result, status =  database_delete(client.core_stub.blockingStub, gRPCController(), db.delete_req(database.name))
+    req_result, status =  Proto.database_delete(client.core_stub.blockingStub, gRPCController(), db.delete_req(database.name))
     return grpc_result_or_error(req_result, status, result->true)
 end
