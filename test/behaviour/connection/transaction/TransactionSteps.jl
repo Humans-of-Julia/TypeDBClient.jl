@@ -208,3 +208,40 @@ end
     result_expect = all(g.is_open.(sess_trans))
     @expect result_expect === true
 end
+
+@then("for each session, transaction has type: read") do context
+    trans = transactions.(sessions(context))
+    sess_trans = reduce(vcat, trans)
+    result_expect = all([trans.type == trans_read for trans in sess_trans])
+    @expect result_expect === true
+    delete_all_databases(context[:client])
+end
+
+@then("for each session, transaction has type: write") do context
+    trans = transactions.(sessions(context))
+    sess_trans = reduce(vcat, trans)
+    result_expect = all([trans.type == trans_write for trans in sess_trans])
+    @expect result_expect === true
+    delete_all_databases(context[:client])
+end
+
+# Scenario: write in a read transaction throws
+@then("graql define; throws exception containing \"schema writes when transaction type does not allow\"") do context
+    define_string =   "define person sub entity;"
+    try
+        g.define(context[:transaction], define_string)
+    catch ex
+        res_comparisson = occursin("schema writes when transaction type does not allow", string(ex.error_message))
+        @expect res_comparisson === true
+    end
+    delete_all_databases(context[:client])
+end
+
+@then("transaction commits; throws exception") do context
+    try
+        g.commit(context[:transaction])
+    catch ex
+        @expect typeof(ex) == g.TypeDBClientException
+    end
+    delete_all_databases(context[:client])
+end

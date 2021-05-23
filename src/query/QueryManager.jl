@@ -74,11 +74,16 @@ function explain(transaction::AbstractCoreTransaction, explainable::AbstractExpl
 end
 
 function define(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result = execute(transaction, QueryManagerRequestBuilder.define_req(query, options))
+    execute(transaction, QueryManagerRequestBuilder.define_req(query, options))
     return nothing
 end
 
 function undefine(transaction::AbstractCoreTransaction, query::String, options = Proto.Options())
-    db_result = execute(transaction, QueryManagerRequestBuilder.undefine_req(query, options))
+    execute(transaction, QueryManagerRequestBuilder.undefine_req(query, options))
+    return nothing
+end
+
+function commit(transaction::AbstractCoreTransaction)
+    execute(transaction, TransactionRequestBuilder.commit_req())
     return nothing
 end
