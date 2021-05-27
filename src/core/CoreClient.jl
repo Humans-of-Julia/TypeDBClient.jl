@@ -1,13 +1,12 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 mutable struct CoreClient <: AbstractCoreClient
-    #private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc"
     channel::gRPCClient.gRPCChannel
     address::String
     port::Int
     core_stub::Core_TypeDBStub
     databaseMgr::CoreDatabaseManager
-    sessions::Dict{String, Union{<:AbstractCoreSession, Nothing}}
+    sessions::Dict{Bytes, Optional{AbstractCoreSession}}
 end
 
 Base.show(io::IO, core_client::CoreClient) = print(io, "CoreClient(address: $(core_client.address):$(core_client.port))")

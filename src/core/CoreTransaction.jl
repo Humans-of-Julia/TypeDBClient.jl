@@ -7,6 +7,7 @@ struct CoreTransaction <: AbstractCoreTransaction
     transaction_id::Optional{UUID}
     session_id::Bytes
     request_timout::Real
+    session::AbstractCoreSession
 end
 
 function Base.show(io::IO, transaction::AbstractCoreTransaction)
@@ -17,7 +18,7 @@ end
 
 function CoreTransaction(session::CoreSession ,
                         sessionId::Bytes,
-                        type::Int32,
+                        type::EnumType,
                         options::TypeDBOptions;
                         request_timout::Real=session.request_timeout)
     type = type
@@ -32,9 +33,9 @@ function CoreTransaction(session::CoreSession ,
 
     open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
 
-    bidirectionalStream = BidirectionalStream(input_channel, output_channel,status)
+    bidirectionalStream = BidirectionalStream(input_channel, output_channel, status)
     trans_id = uuid4()
-    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout)
+    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout, session)
 
     req_result = execute(result, open_req, false)
     kind_of_result = Proto.which_oneof(req_result, :res)
@@ -72,5 +73,11 @@ function is_open(transaction::T)::Bool where {T<:AbstractCoreTransaction}
 end
 
 function close(transaction::T)::Bool where {T<:AbstractCoreTransaction}
-    close(transaction.bidirectional_stream)
+    try
+        close(transaction.bidirectional_stream)
+        delete!(transaction.session, transaction.transaction_id)
+    catch ex
+        throw(TypeDBClientException("something went wrong closing Transaction", ex))
+    end
+    true
 end

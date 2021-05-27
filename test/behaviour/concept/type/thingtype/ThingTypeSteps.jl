@@ -1,9 +1,9 @@
-# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 
 
 
-# 
+#
 # #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -382,3 +382,5 @@ def step_impl(context: Context):
     actuals = [t.get_label() for t in context.tx().concepts().get_root_thing_type().as_remote(context.tx()).get_subtypes()]
     for sub_label in sub_labels:
         assert_that(sub_label, not_(is_in(actuals)))
+
+=#

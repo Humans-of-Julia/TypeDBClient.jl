@@ -1,144 +1,118 @@
-@given("connection open schema session for database: typedb") do context
-    @fail "Implement me"
+# Scenario: for one database, open one session
+@then("session is null: false") do context
+    @expect context[:session] !== nothing
+    @expect context[:session] isa g.CoreSession
 end
 
-@given("connection close all sessions") do context
-    @fail "Implement me"
+@then("session is open: true") do context
+    @expect g.is_open(context[:session]) == true
 end
 
+@then("session has database: typedb") do context
+    @expect context[:session].database.name == "typedb"
+    delete_all_databases(context[:client])
+end
 
+@when("connection open sessions for databases:") do context
+    dbnames = [item[1] for item in context.datatable]
+    sessions = g.CoreSession[]
+    for name in dbnames
+        push!(sessions, g.CoreSession(context[:client], name, g.Proto.Session_Type.DATA, request_timout=Inf))
+    end
+    context[:sessions] = sessions
+    @expect length(dbnames) == length(sessions)
+end
+
+@then("sessions are null: false") do context
+    @expect context[:sessions] !== nothing
+end
+
+@then("sessions are open: true") do context
+    res_open = map(x->g.is_open(x), context[:sessions])
+    @expect length(res_open) > 0
+    @expect all(res_open) === true
+end
+
+@then("sessions have databases:") do context
+    dbs = [item.database for item in context[:sessions]]
+    @expect dbs !== nothing
+    @expect first(unique(typeof.(dbs))) == TypeDBClient.CoreDatabase
+    delete_all_databases(context[:client])
+end
+
+@when("connection open sessions in parallel for databases:") do context
+    dbnames = [item[1] for item in context.datatable]
+    sessions = g.CoreSession[]
+    lock_add = ReentrantLock()
+    @sync @async for db in dbnames
+        sess = g.CoreSession(context[:client], db, g.Proto.Session_Type.DATA, request_timout=Inf)
+        try
+            lock(lock_add)
+            push!(sessions, sess)
+        finally
+            unlock(lock_add)
+        end
+    end
+    context[:sessions] = sessions
+    @expect length(dbnames) == length(sessions)
+end
+
+@then("sessions in parallel are null: false") do context
+    @expect (context[:sessions] !== nothing && !isempty(context[:sessions])) === true
+end
+
+@then("sessions in parallel are open: true") do context
+    res_open = map(x->g.is_open(x), context[:sessions])
+    @expect length(res_open) > 0
+    @expect all(res_open) === true
+end
+
+@then("sessions in parallel have databases:") do context
+    dbnames = [item[1] for item in context.datatable]
+    sessions = context[:sessions]
+    for i in 1:length(dbnames)
+        @expect sessions[i].database.name == dbnames[i]
+    end
+    delete_all_databases(context[:client])
+end
+
+# Scenario: write schema in a data session throws
 @given("connection open data session for database: typedb") do context
-    @fail "Implement me"
+    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timout=Inf)
+    context[:session] = sess
+    trans = g.transaction(sess, g.Proto.Transaction_Type.WRITE)
+    context[:transaction] = trans
 end
 
-#=
-
-from concurrent.futures.thread import ThreadPoolExecutor
-from functools import partial
-from typing import List
-
-from behave import *
-from hamcrest import *
-
-from typedb.api.session import SessionType
-from tests.behaviour.config.parameters import parse_bool, parse_list
-from tests.behaviour.context import Context
+@then("graql define; throws exception containing \"session type does not allow\"") do context
+    define_string = "define person sub entity;"
+    try
+        g.define(context[:transaction], define_string)
+    catch ex
+        res_comparisson = occursin("session type does not allow", string(ex.error_message))
+        @expect res_comparisson === true
+    end
+    delete_all_databases(context[:client])
+end
 
 
-SCHEMA = SessionType.SCHEMA
-DATA = SessionType.DATA
+@given("connection open schema session for database: typedb") do context
+    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.SCHEMA, request_timout=Inf)
+    context[:session] = sess
+end
 
+@then("graql define") do context
+    define_string = "define person sub entity;"
+    g.define(context[:transaction], define_string)
+end
 
-def open_sessions_for_databases(context: Context, names: list, session_type=DATA):
-    for name in names:
-        context.sessions.append(context.client.session(name, session_type))
-
-
-@step("connection open schema session for database: {database_name}")
-def step_impl(context: Context, database_name):
-    open_sessions_for_databases(context, [database_name], SCHEMA)
-
-
-@step("connection open data session for database: {database_name}")
-@step("connection open session for database: {database_name}")
-def step_impl(context: Context, database_name: str):
-    open_sessions_for_databases(context, [database_name], DATA)
-
-
-@step("connection open schema session for database")
-@step("connection open schema session for databases")
-@step("connection open schema sessions for database")
-@step("connection open schema sessions for databases")
-def step_impl(context: Context):
-    names = parse_list(context.table)
-    open_sessions_for_databases(context, names, SCHEMA)
-
-
-@step("connection open data session for database")
-@step("connection open data session for databases")
-@step("connection open data sessions for database")
-@step("connection open data sessions for databases")
-@step("connection open session for database")
-@step("connection open session for databases")
-@step("connection open sessions for database")
-@step("connection open sessions for databases")
-def step_impl(context: Context):
-    names = parse_list(context.table)
-    open_sessions_for_databases(context, names, DATA)
-
-
-@step("connection open data sessions in parallel for databases")
-@step("connection open sessions in parallel for databases")
-def step_impl(context: Context):
-    names = parse_list(context.table)
-    assert_that(len(names), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
-    with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
-        for name in names:
-            context.sessions_parallel.append(executor.submit(partial(context.client.session, name, DATA)))
-
-
-@step("connection close all sessions")
-def step_impl(context: Context):
-    for session in context.sessions:
-        session.close()
-    context.sessions = []
-
-
-@step("session is null: {is_null}")
-@step("sessions are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for session in context.sessions:
-        assert_that(session is None, is_(is_null))
-
-
-@step("session is open: {is_open}")
-@step("sessions are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for session in context.sessions:
-        assert_that(session.is_open(), is_(is_open))
-
-
-@step("sessions in parallel are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for future_session in context.sessions_parallel:
-        assert_that(future_session.result() is None, is_(is_null))
-
-
-@step("sessions in parallel are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for future_session in context.sessions_parallel:
-        assert_that(future_session.result().is_open(), is_(is_open))
-
-
-def sessions_have_databases(context: Context, names: List[str]):
-    assert_that(context.sessions, has_length(equal_to(len(names))))
-    session_iter = iter(context.sessions)
-    for name in names:
-        assert_that(next(session_iter).database().name(), is_(name))
-
-
-@step("session has database: {database_name}")
-@step("sessions have database: {database_name}")
-def step_impl(context: Context, database_name: str):
-    sessions_have_databases(context, [database_name])
-
-
-# TODO: session(s) has/have databases in other implementations, simplify
-@step("sessions have databases")
-def step_impl(context: Context):
-    database_names = parse_list(context.table)
-    sessions_have_databases(context, database_names)
-
-
-@step("sessions in parallel have databases")
-def step_impl(context: Context):
-    database_names = parse_list(context.table)
-    assert_that(context.sessions_parallel, has_length(equal_to(len(database_names))))
-    future_session_iter = iter(context.sessions_parallel)
-    for name in database_names:
-        assert_that(next(future_session_iter).result().database().name(), is_(name))
-=#
+@then("graql insert; throws exception containing \"session type does not allow\"") do context
+    ins_string = "insert \$x isa person;"
+    try
+        g.insert(context[:transaction], ins_string)
+    catch ex
+        res_comparisson = occursin("session type does not allow", string(ex.error_message))
+        @expect res_comparisson === true
+    end
+    delete_all_databases(context[:client])
+end

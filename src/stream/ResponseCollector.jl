@@ -63,10 +63,9 @@ function response_worker(response_collector::ResponseCollector)
         catch ex
             @info "response_worker shows an error \n
             $ex"
-        finally
         end
     end
-    @info "response_collector is Done"
+    @debug "response_collector is Done"
 end
 
 function _process_Transaction_Server(input::Proto.Transaction_Server)
@@ -77,5 +76,5 @@ end
 
 function close(res_collector::ResponseCollector)
     #close the resul channels which are open
-    close.(values(res_collector.collectors))
+    safe_close.(values(res_collector.collectors))
 end

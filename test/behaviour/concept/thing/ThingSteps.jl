@@ -417,3 +417,4 @@ def step_impl(context: Context):
     actuals = [t.get_label() for t in context.tx().concepts().get_root_thing_type().as_remote(context.tx()).get_subtypes()]
     for sub_label in sub_labels:
         assert_that(sub_label, not_(is_in(actuals)))
+=#

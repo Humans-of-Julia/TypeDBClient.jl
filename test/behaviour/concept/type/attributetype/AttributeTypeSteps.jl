@@ -162,3 +162,5 @@ def step_impl(context: Context, type_label: str):
     actuals = list(map(lambda tt: tt.get_label(), attribute_type.as_remote(context.tx()).get_owners(only_key=False)))
     for owner_label in owner_labels:
         assert_that(actuals, not_(has_item(owner_label)))
+
+=#
