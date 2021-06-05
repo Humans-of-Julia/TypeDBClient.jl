@@ -1,7 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct ConceptManager{T <: AbstractCoreTransaction} <: AbstractConceptManager
-    txn::T
+    transaction::T
 end
 
 struct Root
@@ -64,7 +64,7 @@ function Base.get(cm::ConceptManager, ::Type{ThingType}, label::String)
     return nothing
 end
 
-function Base.get(cm::ConceptManager, ::Type{Thing}, iid::String)
+function Base.get(cm::ConceptManager, ::Type{<:AbstractThing}, iid::String)
     req = ConceptManagerRequestBuilder.get_thing_req(iid)
     res = execute(cm, req)
     if which_oneof(res, :res) == :get_thing_res
@@ -75,5 +75,6 @@ end
 
 # TODO execute request and returns Proto.ConceptManager_Res
 function execute(cm::ConceptManager, req::Proto.Transaction_Req)
-    @error "Not implemented yet."
+    result = execute(cm.transaction, req, false)
+    # return result.concept_manager_res
 end

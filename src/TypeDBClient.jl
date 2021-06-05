@@ -75,6 +75,8 @@ include("concept/thing/Entity.jl")
 include("concept/thing/Relation.jl")
 include("concept/thing/Thing.jl")
 
+include("concept/ConceptManager.jl")
+
 include("concept/answer/ConceptMap.jl")
 include("concept/answer/ConceptMapGroup.jl")
 include("concept/answer/NumericGroup.jl")

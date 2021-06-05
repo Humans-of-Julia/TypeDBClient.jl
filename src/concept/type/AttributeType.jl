@@ -1,5 +1,14 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
+"""
+    AttributeType{V} <: AbstractAttributeType
+
+Type parameter `V` contains the value type of an attribute.
+
+```
+(OBJECT = 0, BOOLEAN = 1, LONG = 2, DOUBLE = 3, STRING = 4, DATETIME = 5)
+```
+"""
 struct AttributeType{V} <: AbstractAttributeType
     label::Label
     is_root::Bool

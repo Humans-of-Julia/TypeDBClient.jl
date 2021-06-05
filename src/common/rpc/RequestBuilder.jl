@@ -323,15 +323,18 @@ function unset_plays_req(
     )
 end
 
-# Porting note: the order of `keys_only` and `value_type` are swapped
+# Porting note: keys_only is defaulted to false
 function get_owns_req(
     label::Label,
-    keys_only::Bool,
-    value_type::Optional{EnumType} = nothing
+    value_type::Optional{EnumType} = nothing,
+    keys_only::Bool = false
 )
-    return _treq(label.name, label.scope;
-        thing_type_get_owns_req = Proto.ThingType_GetOwns_Req(; keys_only, value_type)
-    )
+    thing_type_get_owns_req = value_type === nothing ? 
+        Proto.ThingType_GetOwns_Req(; keys_only) :
+        Proto.ThingType_GetOwns_Req(; keys_only, value_type)
+    req = _treq(label.name, label.scope; thing_type_get_owns_req)
+    @show req
+    return req
 end
 
 # Porting note: the order of `is_key` is moved upfront
