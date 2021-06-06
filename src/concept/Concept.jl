@@ -6,12 +6,12 @@
 #   |__ Thing
 #   |     |__ Relation
 #   |     |__ Entity
-#   |     |__ Attribute{VALUE}
+#   |     |__ Attribute
 #   |__ Type
 #         |__ ThingType
 #         |     |__ RelationType
 #         |     |__ EntityType
-#         |     |__ AttributeType
+#         |     |__ AttributeType{V}
 #         |__ RoleType
 
 abstract type AbstractConcept end

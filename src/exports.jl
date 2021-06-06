@@ -9,16 +9,34 @@ const DatabaseManager = CoreDatabaseManager
 export Client, Session, Transaction, Database, DatabaseManager
 export TypeDBOptions
 
-# concepts
-export EntityType, RoleType, AttributeType, ThingType, RelationType
-export Entity, Relation, Attribute, Thing
-export ConceptManager
-export as_remote, execute, instantiate
-export get_instances, get_owns, get_owners, get_plays, get_rule, get_rules,
-    get_subtypes, get_supertype, get_supertypes
-export set_abstract, set_label, set_owns, set_plays, set_supertype
-export unset_abstract
+# constants
 export VALUE_TYPE
 
+# concepts
+# - ConceptManager.jl functions requires these types for dispatch
+export AttributeType, EntityType, RelationType, RoleType, ThingType
+export Attribute, Entity, Relation, Thing
+export ConceptManager
 
+# functions (listed in alphabetical order)
+export get_instances,
+       get_owns,
+       get_owners,
+       get_plays,
+       get_regex,
+       get_rule,
+       get_rules,
+       get_subtypes,
+       get_supertype,
+       get_supertypes,
+       set_abstract,
+       set_label,
+       set_owns,
+       set_plays,
+       set_regex,
+       set_supertype,
+       unset_abstract
+
+# others
+export contains_database
 

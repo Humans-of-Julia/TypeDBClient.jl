@@ -16,6 +16,10 @@ function proto(t::AbstractThingType)
     # return ThingTypeRequestBuilder.proto_thing_type(t.label, encoding(t))
 end
 
+# Contract: all subtypes of AbstractThingType should have these two fields
+is_root(t::AbstractThingType) = t.is_root
+label(t::AbstractThingType) = t.label
+
 # ------------------------------------------------------------------------
 # Remote functions
 # ------------------------------------------------------------------------

@@ -56,7 +56,24 @@ is_keyable(::AttributeType{VALUE_TYPE.LONG}) = true
 #   set_supertype
 #   get_instances
 
-# TODO get_subtypes has some filtering logic...
+# Technically, we can reuse the logic from ThingType. Maybe refactor soon.
+function get_subtypes(r::RemoteConcept{C,T}) where {
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction
+}
+    concept = r.concept
+    req = TypeRequestBuilder.get_subtypes_req(label(concept))
+    res = execute(r.transaction, req)
+    typs = res.type_res_part.type_get_subtypes_res_part.types
+
+    if is_root(concept) && proto(concept) !== VALUE_TYPE.OBJECT
+        return Iterators.filter(
+            t -> proto(t) == proto(concept) || label(t) == label(concept),
+            (instantiate(t) for t in typs)
+        )
+    else
+        return instantiate.(typs)
+    end
+end
 
 function get_owners(r::RemoteConcept{C,T}, only_key = false) where {
     C <: AbstractAttributeType, T <: AbstractCoreTransaction
@@ -67,21 +84,51 @@ function get_owners(r::RemoteConcept{C,T}, only_key = false) where {
         r.type_res_part.attribute_type_get_owners_res_part.owners for r in res)))
 end
 
-#= TODO
+function get_regex(r::RemoteConcept{C,T}) where {
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction
+}
+    req = AttributeTypeRequestBuilder.get_regex_req(r.concept.label)
+    res = execute(r.transaction, req)
+    regex = res.type_res.attribute_type_get_regex_res.regex
+    return isempty(regex) ? nothing : regex
+end
+
+function set_regex(r::RemoteConcept{C,T}, regex::Optional{AbstractString}) where {
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction
+}
+    regex_str = regex === nothing ? "" : regex
+    req = AttributeTypeRequestBuilder.set_regex_req(r.concept.label, regex_str)
+    res = execute(r.transaction, req)
+end
 
 proto_attribute_value(value::Bool) = Proto.Attribute_Value(; boolean = value)
 proto_attribute_value(value::AbstractFloat) = Proto.Attribute_Value(; double = value)
 proto_attribute_value(value::Integer) = Proto.Attribute_Value(; long = value)
 proto_attribute_value(value::AbstractString) = Proto.Attribute_Value(; string = value)
 
-# TODO check epoch definition
-proto_attribute_value(value::DateTime) = Proto.Attribute_Value(; datetime = value)
+# Java client uses epoch of 1970-01-01T00:00:00Z and value is stored as milliseconds
+# https://github.com/vaticle/typedb-client-java/blob/fb535f8c9494ec6ff93421e1a962510c6cb46139/concept/thing/AttributeImpl.java#L491
+function proto_attribute_value(value::DateTime)
+    milliseconds_since_1970 = round(Int64, datetime2unix(value) * 1000)
+    return Proto.Attribute_Value(; datetime = milliseconds_since_1970)
+end
+
+function Base.get(r::RemoteConcept{C,T}, value) where {
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction
+}
+    req = AttributeTypeRequestBuilder.get_req(r.concept.label, proto_attribute_value(value))
+    res = execute(r.transaction, req)
+    if hasproperty(res.type_res.attribute_type_get_res, :attribute)
+        return Attribute(res.type_res.attribute_type_get_res.attribute)
+    else
+        return nothing
+    end
+end
 
 function put(r::RemoteConcept{C,T}, value) where {
     C <: AbstractAttributeType, T <: AbstractCoreTransaction
 }
     req = AttributeTypeRequestBuilder.put_req(r.concept.label, proto_attribute_value(value))
     res = execute(r.transaction, req)
+    return Attribute(res.type_res.attribute_type_put_res.attribute)
 end
-
-=#

@@ -112,10 +112,6 @@ include("common/exception/gRPC_Result_Handling.jl")
 include("precompile.jl")
 include("exports.jl")
 
-export contains_database
-
-# export  Session, Transaction
-
 ####### pretty printing section ##################
 
 function Base.show(io::IO, blocking_stub::Proto.TypeDBBlockingStub)

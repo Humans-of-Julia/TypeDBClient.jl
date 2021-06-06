@@ -57,7 +57,7 @@ Console:
 # ------------------------------------------------------------------
 # ConceptManager methods
 
-function cm_call(f::Function, session)
+function cm_call(f::Function, session::Session)
     transaction = Transaction(session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions())
     concept_manager = ConceptManager(transaction)
     res = f(concept_manager)
@@ -67,61 +67,79 @@ end
 
 cm_call(session) do concept_manager
     @show get(concept_manager, ThingType, "title")
-    @show get(concept_manager, AttributeType, "title")
+    @show get(concept_manager, AttributeType, "title")  # same as ThingType
+    @show get(concept_manager, EntityType, "title") # nothing
+    @show get(concept_manager, RelationType, "title") # nothing
+    nothing
+end
+
+cm_call(session) do concept_manager
+    @show get(concept_manager, Entity, "966e800c8000000000000000")
+    nothing
 end
 
 # ------------------------------------------------------------------
 # ThingType methods
 
 # Fetch a thing_type for testing
-function get_thing_type_as_remote(name::String)
-    transaction = Transaction(session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions())
-    concept_manager = ConceptManager(transaction)
-    thing_type_res = execute(concept_manager, TypeDBClient.ConceptManagerRequestBuilder.get_thing_type_req(name))
-    thing_type = instantiate(thing_type_res.get_thing_type_res.thing_type)
-    return as_remote(thing_type, transaction)
+function thing_call(f::Function, session::Session, name::AbstractString)
+    cm_call(session) do concept_manager
+        thing_type_res = TypeDBClient.execute(
+            concept_manager, TypeDBClient.ConceptManagerRequestBuilder.get_thing_type_req(name)
+        )
+        thing_type = TypeDBClient.instantiate(thing_type_res.get_thing_type_res.thing_type)
+        remote_thing = TypeDBClient.as_remote(thing_type, concept_manager.transaction)
+        f(remote_thing)
+    end
 end
 
-t = get_thing_type_as_remote("title")
-res = get_supertype(t)
+res = thing_call(thing -> get_supertype(thing), session, "title")
 
-t = get_thing_type_as_remote("event-date")
-res = get_subtypes(t)
+res = thing_call(thing -> get_supertypes(thing), session, "approved-date")
 
-t = get_thing_type_as_remote("approved-date")
-res = get_supertypes(t)
+res = thing_call(thing -> get_subtypes(thing), session, "event-date")
 
-t = get_thing_type_as_remote("school")
-res = get_instances(t)
+res = thing_call(thing -> get_instances(thing), session, "school") # entities
+res = thing_call(thing -> get_instances(thing), session, "title") # attributes
+res = thing_call(thing -> get_instances(thing), session, "ownership") # relations
 
-t = get_thing_type_as_remote("person")
-res = get_owns(t)
-res = get_owns(t, VALUE_TYPE.BOOLEAN)
-res = get_owns(t, nothing, true)  # keys only => should return "email" atttribute
+res = thing_call(thing -> get_owns(thing), session, "person")
+res = thing_call(thing -> get_owns(thing, VALUE_TYPE.BOOLEAN), session, "person")
+res = thing_call(thing -> get_owns(thing, nothing, true), session, "person")
 
-t = get_thing_type_as_remote("location")
-res = get_plays(t)
-
-# TODO - 2021-06-05 17:18:10,362 [typedb-service::0] [ERROR] v.t.core.server.TransactionService - [TYW03] Invalid Type Write: The type 'media' has instances, and cannot be set abstract.
-# Should probably create my own attribute and set it to abstract
-t = get_thing_type_as_remote("media")
-set_abstract(t)
-
-# TODO - com.vaticle.typedb.core.common.exception.TypeDBException: [INT03] Invalid Internal State: Illegal internal operation! This method should not have been called.
-# Should probably create my own attribute and set it to abstract and then unset it
-t = get_thing_type_as_remote("media")
-unset_abstract(t)
-
-t = get_thing_type_as_remote("title")
-res = get_owners(t)
+res = thing_call(thing -> get_plays(thing), session, "location")
 
 # ------------------------------------------------------------------
 # AttributeType methods
 
-# attribute_type = AttributeType{VALUE_TYPE.BOOLEAN}(Label("a1"), false)
-# transaction = Transaction(session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions())
-# remote_attribute_type = as_remote(attribute_type, transaction)
-# res = put(remote_attribute_type)
+res = thing_call(thing -> get_regex(thing), session, "emotion")
+res = thing_call(thing -> get_regex(thing), session, "title") # nothing
+
+# TODO [INT03] Invalid Internal State: Illegal internal operation! This method should not have been called.
+res = thing_call(thing -> set_regex(thing, raw".*"), session, "title")
+
+# TODO [TYW03] Invalid Type Write: The type 'media' has instances, and cannot be set abstract.
+# Should probably create my own attribute and set it to abstract
+res = thing_call(thing -> set_abstract(thing), session, "media")
+
+# TODO [INT03] Invalid Internal State: Illegal internal operation! This method should not have been called.
+# Should probably create my own attribute and set it to abstract and then unset it
+res = thing_call(thing -> unset_abstract(thing), session, "media")
+
+# Isn't it a little dumb to get back what I passed?
+res = thing_call(thing -> get(thing, "Biochemistry"), session, "title")
+res = thing_call(thing -> get(thing, "Foo"), session, "title") # nothing
+
+# TODO - what does it mean when calling Put method on an AttributeType
+# https://discord.com/channels/762167454973296644/773324706924593192/851000661583986698
+res = thing_call(thing -> TypeDBClient.put(thing, "Foo"), session, "title")
+
+res = thing_call(thing -> get_subtypes(thing), session, "title")
+
+# TODO - need an example to test the special get_subtypes filtering logic
+# https://discord.com/channels/665254494820368395/837321963814912020/851164383714476074
+# res = thing_call(thing -> get_subtypes(thing), session, "attribute")
+
 
 close(session)
 close(client)
