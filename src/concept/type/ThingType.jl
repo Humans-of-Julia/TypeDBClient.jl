@@ -54,7 +54,54 @@ function get_subtypes(r::RemoteConcept{C,T}) where {
     return instantiate.(typs)
 end
 
-# TODO: set_abstract, unset_abstract, set_plays, set_owns
+function get_instances(r::RemoteConcept{C,T}) where {
+    C <: AbstractThingType, T <: AbstractCoreTransaction
+}
+    req = ThingTypeRequestBuilder.get_instances_req(r.concept.label)
+    res = stream(r.transaction, req)
+    return instantiate.(collect(Iterators.flatten(
+        r.type_res_part.thing_type_get_instances_res_part.things for r in res)))
+end
+
+function set_abstract(r::RemoteConcept{C,T}) where {
+    C <: AbstractThingType, T <: AbstractCoreTransaction
+}
+    req = ThingTypeRequestBuilder.set_abstract_req(r.concept.label)
+    execute(r.transaction, req)
+end
+
+function unset_abstract(r::RemoteConcept{C,T}) where {
+    C <: AbstractThingType, T <: AbstractCoreTransaction
+}
+    req = ThingTypeRequestBuilder.unset_abstract_req(r.concept.label)
+    execute(r.transaction, req)
+end
+
+function set_plays(
+    r::RemoteConcept{C,T},
+    role_type::AbstractRoleType,
+    overridden_role_type::Optional{AbstractRoleType} = nothing
+) where {C <: AbstractThingType, T <: AbstractCoreTransaction}
+    req = ThingTypeRequestBuilder.set_plays_req(
+        r.concept.label,
+        proto(role_type),
+        overridden_role_type
+    )
+    execute(r.transaction, req)
+end
+
+function set_owns(
+    r::RemoteConcept{C,T},
+    attribute_type::AbstractAttributeType,
+    is_key::Bool = false
+) where {C <: AbstractThingType, T <: AbstractCoreTransaction}
+    req = ThingTypeRequestBuilder.set_owns_req(
+        r.concept.label,
+        is_key,
+        proto(attribute_type)
+    )
+    execute(r.transaction, req)
+end
 
 function get_owns(
     r::RemoteConcept{C,T},
@@ -63,7 +110,8 @@ function get_owns(
 ) where {C <: AbstractThingType, T <: AbstractCoreTransaction}
     req = ThingTypeRequestBuilder.get_owns_req(r.concept.label, value_type, keys_only)
     res = stream(r.transaction, req)
-    # TODO The above returns empty array :-(
+    return instantiate.(collect(Iterators.flatten(
+        r.type_res_part.thing_type_get_owns_res_part.attribute_types for r in res)))
 end
 
 function get_plays(r::RemoteConcept{C,T}) where {
@@ -71,5 +119,6 @@ function get_plays(r::RemoteConcept{C,T}) where {
 }
     req = ThingTypeRequestBuilder.get_plays_req(r.concept.label)
     res = stream(r.transaction, req)
-    # TODO The above returns empty array :-(
+    return instantiate.(collect(Iterators.flatten(
+        r.type_res_part.thing_type_get_plays_res_part.roles for r in res)))
 end

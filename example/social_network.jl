@@ -5,17 +5,21 @@
 
 using Revise
 
+using TypeDBClient
 import TypeDBClient.typedb.protocol as P
-import TypeDBClient as C
 
-client = C.CoreClient("127.0.0.1", 1729)
-session = C.CoreSession(client, "social_network", P.Session_Type.DATA)
+client = Client("127.0.0.1")
+session = Session(client, "social_network", P.Session_Type.DATA)
+
+
+# ------------------------------------------------------------------
+# general query
 
 function query(q::AbstractString)
-    transaction = C.CoreTransaction(
-        session, session.sessionID, P.Transaction_Type.READ, C.TypeDBOptions()
+    transaction = Transaction(
+        session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions()
     )
-    result = C.match(transaction, q)
+    result = TypeDBClient.match(transaction, q)
     close(transaction)
     return result
 end
@@ -50,29 +54,74 @@ Console:
 }
 =#
 
+# ------------------------------------------------------------------
+# ConceptManager methods
+
+function cm_call(f::Function, session)
+    transaction = Transaction(session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions())
+    concept_manager = ConceptManager(transaction)
+    res = f(concept_manager)
+    close(transaction)
+    return res
+end
+
+cm_call(session) do concept_manager
+    @show get(concept_manager, ThingType, "title")
+    @show get(concept_manager, AttributeType, "title")
+end
+
+# ------------------------------------------------------------------
+# ThingType methods
+
 # Fetch a thing_type for testing
 function get_thing_type_as_remote(name::String)
-    transaction = C.CoreTransaction(session, session.sessionID, P.Transaction_Type.READ, C.TypeDBOptions())
-    concept_manager = C.ConceptManager(transaction)
-    thing_type_res = C.execute(concept_manager, C.ConceptManagerRequestBuilder.get_thing_type_req(name))
-    thing_type = C.instantiate(thing_type_res.concept_manager_res.get_thing_type_res.thing_type)
-    return C.as_remote(title_thing_type, transaction)
+    transaction = Transaction(session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions())
+    concept_manager = ConceptManager(transaction)
+    thing_type_res = execute(concept_manager, TypeDBClient.ConceptManagerRequestBuilder.get_thing_type_req(name))
+    thing_type = instantiate(thing_type_res.get_thing_type_res.thing_type)
+    return as_remote(thing_type, transaction)
 end
 
 t = get_thing_type_as_remote("title")
-@show res = C.get_supertype(t)
+res = get_supertype(t)
+
+t = get_thing_type_as_remote("event-date")
+res = get_subtypes(t)
+
+t = get_thing_type_as_remote("approved-date")
+res = get_supertypes(t)
+
+t = get_thing_type_as_remote("school")
+res = get_instances(t)
+
+t = get_thing_type_as_remote("person")
+res = get_owns(t)
+res = get_owns(t, VALUE_TYPE.BOOLEAN)
+res = get_owns(t, nothing, true)  # keys only => should return "email" atttribute
+
+t = get_thing_type_as_remote("location")
+res = get_plays(t)
+
+# TODO - 2021-06-05 17:18:10,362 [typedb-service::0] [ERROR] v.t.core.server.TransactionService - [TYW03] Invalid Type Write: The type 'media' has instances, and cannot be set abstract.
+# Should probably create my own attribute and set it to abstract
+t = get_thing_type_as_remote("media")
+set_abstract(t)
+
+# TODO - com.vaticle.typedb.core.common.exception.TypeDBException: [INT03] Invalid Internal State: Illegal internal operation! This method should not have been called.
+# Should probably create my own attribute and set it to abstract and then unset it
+t = get_thing_type_as_remote("media")
+unset_abstract(t)
 
 t = get_thing_type_as_remote("title")
-@show res = C.get_supertypes(t)
+res = get_owners(t)
 
-# TODO - BidirectionalStream couldn't find any result for this call
-#  Union{TypeDBClient.typedb.protocol.Transaction_Res, TypeDBClient.typedb.protocol.Transaction_ResPart}[]
-t = get_thing_type_as_remote("content")
-@show res = C.get_owns(t)
+# ------------------------------------------------------------------
+# AttributeType methods
 
-t = get_thing_type_as_remote("language")
-@show res = C.get_plays(t)
-
+# attribute_type = AttributeType{VALUE_TYPE.BOOLEAN}(Label("a1"), false)
+# transaction = Transaction(session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions())
+# remote_attribute_type = as_remote(attribute_type, transaction)
+# res = put(remote_attribute_type)
 
 close(session)
 close(client)

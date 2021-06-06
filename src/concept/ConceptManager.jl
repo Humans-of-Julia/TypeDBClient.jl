@@ -8,7 +8,7 @@ struct Root
 end
 
 # Get root something type. The hard coded strings came from GraqlToken
-Base.get(cm::ConceptManager, ::Type{EntityType}, ::Root) = get(cm, ThingType, "thing")
+Base.get(cm::ConceptManager, ::Type{EntityType}, ::Root) = get(cm, ThingType, "entity")
 Base.get(cm::ConceptManager, ::Type{RelationType}, ::Root) = get(cm, ThingType, "relation")
 Base.get(cm::ConceptManager, ::Type{AttributeType}, ::Root) = get(cm, ThingType, "attribute")
 Base.get(cm::ConceptManager, ::Type{ThingType}, ::Root) = get(cm, ThingType, "thing")
@@ -73,8 +73,7 @@ function Base.get(cm::ConceptManager, ::Type{<:AbstractThing}, iid::String)
     return nothing
 end
 
-# TODO execute request and returns Proto.ConceptManager_Res
 function execute(cm::ConceptManager, req::Proto.Transaction_Req)
     result = execute(cm.transaction, req, false)
-    # return result.concept_manager_res
+    return result.concept_manager_res
 end
