@@ -17,7 +17,6 @@
 
 #noinspection CucumberUndefinedStep
 Feature: Concept Attribute
-
   Background:
     Given connection has been opened
     Given connection does not have any database
@@ -44,6 +43,7 @@ Feature: Concept Attribute
     Given connection open data session for database: typedb
     Given session opens transaction of type: write
 
+  @actual
   Scenario: Attribute with value type boolean can be created
     When $x = attribute(is-alive) as(boolean) put: true
     Then attribute $x is null: false

@@ -25,7 +25,7 @@ Feature: Concept Attribute Type
     Given connection open schema session for database: typedb
     Given session opens transaction of type: write
 
-  Scenario: Attribute types can be created
+    Scenario: Attribute types can be created
     When put attribute type: name, with value type: string
     Then attribute(name) is null: false
     Then attribute(name) get supertype: attribute

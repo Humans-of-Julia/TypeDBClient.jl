@@ -1,15 +1,41 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
 
-using ExecutableSpecifications.Gherkin: Given, When, Then
-using AttributeType
-using TypeDBClientException
-using ThingSteps: get, put
+using Behavior
+# using AttributeType
+#using TypeDBClientException
+using TypeDBClient
+
+g = TypeDBClient
+
+include(joinpath(@__DIR__,"test/behaviour/connection/database/DatabaseSteps.jl"))
+include(joinpath(@__DIR__,"test/behaviour/connection/session/SessionSteps.jl"))
+include(joinpath(@__DIR__,"test/behaviour/connection/transaction/TransactionSteps.jl"))
+include(joinpath(@__DIR__,"test/behaviour/connection/ConnectionStepsBase.jl"))
+include(joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl"))
+
+
+@given("put attribute type: is-alive, with value type: boolean") do context
+    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req("is-alive", g.Proto.AttributeType_ValueType.BOOLEAN)
+    res = g.execute(context[:transaction], attr_req)
+    @expect typeof(res) == g.Proto.Transaction_Res
+    @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
+    @expect typeof(res.concept_manager_res.put_attribute_type_res) == ConceptManager_PutAttributeType_Res
+end
+
+
+
+
+
+
+
+
+
 
 ###### When Steps ######################
 #                                      #
 ########################################
 
-
+#=
 @when("\$x = attribute(is-alive) as(boolean) put: true") do context
     @fail "Implement me"
 end
@@ -338,4 +364,5 @@ def step_impl(context: Context, var: str, value: str):
 @step("attribute {var:Var} has datetime value: {value:DateTime}")
 def step_impl(context: Context, var: str, value: datetime):
     assert_that(context.get(var).get_value(), is_(value))
+=#
 =#

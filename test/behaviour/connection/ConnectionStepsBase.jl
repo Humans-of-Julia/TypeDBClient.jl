@@ -3,7 +3,7 @@ using Behavior
 
 using TypeDBClient
 
-include(joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl"))
+# include(joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl"))
 
 g = TypeDBClient
 
