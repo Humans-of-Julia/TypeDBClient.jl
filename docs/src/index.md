@@ -3,7 +3,7 @@ CurrentModule = TypeDBClient
 ```
 ## Announcements
 
-TypeDB 2.0 alpha has been released, these are the highlights of the new version:
+TypeDB 2.0 has been released, these are the highlights of the new version:
 
     Replaced Cassandra with RocksDB
     New Graph Storage Engine: replacing JanusGraph
