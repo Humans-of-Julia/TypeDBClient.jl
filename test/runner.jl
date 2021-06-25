@@ -1,6 +1,7 @@
 
 using Behavior
 using Behavior.Gherkin
+using TypeDBClient
 
 rootpath = joinpath(@__DIR__, "test/behaviour")
 featurepath = joinpath(@__DIR__,"test/behaviour/features/concept/thing")
@@ -13,8 +14,6 @@ runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoption
 
 runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="@actual")
 
-
-using TypeDBClient
 
 g = TypeDBClient
 
