@@ -9,6 +9,7 @@ CurrentModule = TypeDBClient
 25.06.2021
 
 - updated docs
+- trigger CI
   
 ***
 08.11.2020
