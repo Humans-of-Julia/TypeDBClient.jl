@@ -1,4 +1,4 @@
-# WIP TypeDBClient.jl
+# TypeDB Client for Julia (INCUBATING)
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Humans-of-Julia.github.io/TypeDBClient.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Humans-of-Julia.github.io/TypeDBClient.jl/dev)
