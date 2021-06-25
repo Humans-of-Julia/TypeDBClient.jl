@@ -22,7 +22,7 @@ TypeDB 2.0 has been released, these are the highlights of the new version:
 Read about it here in the [forum](https://forum.vaticle.com/t/introducing-typedb-typeql-and-vaticle/2418).
 
 
-The TypeDB docs can be found here: [docs.typedb.ai](https://docs.vaticle.com/docs/general/quickstart).
+The TypeDB docs can be found here: [TypeDB documentation](https://docs.vaticle.com/docs/general/quickstart).
 ## About
 
 This is a community approach to translate a given client interface to the knowledge graph database **TypeDB** made by [Vaticle](https://vaticle.com/) into Julia Language.
