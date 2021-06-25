@@ -1,8 +1,6 @@
-# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 using Behavior
-# using AttributeType
-#using TypeDBClientException
 using TypeDBClient
 
 g = TypeDBClient
@@ -13,70 +11,37 @@ include(joinpath(@__DIR__,"test/behaviour/connection/transaction/TransactionStep
 include(joinpath(@__DIR__,"test/behaviour/connection/ConnectionStepsBase.jl"))
 include(joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl"))
 
+function _put_attribute_to_db(context, attr_name, type)
+    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req(attr_name, type)
+    return g.execute(context[:transaction], attr_req)
+end
 
 @given("put attribute type: is-alive, with value type: boolean") do context
-    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req("is-alive", g.Proto.AttributeType_ValueType.BOOLEAN)
-    res = g.execute(context[:transaction], attr_req)
+    res = _put_attribute_to_db(context, "is-alive", g.Proto.AttributeType_ValueType.LONG)
     @expect typeof(res) == g.Proto.Transaction_Res
     @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
     @expect typeof(res.concept_manager_res.put_attribute_type_res) == g.Proto.ConceptManager_PutAttributeType_Res
 end
 
 @given("put attribute type: age, with value type: long") do context
-    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req("age", g.Proto.AttributeType_ValueType.LONG)
-    res = g.execute(context[:transaction], attr_req)
-    @expect typeof(res) == g.Proto.Transaction_Res
-    @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
-    @expect typeof(res.concept_manager_res.put_attribute_type_res) == g.Proto.ConceptManager_PutAttributeType_Res
+    _put_attribute_to_db(context, "age", g.Proto.AttributeType_ValueType.LONG)
 end
 
 @given("put attribute type: score, with value type: double") do context
-    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req("score", g.Proto.AttributeType_ValueType.DOUBLE)
-    res = g.execute(context[:transaction], attr_req)
-    @expect typeof(res) == g.Proto.Transaction_Res
-    @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
-    @expect typeof(res.concept_manager_res.put_attribute_type_res) == g.Proto.ConceptManager_PutAttributeType_Res
+    _put_attribute_to_db(context, "score", g.Proto.AttributeType_ValueType.DOUBLE)
 end
 
 @given("put attribute type: birth-date, with value type: datetime") do context
-    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req("birth-date", g.Proto.AttributeType_ValueType.DATETIME)
-    res = g.execute(context[:transaction], attr_req)
-    @expect typeof(res) == g.Proto.Transaction_Res
-    @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
-    @expect typeof(res.concept_manager_res.put_attribute_type_res) == g.Proto.ConceptManager_PutAttributeType_Res
+    _put_attribute_to_db(context, "birth-date", g.Proto.AttributeType_ValueType.DATETIME)
 end
 
 @given("put attribute type: name, with value type: string") do context
-    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req("name", g.Proto.AttributeType_ValueType.STRING)
-    res = g.execute(context[:transaction], attr_req)
-    @expect typeof(res) == g.Proto.Transaction_Res
-    @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
-    @expect typeof(res.concept_manager_res.put_attribute_type_res) == g.Proto.ConceptManager_PutAttributeType_Res
+    _put_attribute_to_db(context, "name", g.Proto.AttributeType_ValueType.STRING)
 end
 
 @given("put attribute type: email, with value type: string") do context
-    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req("email", g.Proto.AttributeType_ValueType.STRING)
-    res = g.execute(context[:transaction], attr_req)
-    @expect typeof(res) == g.Proto.Transaction_Res
-    @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
-    @expect typeof(res.concept_manager_res.put_attribute_type_res) == g.Proto.ConceptManager_PutAttributeType_Res
+    _put_attribute_to_db(context, "email", g.Proto.AttributeType_ValueType.STRING)
 end
-
-# TODO
-#=
-@given("attribute(email) as(string) set regex: \S+@\S+\.\S+") do context
-
-end
-=#
-
-# check if it works
-@given("put entity type: person") do context
-    ent_req = g.ConceptManagerRequestBuilder.put_entity_type_req("person")
-    res = g.execute(context[:transaction], ent_req)
-    @expect typeof(res) == g.Proto.Transaction_Res
-    @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
-end
-
 
 
 
