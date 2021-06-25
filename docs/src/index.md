@@ -3,7 +3,7 @@ CurrentModule = TypeDBClient
 ```
 ## Announcements
 
-TypeDB 2.0 alpha has been released, these are the highlights of the new version:
+TypeDB 2.0 has been released, these are the highlights of the new version:
 
     Replaced Cassandra with RocksDB
     New Graph Storage Engine: replacing JanusGraph
@@ -19,20 +19,19 @@ TypeDB 2.0 alpha has been released, these are the highlights of the new version:
     New Benchmarking System: an Agent-based Simulation
     New Grabl CI/CD: replacing CircleCI
 
-Read about it here in the [forum](https://discuss.typedb.ai/t/typedb-2-0-alpha-best-practices-in-distributed-systems-and-computer-science/2307).
+Read about it here in the [forum](https://forum.vaticle.com/t/introducing-typedb-typeql-and-vaticle/2418).
 
-While in alpha, there are staged docs available here: [dev.docs.typedb.ai](https://dev.docs.typedb.ai/docs/general/quickstart).
 
-Current production docs can be found here: [docs.typedb.ai](https://docs.typedb.ai/docs/general/quickstart).
+The TypeDB docs can be found here: [TypeDB documentation](https://docs.vaticle.com/docs/general/quickstart).
 ## About
 
-This is a community approach to translate a given client interface to the knowledge graph database **TypeDB** made by [TypeDB.ai](https://typedb.ai/) into Julia Language.
+This is a community approach to translate a given client interface to the knowledge graph database **TypeDB** made by [Vaticle](https://vaticle.com/) into Julia Language.
 
 Starting out as an educational project and to benefit the **Julia** ecosystem.
 
-Please review the [user guide](http://0.0.0.0/guide.html) or if you'd like to help building this the [contribution guidlines](http://0.0.0.0/contributing.html).
+Please review the [user guide](http://0.0.0.0/guide.html) or if you'd like to help building the client, check the [contribution guidlines](http://0.0.0.0/contributing.html).
 
-Feel free to join the project channel on the [Discord server](https://discord.gg/NSYrYZQRyv), and take over a part in translating the given client reference into Julia.
+Feel free to join the project channel on the [Discord server](https://discord.gg/C5h9D4j), and take over a part in translating the given client reference into Julia.
 
 > **TypeDB** is the knowledge graph engine to organise complex networks of data and making it queryable, by performing knowledge engineering. 
 > Rooted in Knowledge Representation and Automated Reasoning, **TypeDB** provides the knowledge foundation for cognitive and intelligent (e.g. AI) systems, by providing an intelligent language for modelling,
@@ -68,7 +67,7 @@ Feel free to join the project channel on the [Discord server](https://discord.gg
 
 ## Credits
 
-Credits go to the [Humans of Julia](https://github.com/Humans-of-Julia) organisation and the [TypeDB team](https://typedb.ai/). 
+Credits go to the [Humans of Julia](https://github.com/Humans-of-Julia) organisation and the [TypeDB team](https://vaticle.com/). 
 
 If you like to have a chat, you can find the Humans of Julia on Discord [here](https://discord.gg/NSYrYZQRyv).
 
@@ -76,8 +75,6 @@ Also if you like to join the TypeDB community, you can find them on Discord as w
 
 ## License
 
-```@index
-```
 TypeDBClient.jl is licensed under the MIT License.
 
  The MIT License (MIT)

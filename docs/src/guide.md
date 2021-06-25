@@ -8,8 +8,6 @@ CurrentModule = TypeDBClient
 
 ## Installation
 
-```@index
-```
 To use this client, you need a compatible TypeDB Server running. Visit the Compatibility Table 
 
 This pkg is not yet registered on the JuliaHub. As of now you would need to install it directly from the GitHub repo.
@@ -20,7 +18,7 @@ Inside the Julia REPL, type ] to enter the Pkg REPL mode then run
 
 ## Quickstart
 
-First make sure, the TypeDB server is running.
+First make sure, the TypeDB server is running. It is described here in the [TypeDB Documentation](https://docs.vaticle.com/docs/running-typedb/install-and-run).
 
 In the Julia REPL or in your source run 
 
