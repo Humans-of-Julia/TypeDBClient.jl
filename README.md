@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/Humans-of-Julia/TypeDBClient.jl/workflows/CI/badge.svg)](https://github.com/Humans-of-Julia/TypeDBClient.jl/actions)
 [![codecov](https://codecov.io/gh/Humans-of-Julia/TypeDBClient.jl/branch/main/graph/badge.svg?token=9SQ8WB8KVM)](https://codecov.io/gh/Humans-of-Julia/TypeDBClient.jl)
 
-This is a community approach to translate a given client interface to the knowledge graph database TypeDB, made by [TypeDB.ai](https://vaticle.com/), into Julia Language.
+This is a community approach to translate a given client interface to the knowledge graph database TypeDB, made by [Vaticle](https://vaticle.com/), into Julia Language.
 
 Starting out as an educational project and to benefit the Julia ecosystem.
 
