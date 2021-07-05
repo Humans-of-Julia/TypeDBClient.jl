@@ -1,31 +1,42 @@
+function _entity_set_owns(entity, attribute_type, context)
+    loc_entity = get(context[:concept_manager], g.EntityType, entity)
+    rem_entitiy = g.as_remote(loc_entity, context[:transaction])
+    loc_attribute = get(context[:concept_manager], g.AttributeType, attribute_type)
+    g.set_owns(rem_entitiy, loc_attribute)
+end
+
+@given("put entity type: person") do context
+    context[:concept_manager] = ConceptManager(context[:transaction])
+    g.put(context[:concept_manager], EntityType, "person")
+end
 
 @given("entity(person) set owns attribute type: is-alive") do context
-    @fail "Implement me"
+    _entity_set_owns("person", "is-alive", context)
 end
 
 
 @given("entity(person) set owns attribute type: age") do context
-    @fail "Implement me"
+    _entity_set_owns("person", "age", context)
 end
 
 
 @given("entity(person) set owns attribute type: score") do context
-    @fail "Implement me"
+    _entity_set_owns("person", "score", context)
 end
 
 
 @given("entity(person) set owns attribute type: name") do context
-    @fail "Implement me"
+    _entity_set_owns("person", "name", context)
 end
 
 
 @given("entity(person) set owns attribute type: email") do context
-    @fail "Implement me"
+    _entity_set_owns("person", "email", context)
 end
 
 
 @given("entity(person) set owns attribute type: birth-date") do context
-    @fail "Implement me"
+    _entity_set_owns("person", "birth-date", context)
 end
 
 

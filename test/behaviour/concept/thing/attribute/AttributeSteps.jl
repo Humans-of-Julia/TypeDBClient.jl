@@ -43,6 +43,13 @@ end
     _put_attribute_to_db(context, "email", g.Proto.AttributeType_ValueType.STRING)
 end
 
+@given("attribute(email) as(string) set regex: \\S+@\\S+\\.\\S+") do context
+    cm = g.ConceptManager(context[:transaction])
+    res = get(cm, g.AttributeType, "email")
+    res_rem = g.as_remote(res, context[:transaction])
+    res_regex = g.set_regex(res_rem, raw"\S+@\S+\.\S+")
+end
+
 
 
 
