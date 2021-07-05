@@ -108,6 +108,9 @@ include("core/CoreTransaction.jl")
 # part of common section -- place because of general grpc resulthandling
 include("common/exception/gRPC_Result_Handling.jl")
 
+# user friendly functions
+include("standard/frontend.jl")
+
 # precompiling section
 include("precompile.jl")
 include("exports.jl")

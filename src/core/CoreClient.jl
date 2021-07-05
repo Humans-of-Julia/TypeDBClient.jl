@@ -26,3 +26,8 @@ is_cluster(client::AbstractCoreClient) = false
 function remove_session(client::AbstractCoreClient, session::AbstractCoreSession)
     delete!(client.sessions, session.sessionID)
 end
+
+function close(client::AbstractCoreClient)
+    safe_close.(collect(values(client.sessions)))
+    return nothing
+end
