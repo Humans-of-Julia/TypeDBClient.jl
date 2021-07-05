@@ -1,0 +1,17 @@
+database create my-typedb
+
+transaction my-typedb schema write
+
+define person sub entity;
+
+commit
+
+transaction my-typedb data write
+
+insert $_ isa person;
+commit
+
+transaction my-typedb data read
+
+match $x isa person;
+
