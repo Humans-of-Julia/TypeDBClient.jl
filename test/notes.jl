@@ -16,7 +16,7 @@ function _entity_set_owns(entity, attribute_type, context)
     set_owns(rem_entitiy, loc_attribute)
 end
 
-@enter _entity_set_owns("person", "is-alive", "")
+_entity_set_owns("person", "is-alive", "")
 
 function cm_call(f::Function, session::Session)
     transaction = Transaction(session, session.sessionID, g.Proto.Transaction_Type.READ, TypeDBOptions())
