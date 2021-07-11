@@ -2,7 +2,7 @@ using TypeDBClient
 g = TypeDBClient
 
 client = g.CoreClient("127.0.0.1",1729)
-g.create_database(client, "typedb")
+# g.create_database(client, "typedb")
 sess = g.CoreSession(client, "typedb", g.Proto.Session_Type.SCHEMA, request_timout = Inf)
 trans = g.transaction(sess, g.Proto.Transaction_Type.WRITE)
 
@@ -38,3 +38,10 @@ function thing_call(f::Function, session::Session, name::AbstractString)
 end
 
 res = thing_call(thing -> get_owns(thing), sess, "person")
+
+loc_entity = get(g.ConceptManager(trans), g.EntityType, "person")
+rem_entitiy = g.as_remote(loc_entity, trans)
+loc_attribute = get(g.ConceptManager(trans), g.AttributeType, "full-name")
+set_owns(rem_entitiy, loc_attribute)
+
+g.commit(trans)

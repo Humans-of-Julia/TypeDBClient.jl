@@ -38,7 +38,19 @@ let
     global as_date_time = _as_something(VALUE_TYPE.DATETIME)
 end
 
-proto(::AttributeType{V}) where {V} = V
+# For testing line below commented out FU
+# proto(::AttributeType{V}) where {V} = V
+
+# Porting note: Java client calls into RequstBuilder but it really
+# has nothing to to with requests... I think it's probably better
+# migrating the function here.
+function proto(t::AbstractAttributeType)
+    Proto._Type(
+        label = t.label.name,
+        encoding = encoding(t)
+    )
+    # return RoleTypeRequestBuilder.proto_role_type(t.label, encoding(t))
+end
 
 # TODO What is Object value type in Java? It needs to return `false` for that.
 is_writable(::AttributeType) = true

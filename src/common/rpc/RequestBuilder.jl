@@ -302,7 +302,7 @@ end
 
 function set_plays_req(
     label::Label,
-    role_type::Proto.RoleType,
+    role_type::Proto._Type,
     overridden_role_type::Optional{Proto.RoleType} = nothing
 )
     return _treq(label.name, label.scope;
@@ -340,8 +340,8 @@ end
 function set_owns_req(
     label::Label,
     is_key::Bool,
-    attribute_type::Proto.AttributeType,
-    overridden_type::Optional{Proto.AttributeType} = nothing
+    attribute_type::Proto._Type,
+    overridden_type::Optional{Proto._Type} = nothing
 )
     # TODO this code can be simplified later (ProtoBuf PR#77)
     thing_type_set_owns_req = overridden_type === nothing ?
