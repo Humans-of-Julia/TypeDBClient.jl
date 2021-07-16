@@ -1,8 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 @when("transaction commits") do context
-    commit_req = g.commit_req()
-    g.execute(context[:transaction], commit_req)
+    g.commit(context[:transaction])
 end
 
 

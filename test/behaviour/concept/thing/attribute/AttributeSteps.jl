@@ -1,3 +1,4 @@
+using Base: func_for_method_checked
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 using Behavior
@@ -16,8 +17,16 @@ function _put_attribute_to_db(context, attr_name, type)
     return g.execute(context[:transaction], attr_req)
 end
 
+function _attribute_instances(transaction, attribute_name::String)
+    cm = g.ConceptManager(transaction)
+    res = get(cm, g.AttributeType, attribute_name)
+    res_rem = g.as_remote(res, transaction)
+    erg = g.get_instances(res_rem)
+    return erg
+end
+
 @given("put attribute type: is-alive, with value type: boolean") do context
-    res = _put_attribute_to_db(context, "is-alive", g.Proto.AttributeType_ValueType.LONG)
+    res = _put_attribute_to_db(context, "is-alive", g.Proto.AttributeType_ValueType.BOOLEAN)
     @expect typeof(res) == g.Proto.Transaction_Res
     @expect typeof(res.concept_manager_res) == g.Proto.ConceptManager_Res
     @expect typeof(res.concept_manager_res.put_attribute_type_res) == g.Proto.ConceptManager_PutAttributeType_Res
@@ -50,9 +59,36 @@ end
     res_regex = g.set_regex(res_rem, raw"\S+@\S+\.\S+")
 end
 
+@when("\$x = attribute(is-alive) as(boolean) put: true") do context
+    ins_string = ins_string = "insert
+    \$x isa is-alive;
+    \$x true;"
+    g.insert(context[:transaction], ins_string)
+end
 
+@then("attribute \$x is null: false") do context
+    cm = g.ConceptManager(context[:transaction])
+    res = get(cm, g.AttributeType, "is-alive")
+    @expect res !== nothing
+end
 
+@then("attribute \$x has type: is-alive") do context
+    erg = _attribute_instances(context[:transaction],"is-alive")
+    @expect length(erg) == 1
+    @expect erg[1].type.label.name == "is-alive"
+end
 
+@then("attribute \$x has value type: boolean") do context
+    cm = g.ConceptManager(context[:transaction])
+    res = get(cm, g.AttributeType, "is-alive")
+    @expect typeof(res) == g.AttributeType{g.VALUE_TYPE.BOOLEAN}
+end
+
+@then("attribute \$x has boolean value: true") do context
+    cm = g.ConceptManager(context[:transaction])
+    res = get(cm, g.EntityType, "is-alive")
+    # @expect res.value === true
+end
 ###### When Steps ######################
 #                                      #
 ########################################

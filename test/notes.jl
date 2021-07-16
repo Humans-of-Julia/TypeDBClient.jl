@@ -9,14 +9,7 @@ trans = g.transaction(sess, g.Proto.Transaction_Type.WRITE)
 g.put(g.ConceptManager(trans), AttributeType, "is-alive", VALUE_TYPE.BOOLEAN )
 g.put(g.ConceptManager(trans), EntityType, "person")
 
-function _entity_set_owns(entity, attribute_type, context)
-    loc_entity = get(g.ConceptManager(trans), g.EntityType, entity)
-    rem_entitiy = g.as_remote(loc_entity, trans)
-    loc_attribute = get(g.ConceptManager(trans), g.AttributeType, attribute_type)
-    set_owns(rem_entitiy, loc_attribute)
-end
 
-_entity_set_owns("person", "is-alive", "")
 
 function cm_call(f::Function, session::Session)
     transaction = Transaction(session, session.sessionID, g.Proto.Transaction_Type.READ, TypeDBOptions())
@@ -37,11 +30,13 @@ function thing_call(f::Function, session::Session, name::AbstractString)
     end
 end
 
-res = thing_call(thing -> get_owns(thing), sess, "person")
+function _entity_set_owns(entity, attribute_type, context)
+    loc_entity = get(g.ConceptManager(trans), g.EntityType, entity)
+    rem_entitiy = g.as_remote(loc_entity, trans)
+    loc_attribute = get(g.ConceptManager(trans), g.AttributeType, attribute_type)
+    set_owns(rem_entitiy, loc_attribute)
+end
 
-loc_entity = get(g.ConceptManager(trans), g.EntityType, "person")
-rem_entitiy = g.as_remote(loc_entity, trans)
-loc_attribute = get(g.ConceptManager(trans), g.AttributeType, "full-name")
-set_owns(rem_entitiy, loc_attribute)
+res = thing_call(thing -> get_owns(thing), sess, "person")
 
 g.commit(trans)
