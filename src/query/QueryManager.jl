@@ -2,7 +2,7 @@
 
 function match(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result =  stream(transaction, QueryManagerRequestBuilder.match_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, map(ConceptMap, [entry.query_manager_res_part.match_res_part.answers for entry in db_result]))
 end
@@ -14,21 +14,21 @@ end
 
 function match_group(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result =  stream(transaction, QueryManagerRequestBuilder.match_group_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, [ConceptMapGroup(item.query_manager_res_part.match_group_res_part.answers) for item in db_result])
 end
 
 function match_group_aggregate(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result =  stream(transaction, QueryManagerRequestBuilder.match_group_aggregate_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, [NumericGroup(item.match_group_aggregate_res_part.answers) for item in db_result])
 end
 
 function insert(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result = stream(transaction, QueryManagerRequestBuilder.insert_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, map(ConceptMap, [entry.query_manager_res_part.insert_res_part.answers for entry in db_result]))
 end
@@ -40,7 +40,7 @@ end
 
 function update(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result = stream(transaction, QueryManagerRequestBuilder.update_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, map(ConceptMap, [entry.query_manager_res_part.update_res_part.answers for entry in db_result]))
 end

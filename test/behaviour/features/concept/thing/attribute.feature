@@ -43,7 +43,6 @@ Feature: Concept Attribute
     Given connection open data session for database: typedb
     Given session opens transaction of type: write
 
-  @actual
   Scenario: Attribute with value type boolean can be created
     When $x = attribute(is-alive) as(boolean) put: true
     Then attribute $x is null: false
@@ -71,6 +70,7 @@ Feature: Concept Attribute
     Then attribute $x has type: age
     Then attribute $x has value type: long
     Then attribute $x has long value: 21
+
 
   Scenario: Attribute with value type double can be created
     When $x = attribute(score) as(double) put: 123.456
@@ -285,7 +285,7 @@ Feature: Concept Attribute
     When session opens transaction of type: read
     When $x = attribute(birth-date) as(datetime) get: 1990-01-01 11:22:33
     Then attribute $x is null: true
-
+@actual
   Scenario: Attribute with value type double is assignable and retrievable from a 'long' value
     When $x = attribute(score) as(double) put: 123
     Then attribute $x is null: false

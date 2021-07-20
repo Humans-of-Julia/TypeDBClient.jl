@@ -1,8 +1,10 @@
+using Dates: length
 using Base: func_for_method_checked
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 using Behavior
 using TypeDBClient
+using Dates
 
 g = TypeDBClient
 
@@ -17,14 +19,19 @@ function _put_attribute_to_db(context, attr_name, type)
     return g.execute(context[:transaction], attr_req)
 end
 
-function _attribute_instances(transaction, attribute_name::String)
-    cm = g.ConceptManager(transaction)
-    res = get(cm, g.AttributeType, attribute_name)
-    res_rem = g.as_remote(res, transaction)
-    erg = g.get_instances(res_rem)
+function _attribute_instances(transaction)
+    res = g.match(transaction, "match \$x isa attribute;")
+    erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
     return erg
 end
 
+function _attribute(transaction, label::String)
+    res = g.match(transaction, "match \$x type $label;")
+    erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
+    return erg
+end
+
+# Scenario: Attribute with value type boolean can be created
 @given("put attribute type: is-alive, with value type: boolean") do context
     res = _put_attribute_to_db(context, "is-alive", g.Proto.AttributeType_ValueType.BOOLEAN)
     @expect typeof(res) == g.Proto.Transaction_Res
@@ -60,367 +67,259 @@ end
 end
 
 @when("\$x = attribute(is-alive) as(boolean) put: true") do context
-    ins_string = ins_string = "insert
+    ins_string = "insert
     \$x isa is-alive;
     \$x true;"
-    g.insert(context[:transaction], ins_string)
+    res = g.insert(context[:transaction], ins_string)
 end
 
 @then("attribute \$x is null: false") do context
-    cm = g.ConceptManager(context[:transaction])
-    res = get(cm, g.AttributeType, "is-alive")
+    match_string = "match \$x sub attribute;"
+    res = g.match(context[:transaction], match_string)
     @expect res !== nothing
 end
 
 @then("attribute \$x has type: is-alive") do context
-    erg = _attribute_instances(context[:transaction],"is-alive")
+    erg = _attribute_instances(context[:transaction])
     @expect length(erg) == 1
     @expect erg[1].type.label.name == "is-alive"
 end
 
 @then("attribute \$x has value type: boolean") do context
-    cm = g.ConceptManager(context[:transaction])
-    res = get(cm, g.AttributeType, "is-alive")
-    @expect typeof(res) == g.AttributeType{g.VALUE_TYPE.BOOLEAN}
+    erg = _attribute_instances(context[:transaction])
+    @expect erg[1].type == g.AttributeType(g.Label("","is-alive"), false, VALUE_TYPE.BOOLEAN)
+    @expect typeof(erg[1].value) == Bool
 end
 
 @then("attribute \$x has boolean value: true") do context
-    cm = g.ConceptManager(context[:transaction])
-    res = get(cm, g.EntityType, "is-alive")
-    # @expect res.value === true
-end
-###### When Steps ######################
-#                                      #
-########################################
-
-#=
-@when("\$x = attribute(is-alive) as(boolean) put: true") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect typeof(erg[1].value) == Bool
+    @expect erg[1].value === true
 end
 
-#maybe like this? :D
-@when("{var:Var} = attribute({type_label}) as(boolean) put: {value:Bool}") do context
-    context[Symbol(var)] = [:tx(), :concepts(), get_attribute_type(:type_label::String), :as_remote(context[:tx()]), :as_boolean(), :put(value::bool)]
+@when("\$x = attribute(is-alive) as(boolean) get: true") do context
+    erg = _attribute(context[:transaction], "is-alive")
+    @expect erg[1].label.name == "is-alive"
 end
 
-#=
-@step("{var:Var} = attribute({type_label}) as(boolean) put: {value:Bool}")
-def step_impl(context: Context, var: str, type_label: str, value: bool):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().put(value))
-=#
-
+# Scenario: Attribute with value type long can be created
 
 @when("\$x = attribute(age) as(long) put: 21") do context
-    @fail "Implement me"
+    ins_string = "insert
+    \$x isa age;
+    \$x 21;"
+    g.insert(context[:transaction], ins_string)
 end
-
-
-@when("\$x = attribute(score) as(double) put: 123.456") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(name) as(string) put: alice") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(email) as(string) put: alice@email.com") do context
-    @fail "Implement me"
-end
-
-
-@when("attribute(email) as(string) put: alice-email-com; throws exception") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
-    @fail "Implement me"
-end
-
-
-@when("\$x = attribute(score) as(double) put: 123") do context
-    @fail "Implement me"
-end
-
-
-@when("delete attribute: \$x") do context
-    @fail "Implement me"
-end
-
-###### Then Steps ######################
-#                                      #
-########################################
-
-@then("attribute \$x is null: false") do context
-    @fail "Implement me"
-end
-
-
-@then("attribute \$x has type: is-alive") do context
-    @fail "Implement me"
-end
-
-
-@then("attribute \$x has value type: boolean") do context
-    @fail "Implement me"
-end
-
-
-@then("attribute \$x has boolean value: true") do context
-    @fail "Implement me"
-end
-
 
 @then("attribute \$x has type: age") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect length(erg) == 1
+    @expect erg[1].type.label.name == "age"
 end
-
 
 @then("attribute \$x has value type: long") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect erg[1].type == g.AttributeType(g.Label("","age"), false, VALUE_TYPE.LONG)
+    @expect typeof(erg[1].value) == Int64
 end
-
 
 @then("attribute \$x has long value: 21") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect typeof(erg[1].value) == Int64
+    @expect erg[1].value == 21
 end
 
+@when("\$x = attribute(age) as(long) get: 21") do context
+    erg = _attribute_instances(context[:transaction])
+    context[:attrib_res] = erg
+end
+
+#  Scenario: Attribute with value type double can be created
+@when("\$x = attribute(score) as(double) put: 123.456") do context
+    ins_string = "insert
+    \$x isa score;
+    \$x 123.456;"
+    res = g.insert(context[:transaction], ins_string)
+    context[:attrib_res] = _attribute_instances(context[:transaction])
+end
 
 @then("attribute \$x has type: score") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect length(erg) == 1
+    @expect erg[1].type.label.name == "score"
 end
-
 
 @then("attribute \$x has value type: double") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect erg[1].type == g.AttributeType(g.Label("","score"), false, VALUE_TYPE.DOUBLE)
+    @expect typeof(erg[1].value) == Float64
 end
-
 
 @then("attribute \$x has double value: 123.456") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect typeof(erg[1].value) == Float64
+    @expect erg[1].value == 123.456
 end
 
+
+# Scenario: Attribute with value type string can be created
+@when("\$x = attribute(name) as(string) put: alice") do context
+    ins_string = raw"""insert $x isa name; $x "alice";"""
+    g.insert(context[:transaction], ins_string)
+    context[:attrib_res] = _attribute_instances(context[:transaction])
+end
 
 @then("attribute \$x has type: name") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect length(erg) == 1
+    @expect erg[1].type.label.name == "name"
 end
-
 
 @then("attribute \$x has value type: string") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect typeof(erg[1].value) == String
 end
-
 
 @then("attribute \$x has string value: alice") do context
-    @fail "Implement me"
+    erg = _context[:attrib_res]
+    @expect typeof(erg[1].value) == String
+    @expect erg[1].value == "alice"
 end
 
+@when("\$x = attribute(name) as(string) get: alice") do context
+    erg = _attribute_instances(context[:transaction])
+    context[:attrib_res] = erg
+end
+
+# Scenario: Attribute with value type string and satisfies a regular expression can be created
+
+@when("\$x = attribute(email) as(string) put: alice@email.com") do context
+    ins_string = raw"""insert $x isa email; $x "alice@email.com";"""
+    g.insert(context[:transaction], ins_string)
+end
 
 @then("attribute \$x has type: email") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect length(erg) == 1
+    @expect erg[1].type.label.name == "email"
 end
-
 
 @then("attribute \$x has string value: alice@email.com") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect typeof(erg[1].value) == String
+    @expect erg[1].value == "alice@email.com"
 end
 
+@when("\$x = attribute(email) as(string) get: alice@email.com") do context
+    erg = _attribute_instances(context[:transaction])
+    @expect typeof(erg[1].value) == String
+    @expect erg[1].value == "alice@email.com"
+end
+
+# Scenario: Attribute with value type string but does not satisfy a regular expression cannot be created
+@when("attribute(email) as(string) put: alice-email-com; throws exception") do context
+    ins_string = raw"""insert $x isa email; $x "alice-email-com";"""
+    try
+        g.insert(context[:transaction], ins_string)
+    catch ex
+        @expect ex !== nothing
+    end
+end
+
+#  Scenario: Attribute with value type datetime can be created
+@when("\$x = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
+    ins_string = raw"""insert $x isa birth-date; $x 1990-01-01T11:22:33;"""
+    g.insert(context[:transaction], ins_string)
+    context[:attrib_res] = _attribute_instances(context[:transaction])
+end
 
 @then("attribute \$x has type: birth-date") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect length(erg) == 1
+    @expect erg[1].type.label.name == "birth-date"
 end
-
 
 @then("attribute \$x has value type: datetime") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect typeof(erg[1].value) == Int64
 end
-
 
 @then("attribute \$x has datetime value: 1990-01-01 11:22:33") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect typeof(erg[1].value) == Int64
+    @expect unix2datetime(erg[1].value / 1000) == parse(DateTime,"1990-01-01T11:22:33")
 end
 
+@when("\$x = attribute(birth-date) as(datetime) get: 1990-01-01 11:22:33") do context
+    erg = _attribute_instances(context[:transaction])
+    context[:attrib_res] = erg
+end
 
+# Scenario: Attribute with value type boolean can be retrieved from its type
 @then("attribute(is-alive) get instances contain: \$x") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect erg[1].type == g.AttributeType(g.Label("","is-alive"), false, VALUE_TYPE.BOOLEAN)
 end
 
-
+# Scenario: Attribute with value type long can be retrieved from its type
 @then("attribute(age) get instances contain: \$x") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect erg[1].type == g.AttributeType(g.Label("","age"), false, VALUE_TYPE.LONG)
 end
 
-
+# Scenario: Attribute with value type double can be retrieved from its type
 @then("attribute(score) get instances contain: \$x") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect erg[1].type == g.AttributeType(g.Label("","score"), false, VALUE_TYPE.DOUBLE)
 end
 
-
+# Scenario: Attribute with value type string can be retrieved from its type
 @then("attribute(name) get instances contain: \$x") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect erg[1].type == g.AttributeType(g.Label("","name"), false, VALUE_TYPE.STRING)
 end
 
-
+# Scenario: Attribute with value type datetime can be retrieved from its type
 @then("attribute(birth-date) get instances contain: \$x") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect erg[1].type == g.AttributeType(g.Label("","birth-date"), false, VALUE_TYPE.DATETIME)
 end
 
+# Scenario: Attribute with value type boolean can be deleted
+@when("delete attribute: \$x") do context
+    del_string = raw"""match $x isa attribute; delete $x isa attribute;"""
+    g.delete(context[:transaction], del_string)
+end
 
 @then("attribute \$x is deleted: true") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect length(erg) == 0
 end
-
 
 @then("attribute \$x is null: true") do context
-    @fail "Implement me"
+    erg = _attribute_instances(context[:transaction])
+    @expect length(erg) == 0
 end
 
+# Scenario: Attribute with value type double can be deleted
+@when("\$x = attribute(score) as(double) get: 123.456") do context
+    erg = _attribute_instances(context[:transaction])
+    context[:attrib_res] = erg
+end
+
+# Scenario: Attribute with value type double is assignable and retrievable from a 'long' value
+@when("\$x = attribute(score) as(double) put: 123") do context
+    ins_string = raw"""insert $x isa score; $x 123;"""
+    g.insert(context[:transaction], ins_string)
+    context[:attrib_res] = _attribute_instances(context[:transaction])
+end
 
 @then("attribute \$x has double value: 123") do context
-    @fail "Implement me"
+    erg = context[:attrib_res]
+    @expect erg[1].value == 123
 end
 
-
-
-
-
-
-
-#=
-from datetime import datetime
-
-from behave import *
-from hamcrest import *
-
-from typedb.api.concept.type.attribute_type import AttributeType
-from typedb.common.exception import TypeDBClientException
-from tests.behaviour.context import Context
-
-
-@step("attribute({type_label}) get instances contain: {var:Var}")
-def step_impl(context: Context, type_label: str, var: str):
-    assert_that(context.get(var), is_in(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).get_instances()))
-
-
-@step("attribute({type_label}) get instances is empty")
-def step_impl(context: Context, type_label: str):
-    assert_that(calling(next).with_args(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).get_instances()), raises(StopIteration))
-
-
-@step("attribute {var1:Var} get owners contain: {var2:Var}")
-def step_impl(context: Context, var1: str, var2: str):
-    assert_that(context.get(var2), is_in(context.get(var1).as_remote(context.tx()).get_owners()))
-
-
-@step("attribute {var1:Var} get owners do not contain: {var2:Var}")
-def step_impl(context: Context, var1: str, var2: str):
-    assert_that(context.get(var2), not_(is_in(context.get(var1).as_remote(context.tx()).get_owners())))
-
-
-@step("attribute {var:Var} has value type: {value_type:ValueType}")
-def step_impl(context: Context, var: str, value_type: AttributeType.ValueType):
-    assert_that(context.get(var).get_type().get_value_type(), is_(value_type))
-
-
-@step("attribute({type_label}) as(boolean) put: {value:Bool}; throws exception")
-def step_impl(context: Context, type_label: str, value: bool):
-    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().put).with_args(value), raises(TypeDBClientException))
-
-
-@step("{var:Var} = attribute({type_label}) as(boolean) put: {value:Bool}")
-def step_impl(context: Context, var: str, type_label: str, value: bool):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().put(value))
-
-
-@step("attribute({type_label}) as(long) put: {value:Int}; throws exception")
-def step_impl(context: Context, type_label: str, value: int):
-    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_long().put).with_args(value), raises(TypeDBClientException))
-
-
-@step("{var:Var} = attribute({type_label}) as(long) put: {value:Int}")
-def step_impl(context: Context, var: str, type_label: str, value: int):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_long().put(value))
-
-
-@step("attribute({type_label}) as(double) put: {value:Float}; throws exception")
-def step_impl(context: Context, type_label: str, value: float):
-    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_double().put).with_args(value), raises(TypeDBClientException))
-
-
-@step("{var:Var} = attribute({type_label}) as(double) put: {value:Float}")
-def step_impl(context: Context, var: str, type_label: str, value: float):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_double().put(value))
-
-
-@step("attribute({type_label}) as(string) put: {value}; throws exception")
-def step_impl(context: Context, type_label: str, value: str):
-    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_string().put).with_args(value), raises(TypeDBClientException))
-
-
-@step("{var:Var} = attribute({type_label}) as(string) put: {value}")
-def step_impl(context: Context, var: str, type_label: str, value: str):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_string().put(value))
-
-
-@step("attribute({type_label}) as(datetime) put: {value:DateTime}; throws exception")
-def step_impl(context: Context, type_label: str, value: datetime):
-    assert_that(calling(context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_datetime().put).with_args(value), raises(TypeDBClientException))
-
-
-@step("{var:Var} = attribute({type_label}) as(datetime) put: {value:DateTime}")
-def step_impl(context: Context, var: str, type_label: str, value: datetime):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_datetime().put(value))
-
-
-@step("{var:Var} = attribute({type_label}) as(boolean) get: {value:Bool}")
-def step_impl(context: Context, var: str, type_label: str, value: bool):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_boolean().get(value))
-
-
-@step("{var:Var} = attribute({type_label}) as(long) get: {value:Int}")
-def step_impl(context: Context, var: str, type_label: str, value: int):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_long().get(value))
-
-
-@step("{var:Var} = attribute({type_label}) as(double) get: {value:Float}")
-def step_impl(context: Context, var: str, type_label: str, value: float):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_double().get(value))
-
-
-@step("{var:Var} = attribute({type_label}) as(string) get: {value}")
-def step_impl(context: Context, var: str, type_label: str, value: str):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_string().get(value))
-
-
-@step("{var:Var} = attribute({type_label}) as(datetime) get: {value:DateTime}")
-def step_impl(context: Context, var: str, type_label: str, value: datetime):
-    context.put(var, context.tx().concepts().get_attribute_type(type_label).as_remote(context.tx()).as_datetime().get(value))
-
-
-@step("attribute {var:Var} has boolean value: {value:Bool}")
-def step_impl(context: Context, var: str, value: bool):
-    assert_that(context.get(var).get_value(), is_(value))
-
-
-@step("attribute {var:Var} has long value: {value:Int}")
-def step_impl(context: Context, var: str, value: int):
-    assert_that(context.get(var).get_value(), is_(value))
-
-
-@step("attribute {var:Var} has double value: {value:Float}")
-def step_impl(context: Context, var: str, value: float):
-    assert_that(context.get(var).get_value(), is_(value))
-
-
-@step("attribute {var:Var} has string value: {value}")
-def step_impl(context: Context, var: str, value: str):
-    assert_that(context.get(var).get_value(), is_(value))
-
-
-@step("attribute {var:Var} has datetime value: {value:DateTime}")
-def step_impl(context: Context, var: str, value: datetime):
-    assert_that(context.get(var).get_value(), is_(value))
-=#
-=#
+@when("\$x = attribute(score) as(double) get: 123") do context
+    erg = _attribute_instances(context[:transaction])
+    context[:attrib_res] = erg
+end
