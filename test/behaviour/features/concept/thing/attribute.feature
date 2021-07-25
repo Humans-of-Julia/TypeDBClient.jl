@@ -285,7 +285,7 @@ Feature: Concept Attribute
     When session opens transaction of type: read
     When $x = attribute(birth-date) as(datetime) get: 1990-01-01 11:22:33
     Then attribute $x is null: true
-@actual
+
   Scenario: Attribute with value type double is assignable and retrievable from a 'long' value
     When $x = attribute(score) as(double) put: 123
     Then attribute $x is null: false

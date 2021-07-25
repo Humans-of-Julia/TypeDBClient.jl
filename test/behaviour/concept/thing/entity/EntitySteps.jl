@@ -1,85 +1,82 @@
-# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
+using Base: concatenate_setindex!
+function _entity_instances(transaction)
+    res = g.match(transaction, "match \$x isa entity;")
+    erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
+    return erg
+end
 
-# 
-# package typedb.client.test.behaviour.concept.thing.entity;
-# 
-# import typedb.client.api.concept.thing.Attribute;
-# import typedb.client.api.concept.thing.Entity;
-# import typedb.client.common.Label;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# 
-# import java.time.LocalDateTime;
-# 
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.get;
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.put;
-# import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static typedb.client.test.behaviour.util.Util.assertThrows;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertTrue;
-# 
-# @SuppressWarnings("CheckReturnValue")
-# public class EntitySteps {
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance")
-#     public void entity_type_create_new_instance(String var, String typeLabel) {
-#         put(var, tx().concepts().getEntityType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @When("entity\\( ?{type_label} ?) create new instance; throws exception")
-#     public void entity_type_create_new_instance_throws_exception(String typeLabel) {
-#         assertThrows(() -> tx().concepts().getEntityType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
-#     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-#         Attribute.Long key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
-#         Entity entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-#         entity.asRemote(tx()).setHas(key);
-#         put(var, entity);
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
-#     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-#         Attribute.String key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
-#         Entity entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-#         entity.asRemote(tx()).setHas(key);
-#         put(var, entity);
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
-#     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-#         Attribute.DateTime key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
-#         Entity entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-#         entity.asRemote(tx()).setHas(key);
-#         put(var, entity);
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
-#     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
-#     public void entity_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
-#     public void entity_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @Then("entity\\( ?{type_label} ?) get instances contain: {var}")
-#     public void entity_type_get_instances_contain(String typeLabel, String var) {
-#         assertTrue(tx().concepts().getEntityType(typeLabel).asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("entity\\( ?{type_label} ?) get instances is empty")
-#     public void entity_type_get_instances_is_empty(String typeLabel) {
-#         assertEquals(0, tx().concepts().getEntityType(typeLabel).asRemote(tx()).getInstances().count());
-#     }
-# }
+@given("put attribute type: username, with value type: string") do context
+    _put_attribute_to_db(context, "username", g.Proto.AttributeType_ValueType.STRING)
+end
+
+@given("entity(person) set owns key type: username") do context
+    _entity_set_owns("person", "username", context, true)
+end
+
+# Scenario: Entity can be created
+@when("\$a = entity(person) create new instance with key(username): alice") do context
+    ins_string = raw"""insert $a isa person, has username "alice";"""
+    g.insert(context[:transaction], ins_string)
+    context[:entity_res] = g.match(context[:transaction],raw"""match $x isa person, has username $y;""")
+end
+
+@then("entity \$a is null: false") do context
+    erg = context[:entity_res]
+    @expect erg[1] !== nothing
+end
+
+@then("entity \$a has type: person") do context
+    erg = context[:entity_res]
+    @expect erg[1]["x"].type == g.EntityType(g.Label("","person"), false)
+end
+
+@then("entity(person) get instances contain: \$a") do context
+    erg = g.match(context[:transaction],raw"""match $x isa person;""")
+    @expect erg[1]["x"].type == context[:entity_res][1]["x"].type
+end
+
+@when("\$a = entity(person) get instance with key(username): alice") do context
+    context[:entity_res] = g.match(context[:transaction],raw"""match $x isa person, has username $y; $y="alice";""")
+end
+
+# Scenario: Entity cannot be created when it misses a key
+@when("\$a = entity(person) create new instance") do context
+    res = g.insert(context[:transaction], raw"""insert $x isa person;""")
+    context[:entity_res] = g.match(context[:transaction], raw"""match $x isa person;""")
+end
+
+# Scenario: Entity can be deleted
+@when("delete entity: \$a") do context
+    del_string = raw"""match $x isa person, has username "alice"; delete $x isa person;"""
+    g.delete(context[:transaction], del_string)
+end
+
+@then("entity \$a is deleted: true") do context
+    match_string = raw"""match $x isa person, has username "alice";"""
+    res = g.match(context[:transaction], match_string)
+    @expect length(res) == 0
+end
+
+@then("entity(person) get instances is empty") do context
+    match_string = raw"""match $x isa person;"""
+    res = g.match(context[:transaction], match_string)
+    @expect length(res) == 0
+end
+
+# Scenario: Entity can have keys
+@when("\$alice = attribute(username) as(string) put: alice") do context
+    ins_string = raw"""insert $x isa username; $x "alice";"""
+    g.insert(context[:transaction], ins_string)
+end
+
+@when("entity \$a set has: \$alice") do context
+    match_string = raw"""match $x isa person;"""
+    res_raw = g.match(context[:transaction], match_string)
+    @expect length(res_raw) == 1
+    res = res_raw[1]["x"]
+
+    match_string = raw"""match $x isa username; $x = "alice";"""
+    res_attr_raw = g.match(context[:transaction], match_string)
+    res_attr = res_attr_raw[1]["x"]
+    # has_req = g.set_has_req(res.iid, )
+end
