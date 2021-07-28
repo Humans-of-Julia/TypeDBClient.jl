@@ -16,4 +16,37 @@ function instantiate(t::Proto.Thing)
     end
 end
 
+function set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
+    res_proto_attribute = get_proto_thing(ConceptManager(transaction), Attribute, attribute.iid)
+    has_req = ThingRequestBuilder.set_has_req(thing.iid, res_proto_attribute)
+    execute(transaction, has_req)
 
+    return nothing
+end
+
+function get_has(transaction::AbstractCoreTransaction,
+                thing::AbstractThing,
+                attribute_type::Optional{AttributeType} = nothing,
+                attribute_types::Vector{<:AbstractAttributeType} = [],
+                only_key = false)
+
+    if length(findall([attribute_type !== nothing, !isempty(attribute_types), only_key])) > 1
+        throw(TypeDBClientException(GET_HAS_WITH_MULTIPLE_FILTERS))
+    end
+
+    attribute_types_intern = attribute_type !== nothing ? [attribute_type] : []
+    attribute_types_intern = !isempty(attribute_types) ? attribute_types : attribute_types_intern
+
+    all_attribute_types = get_owns(as_remote(thing.type, transaction))
+
+    res_attr_types = !isempty(intersect(attribute_types_intern, all_attribute_types)) ?
+                        intersect(attribute_types_intern, all_attribute_types) :
+                        all_attribute_types
+
+    attribute_types_proto = proto.(res_attr_types)
+    has_req = ThingRequestBuilder.get_has_req(thing.iid, attribute_types_proto)
+    res_has = stream(transaction, has_req)
+
+    return instantiate.(collect(Iterators.flatten(
+        r.thing_res_part.thing_get_has_res_part.attributes for r in res_has)))
+end

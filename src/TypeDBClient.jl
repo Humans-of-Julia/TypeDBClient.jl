@@ -15,6 +15,7 @@ Pkg.add(url="https://github.com/erikedin/Behavior.jl")
 =#
 module TypeDBClient
 
+using DataStructures: isempty
 using Dates
 using DataStructures
 using gRPCClient

@@ -22,5 +22,5 @@ function Cluster_TypeDBStub(channel::gRPCClient.gRPCChannel)
 end
 
 function ensure_connected(stub::T) where {T<:AbstractTypeDBStub}
-    throw(TypeDBClientException(GENERAL_UNKOWN_ERROR,"function TypeDBStub.jl/ensure_onnected isn't implemented yet"))
+    throw(TypeDBClientException(GENERAL_UNKOWN_ERROR,"function TypeDBStub.jl/ensure_connected isn't implemented yet"))
 end

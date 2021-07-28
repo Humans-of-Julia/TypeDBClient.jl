@@ -19,7 +19,8 @@ export Attribute, Entity, Relation, Thing
 export ConceptManager
 
 # functions (listed in alphabetical order)
-export get_instances,
+export get_has,
+       get_instances,
        get_owns,
        get_owners,
        get_plays,
@@ -30,6 +31,7 @@ export get_instances,
        get_supertype,
        get_supertypes,
        set_abstract,
+       set_has,
        set_label,
        set_owns,
        set_plays,
@@ -39,4 +41,3 @@ export get_instances,
 
 # others
 export contains_database
-

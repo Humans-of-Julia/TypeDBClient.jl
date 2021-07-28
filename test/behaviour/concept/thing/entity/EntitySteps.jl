@@ -1,4 +1,5 @@
 using Base: concatenate_setindex!
+
 function _entity_instances(transaction)
     res = g.match(transaction, "match \$x isa entity;")
     erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
@@ -66,17 +67,14 @@ end
 # Scenario: Entity can have keys
 @when("\$alice = attribute(username) as(string) put: alice") do context
     ins_string = raw"""insert $x isa username; $x "alice";"""
-    g.insert(context[:transaction], ins_string)
+    res = g.insert(context[:transaction], ins_string)
+    context[:alice] = res[1].data["x"]
 end
 
 @when("entity \$a set has: \$alice") do context
-    match_string = raw"""match $x isa person;"""
-    res_raw = g.match(context[:transaction], match_string)
-    @expect length(res_raw) == 1
-    res = res_raw[1]["x"]
+    set_has(context[:transaction], context[:entity_res][1].data["x"], context[:alice])
+end
 
-    match_string = raw"""match $x isa username; $x = "alice";"""
-    res_attr_raw = g.match(context[:transaction], match_string)
-    res_attr = res_attr_raw[1]["x"]
-    # has_req = g.set_has_req(res.iid, )
+@then("entity \$a get attributes(username) as(string) contain: \$alice") do context
+
 end

@@ -485,7 +485,7 @@ function is_inferred_req(iid::String)
     )
 end
 
-function get_has_req(iid::String, attribute_types::AbstractVector{Proto.Type})
+function get_has_req(iid::String, attribute_types::AbstractVector{Proto._Type})
     return _thing_req(iid;
         thing_get_has_req = Proto.Thing_GetHas_Req(; attribute_types)
     )

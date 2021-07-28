@@ -64,16 +64,24 @@ function Base.get(cm::ConceptManager, ::Type{ThingType}, label::String)
     return nothing
 end
 
-function Base.get(cm::ConceptManager, ::Type{<:AbstractThing}, iid::String)
-    req = ConceptManagerRequestBuilder.get_thing_req(iid)
-    res = execute(cm, req)
-    if which_oneof(res, :res) == :get_thing_res
-        return instantiate(res.get_thing_res.thing)
-    end
+function Base.get(cm::ConceptManager, type::Type{<:AbstractThing}, iid::String)
+    res = get_proto_thing(cm, type, iid)
+    res !== nothing && return instantiate(res)
     return nothing
 end
 
 function execute(cm::ConceptManager, req::Proto.Transaction_Req)
     result = execute(cm.transaction, req, false)
     return result.concept_manager_res
+end
+
+# get_proto_thing is supposed to be a vehicle to get things in its proto form to get
+# a result for setting up set_has etc.
+function get_proto_thing(cm::ConceptManager, ::Type{<:AbstractThing}, iid::String)
+    req = ConceptManagerRequestBuilder.get_thing_req(iid)
+    res = execute(cm, req)
+    if which_oneof(res, :res) == :get_thing_res
+        return res.get_thing_res.thing
+    end
+    return nothing
 end
