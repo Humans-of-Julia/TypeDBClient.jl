@@ -27,15 +27,15 @@ end
 function get_has(transaction::AbstractCoreTransaction,
                 thing::AbstractThing,
                 attribute_type::Optional{AttributeType} = nothing,
-                attribute_types::Vector{<:AbstractAttributeType} = [],
-                only_key = false)
+                attribute_types::Optional{Vector{<:AbstractAttributeType}} = nothing,
+                keys_only = false)
 
-    if length(findall([attribute_type !== nothing, !isempty(attribute_types), only_key])) > 1
+    if length(findall([attribute_type !== nothing, attribute_types !== nothing, keys_only])) > 1
         throw(TypeDBClientException(GET_HAS_WITH_MULTIPLE_FILTERS))
     end
 
     attribute_types_intern = attribute_type !== nothing ? [attribute_type] : []
-    attribute_types_intern = !isempty(attribute_types) ? attribute_types : attribute_types_intern
+    attribute_types_intern = attribute_types !== nothing ? attribute_types : attribute_types_intern
 
     all_attribute_types = get_owns(as_remote(thing.type, transaction))
 
@@ -44,7 +44,9 @@ function get_has(transaction::AbstractCoreTransaction,
                         all_attribute_types
 
     attribute_types_proto = proto.(res_attr_types)
-    has_req = ThingRequestBuilder.get_has_req(thing.iid, attribute_types_proto)
+    has_req = keys_only ?
+                ThingRequestBuilder.get_has_req(thing.iid, keys_only) :
+                ThingRequestBuilder.get_has_req(thing.iid, attribute_types_proto)
     res_has = stream(transaction, has_req)
 
     return instantiate.(collect(Iterators.flatten(

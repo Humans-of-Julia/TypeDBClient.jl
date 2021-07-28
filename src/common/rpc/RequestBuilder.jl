@@ -491,9 +491,9 @@ function get_has_req(iid::String, attribute_types::AbstractVector{Proto._Type})
     )
 end
 
-function get_has_req(iid::String, only_key::Bool)
+function get_has_req(iid::String, keys_only::Bool)
     return _thing_req(iid;
-        thing_get_has_req = Proto.Thing_GetHas_Req(; only_key)
+        thing_get_has_req = Proto.Thing_GetHas_Req(; keys_only)
     )
 end
 
@@ -524,6 +524,18 @@ end
 function delete_req(iid::String)
     return _thing_req(iid;
         thing_delete_req = Proto.Thing_Delete_Req()
+    )
+end
+
+function attribute_get_owners_req(iid::String, thing_type::Proto._Type)
+    return _thing_req(iid;
+        attribute_get_owners_req = Proto.Attribute_GetOwners_Req(; thing_type)
+    )
+end
+
+function attribute_get_owners_req(iid::String)
+    return _thing_req(iid;
+        attribute_get_owners_req = Proto.Attribute_GetOwners_Req()
     )
 end
 

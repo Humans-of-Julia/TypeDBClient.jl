@@ -27,3 +27,16 @@ function Attribute(t::Proto.Thing)
         throw(TypeDBClientException(CONCEPT_BAD_VALUE_TYPE))
     end
 end
+
+function get_owners(transaction::AbstractCoreTransaction,
+                    attribute::AbstractAttribute,
+                    thing_type::Optional{AbstractThingType} = nothing)
+    iid = attribute.iid
+    owner_req = thing_type === nothing ?
+                                ThingRequestBuilder.attribute_get_owners_req(iid) :
+                                ThingRequestBuilder.attribute_get_owners_req(iid, proto(thing_type))
+
+    res_owners = stream(transaction, owner_req)
+    return instantiate.(collect(Iterators.flatten(
+        r.thing_res_part.attribute_get_owners_res_part.things for r in res_owners)))
+end

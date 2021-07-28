@@ -76,5 +76,23 @@ end
 end
 
 @then("entity \$a get attributes(username) as(string) contain: \$alice") do context
+    attr = get(ConceptManager(context[:transaction]), AttributeType, "username")
+    inst_usernames = get_has(context[:transaction], context[:entity_res][1].data["x"], attr)
+    @expect in(context[:alice], inst_usernames)
+end
 
+@then("entity \$a get keys contain: \$alice") do context
+    inst_keys = get_has(context[:transaction], context[:entity_res][1].data["x"] , nothing, nothing, true)
+    @expect in(context[:alice], inst_keys)
+end
+
+@then("attribute \$alice get owners contain: \$a") do context
+    owners = get_owners(context[:transaction], context[:alice])
+    @expect in(context[:entity_res][1].data["x"], owners)
+end
+
+@when("\$alice = attribute(username) as(string) get: alice") do context
+    attr = get(ConceptManager(context[:transaction]), AttributeType, "username")
+    res = g.get_instances(g.as_remote(attr, context[:transaction]))
+    context[:alice] = res[1]
 end
