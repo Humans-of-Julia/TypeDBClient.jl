@@ -242,5 +242,4 @@ end
     catch ex
         @expect typeof(ex) == g.TypeDBClientException
     end
-    delete_all_databases(context[:client])
 end

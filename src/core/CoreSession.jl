@@ -7,7 +7,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     database::CoreDatabase
     sessionID::Bytes
     transactions::Dict{UUID,T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
-    type::Int
+    type::Int32
     accessLock::ReentrantLock
     options::TypeDBOptions
     isOpen::Bool

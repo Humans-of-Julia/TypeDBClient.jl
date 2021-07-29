@@ -24,6 +24,14 @@ function set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, att
     return nothing
 end
 
+function unset_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
+    res_proto_attribute = get_proto_thing(ConceptManager(transaction), Attribute, attribute.iid)
+    unset_has_req = ThingRequestBuilder.unset_has_req(thing.iid, res_proto_attribute)
+    execute(transaction, unset_has_req)
+
+    return nothing
+end
+
 function get_has(transaction::AbstractCoreTransaction,
                 thing::AbstractThing,
                 attribute_type::Optional{AttributeType} = nothing,

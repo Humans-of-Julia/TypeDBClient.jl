@@ -37,7 +37,8 @@ export get_has,
        set_plays,
        set_regex,
        set_supertype,
-       unset_abstract
+       unset_abstract,
+       unset_has
 
 # others
 export contains_database

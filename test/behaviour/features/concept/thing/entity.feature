@@ -70,7 +70,7 @@ Feature: Concept Entity
     When transaction commits
     When session opens transaction of type: read
     Then entity(person) get instances is empty
-@actual
+
   Scenario: Entity can have keys
     When $a = entity(person) create new instance
     When $alice = attribute(username) as(string) put: alice
