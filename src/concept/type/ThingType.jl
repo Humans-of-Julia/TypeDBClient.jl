@@ -82,9 +82,9 @@ end
 
 function set_owns(
     r::RemoteConcept{C,T},
-    attribute_type::AbstractAttributeType,
+    attribute_type::AbstractType,
     is_key::Bool=false
-) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+) where {C <: AbstractType,T <: AbstractCoreTransaction}
     req = ThingTypeRequestBuilder.set_owns_req(
         r.concept.label,
         is_key,

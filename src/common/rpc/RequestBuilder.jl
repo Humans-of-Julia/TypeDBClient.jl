@@ -305,11 +305,13 @@ function set_plays_req(
     role_type::Proto._Type,
     overridden_role_type::Optional{Proto.RoleType} = nothing
 )
+    thing_type_set_plays_req = Proto.ThingType_SetPlays_Req(;role = role_type)
+    if overridden_role_type !== nothing
+        thing_type_set_plays_req.overridden_role = overridden_role_type
+    end
+
     return _treq(label.name, label.scope;
-        thing_type_set_plays_req = Proto.ThingType_SetPlays_Req(
-            role = role_type,
-            overridden_role = overridden_role_type
-        )
+        thing_type_set_plays_req
     )
 end
 
@@ -348,12 +350,6 @@ function set_owns_req(
         Proto.ThingType_SetOwns_Req(; is_key, attribute_type) :
         Proto.ThingType_SetOwns_Req(; is_key, attribute_type, overridden_type)
     return _treq(label.name, label.scope; thing_type_set_owns_req)
-
-    # return _treq(label.name, label.scope;
-    #     thing_type_set_owns_req = Proto.ThingType_SetOwns_Req(;
-    #         is_key, attribute_type, overridden_type
-    #     )
-    # )
 end
 
 function unset_owns_req(label::Label, attribute_type::Proto.AttributeType)
@@ -405,14 +401,16 @@ function get_relates_req(label::Label, role_label::Optional{String})
 end
 
 function set_relates_req(
-    label::Label, role_label::String, overridden_label::Optional{String}
-)
-    return _treq(label.name, label.scope;
-        relation_type_set_relates_req = Proto.RelationType_SetRelates_Req(;
-            label = role_label,
-            overridden_label
-        )
-    )
+    label::Label, role_label::String, overridden_label::Optional{String})
+
+    relation_type_set_relates_req = overridden_label !== nothing ?
+                                            Proto.RelationType_SetRelates_Req(;
+                                                label = role_label,
+                                                overridden_label)  :
+                                            Proto.RelationType_SetRelates_Req(;
+                                                label = role_label)
+
+    return _treq(label.name, label.scope; relation_type_set_relates_req)
 end
 
 function unset_relates_req(label::Label, role_label::Optional{String})

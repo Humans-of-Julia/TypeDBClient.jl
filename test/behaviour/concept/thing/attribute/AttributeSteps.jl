@@ -14,16 +14,6 @@ include(joinpath(@__DIR__,"test/behaviour/connection/transaction/TransactionStep
 include(joinpath(@__DIR__,"test/behaviour/connection/ConnectionStepsBase.jl"))
 include(joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl"))
 
-function _put_attribute_to_db(context, attr_name, type)
-    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req(attr_name, type)
-    return g.execute(context[:transaction], attr_req)
-end
-
-function _attribute_instances(transaction)
-    res = g.match(transaction, raw"""match $x isa attribute;""")
-    erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
-    return erg
-end
 
 function _attribute(transaction, label::String)
     res = g.match(transaction, "match \$x type $label;")

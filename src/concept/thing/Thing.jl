@@ -38,7 +38,7 @@ function get_has(transaction::AbstractCoreTransaction,
                 attribute_types::Optional{Vector{<:AbstractAttributeType}} = nothing,
                 keys_only = false)
 
-    if length(findall([attribute_type !== nothing, attribute_types !== nothing, keys_only])) > 1
+    if count([attribute_type !== nothing, attribute_types !== nothing, keys_only]) > 1
         throw(TypeDBClientException(GET_HAS_WITH_MULTIPLE_FILTERS))
     end
 

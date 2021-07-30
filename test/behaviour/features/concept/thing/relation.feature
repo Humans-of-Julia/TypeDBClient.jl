@@ -41,7 +41,7 @@ Feature: Concept Relation
     Given connection close all sessions
     Given connection open data session for database: typedb
     Given session opens transaction of type: write
-
+@actual
   Scenario: Relation with role players can be created and role players can be retrieved
     When $m = relation(marriage) create new instance with key(license): m
     Then relation $m is null: false

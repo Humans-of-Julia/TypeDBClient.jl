@@ -6,12 +6,13 @@ struct RoleType <: AbstractRoleType
 end
 
 # Porting note: Java client calls into RequstBuilder but it really
-# has nothing to to with requests... I think it's probably better
+# has nothing to do with requests... I think it's probably better
 # migrating the function here.
 function proto(t::AbstractRoleType)
+    @assert t.label.scope !== nothing
     Proto._Type(
         label = t.label.name,
+        scope = t.label.scope,
         encoding = encoding(t)
     )
-    # return RoleTypeRequestBuilder.proto_role_type(t.label, encoding(t))
 end

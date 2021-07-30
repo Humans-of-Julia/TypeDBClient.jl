@@ -1,150 +1,52 @@
-# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-# 
-# package typedb.client.test.behaviour.concept.thing.relation;
-# 
-# import typedb.client.api.concept.thing.Attribute;
-# import typedb.client.api.concept.thing.Relation;
-# import typedb.client.api.concept.thing.Thing;
-# import typedb.client.common.Label;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# 
-# import java.time.LocalDateTime;
-# import java.util.List;
-# import java.util.Map;
-# 
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.get;
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.put;
-# import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static typedb.client.test.behaviour.util.Util.assertThrows;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertFalse;
-# import static org.junit.Assert.assertTrue;
-# 
-# @SuppressWarnings("CheckReturnValue")
-# public class RelationSteps {
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance")
-#     public void relation_type_create_new_instance(String var, String typeLabel) {
-#         put(var, tx().concepts().getRelationType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) create new instance; throws exception")
-#     public void relation_type_create_new_instance_throws_exception(String typeLabel) {
-#         assertThrows(() -> tx().concepts().getRelationType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
-#     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-#         Attribute.Long key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
-#         Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-#         relation.asRemote(tx()).setHas(key);
-#         put(var, relation);
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
-#     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-#         Attribute.String key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
-#         Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-#         relation.asRemote(tx()).setHas(key);
-#         put(var, relation);
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
-#     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-#         Attribute.DateTime key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
-#         Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-#         relation.asRemote(tx()).setHas(key);
-#         put(var, relation);
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
-#     public void relation_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
-#     public void relation_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
-#     public void relation_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) get instances contain: {var}")
-#     public void relation_type_get_instances_contain(String typeLabel, String var) {
-#         assertTrue(tx().concepts().getRelationType(typeLabel).asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) get instances do not contain: {var}")
-#     public void relation_type_get_instances_do_not_contain(String typeLabel, String var) {
-#         assertTrue(tx().concepts().getRelationType(typeLabel).asRemote(tx()).getInstances().noneMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) get instances is empty")
-#     public void relation_type_get_instances_is_empty(String typeLabel) {
-#         assertEquals(0, tx().concepts().getRelationType(typeLabel).asRemote(tx()).getInstances().count());
-#     }
-# 
-#     @When("relation {var} add player for role\\( ?{type_label} ?): {var}")
-#     public void relation_add_player_for_role(String var1, String roleTypeLabel, String var2) {
-#         get(var1).asRelation().asRemote(tx()).addPlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
-#     }
-# 
-#     @When("relation {var} add player for role\\( ?{type_label} ?): {var}; throws exception")
-#     public void relation_add_player_for_role_throws_exception(String var1, String roleTypeLabel, String var2) {
-#         assertThrows(() -> get(var1).asRelation().asRemote(tx()).addPlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2)));
-#     }
-# 
-#     @When("relation {var} remove player for role\\( ?{type_label} ?): {var}")
-#     public void relation_remove_player_for_role(String var1, String roleTypeLabel, String var2) {
-#         get(var1).asRelation().asRemote(tx()).removePlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
-#     }
-# 
-#     @Then("relation {var} get players contain:")
-#     public void relation_get_players_contain(String var, Map<String, String> players) {
-#         Relation relation = get(var).asRelation();
-#         players.forEach((rt, var2) -> assertTrue(relation.asRemote(tx()).getPlayersByRoleType().get(relation.getType().asRemote(tx()).getRelates(rt)).contains(get(var2.substring(1)))));
-#     }
-# 
-#     @Then("relation {var} get players do not contain:")
-#     public void relation_get_players_do_not_contain(String var, Map<String, String> players) {
-#         Relation relation = get(var).asRelation();
-#         players.forEach((rt, var2) -> {
-#             List<? extends Thing> p;
-#             if ((p = relation.asRemote(tx()).getPlayersByRoleType().get(relation.getType().asRemote(tx()).getRelates(rt))) != null) {
-#                 assertFalse(p.contains(get(var2.substring(1))));
-#             }
-#         });
-#     }
-# 
-#     @Then("relation {var} get players contain: {var}")
-#     public void relation_get_players_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx()).getPlayers().anyMatch(p -> p.equals(get(var2))));
-#     }
-# 
-#     @Then("relation {var} get players do not contain: {var}")
-#     public void relation_get_players_do_not_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx()).getPlayers().noneMatch(p -> p.equals(get(var2))));
-#     }
-# 
-#     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
-#     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx())
-#                            .getPlayers(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel))
-#                            .anyMatch(p -> p.equals(get(var2))));
-#     }
-# 
-#     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
-#     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx())
-#                            .getPlayers(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel))
-#                            .noneMatch(p -> p.equals(get(var2))));
-#     }
-# }
+
+@given("put attribute type: license, with value type: string") do context
+    _put_attribute_to_db(context, "license", VALUE_TYPE.STRING)
+end
+
+@given("put attribute type: date, with value type: datetime") do context
+    _put_attribute_to_db(context, "date", VALUE_TYPE.DATETIME)
+end
+
+@given("put relation type: marriage") do context
+    res = g.put(ConceptManager(context[:transaction]), RelationType, "marriage")
+    @info res
+end
+
+@given("relation(marriage) set relates role: wife") do context
+    g.set_relates(context[:transaction],
+                    g.Label("","marriage"),
+                    "wife")
+end
+
+@given("relation(marriage) set relates role: husband") do context
+    g.set_relates(context[:transaction],
+                    g.Label("","marriage"),
+                    "husband")
+end
+
+@given("relation(marriage) set owns key type: license") do context
+    rel_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    lic_typ = g.get(ConceptManager(context[:transaction]), AttributeType, "license")
+    set_owns(g.as_remote(rel_type, context[:transaction]),
+                        lic_typ,
+                        true)
+end
+
+@given("relation(marriage) set owns attribute type: date") do context
+    rel_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    lic_typ = g.get(ConceptManager(context[:transaction]), AttributeType, "date")
+    set_owns(g.as_remote(rel_type, context[:transaction]),
+                        lic_typ,
+                        true)
+end
+
+@given("entity(person) set plays role: marriage:wife") do context
+    ent_pers = g.get(ConceptManager(context[:transaction]), EntityType, "person")
+
+
+    # g.set_plays(g.as_remote(context[:transaction], ent_pers),
+    #     g.RoleType(Label("marriage", "wife"),false))
+    @info ent_pers
+end

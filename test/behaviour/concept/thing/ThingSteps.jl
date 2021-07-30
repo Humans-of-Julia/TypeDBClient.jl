@@ -25,6 +25,17 @@ function _entity_set_owns(entity, attribute_type, context, is_key = false)
     g.set_owns(rem_entitiy, loc_attribute, is_key)
 end
 
+function _put_attribute_to_db(context, attr_name, type)
+    attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req(attr_name, type)
+    return g.execute(context[:transaction], attr_req)
+end
+
+function _attribute_instances(transaction)
+    res = g.match(transaction, raw"""match $x isa attribute;""")
+    erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
+    return erg
+end
+
 @given("put entity type: person") do context
     context[:concept_manager] = ConceptManager(context[:transaction])
     g.put(context[:concept_manager], EntityType, "person")

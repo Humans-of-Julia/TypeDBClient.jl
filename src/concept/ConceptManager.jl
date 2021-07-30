@@ -70,6 +70,8 @@ function Base.get(cm::ConceptManager, type::Type{<:AbstractThing}, iid::String)
     return nothing
 end
 
+
+
 function execute(cm::ConceptManager, req::Proto.Transaction_Req)
     result = execute(cm.transaction, req, false)
     return result.concept_manager_res

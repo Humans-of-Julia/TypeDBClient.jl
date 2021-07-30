@@ -2154,6 +2154,7 @@ mutable struct Type_GetSubtypes_ResPart <: ProtoType
     end
 end # mutable struct Type_GetSubtypes_ResPart
 const __meta_Type_GetSubtypes_ResPart = Ref{ProtoMeta}()
+
 function meta(::Type{Type_GetSubtypes_ResPart})
     ProtoBuf.metalock() do
         if !isassigned(__meta_Type_GetSubtypes_ResPart)
