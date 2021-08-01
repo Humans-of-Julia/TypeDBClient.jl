@@ -65,7 +65,7 @@ function Base.get(cm::ConceptManager, ::Type{ThingType}, label::String)
 end
 
 function Base.get(cm::ConceptManager, type::Type{<:AbstractThing}, iid::String)
-    res = get_proto_thing(cm, type, iid)
+    res = get_proto_thing(cm, iid)
     res !== nothing && return instantiate(res)
     return nothing
 end
@@ -79,7 +79,7 @@ end
 
 # get_proto_thing is supposed to be a vehicle to get things in its proto form to get
 # a result for setting up set_has etc.
-function get_proto_thing(cm::ConceptManager, ::Type{<:AbstractThing}, iid::String)
+function get_proto_thing(cm::ConceptManager, iid::String)
     req = ConceptManagerRequestBuilder.get_thing_req(iid)
     res = execute(cm, req)
     if which_oneof(res, :res) == :get_thing_res

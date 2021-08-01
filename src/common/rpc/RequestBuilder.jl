@@ -464,7 +464,7 @@ end
 # ---------------------------------------------------------------------------------
 module ThingRequestBuilder
 
-using ..TypeDBClient: Proto, Label, Bytes, bytes
+using ..TypeDBClient: Proto, Label, Bytes, bytes, Optional
 
 proto_thing(iid::Bytes) = Proto.Thing(; iid)
 proto_thing(iid::String) = proto_thing(bytes(iid))
@@ -513,9 +513,13 @@ function get_playing_req(iid::String)
     )
 end
 
-function get_relations_req(iid::String, role_types::AbstractVector{Proto._Type})
+function get_relations_req(iid::String, role_types::Optional{AbstractVector{Proto._Type}})
+    thing_get_relations_req = Proto.Thing_GetRelations_Req()
+    if role_types !== nothing
+        thing_get_relations_req.role_types = role_types
+    end
     return _thing_req(iid;
-        thing_get_relations_req = Proto.Thing_GetRelations_Req(; role_types)
+        thing_get_relations_req
     )
 end
 
@@ -542,7 +546,7 @@ end
 # ---------------------------------------------------------------------------------
 module RelationRequestBuilder
 
-using ..TypeDBClient: Proto
+using ..TypeDBClient: Proto, Optional
 using ..ThingRequestBuilder: _thing_req
 
 function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
@@ -563,9 +567,14 @@ function remove_player_req(iid::String, role_type::Proto._Type, player::Proto.Th
     )
 end
 
-function get_players_req(iid::String, role_types::AbstractVector{Proto._Type})
+function get_players_req(iid::String, role_types::Optional{AbstractVector{Proto._Type}} = nothing)
+
+    relation_get_players_req = Proto.Relation_GetPlayers_Req()
+    if role_types !== nothing
+        relation_get_players_req.role_types = role_types
+    end
     return _thing_req(iid;
-        relation_get_players_req = Proto.Relation_GetPlayers_Req(; role_types)
+        relation_get_players_req
     )
 end
 

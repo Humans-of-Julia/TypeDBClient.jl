@@ -17,7 +17,7 @@ function instantiate(t::Proto.Thing)
 end
 
 function set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
-    res_proto_attribute = get_proto_thing(ConceptManager(transaction), Attribute, attribute.iid)
+    res_proto_attribute = get_proto_thing(ConceptManager(transaction), attribute.iid)
     has_req = ThingRequestBuilder.set_has_req(thing.iid, res_proto_attribute)
     execute(transaction, has_req)
 
@@ -25,7 +25,7 @@ function set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, att
 end
 
 function unset_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
-    res_proto_attribute = get_proto_thing(ConceptManager(transaction), Attribute, attribute.iid)
+    res_proto_attribute = get_proto_thing(ConceptManager(transaction), attribute.iid)
     unset_has_req = ThingRequestBuilder.unset_has_req(thing.iid, res_proto_attribute)
     execute(transaction, unset_has_req)
 

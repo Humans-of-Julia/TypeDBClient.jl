@@ -16,3 +16,10 @@ function proto(t::AbstractRoleType)
         encoding = encoding(t)
     )
 end
+
+function get_players(transaction::AbstractCoreTransaction, label::Label)
+    play_req = RoleTypeRequestBuilder.get_players_req(label)
+    player_res = stream(transaction, play_req)
+    return instantiate.(collect(Iterators.flatten(
+        r.type_res_part.role_type_get_players_res_part.thing_types for r in player_res)))
+end

@@ -41,7 +41,7 @@ Feature: Concept Relation
     Given connection close all sessions
     Given connection open data session for database: typedb
     Given session opens transaction of type: write
-@actual
+
   Scenario: Relation with role players can be created and role players can be retrieved
     When $m = relation(marriage) create new instance with key(license): m
     Then relation $m is null: false
@@ -83,7 +83,7 @@ Feature: Concept Relation
     Then relation $m is null: false
     Then relation $m has type: marriage
     Then transaction commits; throws exception
-#
+
   Scenario: Role players can get relations
     When $m = relation(marriage) create new instance with key(license): m
     When $a = entity(person) create new instance with key(username): alice
@@ -140,7 +140,7 @@ Feature: Concept Relation
     Then relation $m get players for role(wife) do not contain: $a
     Then relation $m get players do not contain:
       | wife | $a |
-
+@actual
   Scenario: Relation without role players get deleted
     When $m = relation(marriage) create new instance with key(license): m
     When $a = entity(person) create new instance with key(username): alice
