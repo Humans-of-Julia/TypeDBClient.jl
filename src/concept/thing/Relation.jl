@@ -40,7 +40,7 @@ function add_player(trans::AbstractCoreTransaction,
     return nothing
 end
 
-function remove_player_req(transaction::AbstractCoreTransaction,
+function remove_player(transaction::AbstractCoreTransaction,
                             relation::AbstractRelation,
                             role_type::AbstractRoleType,
                             player_thing::AbstractThing)

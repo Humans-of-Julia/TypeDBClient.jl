@@ -64,7 +64,7 @@ function Base.get(cm::ConceptManager, ::Type{ThingType}, label::String)
     return nothing
 end
 
-function Base.get(cm::ConceptManager, type::Type{<:AbstractThing}, iid::String)
+function Base.get(cm::ConceptManager, iid::String)
     res = get_proto_thing(cm, iid)
     res !== nothing && return instantiate(res)
     return nothing
@@ -83,7 +83,11 @@ function get_proto_thing(cm::ConceptManager, iid::String)
     req = ConceptManagerRequestBuilder.get_thing_req(iid)
     res = execute(cm, req)
     if which_oneof(res, :res) == :get_thing_res
-        return res.get_thing_res.thing
+        if hasproperty(res.get_thing_res, :thing)
+            return res.get_thing_res.thing
+        else
+            return nothing
+        end
     end
     return nothing
 end

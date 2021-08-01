@@ -60,3 +60,11 @@ function get_has(transaction::AbstractCoreTransaction,
     return instantiate.(collect(Iterators.flatten(
         r.thing_res_part.thing_get_has_res_part.attributes for r in res_has)))
 end
+
+
+function delete(transaction::AbstractCoreTransaction, thing::AbstractThing)
+    del_req = ThingRequestBuilder.delete_req(thing.iid)
+    execute(transaction, del_req)
+
+    return nothing
+end

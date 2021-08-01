@@ -140,7 +140,8 @@ end
 
 @when("\$m = relation(marriage) get instance with key(license): m") do context
     match_string = raw"""match $x isa marriage, has license="m";"""
-    context[:marriage] = g.match(context[:transaction], match_string)[1].data["x"]
+    res_match = g.match(context[:transaction], match_string)
+    context[:marriage] = !isempty(res_match) ? res_match[1].data["x"] : nothing
 end
 
 @when("\$b = entity(person) get instance with key(username): bob") do context
@@ -175,7 +176,7 @@ end
 
 # Scenario: Role player can be unassigned from relation
 @when("relation \$m remove player for role(wife): \$a") do context
-    g.remove_player_req(context[:transaction],
+    rem_req = g.remove_player(context[:transaction],
                         context[:marriage],
                         RoleType(g.Label("marriage","wife"),false),
                         context[:entity_res][1].data["x"])
@@ -205,5 +206,56 @@ end
 
 # Scenario: Relation without role players get deleted
 @then("relation \$m is deleted: true") do context
+    res_relation = g.get(ConceptManager(context[:transaction]), context[:marriage].iid)
+    @expect res_relation === nothing
+end
 
+@then("entity \$a get relations do not contain: \$m") do  context
+    rel_alice = g.get_relations(context[:transaction],
+                                context[:entity_res][1].data["x"])
+    @expect !in(context[:marriage], rel_alice)
+end
+
+@then("relation(marriage) get instances do not contain: \$m") do context
+    type_marriage = g.get(g.ConceptManager(context[:transaction]),
+                            g.RelationType,
+                            "marriage")
+
+    res_marriage = g.get_instances(g.as_remote(type_marriage, context[:transaction]))
+    @expect !in(context[:marriage], res_marriage)
+end
+
+@then("relation \$m is null: true") do context
+    @expect context[:marriage] === nothing
+end
+
+@then("relation(marriage) get instances is empty") do context
+    type_marriage = g.get(g.ConceptManager(context[:transaction]),
+    g.RelationType,
+    "marriage")
+    res_marriage = g.get_instances(g.as_remote(type_marriage, context[:transaction]))
+
+    @expect isempty(res_marriage) === true
+end
+
+# Scenario: Relation with role players can be deleted
+@when("delete relation: \$m") do context
+    g.delete(context[:transaction], context[:marriage])
+end
+
+@then("entity \$b get relations do not contain: \$m") do context
+   relations = g.get_relations(context[:transaction], context[:bob])
+   @expect !in(context[:marriage], relations)
+end
+
+# Scenario: Relation cannot have roleplayers inserted after deletion
+@then("relation \$m add player for role(wife): \$a; throws exception") do context
+    try
+        g.add_player(context[:transaction],
+                context[:marriage],
+                g.RoleType(g.Label("marriage","husband"),false),
+                context[:bob])
+    catch ex
+        @expect ex !== nothing
+    end
 end
