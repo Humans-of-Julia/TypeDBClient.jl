@@ -19,7 +19,8 @@ export Attribute, Entity, Relation, Thing
 export ConceptManager
 
 # functions (listed in alphabetical order)
-export get_has,
+export delete,
+       get_has,
        get_instances,
        get_owns,
        get_owners,

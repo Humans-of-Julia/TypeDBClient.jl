@@ -110,3 +110,8 @@ function get_plays(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: Abs
     return instantiate.(collect(Iterators.flatten(
         r.type_res_part.thing_type_get_plays_res_part.roles for r in res)))
 end
+
+function delete(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+    del_req = TypeRequestBuilder.delete_req(r.concept.label)
+    execute(r.transaction, del_req)
+end

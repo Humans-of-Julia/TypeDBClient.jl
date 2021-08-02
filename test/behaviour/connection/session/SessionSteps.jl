@@ -10,7 +10,6 @@ end
 
 @then("session has database: typedb") do context
     @expect context[:session].database.name == "typedb"
-    delete_all_databases(context[:client])
 end
 
 @when("connection open sessions for databases:") do context
@@ -37,7 +36,6 @@ end
     dbs = [item.database for item in context[:sessions]]
     @expect dbs !== nothing
     @expect first(unique(typeof.(dbs))) == TypeDBClient.CoreDatabase
-    delete_all_databases(context[:client])
 end
 
 @when("connection open sessions in parallel for databases:") do context
@@ -73,17 +71,9 @@ end
     for i in 1:length(dbnames)
         @expect sessions[i].database.name == dbnames[i]
     end
-    delete_all_databases(context[:client])
 end
 
 # Scenario: write schema in a data session throws
-@given("connection open data session for database: typedb") do context
-    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timout=Inf)
-    context[:session] = sess
-    trans = g.transaction(sess, g.Proto.Transaction_Type.WRITE)
-    context[:transaction] = trans
-end
-
 @then("graql define; throws exception containing \"session type does not allow\"") do context
     define_string = "define person sub entity;"
     try
@@ -92,13 +82,6 @@ end
         res_comparisson = occursin("session type does not allow", string(ex.error_message))
         @expect res_comparisson === true
     end
-    delete_all_databases(context[:client])
-end
-
-
-@given("connection open schema session for database: typedb") do context
-    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.SCHEMA, request_timout=Inf)
-    context[:session] = sess
 end
 
 @then("graql define") do context
@@ -114,5 +97,4 @@ end
         res_comparisson = occursin("session type does not allow", string(ex.error_message))
         @expect res_comparisson === true
     end
-    delete_all_databases(context[:client])
 end

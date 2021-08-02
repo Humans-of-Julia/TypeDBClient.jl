@@ -8,13 +8,6 @@ using Dates
 
 g = TypeDBClient
 
-include(joinpath(@__DIR__,"test/behaviour/connection/database/DatabaseSteps.jl"))
-include(joinpath(@__DIR__,"test/behaviour/connection/session/SessionSteps.jl"))
-include(joinpath(@__DIR__,"test/behaviour/connection/transaction/TransactionSteps.jl"))
-include(joinpath(@__DIR__,"test/behaviour/connection/ConnectionStepsBase.jl"))
-include(joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl"))
-
-
 function _attribute(transaction, label::String)
     res = g.match(transaction, "match \$x type $label;")
     erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))

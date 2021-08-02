@@ -59,7 +59,11 @@ function Base.get(cm::ConceptManager, ::Type{ThingType}, label::String)
     req = ConceptManagerRequestBuilder.get_thing_type_req(label)
     res = execute(cm, req)
     if which_oneof(res, :res) == :get_thing_type_res
-        return instantiate(res.get_thing_type_res.thing_type)
+        if hasproperty(res.get_thing_type_res, :thing_type)
+            return instantiate(res.get_thing_type_res.thing_type)
+        else
+            return nothing
+        end
     end
     return nothing
 end

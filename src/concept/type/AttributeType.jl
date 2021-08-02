@@ -78,10 +78,8 @@ function get_subtypes(r::RemoteConcept{C,T}) where {
     typs = res.type_res_part.type_get_subtypes_res_part.types
 
     if is_root(concept) && proto(concept) !== VALUE_TYPE.OBJECT
-        return Iterators.filter(
-            t -> proto(t) == proto(concept) || label(t) == label(concept),
-            (instantiate(t) for t in typs)
-        )
+        return filter(t -> proto(t) == proto(concept) || label(t) == label(concept),
+                        [instantiate(t) for t in typs])
     else
         return instantiate.(typs)
     end

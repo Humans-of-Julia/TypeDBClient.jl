@@ -68,7 +68,3 @@ end
 @given("entity(person) set owns attribute type: birth-date") do context
     _entity_set_owns("person", "birth-date", context)
 end
-
-@given("connection close all sessions") do context
-    g.close.(sessions(context))
-end

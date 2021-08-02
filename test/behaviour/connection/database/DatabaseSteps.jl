@@ -12,8 +12,6 @@ end
 @then("connection has database: alice") do context
     result = g.contains_database(context[:client], "alice")
     @expect result === true
-    #until beforescenario works for me :-) the following
-    delete_all_databases(context[:client])
 end
 
 # Scenario: create many databases
@@ -31,8 +29,6 @@ end
     server_dbs = [item.name for item in g.get_all_databases(context[:client])]
 
     @expect (Set(db_names) == Set(server_dbs))
-
-    delete_all_databases(context[:client])
 end
 
 # Scenario: create many databases in parallel
@@ -119,16 +115,5 @@ end
     catch ex
         @expect (typeof(ex) == g.TypeDBClientException)
         @expect occursin("The database typedb does not exist", string(ex))
-    end
-end
-
-##############  utility functions ########################
-function delete_all_databases(client::g.CoreClient)
-    for (_, session) in client.sessions
-        close(session)
-    end
-    all_db = g.get_all_databases(client)
-    for db in all_db
-        g.delete_database(client, db.name)
     end
 end
