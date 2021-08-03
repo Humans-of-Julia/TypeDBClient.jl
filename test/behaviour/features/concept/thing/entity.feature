@@ -34,7 +34,7 @@ Feature: Concept Entity
     Given connection close all sessions
     Given connection open data session for database: typedb
     Given session opens transaction of type: write
-@actual
+
   Scenario: Entity can be created
     When $a = entity(person) create new instance with key(username): alice
     Then entity $a is null: false
@@ -44,14 +44,14 @@ Feature: Concept Entity
     When session opens transaction of type: read
     When $a = entity(person) get instance with key(username): alice
     Then entity(person) get instances contain: $a
-@actual
+
   Scenario: Entity cannot be created when it misses a key
     When $a = entity(person) create new instance
     Then entity $a is null: false
     Then entity $a has type: person
     Then entity(person) get instances contain: $a
     Then transaction commits; throws exception
-@actual
+
   Scenario: Entity can be deleted
     When $a = entity(person) create new instance with key(username): alice
     When delete entity: $a
@@ -70,7 +70,7 @@ Feature: Concept Entity
     When transaction commits
     When session opens transaction of type: read
     Then entity(person) get instances is empty
-@actual
+
   Scenario: Entity can have keys
     When $a = entity(person) create new instance
     When $alice = attribute(username) as(string) put: alice
@@ -85,7 +85,7 @@ Feature: Concept Entity
     Then entity $a get attributes(username) as(string) contain: $alice
     Then entity $a get keys contain: $alice
     Then attribute $alice get owners contain: $a
-@actual
+
   Scenario: Entity can unset keys
     When $a = entity(person) create new instance
     When $alice = attribute(username) as(string) put: alice
@@ -105,7 +105,7 @@ Feature: Concept Entity
     Then entity $a get keys do not contain: $alice
     Then attribute $alice get owners do not contain: $a
     Then transaction commits; throws exception
-@actual
+
   Scenario: Entity that has its key unset cannot be committed
     When $a = entity(person) create new instance
     When $alice = attribute(username) as(string) put: alice
@@ -122,7 +122,7 @@ Feature: Concept Entity
     When $alice = attribute(username) as(string) get: alice
     When entity $a unset has: $alice
     Then transaction commits; throws exception
-@actual
+
   Scenario: Entity cannot have more than one key for a given key type
     When $a = entity(person) create new instance
     When $alice = attribute(username) as(string) put: alice
@@ -139,7 +139,7 @@ Feature: Concept Entity
     When $a = entity(person) get instance with key(username): alice
     When $bob = attribute(username) as(string) get: bob
     Then entity $a set has: $bob; throws exception
-@actual
+
   Scenario: Entity cannot have a key that has been taken
     When $a = entity(person) create new instance
     When $alice = attribute(username) as(string) put: alice
@@ -149,7 +149,7 @@ Feature: Concept Entity
     When $b = entity(person) create new instance
     When $alice = attribute(username) as(string) get: alice
     Then entity $b set has: $alice; throws exception
-@actual
+
   Scenario: Entity can have attribute
     When $a = entity(person) create new instance with key(username): alice
     When $email = attribute(email) as(string) put: alice@email.com
@@ -214,7 +214,7 @@ Feature: Concept Entity
     When $email = attribute(email) as(string) get: alice@email.com
     Then entity $a get attributes(email) as(string) do not contain: $email
     Then attribute $email get owners do not contain: $a
-@actual
+
   Scenario: Entity cannot be given an attribute after deletion
     When $a = entity(person) create new instance with key(username): alice
     When $email = attribute(email) as(string) put: alice@email.com

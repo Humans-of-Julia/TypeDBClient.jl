@@ -61,6 +61,14 @@ function undefine(transaction::AbstractCoreTransaction, query::AbstractString, o
 end
 
 function commit(transaction::AbstractCoreTransaction)
-    execute(transaction, TransactionRequestBuilder.commit_req())
-    return nothing
+    !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
+    try
+        execute(transaction, TransactionRequestBuilder.commit_req())
+        safe_close(transaction)
+    catch ex
+        @info ex
+        return false
+    end
+
+    return true
 end

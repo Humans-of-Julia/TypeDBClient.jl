@@ -369,7 +369,7 @@ Feature: Concept Attribute Type
     Then attribute(rating) get supertype: attribute
     Then attribute(name) get supertype: attribute
     Then attribute(timestamp) get supertype: attribute
-
+@actual
   Scenario: Attribute type root can get attribute types of a specific value class
     When put attribute type: is-open, with value type: boolean
     When put attribute type: age, with value type: long

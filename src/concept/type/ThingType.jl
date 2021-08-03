@@ -24,9 +24,12 @@ label(t::AbstractThingType) = t.label
 # Remote functions
 # ------------------------------------------------------------------------
 
-function set_supertype(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
-    req = ThingTypeRequestBuilder.set_supertype_req(r.concept.label)
-    res = execute(r.transaction, req)
+function set_supertype(r::RemoteConcept{C,T},
+                        super_type::AbstractThingType) where
+                        {C <: AbstractThingType, T <: AbstractCoreTransaction}
+
+    req = ThingTypeRequestBuilder.set_supertype_req(r.concept.label, proto(super_type))
+    execute(r.transaction, req)
 end
 
 function get_supertype(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
@@ -65,6 +68,12 @@ end
 function unset_abstract(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
     req = ThingTypeRequestBuilder.unset_abstract_req(r.concept.label)
     execute(r.transaction, req)
+end
+
+function is_abstract(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+    req = TypeRequestBuilder.is_abstract_req(r.concept.label)
+    res = execute(r.transaction, req)
+    return res.type_res.type_is_abstract_res._abstract
 end
 
 function set_plays(
@@ -109,6 +118,13 @@ function get_plays(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: Abs
     res = stream(r.transaction, req)
     return instantiate.(collect(Iterators.flatten(
         r.type_res_part.thing_type_get_plays_res_part.roles for r in res)))
+end
+
+function set_label(r::RemoteConcept{C,T}, new_label_name::String) where {C <: AbstractThingType, T <: AbstractCoreTransaction}
+    set_label_req = TypeRequestBuilder.set_label_req(r.concept.label, new_label_name)
+    execute(r.transaction, set_label_req)
+
+    return nothing
 end
 
 function delete(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}

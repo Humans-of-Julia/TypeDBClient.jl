@@ -39,7 +39,7 @@ function CoreTransaction(session::CoreSession ,
 
     req_result = execute(result, open_req, false)
     kind_of_result = Proto.which_oneof(req_result, :res)
-    open_req_res = getproperty(req_result, kind_of_result)
+    getproperty(req_result, kind_of_result)
 
     return result
 end
@@ -78,6 +78,7 @@ function close(transaction::T)::Bool where {T<:AbstractCoreTransaction}
         delete!(transaction.session, transaction.transaction_id)
     catch ex
         throw(TypeDBClientException("something went wrong closing Transaction", ex))
+        return false
     end
     true
 end

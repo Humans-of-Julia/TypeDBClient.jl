@@ -288,9 +288,9 @@ function unset_abstract_req(label::Label)
     )
 end
 
-function set_supertype_req(label::Label)
+function set_supertype_req(label::Label, super_type::Proto._Type)
     return _treq(label.name, label.scope;
-        type_set_supertype_req = Proto.Type_SetSupertype_Req()
+        type_set_supertype_req = Proto.Type_SetSupertype_Req(;_type = super_type)
     )
 end
 

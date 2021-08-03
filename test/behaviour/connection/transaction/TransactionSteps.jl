@@ -1,8 +1,8 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-@when("transaction commits") do context
-    g.commit(context[:transaction])
-end
+# @when("transaction commits") do context
+#     g.commit(context[:transaction])
+# end
 
 
 @when("session opens transaction of type: read") do context
@@ -12,7 +12,16 @@ end
 end
 
 @when("session opens transaction of type: write") do context
-    transaction = g.transaction(context[:session], trans_write)
+    db = context[:session].database.name
+    type = context[:session].type
+    transaction = nothing
+    try
+        transaction = g.transaction(context[:session], trans_write)
+    catch ex
+        g.close(context[:session])
+        context[:session] = g.CoreSession(client, db, type, request_timout=Inf)
+        transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
+    end
     @expect transaction !== nothing
     context[:transaction] = transaction
 end

@@ -19,10 +19,6 @@ p = ParseOptions(allow_any_step_order = true)
 function run_tests()
     runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="@actual")
     # runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath)
-    dbs = g.get_all_databases(g.CoreClient("localhost",1729))
-    for db in dbs
-        g.delete_database(client, db.name)
-    end
 end
 
 

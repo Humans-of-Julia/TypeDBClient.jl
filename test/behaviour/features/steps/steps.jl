@@ -14,16 +14,32 @@ end
 end
 
 @given("transaction commits") do context
-    g.commit(context[:transction])
+    if g.is_open(context[:session]) === true
+        g.is_open(context[:transaction]) && g.commit(context[:transaction])
+        for (_,transaction) in context[:session].transactions
+            all([context[:transaction].transaction_id != transaction.transaction_id,
+                 g.is_open(transaction)]) && g.commit(transaction)
+        end
+    end
 end
 
 @given("connection close all sessions") do context
+    g.safe_close(context[:session])
     g.safe_close.(collect(values(context[:client].sessions)))
 end
 
 
 @afterscenario() do context, scenario
-    delete_all_databases(context[:client])
+  g.is_open(context[:session])
+  delete_all_databases(context[:client])
+end
+
+@afterall() do
+    client = g.CoreClient("127.0.0.1",1729)
+    dbs = g.get_all_databases(client)
+    for item in dbs
+        g.delete_database(client, item.name)
+    end
 end
 
 @beforeall() do
@@ -37,7 +53,7 @@ end
 ##############  utility functions ########################
 function delete_all_databases(client::g.CoreClient)
     for (_, session) in client.sessions
-        safe_close(session)
+        g.safe_close(session)
     end
     all_db = g.get_all_databases(client)
     for db in all_db
