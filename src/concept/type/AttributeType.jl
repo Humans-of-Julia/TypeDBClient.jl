@@ -52,6 +52,9 @@ function proto(t::AbstractAttributeType)
     # return RoleTypeRequestBuilder.proto_role_type(t.label, encoding(t))
 end
 
+# function to get the value type out of a given AttributeType
+proto_value_type(type::AttributeType{V}) where {V} = V
+
 # TODO What is Object value type in Java? It needs to return `false` for that.
 is_writable(::AttributeType) = true
 is_writable(::AttributeType{VALUE_TYPE.OBJECT}) = false
@@ -77,7 +80,7 @@ function get_subtypes(r::RemoteConcept{C,T}) where {
     res = execute(r.transaction, req)
     typs = res.type_res_part.type_get_subtypes_res_part.types
 
-    if is_root(concept) && proto(concept) !== VALUE_TYPE.OBJECT
+    if is_root(concept) && proto_value_type(concept) !== VALUE_TYPE.OBJECT
         return filter(t -> proto(t) == proto(concept) || label(t) == label(concept),
                         [instantiate(t) for t in typs])
     else

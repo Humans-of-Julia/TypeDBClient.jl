@@ -352,7 +352,7 @@ function set_owns_req(
     return _treq(label.name, label.scope; thing_type_set_owns_req)
 end
 
-function unset_owns_req(label::Label, attribute_type::Proto.AttributeType)
+function unset_owns_req(label::Label, attribute_type::Proto._Type)
     return _treq(label.name, label.scope;
         thing_type_unset_owns_req = Proto.ThingType_UnsetOwns_Req(; attribute_type)
     )

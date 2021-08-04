@@ -16,6 +16,9 @@ function proto(t::AbstractThingType)
     # return ThingTypeRequestBuilder.proto_thing_type(t.label, encoding(t))
 end
 
+# a convinient function to prevent code to work around a argument nothing
+proto(t::Nothing) = t
+
 # Contract: all subtypes of AbstractThingType should have these two fields
 is_root(t::AbstractThingType) = t.is_root
 label(t::AbstractThingType) = t.label
@@ -92,11 +95,24 @@ end
 function set_owns(
     r::RemoteConcept{C,T},
     attribute_type::AbstractType,
-    is_key::Bool=false
+    is_key::Bool= false,
+    overriden_type::Optional{AbstractType}= nothing
 ) where {C <: AbstractType,T <: AbstractCoreTransaction}
     req = ThingTypeRequestBuilder.set_owns_req(
         r.concept.label,
         is_key,
+        proto(attribute_type),
+        proto(overriden_type)
+    )
+    execute(r.transaction, req)
+end
+
+function unset_owns(
+    r::RemoteConcept{C,T},
+    attribute_type::AbstractType
+) where {C <: AbstractType,T <: AbstractCoreTransaction}
+    req = ThingTypeRequestBuilder.unset_owns_req(
+        r.concept.label,
         proto(attribute_type)
     )
     execute(r.transaction, req)
