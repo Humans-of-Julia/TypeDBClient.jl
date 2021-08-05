@@ -58,13 +58,28 @@ end
 
 function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
     !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
-    result = single_request(transaction.bidirectional_stream, request, batch)
+    result = []
+    try
+        result = single_request(transaction.bidirectional_stream, request, batch)
+    catch ex
+        safe_close(transaction)
+        rethrow(ex)
+    end
+
     return result
 end
 
 function stream(transaction::T, request::R, batch::Bool = true) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
     !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
-    result = stream_request(transaction.bidirectional_stream, request, batch)
+
+    result = []
+    try
+        result = stream_request(transaction.bidirectional_stream, request, batch)
+    catch ex
+        safe_close(transaction)
+        rethrow(ex)
+    end
+
     return result
 end
 

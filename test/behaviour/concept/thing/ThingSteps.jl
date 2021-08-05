@@ -19,9 +19,9 @@ function cm_call(f::Function, session::Session)
 end
 
 function _entity_set_owns(entity, attribute_type, context, is_key = false)
-    loc_entity = get(context[:concept_manager], g.EntityType, entity)
+    loc_entity = get(ConceptManager(context[:transaction]), g.EntityType, entity)
     rem_entitiy = g.as_remote(loc_entity, context[:transaction])
-    loc_attribute = get(context[:concept_manager], g.AttributeType, attribute_type)
+    loc_attribute = get(ConceptManager(context[:transaction]), g.AttributeType, attribute_type)
     g.set_owns(rem_entitiy, loc_attribute, is_key)
 end
 

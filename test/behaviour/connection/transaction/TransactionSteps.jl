@@ -12,16 +12,13 @@
 end
 
 @when("session opens transaction of type: write") do context
-    db = context[:session].database.name
-    type = context[:session].type
-    transaction = nothing
-    try
-        transaction = g.transaction(context[:session], trans_write)
-    catch ex
-        g.close(context[:session])
-        context[:session] = g.CoreSession(client, db, type, request_timout=Inf)
-        transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
+    # db = context[:session].database.name
+    # type = context[:session].type
+    if haskey(context, :transaction)
+        context[:transaction] !== nothing && g.close(context[:transaction])
     end
+
+    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
     @expect transaction !== nothing
     context[:transaction] = transaction
 end

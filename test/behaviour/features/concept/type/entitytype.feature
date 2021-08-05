@@ -250,7 +250,7 @@ Feature: Concept Entity Type
     Then entity(person) get owns key types contain:
       | email    |
       | username |
-
+@actual
   Scenario: Entity types can only commit keys if every instance owns a distinct key
     When put attribute type: email, with value type: string
     When put attribute type: username, with value type: string
