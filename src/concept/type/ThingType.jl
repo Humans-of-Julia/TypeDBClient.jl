@@ -87,9 +87,16 @@ function set_plays(
     req = ThingTypeRequestBuilder.set_plays_req(
         r.concept.label,
         proto(role_type),
-        overridden_role_type
+        proto(overridden_role_type)
     )
     execute(r.transaction, req)
+end
+
+function unset_plays(r::RemoteConcept{C,T},
+    role_type::AbstractRoleType
+) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+    unset_req = ThingTypeRequestBuilder.unset_plays_req(r.concept.label, proto(role_type))
+    execute(r.transaction, unset_req)
 end
 
 function set_owns(

@@ -30,12 +30,7 @@ function thing_call(f::Function, session::Session, name::AbstractString)
     end
 end
 
-function _entity_set_owns(entity, attribute_type, context)
-    loc_entity = get(g.ConceptManager(trans), g.EntityType, entity)
-    rem_entitiy = g.as_remote(loc_entity, trans)
-    loc_attribute = get(g.ConceptManager(trans), g.AttributeType, attribute_type)
-    set_owns(rem_entitiy, loc_attribute)
-end
+
 
 res = thing_call(thing -> get_owns(thing), sess, "person")
 

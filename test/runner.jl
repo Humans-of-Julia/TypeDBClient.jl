@@ -7,10 +7,10 @@ using TypeDBClient
 g = TypeDBClient
 client = g.CoreClient("localhost",1729)
 
-rootpath = joinpath(@__DIR__, "test/behaviour")
-featurepath = joinpath(@__DIR__,"test/behaviour/features")
-stepspath = joinpath(@__DIR__,"test/behaviour")
-configpath = joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl")
+rootpath = joinpath(@__DIR__,"behaviour")
+featurepath = joinpath(@__DIR__,"behaviour/features")
+stepspath = joinpath(@__DIR__,"behaviour")
+configpath = joinpath(@__DIR__,"behaviour/config/ConfigEnvironment.jl")
 
 p = ParseOptions(allow_any_step_order = true)
 

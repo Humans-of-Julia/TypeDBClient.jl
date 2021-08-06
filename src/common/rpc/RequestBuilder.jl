@@ -303,7 +303,7 @@ end
 function set_plays_req(
     label::Label,
     role_type::Proto._Type,
-    overridden_role_type::Optional{Proto.RoleType} = nothing
+    overridden_role_type::Optional{Proto._Type} = nothing
 )
     thing_type_set_plays_req = Proto.ThingType_SetPlays_Req(;role = role_type)
     if overridden_role_type !== nothing
@@ -316,7 +316,7 @@ function set_plays_req(
 end
 
 function unset_plays_req(
-    label::Label, role_type::Proto.RoleType
+    label::Label, role_type::Proto._Type
 )
     return _treq(label.name, label.scope;
         thing_type_unset_plays_req = Proto.ThingType_UnsetPlays_Req(

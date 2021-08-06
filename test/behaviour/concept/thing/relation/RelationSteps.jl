@@ -79,7 +79,7 @@ end
 @when("\$b = entity(person) create new instance with key(username): bob") do context
     ins_string = raw"""insert $x isa person, has username = "bob";"""
     res = g.insert(context[:transaction], ins_string)
-    context[:bob] = res[1].data["x"]
+    context[:b] = res[1].data["x"]
 end
 
 @when("relation \$m add player for role(wife): \$a") do context
@@ -93,7 +93,7 @@ end
     g.add_player(context[:transaction],
                 context[:marriage],
                 g.RoleType(g.Label("marriage","husband"),false),
-                context[:bob])
+                context[:b])
 end
 
 @then("relation \$m get players for role(wife) contain: \$a") do context
@@ -119,7 +119,7 @@ end
 
 @then("relation \$m get players contain: \$b") do context
     res = g.get_players(context[:transaction], context[:marriage])
-    @expect in(context[:bob], res)
+    @expect in(context[:b], res)
 end
 
 @then("relation \$m get players contain:") do context
@@ -127,7 +127,6 @@ end
     entities = [db[2] for db in context.datatable]
 
     context[Symbol("a")] = context[:entity_res][1].data["x"]
-    context[Symbol("b")] = context[:bob]
 
     for i in 1:length(roles_inp)
         roles = [g.RoleType(g.Label("marriage", roles_inp[i]),false)]
@@ -146,7 +145,7 @@ end
 
 @when("\$b = entity(person) get instance with key(username): bob") do context
     match_string = raw"""match $x isa person, has username="bob";"""
-    context[:bob] = g.match(context[:transaction], match_string)[1].data["x"]
+    context[:b] = g.match(context[:transaction], match_string)[1].data["x"]
 end
 
 # Scenario: Role players can get relations
@@ -156,7 +155,7 @@ end
 end
 
 @then("entity \$b get relations(marriage:husband) do not contain: \$m") do context
-    rel_bob= g.get_relations(context[:transaction], context[:bob])
+    rel_bob= g.get_relations(context[:transaction], context[:b])
     @expect !in(context[:marriage], rel_bob)
 end
 
@@ -169,7 +168,7 @@ end
 
 @then("entity \$b get relations(marriage:husband) contain: \$m") do context
     rel_bob = g.get_relations(context[:transaction],
-                                context[:bob],
+                                context[:b],
                                 [g.RoleType(g.Label("marriage","husband"),false)])
     @expect in(context[:marriage], rel_bob)
 end
@@ -193,7 +192,6 @@ end
     entities = [db[2] for db in context.datatable]
 
     context[Symbol("a")] = context[:entity_res][1].data["x"]
-    context[Symbol("b")] = context[:bob]
 
     for i in 1:length(roles_inp)
         roles = [g.RoleType(g.Label("marriage", roles_inp[i]),false)]
@@ -244,7 +242,7 @@ end
 end
 
 @then("entity \$b get relations do not contain: \$m") do context
-   relations = g.get_relations(context[:transaction], context[:bob])
+   relations = g.get_relations(context[:transaction], context[:b])
    @expect !in(context[:marriage], relations)
 end
 
@@ -253,8 +251,8 @@ end
     try
         g.add_player(context[:transaction],
                 context[:marriage],
-                g.RoleType(g.Label("marriage","husband"),false),
-                context[:bob])
+                g.RoleType(g.Label("marriage","wife"),false),
+                context[:res_entity][1].data["x"])
     catch ex
         @expect ex !== nothing
     end

@@ -24,8 +24,8 @@ Feature: Concept Entity Type
     Given connection create database: typedb
     Given connection open schema session for database: typedb
     Given session opens transaction of type: write
-
-  Scenario: Entity types can be created
+@actual
+ Scenario: Entity types can be created
     When put entity type: person
     Then entity(person) is null: false
     Then entity(person) get supertype: entity
@@ -33,8 +33,8 @@ Feature: Concept Entity Type
     When session opens transaction of type: read
     Then entity(person) is null: false
     Then entity(person) get supertype: entity
-
-  Scenario: Entity types can be deleted
+@actual
+ Scenario: Entity types can be deleted
     When put entity type: person
     Then entity(person) is null: false
     When put entity type: company
@@ -61,8 +61,8 @@ Feature: Concept Entity Type
     Then entity(entity) get subtypes do not contain:
       | person  |
       | company |
-
-  Scenario: Entity types that have instances cannot be deleted
+@actual
+ Scenario: Entity types that have instances cannot be deleted
     When put entity type: person
     When transaction commits
     When connection close all sessions
@@ -74,8 +74,8 @@ Feature: Concept Entity Type
     When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then delete entity type: person; throws exception
-
-  Scenario: Entity types can change labels
+@actual
+ Scenario: Entity types can change labels
     When put entity type: person
     Then entity(person) get label: person
     When entity(person) set label: horse
@@ -93,8 +93,8 @@ Feature: Concept Entity Type
     When session opens transaction of type: read
     Then entity(animal) is null: false
     Then entity(animal) get label: animal
-
-  Scenario: Entity types can be set to abstract
+@actual
+ Scenario: Entity types can be set to abstract
     When put entity type: person
     When entity(person) set abstract: true
     When put entity type: company
@@ -116,8 +116,8 @@ Feature: Concept Entity Type
     When session opens transaction of type: write
     Then entity(company) is abstract: true
     Then entity(company) create new instance; throws exception
-
-  Scenario: Entity types can be subtypes of other entity types
+@actual
+ Scenario: Entity types can be subtypes of other entity types
     When put entity type: man
     When put entity type: woman
     When put entity type: person
@@ -227,16 +227,16 @@ Feature: Concept Entity Type
       | person |
       | man    |
       | woman  |
-
-  Scenario: Entity types cannot subtype itself
+@actual
+ Scenario: Entity types cannot subtype itself
     When put entity type: person
     When transaction commits
     When session opens transaction of type: write
     Then entity(person) set supertype: person; throws exception
     When session opens transaction of type: write
     Then entity(person) set supertype: person; throws exception
-
-  Scenario: Entity types can have keys
+@actual
+ Scenario: Entity types can have keys
     When put attribute type: email, with value type: string
     When put attribute type: username, with value type: string
     When put entity type: person
@@ -251,7 +251,7 @@ Feature: Concept Entity Type
       | email    |
       | username |
 @actual
-  Scenario: Entity types can only commit keys if every instance owns a distinct key
+ Scenario: Entity types can only commit keys if every instance owns a distinct key
     When put attribute type: email, with value type: string
     When put attribute type: username, with value type: string
     When put entity type: person
@@ -292,8 +292,8 @@ Feature: Concept Entity Type
     Then entity(person) get owns key types contain:
       | email    |
       | username |
-
-  Scenario: Entity types can unset keys
+@actual
+ Scenario: Entity types can unset keys
     When put attribute type: email, with value type: string
     When put attribute type: username, with value type: string
     When put entity type: person
@@ -308,8 +308,8 @@ Feature: Concept Entity Type
     Then entity(person) get owns key types do not contain:
       | email    |
       | username |
-
-  Scenario: Entity types cannot have keys of attributes that are not keyable
+@actual
+ Scenario: Entity types cannot have keys of attributes that are not keyable
     When put attribute type: is-open, with value type: boolean
     When put attribute type: age, with value type: long
     When put attribute type: rating, with value type: double
@@ -325,8 +325,8 @@ Feature: Concept Entity Type
     Then entity(person) set owns key type: is-open; throws exception
     When session opens transaction of type: write
     Then entity(person) set owns key type: rating; throws exception
-
-  Scenario: Entity types can have attributes
+@actual
+ Scenario: Entity types can have attributes
     When put attribute type: name, with value type: string
     When put attribute type: age, with value type: long
     When put entity type: person
@@ -340,8 +340,8 @@ Feature: Concept Entity Type
     Then entity(person) get owns attribute types contain:
       | name |
       | age  |
-
-  Scenario: Entity types can unset owning attributes
+@actual
+ Scenario: Entity types can unset owning attributes
     When put attribute type: name, with value type: string
     When put attribute type: age, with value type: long
     When put entity type: person
@@ -356,8 +356,8 @@ Feature: Concept Entity Type
     Then entity(person) get owns attribute types do not contain:
       | name |
       | age  |
-
-  Scenario: Entity types cannot unset owning attributes that are owned by existing instances
+@actual
+ Scenario: Entity types cannot unset owning attributes that are owned by existing instances
     When put attribute type: name, with value type: string
     When put entity type: person
     When entity(person) set owns attribute type: name
@@ -373,8 +373,8 @@ Feature: Concept Entity Type
     When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then entity(person) unset owns attribute type: name; throws exception
-
-  Scenario: Entity types can have keys and attributes
+@actual
+ Scenario: Entity types can have keys and attributes
     When put attribute type: email, with value type: string
     When put attribute type: username, with value type: string
     When put attribute type: name, with value type: string
@@ -402,8 +402,8 @@ Feature: Concept Entity Type
       | username |
       | name     |
       | age      |
-
-  Scenario: Entity types can inherit keys and attributes
+@actual
+ Scenario: Entity types can inherit keys and attributes
     When put attribute type: email, with value type: string
     When put attribute type: name, with value type: string
     When put attribute type: reference, with value type: string
@@ -460,8 +460,8 @@ Feature: Concept Entity Type
       | name      |
       | rating    |
       | points    |
-
-  Scenario: Entity types can inherit keys and attributes that are subtypes of each other
+@actual
+ Scenario: Entity types can inherit keys and attributes that are subtypes of each other
     When put attribute type: username, with value type: string
     When attribute(username) set abstract: true
     When put attribute type: score, with value type: double
@@ -529,8 +529,8 @@ Feature: Concept Entity Type
       | score     |
       | rating    |
       | points    |
-
-  Scenario: Entity types can override inherited keys and attributes
+@actual
+ Scenario: Entity types can override inherited keys and attributes
     When put attribute type: username, with value type: string
     When put attribute type: email, with value type: string
     When attribute(email) set abstract: true
@@ -637,8 +637,8 @@ Feature: Concept Entity Type
       | references |
       | name       |
       | rating     |
-
-  Scenario: Entity types can override inherited attributes as keys
+@actual
+ Scenario: Entity types can override inherited attributes as keys
     When put attribute type: name, with value type: string
     When attribute(name) set abstract: true
     When put attribute type: username, with value type: string
@@ -667,8 +667,8 @@ Feature: Concept Entity Type
       | username |
     Then entity(customer) get owns attribute types do not contain:
       | name |
-
-  Scenario: Entity types can redeclare keys as keys
+@actual
+ Scenario: Entity types can redeclare keys as keys
     When put attribute type: name, with value type: string
     When put attribute type: email, with value type: string
     When put entity type: person
@@ -678,8 +678,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     Then entity(person) set owns key type: email
-
-  Scenario: Entity types can redeclare attributes as attributes
+@actual
+ Scenario: Entity types can redeclare attributes as attributes
     When put attribute type: name, with value type: string
     When put attribute type: email, with value type: string
     When put entity type: person
@@ -689,8 +689,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     Then entity(person) set owns attribute type: email
-
-  Scenario: Entity types can re-override keys as keys
+@actual
+ Scenario: Entity types can re-override keys as keys
     When put attribute type: email, with value type: string
     When attribute(email) set abstract: true
     When put attribute type: work-email, with value type: string
@@ -705,8 +705,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     When entity(customer) set owns key type: work-email as email
-
-  Scenario: Entity types can re-override attributes as attributes
+@actual
+ Scenario: Entity types can re-override attributes as attributes
     When put attribute type: name, with value type: string
     When attribute(name) set abstract: true
     When put attribute type: nick-name, with value type: string
@@ -721,8 +721,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     When entity(customer) set owns attribute type: nick-name as name
-
-  Scenario: Entity types can redeclare keys as attributes
+@actual
+ Scenario: Entity types can redeclare keys as attributes
     When put attribute type: name, with value type: string
     When put attribute type: email, with value type: string
     When put entity type: person
@@ -732,8 +732,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     Then entity(person) set owns attribute type: email
-
-  Scenario: Entity types can redeclare attributes as keys
+@actual
+ Scenario: Entity types can redeclare attributes as keys
     When put attribute type: name, with value type: string
     When put attribute type: email, with value type: string
     When put entity type: person
@@ -743,8 +743,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     Then entity(person) set owns key type: email
-
-  Scenario: Entity types can redeclare inherited attributes as keys (which will override)
+@actual
+ Scenario: Entity types can redeclare inherited attributes as keys (which will override)
     When put attribute type: email, with value type: string
     When put entity type: person
     When entity(person) set owns attribute type: email
@@ -762,8 +762,8 @@ Feature: Concept Entity Type
     Then entity(subscriber) set owns key type: email
     Then entity(subscriber) get owns key types contain:
       | email |
-
-  Scenario: Entity types cannot redeclare inherited attributes as attributes
+@actual
+ Scenario: Entity types cannot redeclare inherited attributes as attributes
     When put attribute type: email, with value type: string
     When put attribute type: name, with value type: string
     When put entity type: person
@@ -771,8 +771,8 @@ Feature: Concept Entity Type
     When put entity type: customer
     When entity(customer) set supertype: person
     Then entity(customer) set owns attribute type: name; throws exception
-
-  Scenario: Entity types cannot redeclare inherited keys as keys or attributes
+@actual
+ Scenario: Entity types cannot redeclare inherited keys as keys or attributes
     When put attribute type: email, with value type: string
     When put attribute type: name, with value type: string
     When put entity type: person
@@ -784,8 +784,8 @@ Feature: Concept Entity Type
     Then entity(customer) set owns key type: email; throws exception
     When session opens transaction of type: write
     Then entity(customer) set owns attribute type: email; throws exception
-
-  Scenario: Entity types cannot redeclare inherited key attribute types
+@actual
+ Scenario: Entity types cannot redeclare inherited key attribute types
     When put attribute type: email, with value type: string
     When attribute(email) set abstract: true
     When put attribute type: customer-email, with value type: string
@@ -799,8 +799,8 @@ Feature: Concept Entity Type
     When put entity type: subscriber
     When entity(subscriber) set supertype: customer
     Then entity(subscriber) set owns key type: email; throws exception
-
-  Scenario: Entity types cannot redeclare overridden key attribute types
+@actual
+ Scenario: Entity types cannot redeclare overridden key attribute types
     When put attribute type: email, with value type: string
     When attribute(email) set abstract: true
     When put attribute type: customer-email, with value type: string
@@ -814,8 +814,8 @@ Feature: Concept Entity Type
     When put entity type: subscriber
     When entity(subscriber) set supertype: customer
     Then entity(subscriber) set owns key type: customer-email; throws exception
-
-  Scenario: Entity types cannot redeclare inherited owns attribute types
+@actual
+ Scenario: Entity types cannot redeclare inherited owns attribute types
     When put attribute type: name, with value type: string
     When attribute(name) set abstract: true
     When put attribute type: customer-name, with value type: string
@@ -829,8 +829,8 @@ Feature: Concept Entity Type
     When put entity type: subscriber
     When entity(subscriber) set supertype: customer
     Then entity(subscriber) set owns attribute type: name; throws exception
-
-  Scenario: Entity types cannot redeclare overridden owns attribute types
+@actual
+ Scenario: Entity types cannot redeclare overridden owns attribute types
     When put attribute type: name, with value type: string
     When attribute(name) set abstract: true
     When put attribute type: customer-name, with value type: string
@@ -844,8 +844,8 @@ Feature: Concept Entity Type
     When put entity type: subscriber
     When entity(subscriber) set supertype: customer
     Then entity(subscriber) set owns attribute type: customer-name; throws exception
-
-  Scenario: Entity types cannot override declared keys and attributes
+@actual
+ Scenario: Entity types cannot override declared keys and attributes
     When put attribute type: username, with value type: string
     When attribute(username) set abstract: true
     When put attribute type: email, with value type: string
@@ -863,8 +863,8 @@ Feature: Concept Entity Type
     Then entity(person) set owns key type: email as username; throws exception
     When session opens transaction of type: write
     Then entity(person) set owns attribute type: first-name as name; throws exception
-
-  Scenario: Entity types cannot override inherited keys as attributes
+@actual
+ Scenario: Entity types cannot override inherited keys as attributes
     When put attribute type: username, with value type: string
     When attribute(username) set abstract: true
     When put attribute type: email, with value type: string
@@ -875,8 +875,8 @@ Feature: Concept Entity Type
     When put entity type: customer
     When entity(customer) set supertype: person
     Then entity(customer) set owns attribute type: email as username; throws exception
-
-  Scenario: Entity types cannot override inherited keys and attributes other than with their subtypes
+@actual
+ Scenario: Entity types cannot override inherited keys and attributes other than with their subtypes
     When put attribute type: username, with value type: string
     When put attribute type: name, with value type: string
     When put attribute type: reference, with value type: string
@@ -891,8 +891,8 @@ Feature: Concept Entity Type
     Then entity(customer) set owns key type: reference as username; throws exception
     When session opens transaction of type: write
     Then entity(customer) set owns attribute type: rating as name; throws exception
-
-  Scenario: Entity types can play role types
+@actual
+ Scenario: Entity types can play role types
     When put relation type: marriage
     When relation(marriage) set relates role: husband
     When put entity type: person
@@ -921,8 +921,8 @@ Feature: Concept Entity Type
       | person |
     Then relation(marriage) get role(wife) get players contain:
       | person |
-
-  Scenario: Entity types can unset playing role types
+@actual
+ Scenario: Entity types can unset playing role types
     When put relation type: marriage
     When relation(marriage) set relates role: husband
     When relation(marriage) set relates role: wife
@@ -953,8 +953,8 @@ Feature: Concept Entity Type
       | person |
     Then relation(marriage) get role(wife) get players do not contain:
       | person |
-
-  Scenario: Attempting to unset playing a role type that an entity type cannot actually play throws
+@actual
+ Scenario: Attempting to unset playing a role type that an entity type cannot actually play throws
     When put relation type: marriage
     When relation(marriage) set relates role: husband
     When relation(marriage) set relates role: wife
@@ -963,8 +963,8 @@ Feature: Concept Entity Type
     Then entity(person) get playing roles do not contain:
       | marriage:husband |
     Then entity(person) unset plays role: marriage:husband; throws exception
-
-  Scenario: Entity types cannot unset playing role types that are currently played by existing instances
+@actual
+ Scenario: Entity types cannot unset playing role types that are currently played by existing instances
     When put relation type: marriage
     When relation(marriage) set relates role: husband
     When relation(marriage) set relates role: wife
@@ -982,8 +982,8 @@ Feature: Concept Entity Type
     When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then entity(person) unset plays role: marriage:wife; throws exception
-
-  Scenario: Entity types can inherit playing role types
+@actual
+ Scenario: Entity types can inherit playing role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
     When relation(parentship) set relates role: child
@@ -1036,8 +1036,8 @@ Feature: Concept Entity Type
       | marriage:husband  |
       | marriage:wife     |
       | sales:buyer       |
-
-  Scenario: Entity types can inherit playing role types that are subtypes of each other
+@actual
+ Scenario: Entity types can inherit playing role types that are subtypes of each other
     When put relation type: parentship
     When relation(parentship) set relates role: parent
     When relation(parentship) set relates role: child
@@ -1083,8 +1083,8 @@ Feature: Concept Entity Type
       | parentship:parent |
       | mothership:mother |
       | parentship:child  |
-
-  Scenario: Entity types can override inherited playing role types
+@actual
+ Scenario: Entity types can override inherited playing role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
     When relation(parentship) set relates role: child
@@ -1135,8 +1135,8 @@ Feature: Concept Entity Type
       | parentship:child  |
     Then entity(woman) get playing roles do not contain:
       | parentship:parent |
-
-  Scenario: Entity types can redeclare playing role types
+@actual
+ Scenario: Entity types can redeclare playing role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
     When put entity type: person
@@ -1144,8 +1144,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     When entity(person) set plays role: parentship:parent
-
-  Scenario: Entity types can re-override inherited playing role types
+@actual
+ Scenario: Entity types can re-override inherited playing role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
     When put relation type: fathership
@@ -1159,8 +1159,8 @@ Feature: Concept Entity Type
     When transaction commits
     When session opens transaction of type: write
     When entity(man) set plays role: fathership:father as parentship:parent
-
-  Scenario: Entity types cannot redeclare inherited/overridden playing role types
+@actual
+ Scenario: Entity types cannot redeclare inherited/overridden playing role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
     When put relation type: fathership
@@ -1178,7 +1178,7 @@ Feature: Concept Entity Type
     Then entity(boy) set plays role: parentship:parent; throws exception
     When session opens transaction of type: write
     Then entity(boy) set plays role: fathership:father; throws exception
-
+@actual
   Scenario: Entity types cannot override declared playing role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
@@ -1188,7 +1188,7 @@ Feature: Concept Entity Type
     When put entity type: person
     When entity(person) set plays role: parentship:parent
     Then entity(person) set plays role: fathership:father as parentship:parent; throws exception
-
+@actual
   Scenario: Entity types cannot override inherited playing role types other than with their subtypes
     When put relation type: parentship
     When relation(parentship) set relates role: parent
