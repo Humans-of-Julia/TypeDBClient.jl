@@ -392,11 +392,9 @@ function create_req(label::Label)
     )
 end
 
-function get_relates_req(label::Label, role_label::Optional{String})
+function get_relates_req(label::Label)
     return _treq(label.name, label.scope;
-        relation_type_get_relates_req = Proto.RelationType_GetRelates_Req(;
-            label = role_label
-        )
+        relation_type_get_relates_req = Proto.RelationType_GetRelates_Req()
     )
 end
 
@@ -416,6 +414,14 @@ end
 function unset_relates_req(label::Label, role_label::Optional{String})
     return _treq(label.name, label.scope;
         relation_type_unset_relates_req = Proto.RelationType_UnsetRelates_Req(;
+            label = role_label
+        )
+    )
+end
+
+function relation_type_get_relates_for_role_label_req(label::Label, role_label::String)
+    return _treq(label.name, label.scope;
+            relation_type_get_relates_for_role_label_req = Proto.RelationType_GetRelatesForRoleLabel_Req(;
             label = role_label
         )
     )

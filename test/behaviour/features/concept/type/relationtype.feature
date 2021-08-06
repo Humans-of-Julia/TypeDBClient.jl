@@ -24,7 +24,7 @@ Feature: Concept Relation Type and Role Type
     Given connection create database: typedb
     Given connection open schema session for database: typedb
     Given session opens transaction of type: write
-
+@actual
   Scenario: Relation and role types can be created
     When put relation type: marriage
     When relation(marriage) set relates role: husband

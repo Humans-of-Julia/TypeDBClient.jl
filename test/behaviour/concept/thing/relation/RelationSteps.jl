@@ -14,7 +14,7 @@ end
 end
 
 @given("relation(marriage) set relates role: wife") do context
-    g.set_relates(context[:transaction],
+    res = g.set_relates(context[:transaction],
                     g.Label("","marriage"),
                     "wife")
 end
