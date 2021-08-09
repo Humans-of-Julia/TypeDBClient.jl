@@ -521,9 +521,7 @@ end
 end
 
 @when("put relation type: father-son") do context
-    g.put(ConceptManager(context[:transaction]),
-            RelationType,
-            "father-son")
+    res = g.put(context[:cm], RelationType, "father-son")
 end
 
 @when("relation(father-son) set supertype: fathership") do context

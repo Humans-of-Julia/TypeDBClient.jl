@@ -47,10 +47,10 @@ function _subtypes_contain(context, abstract_type::Type{<:g.AbstractThingType}, 
     attr = g.get(ConceptManager(context[:transaction]), abstract_type, attr_name)
     res_types = g.get_subtypes(g.as_remote(attr, context[:transaction]))
     res_array = Bool[]
-    for attr in res_types
-        push!(res_array, in(attr.label.name, sub_types))
+    for i in 1:length(sub_types)
+        sub_type = g.get(context[:cm], abstract_type, sub_types[i])
+        push!(res_array, in(sub_type, res_types))
     end
-
     return res_array
 end
 
@@ -167,10 +167,125 @@ end
 
 @then("thing type root get subtypes contain:") do context
     res_contain = _subtypes_contain(context, ThingType, "thing")
-    @expect !all(res_contain) === true
+    @expect all(res_contain) === true
 end
 
 @then("thing type root get subtypes do not contain:") do context
     res_contain = _subtypes_contain(context, ThingType, "thing")
     @expect all(res_contain) === false
+end
+
+# Scenario: Root thing type can retrieve all instances
+@when("\$att1 = attribute(is-alive) as(boolean) put: true") do context
+    ins_string = raw"""insert $x isa is-alive; $x true;"""
+    res = g.insert(context[:transaction], ins_string)
+    context[:att1] = res[1].data["x"]
+end
+
+@when("\$att2 = attribute(age) as(long) put: 21") do context
+    ins_string = raw"""insert $x isa age; $x 21;"""
+    res = g.insert(context[:transaction], ins_string)
+    context[:att2] = res[1].data["x"]
+end
+
+@when("\$att3 = attribute(score) as(double) put: 123.456") do context
+    ins_string = raw"""insert $x isa score; $x 123.456;"""
+    res = g.insert(context[:transaction], ins_string)
+    context[:att3] = res[1].data["x"]
+end
+
+@when("\$att4 = attribute(username) as(string) put: alice") do context
+    ins_string = raw"""insert $x isa username; $x "alice";"""
+    res = g.insert(context[:transaction], ins_string)
+    context[:att4] = res[1].data["x"]
+end
+
+@when("\$att5 = attribute(license) as(string) put: abc") do context
+    ins_string = raw"""insert $x isa license; $x "abc";"""
+    res = g.insert(context[:transaction], ins_string)
+    context[:att5] = res[1].data["x"]
+end
+
+@when("\$att6 = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
+    ins_string = raw"""insert $x isa birth-date; $x 1990-01-01T11:22:33;"""
+    res = g.insert(context[:transaction], ins_string)
+    context[:att6] = res[1].data["x"]
+end
+
+@when("\$ent1 = entity(person) create new instance with key(username): alice") do context
+    ins_string = raw"""insert $x isa person, has username="alice";"""
+    res = g.insert(context[:transaction], ins_string)
+    context[:ent1] = res[1].data["x"]
+end
+
+@when("\$rel1 = relation(marriage) create new instance with key(license): abc") do context
+    type = g.get(context[:cm], RelationType, "marriage")
+    res = g.create(g.as_remote(type, context[:transaction]))
+    context[:rel1] = res
+
+    match_string = raw"""match $x isa license; $x="abc";"""
+    lic = g.match(context[:transaction], match_string)[1].data["x"]
+    g.set_has(context[:transaction],res ,lic)
+end
+
+@then("root(thing) get instances count: 8") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+    @expect length(res) == 8
+end
+
+@then("root(thing) get instances contain: \$att1") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:att1], res)
+end
+
+@then("root(thing) get instances contain: \$att2") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:att2], res)
+end
+
+@then("root(thing) get instances contain: \$att3") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:att3], res)
+end
+
+@then("root(thing) get instances contain: \$att4") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:att4], res)
+end
+
+@then("root(thing) get instances contain: \$att5") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:att5], res)
+end
+
+@then("root(thing) get instances contain: \$att6") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:att6], res)
+end
+
+@then("root(thing) get instances contain: \$ent1") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:ent1], res)
+end
+
+@then("root(thing) get instances contain: \$rel1") do context
+    type = g.get(context[:cm], ThingType, "thing")
+    res = g.get_instances(g.as_remote(type, context[:transaction]))
+
+    @expect in(context[:rel1], res)
 end

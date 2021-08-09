@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+
 Feature: Concept Attribute
   Background:
     Given connection has been opened
@@ -70,7 +71,6 @@ Feature: Concept Attribute
     Then attribute $x has type: age
     Then attribute $x has value type: long
     Then attribute $x has long value: 21
-
 
   Scenario: Attribute with value type double can be created
     When $x = attribute(score) as(double) put: 123.456

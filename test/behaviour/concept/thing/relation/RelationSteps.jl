@@ -57,23 +57,23 @@ end
     res_license = res_raw_license[1].data["x"]
 
     mar_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
-    context[:marriage] = g.create(g.as_remote(mar_type, context[:transaction]))
-    g.set_has(context[:transaction], context[:marriage], res_license)
+    context[:m] = g.create(g.as_remote(mar_type, context[:transaction]))
+    g.set_has(context[:transaction], context[:m], res_license)
 end
 
 @then("relation \$m is null: false") do context
-    @expect context[:marriage] !== nothing
+    @expect context[:m] !== nothing
 end
 
 @then("relation \$m has type: marriage") do context
-    @expect context[:marriage].type.label.name == "marriage"
+    @expect context[:m].type.label.name == "marriage"
 end
 
 @then("relation(marriage) get instances contain: \$m") do context
     rel_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
     res_inst = g.get_instances(g.as_remote(rel_type, context[:transaction]))
 
-    @expect in(context[:marriage], res_inst)
+    @expect in(context[:m], res_inst)
 end
 
 @when("\$b = entity(person) create new instance with key(username): bob") do context
@@ -84,41 +84,41 @@ end
 
 @when("relation \$m add player for role(wife): \$a") do context
     g.add_player(context[:transaction],
-                context[:marriage],
+                context[:m],
                 g.RoleType(g.Label("marriage","wife"),false),
-                context[:entity_res][1].data["x"])
+                context[:a])
 end
 
 @when("relation \$m add player for role(husband): \$b") do context
     g.add_player(context[:transaction],
-                context[:marriage],
-                g.RoleType(g.Label("marriage","husband"),false),
+                context[:m],
+                g.RoleType(g.Label(context[:m].type.label.name,"husband"),false),
                 context[:b])
 end
 
 @then("relation \$m get players for role(wife) contain: \$a") do context
-    roles = [g.RoleType(g.Label("marriage","wife"),false)]
+    roles = [g.RoleType(g.Label(context[:m].type.label.name, "wife"),false)]
     res = g.get_players(context[:transaction],
-                context[:marriage],
+                context[:m],
                 roles)
-    @expect in(context[:entity_res][1].data["x"], res)
+    @expect in(context[:a], res)
 end
 
 @then("relation \$m get players for role(husband) contain: \$b") do context
     roles = [g.RoleType(g.Label("marriage","husband"),false)]
     res = g.get_players(context[:transaction],
-                context[:marriage],
+                context[:m],
                 roles)
-    @expect in(context[:bob], res)
+    @expect in(context[:b], res)
 end
 
 @then("relation \$m get players contain: \$a") do context
-    res = g.get_players(context[:transaction], context[:marriage])
-    @expect in(context[:entity_res][1].data["x"], res)
+    res = g.get_players(context[:transaction], context[:m])
+    @expect in(context[:a], res)
 end
 
 @then("relation \$m get players contain: \$b") do context
-    res = g.get_players(context[:transaction], context[:marriage])
+    res = g.get_players(context[:transaction], context[:m])
     @expect in(context[:b], res)
 end
 
@@ -126,12 +126,12 @@ end
     roles_inp = [db[1] for db in context.datatable]
     entities = [db[2] for db in context.datatable]
 
-    context[Symbol("a")] = context[:entity_res][1].data["x"]
+    context[Symbol("a")] = context[:a]
 
     for i in 1:length(roles_inp)
         roles = [g.RoleType(g.Label("marriage", roles_inp[i]),false)]
         res = g.get_players(context[:transaction],
-                    context[:marriage],
+                    context[:m],
                     roles)
         @expect in(context[Symbol(string(SubString(entities[i],2,2)))], res)
     end
@@ -140,7 +140,7 @@ end
 @when("\$m = relation(marriage) get instance with key(license): m") do context
     match_string = raw"""match $x isa marriage, has license="m";"""
     res_match = g.match(context[:transaction], match_string)
-    context[:marriage] = !isempty(res_match) ? res_match[1].data["x"] : nothing
+    context[:m] = !isempty(res_match) ? res_match[1].data["x"] : nothing
 end
 
 @when("\$b = entity(person) get instance with key(username): bob") do context
@@ -150,53 +150,53 @@ end
 
 # Scenario: Role players can get relations
 @then("entity \$a get relations(marriage:wife) do not contain: \$m") do context
-    rel_alice = g.get_relations(context[:transaction], context[:entity_res][1].data["x"])
-    @expect !in(context[:marriage], rel_alice)
+    rel_alice = g.get_relations(context[:transaction], context[:a])
+    @expect !in(context[:m], rel_alice)
 end
 
 @then("entity \$b get relations(marriage:husband) do not contain: \$m") do context
     rel_bob= g.get_relations(context[:transaction], context[:b])
-    @expect !in(context[:marriage], rel_bob)
+    @expect !in(context[:m], rel_bob)
 end
 
 @then("entity \$a get relations(marriage:wife) contain: \$m") do context
     rel_alice = g.get_relations(context[:transaction],
-                                context[:entity_res][1].data["x"],
+                                context[:a],
                                 [g.RoleType(g.Label("marriage","wife"),false)])
-    @expect in(context[:marriage], rel_alice)
+    @expect in(context[:m], rel_alice)
 end
 
 @then("entity \$b get relations(marriage:husband) contain: \$m") do context
     rel_bob = g.get_relations(context[:transaction],
                                 context[:b],
                                 [g.RoleType(g.Label("marriage","husband"),false)])
-    @expect in(context[:marriage], rel_bob)
+    @expect in(context[:m], rel_bob)
 end
 
 # Scenario: Role player can be unassigned from relation
 @when("relation \$m remove player for role(wife): \$a") do context
     rem_req = g.remove_player(context[:transaction],
-                        context[:marriage],
+                        context[:m],
                         RoleType(g.Label("marriage","wife"),false),
-                        context[:entity_res][1].data["x"])
+                        context[:a])
 end
 
 
 @then("relation \$m get players for role(wife) do not contain: \$a") do context
-    res = g.get_players(context[:transaction], context[:marriage])
-    @expect !in(context[:entity_res][1].data["x"], res)
+    res = g.get_players(context[:transaction], context[:m])
+    @expect !in(context[:a], res)
 end
 
 @then("relation \$m get players do not contain:") do context
     roles_inp = [db[1] for db in context.datatable]
     entities = [db[2] for db in context.datatable]
 
-    context[Symbol("a")] = context[:entity_res][1].data["x"]
+    context[Symbol("a")] = context[:a]
 
     for i in 1:length(roles_inp)
         roles = [g.RoleType(g.Label("marriage", roles_inp[i]),false)]
         res = g.get_players(context[:transaction],
-                    context[:marriage],
+                    context[:m],
                     roles)
         @expect !in(context[Symbol(string(SubString(entities[i],2,2)))], res)
     end
@@ -204,14 +204,14 @@ end
 
 # Scenario: Relation without role players get deleted
 @then("relation \$m is deleted: true") do context
-    res_relation = g.get(ConceptManager(context[:transaction]), context[:marriage].iid)
+    res_relation = g.get(ConceptManager(context[:transaction]), context[:m].iid)
     @expect res_relation === nothing
 end
 
 @then("entity \$a get relations do not contain: \$m") do  context
     rel_alice = g.get_relations(context[:transaction],
-                                context[:entity_res][1].data["x"])
-    @expect !in(context[:marriage], rel_alice)
+                                context[:a])
+    @expect !in(context[:m], rel_alice)
 end
 
 @then("relation(marriage) get instances do not contain: \$m") do context
@@ -220,11 +220,11 @@ end
                             "marriage")
 
     res_marriage = g.get_instances(g.as_remote(type_marriage, context[:transaction]))
-    @expect !in(context[:marriage], res_marriage)
+    @expect !in(context[:m], res_marriage)
 end
 
 @then("relation \$m is null: true") do context
-    @expect context[:marriage] === nothing
+    @expect context[:m] === nothing
 end
 
 @then("relation(marriage) get instances is empty") do context
@@ -238,19 +238,19 @@ end
 
 # Scenario: Relation with role players can be deleted
 @when("delete relation: \$m") do context
-    g.delete(context[:transaction], context[:marriage])
+    g.delete(context[:transaction], context[:m])
 end
 
 @then("entity \$b get relations do not contain: \$m") do context
    relations = g.get_relations(context[:transaction], context[:b])
-   @expect !in(context[:marriage], relations)
+   @expect !in(context[:m], relations)
 end
 
 # Scenario: Relation cannot have roleplayers inserted after deletion
 @then("relation \$m add player for role(wife): \$a; throws exception") do context
     try
         g.add_player(context[:transaction],
-                context[:marriage],
+                context[:m],
                 g.RoleType(g.Label("marriage","wife"),false),
                 context[:res_entity][1].data["x"])
     catch ex

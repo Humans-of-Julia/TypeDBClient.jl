@@ -54,35 +54,29 @@ end
     \$x isa is-alive;
     \$x true;"
     res = g.insert(context[:transaction], ins_string)
+    context[:x] = res[1].data["x"]
 end
 
 @then("attribute \$x is null: false") do context
-    match_string = "match \$x sub attribute;"
-    res = g.match(context[:transaction], match_string)
-    @expect res !== nothing
+    @expect context[:x] !== nothing
 end
 
 @then("attribute \$x has type: is-alive") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect length(erg) == 1
-    @expect erg[1].type.label.name == "is-alive"
+    @expect context[:x].type.label.name == "is-alive"
 end
 
 @then("attribute \$x has value type: boolean") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect erg[1].type == g.AttributeType(g.Label("","is-alive"), false, VALUE_TYPE.BOOLEAN)
-    @expect typeof(erg[1].value) == Bool
+    @expect typeof(context[:x].value) == Bool
 end
 
 @then("attribute \$x has boolean value: true") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect typeof(erg[1].value) == Bool
-    @expect erg[1].value === true
+    @expect typeof(context[:x].value) == Bool
+    @expect context[:x].value === true
 end
 
 @when("\$x = attribute(is-alive) as(boolean) get: true") do context
-    erg = _attribute(context[:transaction], "is-alive")
-    @expect erg[1].label.name == "is-alive"
+    @expect context[:x].type.label.name == "is-alive"
+    @expect context[:x].value === true
 end
 
 # Scenario: Attribute with value type long can be created
@@ -91,30 +85,30 @@ end
     ins_string = "insert
     \$x isa age;
     \$x 21;"
-    g.insert(context[:transaction], ins_string)
+    res = g.insert(context[:transaction], ins_string)
+
+    context[:x] = res[1].data["x"]
 end
 
 @then("attribute \$x has type: age") do context
-    erg = context[:attrib_res]
-    @expect length(erg) == 1
-    @expect erg[1].type.label.name == "age"
+    erg = context[:x]
+    @expect erg.type.label.name == "age"
 end
 
 @then("attribute \$x has value type: long") do context
-    erg = context[:attrib_res]
-    @expect erg[1].type == g.AttributeType(g.Label("","age"), false, VALUE_TYPE.LONG)
-    @expect typeof(erg[1].value) == Int64
+    erg = context[:x]
+    @expect erg.type == g.AttributeType(g.Label("","age"), false, VALUE_TYPE.LONG)
+    @expect typeof(erg.value) == Int64
 end
 
 @then("attribute \$x has long value: 21") do context
-    erg = context[:attrib_res]
-    @expect typeof(erg[1].value) == Int64
-    @expect erg[1].value == 21
+    erg = context[:x]
+    @expect typeof(erg.value) == Int64
+    @expect erg.value == 21
 end
 
 @when("\$x = attribute(age) as(long) get: 21") do context
-    erg = _attribute_instances(context[:transaction])
-    context[:attrib_res] = erg
+    @expect context[:x].value == 21
 end
 
 #  Scenario: Attribute with value type double can be created
@@ -123,80 +117,73 @@ end
     \$x isa score;
     \$x 123.456;"
     res = g.insert(context[:transaction], ins_string)
-    context[:attrib_res] = _attribute_instances(context[:transaction])
+    context[:x] = res[1].data["x"]
 end
 
 @then("attribute \$x has type: score") do context
-    erg = context[:attrib_res]
-    @expect length(erg) == 1
-    @expect erg[1].type.label.name == "score"
+    erg = context[:x]
+    @expect erg.type.label.name == "score"
 end
 
 @then("attribute \$x has value type: double") do context
-    erg = context[:attrib_res]
-    @expect erg[1].type == g.AttributeType(g.Label("","score"), false, VALUE_TYPE.DOUBLE)
-    @expect typeof(erg[1].value) == Float64
+    erg = context[:x]
+    @expect erg.type == g.AttributeType(g.Label("","score"), false, VALUE_TYPE.DOUBLE)
+    @expect typeof(erg.value) == Float64
 end
 
 @then("attribute \$x has double value: 123.456") do context
-    erg = context[:attrib_res]
-    @expect typeof(erg[1].value) == Float64
-    @expect erg[1].value == 123.456
+    erg = context[:x]
+    @expect typeof(erg.value) == Float64
+    @expect erg.value == 123.456
 end
 
 
 # Scenario: Attribute with value type string can be created
 @when("\$x = attribute(name) as(string) put: alice") do context
     ins_string = raw"""insert $x isa name; $x "alice";"""
-    g.insert(context[:transaction], ins_string)
-    context[:attrib_res] = _attribute_instances(context[:transaction])
+    res = g.insert(context[:transaction], ins_string)
+    context[:x] = res[1].data["x"]
 end
 
 @then("attribute \$x has type: name") do context
-    erg = context[:attrib_res]
-    @expect length(erg) == 1
-    @expect erg[1].type.label.name == "name"
+    erg = context[:x]
+
+    @expect erg.type.label.name == "name"
 end
 
 @then("attribute \$x has value type: string") do context
-    erg = context[:attrib_res]
-    @expect typeof(erg[1].value) == String
+    erg = context[:x]
+    @expect typeof(erg.value) == String
 end
 
 @then("attribute \$x has string value: alice") do context
-    erg = _context[:attrib_res]
-    @expect typeof(erg[1].value) == String
-    @expect erg[1].value == "alice"
+    erg = context[:x]
+    @expect typeof(erg.value) == String
+    @expect erg.value == "alice"
 end
 
 @when("\$x = attribute(name) as(string) get: alice") do context
-    erg = _attribute_instances(context[:transaction])
-    context[:attrib_res] = erg
+    @expect context[:x].value == "alice"
 end
 
 # Scenario: Attribute with value type string and satisfies a regular expression can be created
 
 @when("\$x = attribute(email) as(string) put: alice@email.com") do context
     ins_string = raw"""insert $x isa email; $x "alice@email.com";"""
-    g.insert(context[:transaction], ins_string)
+    context[:x] =  g.insert(context[:transaction], ins_string)[1].data["x"]
 end
 
 @then("attribute \$x has type: email") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect length(erg) == 1
-    @expect erg[1].type.label.name == "email"
+    @expect context[:x].type.label.name == "email"
 end
 
 @then("attribute \$x has string value: alice@email.com") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect typeof(erg[1].value) == String
-    @expect erg[1].value == "alice@email.com"
+    @expect context[:x].value == "alice@email.com"
 end
 
 @when("\$x = attribute(email) as(string) get: alice@email.com") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect typeof(erg[1].value) == String
-    @expect erg[1].value == "alice@email.com"
+    @expect typeof(context[:x].value) == String
+    @expect context[:x].value == "alice@email.com"
 end
 
 # Scenario: Attribute with value type string but does not satisfy a regular expression cannot be created
@@ -212,60 +199,66 @@ end
 #  Scenario: Attribute with value type datetime can be created
 @when("\$x = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
     ins_string = raw"""insert $x isa birth-date; $x 1990-01-01T11:22:33;"""
-    g.insert(context[:transaction], ins_string)
-    context[:attrib_res] = _attribute_instances(context[:transaction])
+    res = g.insert(context[:transaction], ins_string)
+    context[:x] = res[1].data["x"]
 end
 
 @then("attribute \$x has type: birth-date") do context
-    erg = context[:attrib_res]
-    @expect length(erg) == 1
-    @expect erg[1].type.label.name == "birth-date"
+    erg = context[:x]
+
+    @expect erg.type.label.name == "birth-date"
 end
 
 @then("attribute \$x has value type: datetime") do context
-    erg = context[:attrib_res]
-    @expect typeof(erg[1].value) == Int64
+    erg = context[:x]
+    @expect typeof(erg.value) == Int64
 end
 
 @then("attribute \$x has datetime value: 1990-01-01 11:22:33") do context
-    erg = context[:attrib_res]
-    @expect typeof(erg[1].value) == Int64
-    @expect unix2datetime(erg[1].value / 1000) == parse(DateTime,"1990-01-01T11:22:33")
+    erg = context[:x]
+    @expect typeof(erg.value) == Int64
+    @expect unix2datetime(erg.value / 1000) == parse(DateTime,"1990-01-01T11:22:33")
 end
 
 @when("\$x = attribute(birth-date) as(datetime) get: 1990-01-01 11:22:33") do context
-    erg = _attribute_instances(context[:transaction])
-    context[:attrib_res] = erg
+    erg = context[:x]
+    @expect erg.type.label.name == "birth-date"
+    @expect typeof(erg.value) == Int64
+    @expect unix2datetime(erg.value / 1000) == parse(DateTime,"1990-01-01T11:22:33")
 end
 
 # Scenario: Attribute with value type boolean can be retrieved from its type
 @then("attribute(is-alive) get instances contain: \$x") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect erg[1].type == g.AttributeType(g.Label("","is-alive"), false, VALUE_TYPE.BOOLEAN)
+    erg = _attribute_instances(context[:transaction])[1]
+    @expect erg.type == g.AttributeType(g.Label("","is-alive"), false, VALUE_TYPE.BOOLEAN)
 end
 
 # Scenario: Attribute with value type long can be retrieved from its type
 @then("attribute(age) get instances contain: \$x") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect erg[1].type == g.AttributeType(g.Label("","age"), false, VALUE_TYPE.LONG)
+    attr = g.get(context[:cm], AttributeType, "age")
+    erg = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
+    @expect erg.type == g.AttributeType(g.Label("","age"), false, VALUE_TYPE.LONG)
 end
 
 # Scenario: Attribute with value type double can be retrieved from its type
 @then("attribute(score) get instances contain: \$x") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect erg[1].type == g.AttributeType(g.Label("","score"), false, VALUE_TYPE.DOUBLE)
+    attr = g.get(context[:cm], AttributeType, "score")
+    erg = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
+    @expect erg.type == g.AttributeType(g.Label("","score"), false, VALUE_TYPE.DOUBLE)
 end
 
 # Scenario: Attribute with value type string can be retrieved from its type
 @then("attribute(name) get instances contain: \$x") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect erg[1].type == g.AttributeType(g.Label("","name"), false, VALUE_TYPE.STRING)
+    attr = g.get(context[:cm], AttributeType, "name")
+    res = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
+    @expect res.type == g.AttributeType(g.Label("","name"), false, VALUE_TYPE.STRING)
 end
 
 # Scenario: Attribute with value type datetime can be retrieved from its type
 @then("attribute(birth-date) get instances contain: \$x") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect erg[1].type == g.AttributeType(g.Label("","birth-date"), false, VALUE_TYPE.DATETIME)
+    attr = g.get(context[:cm], AttributeType, "birth-date")
+    res = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
+    @expect res.type == g.AttributeType(g.Label("","birth-date"), false, VALUE_TYPE.DATETIME)
 end
 
 # Scenario: Attribute with value type boolean can be deleted
@@ -286,23 +279,22 @@ end
 
 # Scenario: Attribute with value type double can be deleted
 @when("\$x = attribute(score) as(double) get: 123.456") do context
-    erg = _attribute_instances(context[:transaction])
-    context[:attrib_res] = erg
+    @expect context[:x].value == 123.456
 end
 
 # Scenario: Attribute with value type double is assignable and retrievable from a 'long' value
 @when("\$x = attribute(score) as(double) put: 123") do context
     ins_string = raw"""insert $x isa score; $x 123;"""
-    g.insert(context[:transaction], ins_string)
-    context[:attrib_res] = _attribute_instances(context[:transaction])
+    res = g.insert(context[:transaction], ins_string)
+    context[:x] = res[1].data["x"]
 end
 
 @then("attribute \$x has double value: 123") do context
-    erg = context[:attrib_res]
-    @expect erg[1].value == 123
+    erg = context[:x]
+    @expect erg.value == 123
 end
 
 @when("\$x = attribute(score) as(double) get: 123") do context
     erg = _attribute_instances(context[:transaction])
-    context[:attrib_res] = erg
+    context[:x] = erg[1]
 end

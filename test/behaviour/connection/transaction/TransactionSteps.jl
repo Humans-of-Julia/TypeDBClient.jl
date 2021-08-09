@@ -105,7 +105,8 @@ end
 @when("for each session, open transactions of type:") do context
     read = g.Proto.Transaction_Type.READ
     types_of_read = [row[1] for row in context.datatable]
-    sessions = sessions(context)
+    # sessions = sessions(context)
+    sessions = collect(values(context[:client].sessions))
     for session in sessions
         for type_of_read in types_of_read
             type_of_read == "read" && g.transaction(session,read)
@@ -131,7 +132,7 @@ end
 
 @then("for each session, transactions have type:") do context
     types_of_read = [row[1] for row in context.datatable]
-    transactions = transactions(context)
+    transactions = collect(values(context[:session].transactions))
     for nr in 1:length(types_of_read)
         type_transaction = types_of_read[nr] == "read" ? trans_read : trans_write
         @expect transactions[nr].type == type_transaction

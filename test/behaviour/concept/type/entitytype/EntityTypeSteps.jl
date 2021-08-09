@@ -56,7 +56,7 @@ end
 # Scenario: Entity types that have instances cannot be deleted
 @when("\$x = entity(person) create new instance") do context
     res = g.insert(context[:transaction], raw"""insert $x isa person;""")
-    context[:x] = g.match(context[:transaction], raw"""match $x isa person;""")[1].data["x"]
+    context[:x] = res[1].data["x"]
 end
 
 @then("delete entity type: person; throws exception") do context
@@ -861,7 +861,7 @@ end
 # Scenario: Entity types cannot unset playing role types that are currently played by existing instances
 @when("\$m = relation(marriage) create new instance") do context
     mar_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
-    context[:marriage] = g.create(g.as_remote(mar_type, context[:transaction]))
+    context[:m] = g.create(g.as_remote(mar_type, context[:transaction]))
 end
 
 @then("entity(person) unset plays role: marriage:wife; throws exception") do context

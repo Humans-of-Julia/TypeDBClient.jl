@@ -226,8 +226,6 @@ Feature: Concept Relation Type and Role Type
     Then relation(parentship) get role(child) is abstract: true
     Then relation(parentship) create new instance; throws exception
 
-
-
   Scenario: Relation types must have at least one role in order to commit, unless they are abstract
     When put relation type: connection
     Then transaction commits; throws exception
@@ -235,8 +233,6 @@ Feature: Concept Relation Type and Role Type
     When put relation type: connection
     When relation(connection) set abstract: true
     Then transaction commits
-
-
 
   Scenario: Relation and role types can be subtypes of other relation and role types
     When put relation type: parentship
