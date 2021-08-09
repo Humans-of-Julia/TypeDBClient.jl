@@ -48,7 +48,7 @@ function _subtypes_contain(context, abstract_type::Type{<:g.AbstractThingType}, 
     res_types = g.get_subtypes(g.as_remote(attr, context[:transaction]))
     res_array = Bool[]
     for attr in res_types
-        (res_array, in(attr.label.name, sub_types))
+        push!(res_array, in(attr.label.name, sub_types))
     end
 
     return res_array
@@ -149,9 +149,28 @@ end
 # Scenario: Root thing type can retrieve all types
 @then("thing type root get supertypes contain:") do context
     super_types = [db[1] for db in context.datatable]
-    attr = g.get(ConceptManager(context[:transaction]), ThingType, "root")
+    attr = g.get(ConceptManager(context[:transaction]), ThingType, "thing")
     res_types = g.get_supertypes(g.as_remote(attr, context[:transaction]))
     for attr in res_types
         @expect in(attr.label.name, super_types)
     end
+end
+
+@then("thing type root get supertypes do not contain:") do context
+    super_types = [db[1] for db in context.datatable]
+    attr = g.get(ConceptManager(context[:transaction]), ThingType, "thing")
+    res_types = g.get_supertypes(g.as_remote(attr, context[:transaction]))
+    for attr in res_types
+        @expect !in(attr.label.name, super_types)
+    end
+end
+
+@then("thing type root get subtypes contain:") do context
+    res_contain = _subtypes_contain(context, ThingType, "thing")
+    @expect !all(res_contain) === true
+end
+
+@then("thing type root get subtypes do not contain:") do context
+    res_contain = _subtypes_contain(context, ThingType, "thing")
+    @expect all(res_contain) === false
 end
