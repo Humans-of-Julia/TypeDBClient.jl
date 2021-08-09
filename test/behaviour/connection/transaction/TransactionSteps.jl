@@ -9,11 +9,11 @@
     transaction = g.transaction(context[:session], trans_read)
     @expect transaction !== nothing
     context[:transaction] = transaction
+    context[:cm] = ConceptManager(context[:transaction])
 end
 
 @when("session opens transaction of type: write") do context
-    # db = context[:session].database.name
-    # type = context[:session].type
+
     if haskey(context, :transaction)
         context[:transaction] !== nothing && g.close(context[:transaction])
     end
@@ -21,6 +21,8 @@ end
     transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
     @expect transaction !== nothing
     context[:transaction] = transaction
+    # only a convinience method to prevent paperwork
+    context[:cm] = ConceptManager(context[:transaction])
 end
 
 @then("session transaction is null: false") do context

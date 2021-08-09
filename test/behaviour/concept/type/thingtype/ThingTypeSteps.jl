@@ -27,15 +27,45 @@ function _supertypes_contain(context, abstract_type::Type{<:g.AbstractThingType}
     return res_array
 end
 
+function _supertypes_contain(context, ::Type{g.RoleType}, relation_name::String, role_name::String)
+    db_roles = [_split_role(db[1])[1]=>_split_role(db[1])[2] for db in context.datatable]
+    res = g.get(ConceptManager(context[:transaction]),
+                RelationType,
+                relation_name)
+    role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), role_name)
+    res_supertypes = g.get_supertypes(g.as_remote(role_play, context[:transaction]))
+    res_array = Bool[]
+    for i in 1:length(db_roles)
+        super_role = RoleType(g.Label(db_roles[i].first, db_roles[i].second), false)
+        push!(res_array, in(super_role, res_supertypes))
+    end
+    return res_array
+end
+
 function _subtypes_contain(context, abstract_type::Type{<:g.AbstractThingType}, attr_name::String)
-    super_types = [db[1] for db in context.datatable]
+    sub_types = [db[1] for db in context.datatable]
     attr = g.get(ConceptManager(context[:transaction]), abstract_type, attr_name)
     res_types = g.get_subtypes(g.as_remote(attr, context[:transaction]))
     res_array = Bool[]
     for attr in res_types
-        push!(res_array, in(attr.label.name, super_types))
+        (res_array, in(attr.label.name, sub_types))
     end
 
+    return res_array
+end
+
+function _subtypes_contain(context, ::Type{g.RoleType}, relation_name::String, role_name::String)
+    db_roles = [_split_role(db[1])[1]=>_split_role(db[1])[2] for db in context.datatable]
+    res = g.get(ConceptManager(context[:transaction]),
+                RelationType,
+                relation_name)
+    role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), role_name)
+    res_subtypes = g.get_subtypes(g.as_remote(role_play, context[:transaction]))
+    res_array = Bool[]
+    for i in 1:length(db_roles)
+        sub_role = RoleType(g.Label(db_roles[i].first, db_roles[i].second), false)
+        push!(res_array, in(sub_role, res_subtypes))
+    end
     return res_array
 end
 
@@ -56,23 +86,6 @@ function _get_owns_contain(context, abstract_type::Type{<:g.AbstractThingType}, 
     return res_array
 end
 
-function _entity_set_owns(entity::String, attribute_type::String, context, is_key = false, overriden::Optional{String} = nothing)
-    cm = ConceptManager(context[:transaction])
-
-    loc_entity = get(cm, g.EntityType, entity)
-    rem_entitiy = g.as_remote(loc_entity, context[:transaction])
-    loc_attribute = get(cm, g.AttributeType, attribute_type)
-
-    if overriden !== nothing
-        overriden_attr = get(cm, g.AttributeType, overriden)
-    else
-        overriden_attr = overriden
-    end
-
-    @assert rem_entitiy !== nothing && loc_attribute !== nothing "$entity or $attribute_type wasn't there"
-    g.set_owns(rem_entitiy, loc_attribute, is_key, overriden_attr)
-    return nothing
-end
 
 function _get_players_contain(relation_name::String, role_name::String, context)
     db = [db[1] for db in context.datatable]
@@ -99,4 +112,46 @@ function _get_playing_roles_contain(player::String, player_type::Type{<:g.Abstra
         push!(res_array, in(role, play_roles))
     end
     return res_array
+end
+
+function _get_related_roles_contain(context, relation_name::String)
+    inp_roles = filter(x->x !== nothing,[_split_role(db[1]) for db in context.datatable])
+
+    res = g.get(ConceptManager(context[:transaction]),
+                RelationType,
+                relation_name)
+
+    relates = g.get_relates(g.as_remote(res, context[:transaction]))
+    res_array = Bool[]
+    for i in 1:length(inp_roles)
+        inp_role = RoleType(g.Label(inp_roles[i].first, inp_roles[i].second),false)
+        push!(res_array, in(inp_role, relates))
+    end
+    return res_array
+end
+
+function _thing_type_unset_type(context,
+            type::Type{<:g.AbstractThingType},
+            thing_name::String,
+            unset_type::Type{<:g.AbstractType},
+            unset_name::String)
+    thing_type = g.get(context[:cm], type, thing_name)
+    type_to_unset = g.get(context[:cm], unset_type, unset_name)
+    g.unset_owns(g.as_remote(thing_type, context[:transaction]), type_to_unset)
+end
+
+function _split_role(role::String)
+    res = split(role,":")
+    return (string(res[1])=>string(res[2]))
+end
+
+
+# Scenario: Root thing type can retrieve all types
+@then("thing type root get supertypes contain:") do context
+    super_types = [db[1] for db in context.datatable]
+    attr = g.get(ConceptManager(context[:transaction]), ThingType, "root")
+    res_types = g.get_supertypes(g.as_remote(attr, context[:transaction]))
+    for attr in res_types
+        @expect in(attr.label.name, super_types)
+    end
 end

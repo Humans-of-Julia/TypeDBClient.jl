@@ -35,21 +35,21 @@ function set_supertype(r::RemoteConcept{C,T},
     execute(r.transaction, req)
 end
 
-function get_supertype(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+function get_supertype(r::RemoteConcept{C,T}) where {C <: AbstractType,T <: AbstractCoreTransaction}
     req = TypeRequestBuilder.get_supertype_req(r.concept.label)
     res = execute(r.transaction, req)
     typ = res.type_res.type_get_supertype_res._type
     return instantiate(typ)
 end
 
-function get_supertypes(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+function get_supertypes(r::RemoteConcept{C,T}) where {C <: AbstractType,T <: AbstractCoreTransaction}
     req = TypeRequestBuilder.get_supertypes_req(r.concept.label)
     res = execute(r.transaction, req)
     typs = res.type_res_part.type_get_supertypes_res_part.types
     return instantiate.(typs)
 end
 
-function get_subtypes(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+function get_subtypes(r::RemoteConcept{C,T}) where {C <: AbstractType,T <: AbstractCoreTransaction}
     req = TypeRequestBuilder.get_subtypes_req(r.concept.label)
     res = execute(r.transaction, req)
     typs = res.type_res_part.type_get_subtypes_res_part.types
@@ -73,7 +73,7 @@ function unset_abstract(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <
     execute(r.transaction, req)
 end
 
-function is_abstract(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+function is_abstract(r::RemoteConcept{C,T}) where {C <: AbstractType,T <: AbstractCoreTransaction}
     req = TypeRequestBuilder.is_abstract_req(r.concept.label)
     res = execute(r.transaction, req)
     return res.type_res.type_is_abstract_res._abstract
@@ -143,7 +143,7 @@ function get_plays(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: Abs
         r.type_res_part.thing_type_get_plays_res_part.roles for r in res)))
 end
 
-function set_label(r::RemoteConcept{C,T}, new_label_name::String) where {C <: AbstractThingType, T <: AbstractCoreTransaction}
+function set_label(r::RemoteConcept{C,T}, new_label_name::String) where {C <: AbstractType, T <: AbstractCoreTransaction}
     set_label_req = TypeRequestBuilder.set_label_req(r.concept.label, new_label_name)
     execute(r.transaction, set_label_req)
 

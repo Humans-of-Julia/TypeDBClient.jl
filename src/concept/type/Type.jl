@@ -24,6 +24,21 @@ function instantiate(t::Proto._Type)
 end
 
 """
+    ==(type1::AbstractType, type2::AbstractType)
+secures the equality of two types by comparing the two labels and the
+same type.
+"""
+function ==(type1::AbstractType, type2::AbstractType)
+    if type1 === type2
+        return true
+    elseif typeof(type1) == typeof(type2) && type1.label == type2.label
+        return true
+    else
+        return false
+    end
+end
+
+"""
     encoding(t)
 
 Return the ProtoBuf encoding value for the given concept type `t`.

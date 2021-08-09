@@ -18,13 +18,6 @@ function cm_call(f::Function, session::Session)
     return res
 end
 
-function _entity_set_owns(entity, attribute_type, context, is_key = false)
-    loc_entity = get(ConceptManager(context[:transaction]), g.EntityType, entity)
-    rem_entitiy = g.as_remote(loc_entity, context[:transaction])
-    loc_attribute = get(ConceptManager(context[:transaction]), g.AttributeType, attribute_type)
-    g.set_owns(rem_entitiy, loc_attribute, is_key)
-end
-
 function _put_attribute_to_db(context, attr_name, type)
     attr_req = g.ConceptManagerRequestBuilder.put_attribute_type_req(attr_name, type)
     return g.execute(context[:transaction], attr_req)
@@ -42,29 +35,29 @@ end
 end
 
 @given("entity(person) set owns attribute type: is-alive") do context
-    _entity_set_owns("person", "is-alive", context)
+    g.con.entity_set_owns("person", "is-alive", context[:transaction])
 end
 
 
 @given("entity(person) set owns attribute type: age") do context
-    _entity_set_owns("person", "age", context)
+    g.con.entity_set_owns("person", "age", context[:transaction])
 end
 
 
 @given("entity(person) set owns attribute type: score") do context
-    _entity_set_owns("person", "score", context)
+    g.con.entity_set_owns("person", "score", context[:transaction])
 end
 
 
 @given("entity(person) set owns attribute type: name") do context
-    _entity_set_owns("person", "name", context)
+    g.con.entity_set_owns("person", "name", context[:transaction])
 end
 
 
 @given("entity(person) set owns attribute type: email") do context
-    _entity_set_owns("person", "email", context)
+    g.con.entity_set_owns("person", "email", context[:transaction])
 end
 
 @given("entity(person) set owns attribute type: birth-date") do context
-    _entity_set_owns("person", "birth-date", context)
+    g.con.entity_set_owns("person", "birth-date", context[:transaction])
 end

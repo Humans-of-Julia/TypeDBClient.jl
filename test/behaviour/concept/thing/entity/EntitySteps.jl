@@ -11,7 +11,7 @@ end
 end
 
 @given("entity(person) set owns key type: username") do context
-    _entity_set_owns("person", "username", context, true)
+    g.con.entity_set_owns("person", "username", context[:transaction], true)
 end
 
 # Scenario: Entity can be created

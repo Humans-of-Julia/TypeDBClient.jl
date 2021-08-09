@@ -28,6 +28,9 @@ end
     g.safe_close.(collect(values(context[:client].sessions)))
 end
 
+@beforescenario() do context, scenario
+
+end
 
 @afterscenario() do context, scenario
   g.is_open(context[:session])

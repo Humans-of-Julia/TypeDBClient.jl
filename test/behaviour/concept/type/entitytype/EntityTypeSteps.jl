@@ -328,20 +328,20 @@ end
 
 # Scenario: Entity types cannot have keys of attributes that are not keyable
 @given("entity(person) set owns key type: age") do context
-    _entity_set_owns("person", "age", context, true)
+    g.con.entity_set_owns("person", "age", context[:transaction], true)
 end
 
 @given("entity(person) set owns key type: name") do context
-    _entity_set_owns("person", "name", context, true)
+    g.con.entity_set_owns("person", "name", context[:transaction], true)
 end
 
 @given("entity(person) set owns key type: timestamp") do context
-    _entity_set_owns("person", "timestamp", context, true)
+    g.con.entity_set_owns("person", "timestamp", context[:transaction], true)
 end
 
 @given("entity(person) set owns key type: is-open; throws exception") do context
     try
-        _entity_set_owns("person", "timestamp", context)
+        g.con.entity_set_owns("person", "timestamp", context[:transaction])
     catch ex
         @expect ex !== nothing
     end
@@ -349,7 +349,7 @@ end
 
 @given("entity(person) set owns key type: rating; throws exception") do context
     try
-        _entity_set_owns("person", "rating", context, true)
+        g.con.entity_set_owns("person", "rating", context[:transaction], true)
     catch ex
         @expect ex !== nothing
     end
@@ -418,11 +418,11 @@ end
 end
 
 @given("entity(customer) set owns key type: reference") do context
-    _entity_set_owns("customer", "reference", context, true)
+    g.con.entity_set_owns("customer", "reference", context[:transaction], true)
 end
 
 @given("entity(customer) set owns attribute type: rating") do context
-    _entity_set_owns("customer", "rating", context, false)
+    g.con.entity_set_owns("customer", "rating", context[:transaction], false)
 end
 
 @then("entity(customer) get owns key types contain:") do context
@@ -450,11 +450,11 @@ end
 end
 
 @when("entity(subscriber) set owns key type: license") do context
-    _entity_set_owns("subscriber", "license", context, true)
+    g.con.entity_set_owns("subscriber", "license", context[:transaction], true)
 end
 
 @when("entity(subscriber) set owns attribute type: points") do context
-    _entity_set_owns("subscriber", "points", context, false)
+    g.con.entity_set_owns("subscriber", "points", context[:transaction], false)
 end
 
 @then("entity(subscriber) get owns key types contain:") do context
@@ -672,7 +672,7 @@ end
 
 @when("entity(customer) set owns attribute type: email; throws exception") do context
     try
-        _entity_set_owns("customer", "email", context, true)
+        g.con.entity_set_owns("customer", "email", context[:transaction], true)
     catch ex
         @expect ex !== nothing
     end
@@ -691,12 +691,12 @@ end
 end
 
 @when("entity(customer) set owns key type: customer-email") do context
-    _entity_set_owns("customer", "customer-email", context, true)
+    g.con.entity_set_owns("customer", "customer-email", context[:transaction], true)
 end
 
 @given("entity(subscriber) set owns key type: email; throws exception") do context
     try
-        _entity_set_owns("subscriber", "email", context, true)
+        g.con.entity_set_owns("subscriber", "email", context[:transaction], true)
     catch ex
         @expect ex !== nothing
     end
@@ -705,7 +705,7 @@ end
 # Scenario: Entity types cannot redeclare overridden key attribute types
 @given("entity(subscriber) set owns key type: customer-email; throws exception") do context
     try
-        _entity_set_owns("subscriber", "customer-email", context, true)
+        g.con.entity_set_owns("subscriber", "customer-email", context[:transaction], true)
     catch ex
         @expect ex !== nothing
     end
@@ -724,12 +724,12 @@ end
 end
 
 @when("entity(customer) set owns attribute type: customer-name") do context
-    _entity_set_owns("customer", "customer-name", context, false)
+    g.con.entity_set_owns("customer", "customer-name", context[:transaction], false)
 end
 
 @given("entity(subscriber) set owns attribute type: name; throws exception") do context
     try
-        _entity_set_owns("subscriber", "name", context, true)
+        g.con.entity_set_owns("subscriber", "name", context[:transaction], true)
     catch ex
         @expect ex !== nothing
     end
@@ -738,7 +738,7 @@ end
 # Scenario: Entity types cannot redeclare overridden owns attribute types
 @given("entity(subscriber) set owns attribute type: customer-name; throws exception") do context
     try
-        _entity_set_owns("subscriber", "customer-name", context, false)
+        g.con.entity_set_owns("subscriber", "customer-name", context[:transaction], false)
     catch ex
         @expect ex !== nothing
     end
@@ -755,7 +755,7 @@ end
 
 @when("entity(person) set owns key type: email as username; throws exception") do context
     try
-        _entity_set_owns("person", "email", context, false, "username")
+        g.con.entity_set_owns("person", "email", context[:transaction], false, "username")
     catch ex
         @expect ex !== nothing
     end
@@ -763,7 +763,7 @@ end
 
 @when("entity(person) set owns attribute type: first-name as name; throws exception") do context
     try
-        _entity_set_owns("person", "first-name", context, false, "name")
+        g.con.entity_set_owns("person", "first-name", context[:transaction], false, "name")
     catch ex
         @expect ex !== nothing
     end
@@ -772,7 +772,7 @@ end
 # entity(customer) set owns attribute type: email as username; throws exception
 @when("entity(customer) set owns attribute type: email as username; throws exception") do context
     try
-        _entity_set_owns("customer", "email", context, false, "username")
+        g.con.entity_set_owns("customer", "email", context[:transaction], false, "username")
     catch ex
         @expect ex !== nothing
     end
@@ -781,7 +781,7 @@ end
 # Scenario: Entity types cannot override inherited keys and attributes other than with their subtypes
 @when("entity(customer) set owns key type: reference as username; throws exception") do context
     try
-        _entity_set_owns("customer", "reference", context, true, "username")
+        g.con.entity_set_owns("customer", "reference", context[:transaction], true, "username")
     catch ex
         @expect ex !== nothing
     end
@@ -789,7 +789,7 @@ end
 
 @then("entity(customer) set owns attribute type: rating as name; throws exception") do context
     try
-        _entity_set_owns("customer", "rating", context, false, "name")
+        g.con.entity_set_owns("customer", "rating", context[:transaction], false, "name")
     catch ex
         @expect ex !== nothing
     end
@@ -1076,4 +1076,35 @@ end
     catch ex
         @expect ex !== nothing
     end
+end
+
+@when("relation(marriage) set plays role: locates:located") do context
+    ent_pers = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    g.set_plays(g.as_remote(ent_pers, context[:transaction]), g.RoleType(g.Label("locates", "located"),false))
+end
+
+@then("relation(marriage) get playing roles contain:") do context
+    res = _get_playing_roles_contain("marriage", RelationType, context)
+    @expect all(res) === true
+end
+
+@when("put relation type: organises") do context
+    g.put(context[:cm], RelationType, "organises")
+end
+
+@when("relation(organises) set relates role: organiser") do context
+    g.set_relates(context[:transaction],
+        g.Label("","organises"),
+                "organiser")
+end
+
+@when("relation(organises) set relates role: organised") do context
+    g.set_relates(context[:transaction],
+        g.Label("","organises"),
+                "organised")
+end
+
+@when("relation(marriage) set plays role: organises:organised") do context
+    ent_pers = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    g.set_plays(g.as_remote(ent_pers, context[:transaction]), g.RoleType(g.Label("organises", "organised"),false))
 end

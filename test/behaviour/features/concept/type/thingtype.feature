@@ -24,7 +24,7 @@ Feature: Concept Thing Type
     Given connection create database: typedb
     Given connection open schema session for database: typedb
     Given session opens transaction of type: write
-
+@actual
   Scenario: Root thing type can retrieve all types
     When put entity type: person
     When put attribute type: is-alive, with value type: boolean
