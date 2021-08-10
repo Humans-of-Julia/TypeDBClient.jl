@@ -15,9 +15,7 @@ mutable struct Options <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end

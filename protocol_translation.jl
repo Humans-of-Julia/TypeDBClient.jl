@@ -1,7 +1,7 @@
 using Pkg
 using ProtoBuf
 
-root_dir_java = "/Users/frank/Documents/JuliaProjects/JuliaSource/TypeDBClient/client-java"
+# root_dir_java = "/Users/frank/Documents/JuliaProjects/JuliaSource/TypeDBClient/client-java"
 root_dir = "/Users/frank/Documents/JuliaProjects/JuliaSource/GraknClient/TypeDBClient.jl/src"
 
 

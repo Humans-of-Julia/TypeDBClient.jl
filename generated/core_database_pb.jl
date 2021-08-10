@@ -15,9 +15,7 @@ mutable struct CoreDatabaseManager_Contains_Req <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -54,9 +52,7 @@ mutable struct CoreDatabaseManager_Contains_Res <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -93,9 +89,7 @@ mutable struct CoreDatabaseManager_Contains <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -125,9 +119,7 @@ mutable struct CoreDatabaseManager_Create_Req <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -164,9 +156,7 @@ mutable struct CoreDatabaseManager_Create_Res <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -196,9 +186,7 @@ mutable struct CoreDatabaseManager_Create <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -228,9 +216,7 @@ mutable struct CoreDatabaseManager_All_Req <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -260,9 +246,7 @@ mutable struct CoreDatabaseManager_All_Res <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -299,9 +283,7 @@ mutable struct CoreDatabaseManager_All <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -331,9 +313,7 @@ mutable struct CoreDatabaseManager <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -363,9 +343,7 @@ mutable struct CoreDatabase_Schema_Req <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -402,9 +380,7 @@ mutable struct CoreDatabase_Schema_Res <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -441,9 +417,7 @@ mutable struct CoreDatabase_Schema <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -473,9 +447,7 @@ mutable struct CoreDatabase_Delete_Req <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -512,9 +484,7 @@ mutable struct CoreDatabase_Delete_Res <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -544,9 +514,7 @@ mutable struct CoreDatabase_Delete <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
@@ -576,9 +544,7 @@ mutable struct CoreDatabase <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            if fldval !== nothing
-                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
-            end
+            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
         end
         obj
     end
