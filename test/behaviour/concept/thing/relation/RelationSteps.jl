@@ -144,8 +144,8 @@ end
 @when("\$m = relation(marriage) get instance with key(license): m") do context
     attr_license  = g.get(context[:cm], AttributeType, "license")
     license = g.get(as_remote(attr_license, context[:transaction]),"m")
-    res_owner = g.get_owners(context[:transaction], license)[1]
-    context[:m] = res_owner
+    res_owner = g.get_owners(context[:transaction], license)
+    context[:m] = isempty(res_owner) ? nothing : res_owner[1]
 end
 
 @when("\$b = entity(person) get instance with key(username): bob") do context
