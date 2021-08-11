@@ -16,7 +16,6 @@
 #
 
 #noinspection CucumberUndefinedStep
-@actual
 Feature: Connection Transaction
 
   Background:

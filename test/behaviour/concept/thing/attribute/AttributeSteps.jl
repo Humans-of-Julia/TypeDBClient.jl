@@ -223,42 +223,42 @@ end
 
 # Scenario: Attribute with value type boolean can be retrieved from its type
 @then("attribute(is-alive) get instances contain: \$x") do context
-    erg = _attribute_instances(context[:transaction])[1]
-    @expect erg.type == g.AttributeType(g.Label("","is-alive"), false, VALUE_TYPE.BOOLEAN)
+    type = g.get(context[:cm], AttributeType, "is-alive")
+    instances_type = g.get_instances(g.as_remote(type, context[:transaction]))
+    @expect in(context[:x], instances_type)
 end
 
 # Scenario: Attribute with value type long can be retrieved from its type
 @then("attribute(age) get instances contain: \$x") do context
     attr = g.get(context[:cm], AttributeType, "age")
-    erg = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
-    @expect erg.type == g.AttributeType(g.Label("","age"), false, VALUE_TYPE.LONG)
+    instances_type = g.get_instances(g.as_remote(attr, context[:transaction]))
+    @expect in(context[:x], instances_type)
 end
 
 # Scenario: Attribute with value type double can be retrieved from its type
 @then("attribute(score) get instances contain: \$x") do context
     attr = g.get(context[:cm], AttributeType, "score")
-    erg = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
-    @expect erg.type == g.AttributeType(g.Label("","score"), false, VALUE_TYPE.DOUBLE)
+    instances_type = g.get_instances(g.as_remote(attr, context[:transaction]))
+    @expect in(context[:x], instances_type)
 end
 
 # Scenario: Attribute with value type string can be retrieved from its type
 @then("attribute(name) get instances contain: \$x") do context
     attr = g.get(context[:cm], AttributeType, "name")
-    res = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
-    @expect res.type == g.AttributeType(g.Label("","name"), false, VALUE_TYPE.STRING)
+    instances_type = g.get_instances(g.as_remote(attr, context[:transaction]))
+    @expect in(context[:x], instances_type)
 end
 
 # Scenario: Attribute with value type datetime can be retrieved from its type
 @then("attribute(birth-date) get instances contain: \$x") do context
     attr = g.get(context[:cm], AttributeType, "birth-date")
-    res = g.get_instances(g.as_remote(attr, context[:transaction]))[1]
-    @expect res.type == g.AttributeType(g.Label("","birth-date"), false, VALUE_TYPE.DATETIME)
+    instances_type = g.get_instances(g.as_remote(attr, context[:transaction]))
+    @expect in(context[:x], instances_type)
 end
 
 # Scenario: Attribute with value type boolean can be deleted
 @when("delete attribute: \$x") do context
-    del_string = raw"""match $x isa attribute; delete $x isa attribute;"""
-    g.delete(context[:transaction], del_string)
+    g.delete(g.as_remote(context[:x], context[:transaction]))
 end
 
 @then("attribute \$x is deleted: true") do context
@@ -267,8 +267,8 @@ end
 end
 
 @then("attribute \$x is null: true") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect length(erg) == 0
+    res = g.get(context[:cm], context[:x])
+    @expect res === nothing
 end
 
 # Scenario: Attribute with value type double can be deleted
@@ -289,6 +289,6 @@ end
 end
 
 @when("\$x = attribute(score) as(double) get: 123") do context
-    erg = _attribute_instances(context[:transaction])
-    context[:x] = erg[1]
+    attr = g.get(context[:cm], AttributeType, "score")
+    context[:x] = g.get(g.as_remote(attr,context[:transaction]), 123.0)
 end

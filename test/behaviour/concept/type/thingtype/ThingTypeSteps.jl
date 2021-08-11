@@ -177,55 +177,57 @@ end
 
 # Scenario: Root thing type can retrieve all instances
 @when("\$att1 = attribute(is-alive) as(boolean) put: true") do context
-    ins_string = raw"""insert $x isa is-alive; $x true;"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:att1] = res[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "is-alive")
+    res = g.put(g.as_remote(attr, context[:transaction]), true)
+    context[:att1] = res
 end
 
 @when("\$att2 = attribute(age) as(long) put: 21") do context
-    ins_string = raw"""insert $x isa age; $x 21;"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:att2] = res[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "age")
+    res = g.put(g.as_remote(attr, context[:transaction]), 21)
+    context[:att2] = res
 end
 
 @when("\$att3 = attribute(score) as(double) put: 123.456") do context
-    ins_string = raw"""insert $x isa score; $x 123.456;"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:att3] = res[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "score")
+    res = g.put(g.as_remote(attr, context[:transaction]), 123.456)
+    context[:att3] = res
 end
 
 @when("\$att4 = attribute(username) as(string) put: alice") do context
-    ins_string = raw"""insert $x isa username; $x "alice";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:att4] = res[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "username")
+    res = g.put(g.as_remote(attr, context[:transaction]), "alice")
+    context[:att4] = res
 end
 
 @when("\$att5 = attribute(license) as(string) put: abc") do context
-    ins_string = raw"""insert $x isa license; $x "abc";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:att5] = res[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "license")
+    res = g.put(g.as_remote(attr, context[:transaction]), "abc")
+    context[:att5] = res
 end
 
 @when("\$att6 = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
-    ins_string = raw"""insert $x isa birth-date; $x 1990-01-01T11:22:33;"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:att6] = res[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "birth-date")
+    res = g.put(g.as_remote(attr, context[:transaction]), parse(DateTime, "1990-01-01T11:22:33"))
+    context[:att6] = res
 end
 
 @when("\$ent1 = entity(person) create new instance with key(username): alice") do context
-    ins_string = raw"""insert $x isa person, has username="alice";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:ent1] = res[1].data["x"]
+    ent_type = g.get(context[:cm], EntityType, "person")
+    attr_type = g.get(context[:cm], AttributeType, "username")
+    user_name = g.get(g.as_remote(attr_type, context[:transaction]), "alice")
+    res = g.create(g.as_remote(ent_type, context[:transaction]))
+    context[:ent1] = res
+    set_has(context[:transaction], context[:ent1], user_name)
 end
 
 @when("\$rel1 = relation(marriage) create new instance with key(license): abc") do context
-    type = g.get(context[:cm], RelationType, "marriage")
-    res = g.create(g.as_remote(type, context[:transaction]))
+    ent_type = g.get(context[:cm], RelationType, "marriage")
+    attr_type = g.get(context[:cm], AttributeType, "license")
+    user_name = g.get(g.as_remote(attr_type, context[:transaction]), "abc")
+    res = g.create(g.as_remote(ent_type, context[:transaction]))
     context[:rel1] = res
-
-    match_string = raw"""match $x isa license; $x="abc";"""
-    lic = g.match(context[:transaction], match_string)[1].data["x"]
-    g.set_has(context[:transaction],res ,lic)
+    set_has(context[:transaction], context[:rel1], user_name)
 end
 
 @then("root(thing) get instances count: 8") do context

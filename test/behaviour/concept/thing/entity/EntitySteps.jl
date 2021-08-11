@@ -1,11 +1,5 @@
 using Base: concatenate_setindex!, @nexprs
 
-function _entity_instances(transaction)
-    res = g.match(transaction, "match \$x isa entity;")
-    erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
-    return erg
-end
-
 @given("put attribute type: username, with value type: string") do context
     _put_attribute_to_db(context, "username", g.Proto.AttributeType_ValueType.STRING)
 end
@@ -44,8 +38,9 @@ end
 end
 
 @when("\$a = entity(person) get instance with key(username): alice") do context
-    match_str = raw"""match $x isa person, has username $y; $y="alice";"""
-    context[:a] = g.match(context[:transaction], match_str)[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "username")
+    res_attr = g.get(g.as_remote(attr_type, context[:transaction]), "alice")
+    context[:a] = g.get_owners(context[:transaction], res_attr, nothing)[1]
 end
 
 # Scenario: Entity cannot be created when it misses a key
@@ -65,9 +60,9 @@ end
 end
 
 @then("entity(person) get instances is empty") do context
-    match_string = raw"""match $x isa person;"""
-    res = g.match(context[:transaction], match_string)
-    @expect length(res) == 0
+    attr = g.get(context[:cm], EntityType, "person")
+    res_ent = g.get_instances(g.as_remote(attr, context[:transaction]))
+    @expect isempty(res_ent) === true
 end
 
 # Scenario: Entity can have keys
@@ -163,9 +158,8 @@ end
 
 # Scenario: Entity can have attribute
 @when("\$email = attribute(email) as(string) put: alice@email.com") do context
-    ins_string = raw"""insert $x isa email; $x "alice@email.com";"""
-    res_ins = g.insert(context[:transaction], ins_string)
-    context[:email] = res_ins[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "email")
+    context[:email] = g.put(g.as_remote(attr, context[:transaction]), "alice@email.com")
 end
 
 @when("entity \$a set has: \$email") do context

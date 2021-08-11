@@ -23,12 +23,6 @@ function _put_attribute_to_db(context, attr_name, type)
     return g.execute(context[:transaction], attr_req)
 end
 
-function _attribute_instances(transaction)
-    res = g.match(transaction, raw"""match $x isa attribute;""")
-    erg = isempty(res) ? [] : collect(Iterators.flatten([values(rm.data) for rm in res]))
-    return erg
-end
-
 @given("put entity type: person") do context
     context[:concept_manager] = ConceptManager(context[:transaction])
     g.put(context[:concept_manager], EntityType, "person")

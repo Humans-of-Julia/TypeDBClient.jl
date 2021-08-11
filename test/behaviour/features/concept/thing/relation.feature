@@ -16,7 +16,6 @@
 #
 
 #noinspection CucumberUndefinedStep
-
 Feature: Concept Relation
 
   Background:
@@ -141,7 +140,7 @@ Feature: Concept Relation
     Then relation $m get players for role(wife) do not contain: $a
     Then relation $m get players do not contain:
       | wife | $a |
-@failure
+
   Scenario: Relation without role players get deleted
     When $m = relation(marriage) create new instance with key(license): m
     When $a = entity(person) create new instance with key(username): alice

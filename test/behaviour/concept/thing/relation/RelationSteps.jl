@@ -52,11 +52,10 @@ end
 end
 
 @when("\$m = relation(marriage) create new instance with key(license): m") do context
-    ins_string = raw"""insert $x isa license; $x "m";"""
-    res_raw_license = g.insert(context[:transaction], ins_string)
-    res_license = res_raw_license[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "license")
+    rel_license = g.put(g.as_remote(attr, context[:transaction]), "m")
 
-    mar_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    mar_type = g.get(context[:cm], RelationType, "marriage")
     context[:m] = g.create(g.as_remote(mar_type, context[:transaction]))
     g.set_has(context[:transaction], context[:m], res_license)
 end
@@ -77,9 +76,14 @@ end
 end
 
 @when("\$b = entity(person) create new instance with key(username): bob") do context
-    ins_string = raw"""insert $x isa person, has username = "bob";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:b] = res[1].data["x"]
+    attr_user = g.get(context[:cm], AttributeType, "username")
+    user_bob = g.put(g.as_remote(attr_user, context[:transaction]), "bob")
+
+    type_pers = g.get(context[:cm], EntityType, "person")
+    person = g.create(g.as_remote(type_pers, context[:transaction]))
+
+    g.set_has(context[:transaction], person, user_bob)
+    context[:b] = person
 end
 
 @when("relation \$m add player for role(wife): \$a") do context
@@ -138,14 +142,17 @@ end
 end
 
 @when("\$m = relation(marriage) get instance with key(license): m") do context
-    match_string = raw"""match $x isa marriage, has license="m";"""
-    res_match = g.match(context[:transaction], match_string)
-    context[:m] = !isempty(res_match) ? res_match[1].data["x"] : nothing
+    attr_license  = g.get(context[:cm], AttributeType, "license")
+    license = g.get(as_remote(attr_license, context[:transaction]),"m")
+    res_owner = g.get_owners(context[:transaction], license)[1]
+    context[:m] = res_owner
 end
 
 @when("\$b = entity(person) get instance with key(username): bob") do context
-    match_string = raw"""match $x isa person, has username="bob";"""
-    context[:b] = g.match(context[:transaction], match_string)[1].data["x"]
+    attr  = g.get(context[:cm], AttributeType, "username")
+    obj_attr = g.get(as_remote(attr, context[:transaction]),"bob")
+    res_owner = g.get_owners(context[:transaction], obj_attr)[1]
+    context[:b] = res_owner
 end
 
 # Scenario: Role players can get relations

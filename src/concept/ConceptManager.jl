@@ -74,10 +74,12 @@ function Base.get(cm::ConceptManager, iid::String)
     return nothing
 end
 
-
+function Base.get(cm::ConceptManager, thing::AbstractThing)
+    return get(cm, thing.iid)
+end
 
 function execute(cm::ConceptManager, req::Proto.Transaction_Req)
-    result = execute(cm.transaction, req, false)
+    result = execute(cm.transaction, req)
     return result.concept_manager_res
 end
 

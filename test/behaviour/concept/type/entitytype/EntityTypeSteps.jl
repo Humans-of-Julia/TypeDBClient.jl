@@ -55,8 +55,9 @@ end
 
 # Scenario: Entity types that have instances cannot be deleted
 @when("\$x = entity(person) create new instance") do context
-    res = g.insert(context[:transaction], raw"""insert $x isa person;""")
-    context[:x] = res[1].data["x"]
+    ent_type = g.get(context[:cm], EntityType, "person")
+    res = g.create(g.as_remote(ent_type, context[:transaction]))
+    context[:x] = res
 end
 
 @then("delete entity type: person; throws exception") do context
@@ -118,7 +119,8 @@ end
 
 @then("entity(person) create new instance; throws exception") do context
     try
-        res = g.insert(context[:transaction], raw"""insert $x isa person;""")
+        ent_type = g.get(context[:cm], EntityType, "person")
+        res = g.create(g.as_remote(ent_type, context[:transaction]))
     catch ex
         @expect ex !== nothing
     end
@@ -143,7 +145,8 @@ end
 
 @then("entity(company) create new instance; throws exception") do context
     try
-        res = g.insert(context[:transaction], raw"""insert $x isa company;""")
+        ent_type = g.get(context[:cm], EntityType, "company")
+        res = g.create(g.as_remote(ent_type, context[:transaction]))
     catch ex
         @expect ex !== nothing
     end
@@ -289,13 +292,13 @@ end
 end
 
 @when("\$alice = attribute(email) as(string) put: alice@typedb.ai") do context
-    ins_string = raw"""insert $x isa email; $x "alice@typedb.ai";"""
-    context[:alice] = g.insert(context[:transaction], ins_string)[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "email")
+    context[:alice] = g.put(g.as_remote(attr, context[:transaction]), "alice@typedb.ai")
 end
 
 @when("\$bob = attribute(email) as(string) put: bob@typedb.ai") do context
-    ins_string = raw"""insert $x isa email; $x "bob@typedb.ai";"""
-    context[:bob] = g.insert(context[:transaction], ins_string)[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "email")
+    context[:bob] = g.put(g.as_remote(attr, context[:transaction]), "bob@typedb.ai")
 end
 
 @when("entity \$b set has: \$bob") do context
@@ -383,8 +386,8 @@ end
 
 # Scenario: Entity types cannot unset owning attributes that are owned by existing instances
 @when("\$alice = attribute(name) as(string) put: alice") do context
-    res = g.insert(context[:transaction], raw"""insert $x isa name; $x "alice";""")
-    context[:alice] = g.match(context[:transaction], raw"""match $x isa name; $x="alice";""")[1].data["x"]
+    attr = g.get(context[:cm], AttributeType, "name")
+    context[:alice] = g.put(g.as_remote(attr, context[:transaction]), "alice")
 end
 
 @when("entity(person) unset owns attribute type: name; throws exception") do context
