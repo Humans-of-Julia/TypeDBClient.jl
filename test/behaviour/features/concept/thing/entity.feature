@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@actual
 Feature: Concept Entity
 
   Background:
@@ -51,7 +52,7 @@ Feature: Concept Entity
     Then entity $a has type: person
     Then entity(person) get instances contain: $a
     Then transaction commits; throws exception
-
+@failure
   Scenario: Entity can be deleted
     When $a = entity(person) create new instance with key(username): alice
     When delete entity: $a

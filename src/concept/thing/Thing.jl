@@ -62,9 +62,14 @@ function get_has(transaction::AbstractCoreTransaction,
 end
 
 
-function delete(transaction::AbstractCoreTransaction, thing::AbstractThing)
-    del_req = ThingRequestBuilder.delete_req(thing.iid)
-    execute(transaction, del_req)
+function delete(r::RemoteConcept{<:AbstractThing})
+    del_req = ThingRequestBuilder.delete_req(r.concept.iid)
+    execute(r.transaction, del_req)
 
     return nothing
+end
+
+function is_deleted(r::RemoteConcept{<:AbstractThing})
+    res_thing = get(ConceptManager(r.transaction), r.concept.iid)
+    return res_thing === nothing
 end

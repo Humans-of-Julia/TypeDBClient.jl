@@ -42,4 +42,5 @@ export delete,
        unset_has
 
 # others
-export contains_database
+export  as_remote,
+        contains_database

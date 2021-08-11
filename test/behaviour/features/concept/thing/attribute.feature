@@ -170,7 +170,7 @@ Feature: Concept Attribute
     When session opens transaction of type: read
     When $x = attribute(birth-date) as(datetime) get: 1990-01-01 11:22:33
     Then attribute(birth-date) get instances contain: $x
-
+@failure
   Scenario: Attribute with value type boolean can be deleted
     When $x = attribute(is-alive) as(boolean) put: true
     When delete attribute: $x

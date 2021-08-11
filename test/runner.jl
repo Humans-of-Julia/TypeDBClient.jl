@@ -22,5 +22,6 @@ function run_tests(tag::String = "")
 end
 
 
-run_tests("not @ignore-typedb-core")
+# run_tests("not @ignore-typedb-core")
+run_tests("@failure")
 # run_tests("@actual")

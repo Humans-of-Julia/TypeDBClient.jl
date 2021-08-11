@@ -105,7 +105,6 @@ end
 @when("for each session, open transactions of type:") do context
     read = g.Proto.Transaction_Type.READ
     types_of_read = [row[1] for row in context.datatable]
-    # sessions = sessions(context)
     sessions = collect(values(context[:client].sessions))
     for session in sessions
         for type_of_read in types_of_read

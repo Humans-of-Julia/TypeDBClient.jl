@@ -204,8 +204,8 @@ end
 
 # Scenario: Relation without role players get deleted
 @then("relation \$m is deleted: true") do context
-    res_relation = g.get(ConceptManager(context[:transaction]), context[:m].iid)
-    @expect res_relation === nothing
+    res = g.is_deleted(g.as_remote(context[:m], context[:transaction]))
+    @expect res === true
 end
 
 @then("entity \$a get relations do not contain: \$m") do  context
@@ -238,7 +238,7 @@ end
 
 # Scenario: Relation with role players can be deleted
 @when("delete relation: \$m") do context
-    g.delete(context[:transaction], context[:m])
+    g.delete(g.as_remote(context[:m], context[:transaction]))
 end
 
 @then("entity \$b get relations do not contain: \$m") do context

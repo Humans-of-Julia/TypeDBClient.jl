@@ -8,6 +8,8 @@ using Revise
 using TypeDBClient
 import TypeDBClient.typedb.protocol as P
 
+g = TypeDBClient
+
 client = Client("127.0.0.1")
 session = Session(client, "social_network", P.Session_Type.DATA)
 
@@ -19,7 +21,7 @@ function query(q::AbstractString)
     transaction = Transaction(
         session, session.sessionID, P.Transaction_Type.READ, TypeDBOptions()
     )
-    result = TypeDBClient.match(transaction, q)
+    result = g.match(transaction, q)
     close(transaction)
     return result
 end
@@ -74,7 +76,7 @@ cm_call(session) do concept_manager
 end
 
 cm_call(session) do concept_manager
-    @show get(concept_manager, Entity, "966e800c8000000000000000")
+    @show g.get(concept_manager, EntityType, "employment")
     nothing
 end
 
@@ -116,10 +118,8 @@ res = thing_call(thing -> get_regex(thing), session, "emotion")
 res = thing_call(thing -> get_regex(thing), session, "title") # nothing
 
 # TODO [INT03] Invalid Internal State: Illegal internal operation! This method should not have been called.
-res = thing_call(thing -> set_regex(thing, raw".*"), session, "title")
+res = thing_call(thing -> set_regex(thing, ".*"), session, "title")
 
-# TODO [TYW03] Invalid Type Write: The type 'media' has instances, and cannot be set abstract.
-# Should probably create my own attribute and set it to abstract
 res = thing_call(thing -> set_abstract(thing), session, "media")
 
 # TODO [INT03] Invalid Internal State: Illegal internal operation! This method should not have been called.
@@ -127,6 +127,9 @@ res = thing_call(thing -> set_abstract(thing), session, "media")
 res = thing_call(thing -> unset_abstract(thing), session, "media")
 
 # Isn't it a little dumb to get back what I passed?
+# @franku: No. Many times you call get to ensure that e.g. an AttributeType is in
+#           the database. Afterwards you work with with this type in a chain to set CoreTransaction
+#           things.
 res = thing_call(thing -> get(thing, "Biochemistry"), session, "title")
 res = thing_call(thing -> get(thing, "Foo"), session, "title") # nothing
 

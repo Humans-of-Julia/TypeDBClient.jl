@@ -16,9 +16,16 @@ end
 
 # Scenario: Entity can be created
 @when("\$a = entity(person) create new instance with key(username): alice") do context
-    ins_string = raw"""insert $a isa person, has username "alice";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:a] = res[1].data["a"]
+
+    username_type = g.get(context[:cm], AttributeType, "username")
+    username_alice = g.put(g.as_remote(username_type, context[:transaction]), "alice")
+
+    ent_type = g.get(context[:cm], EntityType, "person")
+    ent_instance = g.create(g.as_remote(ent_type, context[:transaction]))
+
+    g.set_has(context[:transaction], ent_instance, username_alice)
+
+    context[:a] = ent_instance
 end
 
 @then("entity \$a is null: false") do context
@@ -43,20 +50,18 @@ end
 
 # Scenario: Entity cannot be created when it misses a key
 @when("\$a = entity(person) create new instance") do context
-    res = g.insert(context[:transaction], raw"""insert $x isa person;""")
-    context[:a] = res[1].data["x"]
+    ent_type = g.get(context[:cm], EntityType, "person")
+    context[:a] = g.create(g.as_remote(ent_type, context[:transaction]))
 end
 
 # Scenario: Entity can be deleted
 @when("delete entity: \$a") do context
-    del_string = raw"""match $x isa person, has username "alice"; delete $x isa person;"""
-    g.delete(context[:transaction], del_string)
+    g.delete(g.as_remote(context[:a], context[:transaction]))
 end
 
 @then("entity \$a is deleted: true") do context
-    match_string = raw"""match $x isa person, has username "alice";"""
-    res = g.match(context[:transaction], match_string)
-    @expect length(res) == 0
+    res = g.is_deleted(g.as_remote(context[:a], context[:transaction]))
+    @expect res === true
 end
 
 @then("entity(person) get instances is empty") do context
@@ -67,9 +72,9 @@ end
 
 # Scenario: Entity can have keys
 @when("\$alice = attribute(username) as(string) put: alice") do context
-    ins_string = raw"""insert $x isa username; $x "alice";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:alice] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "username")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), "alice")
+    context[:alice] = res
 end
 
 @when("entity \$a set has: \$alice") do context
@@ -121,9 +126,9 @@ end
 
 # Scenario: Entity cannot have more than one key for a given key type
 @when("\$bob = attribute(username) as(string) put: bob") do context
-    ins_string = raw"""insert $x isa username; $x "bob";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:bob] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "username")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), "bob")
+    context[:bob] = res
 end
 
 @then("entity \$a set has: \$bob; throws exception") do context
@@ -142,9 +147,10 @@ end
 
 # Scenario: Entity cannot have a key that has been taken
 @when("\$b = entity(person) create new instance") do context
-    ins_string = raw"""insert $x isa person;"""
-    res_ins = g.insert(context[:transaction], ins_string)
-    context[:b] = res_ins[1].data["x"]
+    ent_type = g.get(context[:cm], EntityType, "person")
+    res = g.create(g.as_remote(ent_type, context[:transaction]))
+    context[:b] = res
+    @expect res !== nothing
 end
 
 @then("entity \$b set has: \$alice; throws exception") do context

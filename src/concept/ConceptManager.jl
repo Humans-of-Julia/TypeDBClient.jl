@@ -19,7 +19,7 @@ function Base.get(cm::ConceptManager, ::Type{EntityType}, label::String)
     return nothing
 end
 
-function put(cm::ConceptManager, ::Type{EntityType}, label::String)
+function put(cm::ConceptManager, ::Type{EntityType}, label::Optional{String})
     res = execute(cm, ConceptManagerRequestBuilder.put_entity_type_req(label))
     if which_oneof(res, :res) == :put_entity_type_res
         return instantiate(res.put_entity_type_res.entity_type)

@@ -106,7 +106,7 @@ end
 # ---------------------------------------------------------------------------------
 module ConceptManagerRequestBuilder
 
-using ..TypeDBClient: Proto, EnumType, bytes
+using ..TypeDBClient: Proto, EnumType, bytes, Optional
 
 function _treq(; kwargs...)
     return Proto.Transaction_Req(
@@ -114,7 +114,7 @@ function _treq(; kwargs...)
     )
 end
 
-function put_entity_type_req(label::String)
+function put_entity_type_req(label::Optional{String})
     return _treq(
         put_entity_type_req = Proto.ConceptManager_PutEntityType_Req(; label)
     )

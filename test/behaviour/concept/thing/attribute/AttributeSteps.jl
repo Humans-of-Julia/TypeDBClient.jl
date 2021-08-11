@@ -50,11 +50,9 @@ end
 end
 
 @when("\$x = attribute(is-alive) as(boolean) put: true") do context
-    ins_string = "insert
-    \$x isa is-alive;
-    \$x true;"
-    res = g.insert(context[:transaction], ins_string)
-    context[:x] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "is-alive")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), true)
+    context[:x] = res
 end
 
 @then("attribute \$x is null: false") do context
@@ -82,12 +80,9 @@ end
 # Scenario: Attribute with value type long can be created
 
 @when("\$x = attribute(age) as(long) put: 21") do context
-    ins_string = "insert
-    \$x isa age;
-    \$x 21;"
-    res = g.insert(context[:transaction], ins_string)
-
-    context[:x] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "age")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), 21)
+    context[:x] = res
 end
 
 @then("attribute \$x has type: age") do context
@@ -113,11 +108,9 @@ end
 
 #  Scenario: Attribute with value type double can be created
 @when("\$x = attribute(score) as(double) put: 123.456") do context
-    ins_string = "insert
-    \$x isa score;
-    \$x 123.456;"
-    res = g.insert(context[:transaction], ins_string)
-    context[:x] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "score")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), 123.456)
+    context[:x] = res
 end
 
 @then("attribute \$x has type: score") do context
@@ -140,9 +133,9 @@ end
 
 # Scenario: Attribute with value type string can be created
 @when("\$x = attribute(name) as(string) put: alice") do context
-    ins_string = raw"""insert $x isa name; $x "alice";"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:x] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "name")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), "alice")
+    context[:x] = res
 end
 
 @then("attribute \$x has type: name") do context
@@ -169,8 +162,9 @@ end
 # Scenario: Attribute with value type string and satisfies a regular expression can be created
 
 @when("\$x = attribute(email) as(string) put: alice@email.com") do context
-    ins_string = raw"""insert $x isa email; $x "alice@email.com";"""
-    context[:x] =  g.insert(context[:transaction], ins_string)[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "email")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), "alice@email.com")
+    context[:x] = res
 end
 
 @then("attribute \$x has type: email") do context
@@ -188,9 +182,9 @@ end
 
 # Scenario: Attribute with value type string but does not satisfy a regular expression cannot be created
 @when("attribute(email) as(string) put: alice-email-com; throws exception") do context
-    ins_string = raw"""insert $x isa email; $x "alice-email-com";"""
     try
-        g.insert(context[:transaction], ins_string)
+        attr_type = g.get(context[:cm], AttributeType, "email")
+        res = g.put(g.as_remote(attr_type, context[:transaction]), alice-email-com)
     catch ex
         @expect ex !== nothing
     end
@@ -198,9 +192,9 @@ end
 
 #  Scenario: Attribute with value type datetime can be created
 @when("\$x = attribute(birth-date) as(datetime) put: 1990-01-01 11:22:33") do context
-    ins_string = raw"""insert $x isa birth-date; $x 1990-01-01T11:22:33;"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:x] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "birth-date")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), parse(DateTime,"1990-01-01T11:22:33"))
+    context[:x] = res
 end
 
 @then("attribute \$x has type: birth-date") do context
@@ -268,8 +262,8 @@ end
 end
 
 @then("attribute \$x is deleted: true") do context
-    erg = _attribute_instances(context[:transaction])
-    @expect length(erg) == 0
+    res = g.is_deleted(g.as_remote(context[:x], context[:transaction]))
+    @expect res === true
 end
 
 @then("attribute \$x is null: true") do context
@@ -284,9 +278,9 @@ end
 
 # Scenario: Attribute with value type double is assignable and retrievable from a 'long' value
 @when("\$x = attribute(score) as(double) put: 123") do context
-    ins_string = raw"""insert $x isa score; $x 123;"""
-    res = g.insert(context[:transaction], ins_string)
-    context[:x] = res[1].data["x"]
+    attr_type = g.get(context[:cm], AttributeType, "score")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), 123.0)
+    context[:x] = res
 end
 
 @then("attribute \$x has double value: 123") do context

@@ -123,7 +123,7 @@ proto_attribute_value(value::AbstractString) = Proto.Attribute_Value(; string = 
 # https://github.com/vaticle/typedb-client-java/blob/fb535f8c9494ec6ff93421e1a962510c6cb46139/concept/thing/AttributeImpl.java#L491
 function proto_attribute_value(value::DateTime)
     milliseconds_since_1970 = round(Int64, datetime2unix(value) * 1000)
-    return Proto.Attribute_Value(; datetime = milliseconds_since_1970)
+    return Proto.Attribute_Value(; date_time = milliseconds_since_1970)
 end
 
 function Base.get(r::RemoteConcept{C,T}, value) where {

@@ -4,6 +4,8 @@ using ..TypeDBClient
 
 g = TypeDBClient
 
+export entity_set_owns
+
 function entity_set_owns(thing_type::Type{<:g.AbstractThingType},
                 entity::String,
                 attribute_type::String,
