@@ -16,6 +16,7 @@ gRPCClient = "aaca4a50-36af-4a1d-b878-4c443f2061ad"
 
 [compat]
 Behavior = "0.3"
+ProtoBuf = "0.11"
 julia = "1"
 
 [extras]
