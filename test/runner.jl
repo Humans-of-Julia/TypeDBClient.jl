@@ -23,5 +23,5 @@ end
 
 
 # run_tests("not @ignore-typedb-core")
-run_tests("@failure")
-# run_tests("@actual")
+# run_tests("@failure")
+run_tests("@actual")
