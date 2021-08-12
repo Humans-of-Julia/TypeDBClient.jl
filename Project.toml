@@ -15,7 +15,12 @@ UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 gRPCClient = "aaca4a50-36af-4a1d-b878-4c443f2061ad"
 
 [compat]
-julia = "1"
+julia = "1.6"
+ProtoBuf = "0.11.1"
+DataStructures = "0.18.10"
+Pretend = "1.0.0"
+TimeZones = "1.5.6"
+gRPCClient = "0.1.2"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

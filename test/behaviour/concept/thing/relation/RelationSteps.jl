@@ -57,7 +57,7 @@ end
 
     mar_type = g.get(context[:cm], RelationType, "marriage")
     context[:m] = g.create(g.as_remote(mar_type, context[:transaction]))
-    g.set_has(context[:transaction], context[:m], res_license)
+    g.set_has(context[:transaction], context[:m], rel_license)
 end
 
 @then("relation \$m is null: false") do context

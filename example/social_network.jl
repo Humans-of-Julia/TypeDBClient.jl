@@ -1,7 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 # This example uses the social_network dataset. You can create the schema and upload data
-# by following instructionns from https://docs.grakn.ai/docs/general/quickstart
+# by following instructionns from https://docs.vaticle.com/docs/general/quickstart
 
 using Revise
 
@@ -141,7 +141,7 @@ res = thing_call(thing -> get_subtypes(thing), session, "title")
 
 # TODO - need an example to test the special get_subtypes filtering logic
 # https://discord.com/channels/665254494820368395/837321963814912020/851164383714476074
-# res = thing_call(thing -> get_subtypes(thing), session, "attribute")
+res = thing_call(thing -> get_subtypes(thing), session, "attribute")
 
 
 close(session)
