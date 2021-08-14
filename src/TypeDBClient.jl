@@ -112,14 +112,22 @@ include("common/exception/gRPC_Result_Handling.jl")
 # user friendly functions
 include("standard/frontend.jl")
 
-# precompiling section
-include("precompile.jl")
+# exports section
 include("exports.jl")
 
 #contribution section
 include("contribution/contribution.jl")
 include("standard/type_aliases_contrib.jl")
 include("export_contrib.jl")
+
+#precompiling
+include("precompile/precompile_TypeDBClient.jl")
+
+include("precompile/precompile_ProtoBuf.jl")
+Precompile_Protobuf._precompile_()
+
+include("precompile/precompile_TypeDBClient.typedb.protocol.jl")
+Precompile_TypeDB_Protocol._precompile_()
 
 
 
@@ -147,5 +155,7 @@ function Base.show(io::IO, item::Proto.ProtoType)
     end
     return nothing
 end
+
+__precompile__()
 
 end #module
