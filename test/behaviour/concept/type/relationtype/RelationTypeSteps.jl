@@ -52,7 +52,7 @@ end
 
 @then("relation(marriage) get related roles contain:") do context
     result_contain = _get_related_roles_contain(context, "marriage")
-    @expect all(result_contain) === true
+    @expect all(result_contain)
 end
 
 #  Scenario: Relation and role types can be deleted
@@ -326,7 +326,7 @@ end
                 RelationType,
                 "marriage")
     result = g.is_abstract(g.as_remote(res, context[:transaction]))
-    @expect result === true
+    @expect result
 end
 
 @then("relation(marriage) get role(husband) is abstract: true") do context
@@ -335,7 +335,7 @@ end
                 "marriage")
     role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), "husband")
     result = g.is_abstract(g.as_remote(role_play, context[:transaction]))
-    @expect result === true
+    @expect result
 end
 
 @then("relation(marriage) get role(wife) is abstract: true") do context
@@ -344,7 +344,7 @@ end
                 "marriage")
     role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), "wife")
     result = g.is_abstract(g.as_remote(role_play, context[:transaction]))
-    @expect result === true
+    @expect result
 end
 
 @then("relation(marriage) create new instance; throws exception") do context
@@ -389,7 +389,7 @@ end
                 RelationType,
                 "parentship")
     result = g.is_abstract(g.as_remote(res, context[:transaction]))
-    @expect result === true
+    @expect result
 end
 
 @then("relation(parentship) get role(parent) is abstract: true") do context
@@ -398,7 +398,7 @@ end
                 "parentship")
     role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), "parent")
     result = g.is_abstract(g.as_remote(role_play, context[:transaction]))
-    @expect result === true
+    @expect result
 end
 
 @then("relation(parentship) get role(child) is abstract: false") do context
@@ -416,7 +416,7 @@ end
                 "parentship")
     role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), "child")
     result = g.is_abstract(g.as_remote(role_play, context[:transaction]))
-    @expect result === true
+    @expect result
 end
 
 @then("relation(parentship) get role(child) is abstract: true") do context
@@ -425,7 +425,7 @@ end
                 "parentship")
     role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), "child")
     result = g.is_abstract(g.as_remote(role_play, context[:transaction]))
-    @expect result === true
+    @expect result
 end
 
 @then("relation(parentship) create new instance; throws exception") do context
@@ -606,12 +606,12 @@ end
 # Scenario: Relation types can inherit related role types
 @then("relation(fathership) get related roles contain:") do context
     result_contain = _get_related_roles_contain(context, "fathership")
-    @expect all(result_contain) === true
+    @expect all(result_contain)
 end
 
 @then("relation(mothership) get related roles contain:") do context
     result_contain = _get_related_roles_contain(context, "mothership")
-    @expect all(result_contain) === true
+    @expect all(result_contain)
 end
 
 # Scenario: Relation types can override inherited related role types

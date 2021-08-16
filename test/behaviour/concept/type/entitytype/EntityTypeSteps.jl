@@ -114,7 +114,7 @@ end
 @then("entity(person) is abstract: true") do context
     attr = g.get(ConceptManager(context[:transaction]), EntityType, "person")
     res_abstract = g.is_abstract(g.as_remote(attr, context[:transaction]))
-    @expect res_abstract === true
+    @expect res_abstract
 end
 
 @then("entity(person) create new instance; throws exception") do context
@@ -140,7 +140,7 @@ end
 @then("entity(company) is abstract: true") do context
     attr = g.get(ConceptManager(context[:transaction]), EntityType, "company")
     res_abstract = g.is_abstract(g.as_remote(attr, context[:transaction]))
-    @expect res_abstract === true
+    @expect res_abstract
 end
 
 @then("entity(company) create new instance; throws exception") do context
@@ -195,22 +195,22 @@ end
 
 @then("entity(man) get supertype: person") do context
     res = _is_supertype_for_type(context, EntityType, "man", "person")
-    @expect res === true
+    @expect res
 end
 
 @then("entity(woman) get supertype: person") do context
     res = _is_supertype_for_type(context, EntityType, "woman", "person")
-    @expect res === true
+    @expect res
 end
 
 @then("entity(person) get supertype: animal") do context
     res = _is_supertype_for_type(context, EntityType, "person", "animal")
-    @expect res === true
+    @expect res
 end
 
 @then("entity(cat) get supertype: animal") do context
     res = _is_supertype_for_type(context, EntityType, "cat", "animal")
-    @expect res === true
+    @expect res
 end
 
 @then("entity(man) get supertypes contain:") do context

@@ -80,7 +80,7 @@ end
         g.define(context[:transaction], define_string)
     catch ex
         res_comparisson = occursin("session type does not allow", string(ex.error_message))
-        @expect res_comparisson === true
+        @expect res_comparisson
     end
 end
 
@@ -95,6 +95,6 @@ end
         g.insert(context[:transaction], ins_string)
     catch ex
         res_comparisson = occursin("session type does not allow", string(ex.error_message))
-        @expect res_comparisson  === true
+        @expect res_comparisson
     end
 end

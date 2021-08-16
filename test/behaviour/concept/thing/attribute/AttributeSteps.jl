@@ -263,7 +263,7 @@ end
 
 @then("attribute \$x is deleted: true") do context
     res = g.is_deleted(g.as_remote(context[:x], context[:transaction]))
-    @expect res === true
+    @expect res
 end
 
 @then("attribute \$x is null: true") do context

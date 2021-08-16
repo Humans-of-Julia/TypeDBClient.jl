@@ -58,13 +58,13 @@ end
 
 @then("entity \$a is deleted: true") do context
     res = g.is_deleted(g.as_remote(context[:a], context[:transaction]))
-    @expect res === true
+    @expect res
 end
 
 @then("entity(person) get instances is empty") do context
     attr = g.get(context[:cm], EntityType, "person")
     res_ent = g.get_instances(g.as_remote(attr, context[:transaction]))
-    @expect isempty(res_ent) === true
+    @expect isempty(res_ent)
 end
 
 # Scenario: Entity can have keys

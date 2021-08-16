@@ -212,7 +212,7 @@ end
 # Scenario: Relation without role players get deleted
 @then("relation \$m is deleted: true") do context
     res = g.is_deleted(g.as_remote(context[:m], context[:transaction]))
-    @expect res === true
+    @expect res
 end
 
 @then("entity \$a get relations do not contain: \$m") do  context

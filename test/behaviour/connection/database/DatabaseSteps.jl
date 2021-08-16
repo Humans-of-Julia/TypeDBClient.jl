@@ -6,12 +6,12 @@ g = TypeDBClient
 @when("connection create database: alice") do context
     client = context[:client]
     db = g.create_database(client, "alice")
-    @expect db === true
+    @expect db
 end
 
 @then("connection has database: alice") do context
     result = g.contains_database(context[:client], "alice")
-    @expect result === true
+    @expect result
 end
 
 # Scenario: create many databases
@@ -21,7 +21,7 @@ end
     for db in db_names
         push!(all_db, g.create_database(context[:client], db[1]))
     end
-    @expect all(all_db) === true
+    @expect all(all_db)
 end
 
 @then("connection has databases:") do context

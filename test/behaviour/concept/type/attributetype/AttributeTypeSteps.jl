@@ -46,7 +46,7 @@ end
 @then("attribute(age) get value type: long") do context
     attr = g.get(ConceptManager(context[:transaction]), AttributeType, "age")
     comparison = typeof(attr) == AttributeType{VALUE_TYPE.LONG}
-    @expect comparison === true
+    @expect comparison
 end
 
 # Scenario: Attribute types can be created with value class double
@@ -57,14 +57,14 @@ end
 @then("attribute(rating) get value type: double") do context
     attr = g.get(ConceptManager(context[:transaction]), AttributeType, "rating")
     comparison = typeof(attr) == AttributeType{VALUE_TYPE.DOUBLE}
-    @expect comparison === true
+    @expect comparison
 end
 
 # Scenario: Attribute types can be created with value class string
 @then("attribute(name) get value type: string") do context
     attr = g.get(ConceptManager(context[:transaction]), AttributeType, "name")
     comparison = typeof(attr) == AttributeType{VALUE_TYPE.STRING}
-    @expect comparison === true
+    @expect comparison
 end
 
 # Scenario: Attribute types with value type string and regular expression can be created
@@ -82,7 +82,7 @@ end
 @then("attribute(timestamp) get value type: datetime") do context
     attr = g.get(ConceptManager(context[:transaction]), AttributeType, "timestamp")
     comparison = typeof(attr) == AttributeType{VALUE_TYPE.DATETIME}
-    @expect comparison === true
+    @expect comparison
 end
 
 # Scenario: Attribute types can be deleted
@@ -181,7 +181,7 @@ end
 @then("attribute(name) is abstract: true") do context
     attr_name = g.get(ConceptManager(context[:transaction]), AttributeType, "name")
     res_abstract = g.is_abstract(g.as_remote(attr_name, context[:transaction]))
-    @expect res_abstract === true
+    @expect res_abstract
 end
 
 @then("attribute(name) as(string) put: alice; throws exception") do context
@@ -207,7 +207,7 @@ end
 @then("attribute(email) is abstract: true") do context
     attr_name = g.get(ConceptManager(context[:transaction]), AttributeType, "email")
     res_abstract = g.is_abstract(g.as_remote(attr_name, context[:transaction]))
-    @expect res_abstract === true
+    @expect res_abstract
 end
 
 @then("attribute(email) as(string) put: alice@email.com; throws exception") do context

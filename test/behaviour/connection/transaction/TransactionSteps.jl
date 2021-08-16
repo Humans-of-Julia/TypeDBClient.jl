@@ -34,12 +34,12 @@ end
     sess_trans = transactions(context)
     is_open = map(item->g.is_open(item),sess_trans)
     all_open = all(is_open)
-    @expect all_open === true
+    @expect all_open
 end
 
 @then("session transaction has type: read") do context
     is_open = g.is_open(context[:transaction])
-    @expect is_open === true
+    @expect is_open
 end
 
 @then("session transaction has type: write") do context
@@ -144,10 +144,10 @@ end
         for nr in 1:length(trans_types)
             trans = trans_types[nr] == "read" ? g.transaction(session, trans_read) : g.transaction(session, trans_write)
             result = trans !== nothing
-            @expect result === true
+            @expect result
         end
         expectation = length(session.transactions) == length(trans_types)
-        @expect expectation === true
+        @expect expectation
     end
 end
 
@@ -184,42 +184,42 @@ end
         g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timout=Inf)
     end
     count_result = length(context[:client].sessions) == length(dbs)
-    @expect count_result === true
+    @expect count_result
 end
 
 @when("for each session, open transaction of type: read") do context
     for session in sessions(context)
         g.transaction(session, trans_read)
         test_trans = length(session.transactions) == 1
-        @expect test_trans === true
+        @expect test_trans
     end
 end
 
 @then("for each session, transaction is null: false") do context
     result_empty = map(x->!isempty(x.transactions) ,sessions(context))
     result_expect = all(result_empty)
-    @expect result_expect === true
+    @expect result_expect
 end
 
 @then("for each session, transaction is open: true") do context
     trans = transactions.(sessions(context))
     sess_trans = reduce(vcat, trans)
     result_expect = all(g.is_open.(sess_trans))
-    @expect result_expect === true
+    @expect result_expect
 end
 
 @then("for each session, transaction has type: read") do context
     trans = transactions.(sessions(context))
     sess_trans = reduce(vcat, trans)
     result_expect = all([trans.type == trans_read for trans in sess_trans])
-    @expect result_expect === true
+    @expect result_expect
 end
 
 @then("for each session, transaction has type: write") do context
     trans = transactions.(sessions(context))
     sess_trans = reduce(vcat, trans)
     result_expect = all([trans.type == trans_write for trans in sess_trans])
-    @expect result_expect === true
+    @expect result_expect
 end
 
 # Scenario: write in a read transaction throws
@@ -229,7 +229,7 @@ end
         g.define(context[:transaction], define_string)
     catch ex
         res_comparisson = occursin("schema writes when transaction type does not allow", string(ex.error_message))
-        @expect res_comparisson === true
+        @expect res_comparisson
     end
 end
 
