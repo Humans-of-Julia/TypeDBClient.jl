@@ -167,7 +167,7 @@ end
 
 @then("thing type root get subtypes contain:") do context
     res_contain = _subtypes_contain(context, ThingType, "thing")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("thing type root get subtypes do not contain:") do context

@@ -29,7 +29,7 @@ end
 @then("sessions are open: true") do context
     res_open = map(x->g.is_open(x), context[:sessions])
     @expect length(res_open) > 0
-    @expect all(res_open) === true
+    @expect all(res_open)
 end
 
 @then("sessions have databases:") do context
@@ -56,13 +56,13 @@ end
 end
 
 @then("sessions in parallel are null: false") do context
-    @expect (context[:sessions] !== nothing && !isempty(context[:sessions])) === true
+    @expect (context[:sessions] !== nothing && !isempty(context[:sessions]))
 end
 
 @then("sessions in parallel are open: true") do context
     res_open = map(x->g.is_open(x), context[:sessions])
     @expect length(res_open) > 0
-    @expect all(res_open) === true
+    @expect all(res_open)
 end
 
 @then("sessions in parallel have databases:") do context
@@ -95,6 +95,6 @@ end
         g.insert(context[:transaction], ins_string)
     catch ex
         res_comparisson = occursin("session type does not allow", string(ex.error_message))
-        @expect res_comparisson === true
+        @expect res_comparisson  === true
     end
 end

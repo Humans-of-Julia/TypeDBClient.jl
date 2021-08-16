@@ -680,61 +680,61 @@ end
 @then("attribute(attribute) as(boolean) get subtypes contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.BOOLEAN, true)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(boolean) get subtypes do not contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.BOOLEAN, false)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(long) get subtypes contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.LONG, true)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(long) get subtypes do not contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.LONG, false)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(double) get subtypes contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.DOUBLE, true)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(double) get subtypes do not contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.DOUBLE, false)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(string) get subtypes contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.STRING, true)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(string) get subtypes do not contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.STRING, false)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(datetime) get subtypes contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.DATETIME, true)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("attribute(attribute) as(datetime) get subtypes do not contain:") do context
     res = _attribute_subtypes(context, "attribute", VALUE_TYPE.DATETIME, false)
     @expect length(context.datatable) == length(res)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Attribute types can have keys
@@ -764,7 +764,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect in(key_type, types_owns) === true
+        @expect in(key_type, types_owns)
     end
 end
 
@@ -816,7 +816,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect !in(key_type, types_owns) === true
+        @expect !in(key_type, types_owns)
     end
 end
 
@@ -868,7 +868,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect in(key_type, types_owns) === true
+        @expect in(key_type, types_owns)
     end
 end
 
@@ -890,7 +890,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect !in(key_type, types_owns) === true
+        @expect !in(key_type, types_owns)
     end
 end
 
@@ -927,7 +927,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect in(key_type, types_owns) === true
+        @expect in(key_type, types_owns)
     end
 end
 
@@ -972,7 +972,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect in(key_type, types_owns) === true
+        @expect in(key_type, types_owns)
     end
 end
 
@@ -986,7 +986,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect in(key_type, types_owns) === true
+        @expect in(key_type, types_owns)
     end
 end
 
@@ -1000,7 +1000,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect in(key_type, types_owns) === true
+        @expect in(key_type, types_owns)
     end
 end
 
@@ -1014,7 +1014,7 @@ end
         key_type = g.get(ConceptManager(context[:transaction]),
                           AttributeType,
                           key_types[i])
-        @expect in(key_type, types_owns) === true
+        @expect in(key_type, types_owns)
     end
 end
 

@@ -1,9 +1,7 @@
 using Pkg
 using ProtoBuf
 
-# root_dir_java = "/Users/frank/Documents/JuliaProjects/JuliaSource/TypeDBClient/client-java"
 root_dir = "/Users/frank/Documents/JuliaProjects/JuliaSource/GraknClient/TypeDBClient.jl/src"
-
 
 license_text = "# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE \n"
 

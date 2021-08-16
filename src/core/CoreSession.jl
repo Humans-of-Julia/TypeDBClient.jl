@@ -7,7 +7,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     database::CoreDatabase
     sessionID::Bytes
     transactions::Dict{UUID,T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
-    type::Int32
+    type::EnumType
     accessLock::ReentrantLock
     options::TypeDBOptions
     isOpen::Bool
@@ -126,7 +126,7 @@ function close(session::AbstractCoreSession, session_alive::Bool=true)
             remove_session(session.client, session)
             safe_close(session.timer)
 
-            if session_alive === true
+            if session_alive
                 req = SessionRequestBuilder.close_req(session.sessionID)
                 stub = session.client.core_stub.blockingStub
                 Proto.session_close(stub, gRPCController(), req )

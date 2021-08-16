@@ -3,7 +3,7 @@
 # @when("transaction commits") do context
 #     g.commit(context[:transaction])
 # end
-
+g = TypeDBClient
 
 @when("session opens transaction of type: read") do context
     transaction = g.transaction(context[:session], trans_read)
@@ -124,7 +124,7 @@ end
     for session in sessions(context)
         transactions = collect(values(session.transactions))
         for transaction in transactions
-            @expect g.is_open(transaction) === true
+            @expect g.is_open(transaction)
         end
     end
 end
@@ -161,7 +161,7 @@ end
 @then("for each session, transactions in parallel are open: true") do context
     for session in sessions(context)
         for trans in transactions(session)
-            @expect g.is_open(trans) === true
+            @expect g.is_open(trans)
         end
     end
 end

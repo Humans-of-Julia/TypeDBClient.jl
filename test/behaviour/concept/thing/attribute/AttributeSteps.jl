@@ -69,12 +69,12 @@ end
 
 @then("attribute \$x has boolean value: true") do context
     @expect typeof(context[:x].value) == Bool
-    @expect context[:x].value === true
+    @expect context[:x].value
 end
 
 @when("\$x = attribute(is-alive) as(boolean) get: true") do context
     @expect context[:x].type.label.name == "is-alive"
-    @expect context[:x].value === true
+    @expect context[:x].value
 end
 
 # Scenario: Attribute with value type long can be created

@@ -71,7 +71,7 @@ end
     @sync @async for db in db_names
         g.delete_database(context[:client], db)
     end
-    @expect isempty(g.get_all_databases(context[:client])) === true
+    @expect isempty(g.get_all_databases(context[:client]))
 end
 
 # Scenario: delete a database causes open sessions to fail
@@ -104,7 +104,7 @@ end
     try
         g.define(context[:transaction], define_string)
     catch ex
-       # @expect occursin("transaction has been closed", ex.message) === true
+       # @expect occursin("transaction has been closed", ex.message)
        @info ex
     end
 end

@@ -52,7 +52,11 @@ function get_players(transaction::AbstractCoreTransaction,
         r.thing_res_part.relation_get_players_res_part.things for r in player_res)))
 end
 
-function get_relations(transaction::AbstractCoreTransaction, thing::AbstractThing, role_types::Optional{AbstractVector{<:AbstractRoleType}}=nothing)
+function get_relations(
+    transaction::AbstractCoreTransaction,
+    thing::AbstractThing,
+    role_types::Optional{AbstractVector{<:AbstractRoleType}}=nothing)
+
     proto_role_types = role_types !== nothing ? proto.(role_types) : nothing
 
     rel_req = ThingRequestBuilder.get_relations_req(thing.iid, proto_role_types)
@@ -60,10 +64,3 @@ function get_relations(transaction::AbstractCoreTransaction, thing::AbstractThin
     return return instantiate.(collect(Iterators.flatten(
         r.thing_res_part.thing_get_relations_res_part.relations for r in res_rel)))
 end
-
-
-
-# Remote functions
-
-
-# TODO depends on concepts: RoleType, Thing

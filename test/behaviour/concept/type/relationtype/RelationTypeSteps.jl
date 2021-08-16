@@ -482,42 +482,42 @@ end
 
 @then("relation(fathership) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, RelationType, "fathership")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(fathership) get role(father) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, RoleType, "fathership", "father")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(fathership) get role(child) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, RoleType, "fathership", "child")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(parentship) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RelationType, "parentship")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(parentship) get role(parent) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RoleType, "parentship", "parent")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(parentship) get role(child) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RoleType, "parentship", "child")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(relation) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RelationType, "relation")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(relation) get role(role) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RoleType, "relation", "role")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @when("put relation type: father-son") do context
@@ -563,32 +563,32 @@ end
 
 @then("relation(father-son) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, RelationType, "father-son")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(father-son) get role(father) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, RoleType, "father-son", "father")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(father-son) get role(son) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, RoleType, "father-son", "son")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(fathership) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RelationType, "fathership")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(fathership) get role(father) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RoleType, "fathership", "father")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("relation(fathership) get role(child) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, RoleType, "fathership", "child")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 # Scenario: Relation types cannot subtype itself
@@ -651,7 +651,7 @@ end
 # Scenario: Relation types can have keys
 @then("relation(marriage) get owns key types contain:") do context
     res = _get_owns_contain(context, RelationType, "marriage", true)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Relation types can unset keys
@@ -748,7 +748,7 @@ end
 
 @then("relation(marriage) get owns attribute types contain:") do context
     res = _get_owns_contain(context, RelationType, "marriage", false)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Relation types can unset attributes
@@ -834,12 +834,12 @@ end
 
 @then("relation(contractor-employment) get owns key types contain:") do context
     res = _get_owns_contain(context, RelationType, "contractor-employment", true)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("relation(contractor-employment) get owns attribute types contain:") do context
     res = _get_owns_contain(context, RelationType, "contractor-employment", false)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @when("put attribute type: parttime-reference, with value type: string") do context
@@ -874,12 +874,12 @@ end
 
 @then("relation(parttime-employment) get owns key types contain:") do context
     res = _get_owns_contain(context, RelationType, "parttime-employment", true)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("relation(parttime-employment) get owns attribute types contain:") do context
     res = _get_owns_contain(context, RelationType, "parttime-employment", false)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Relation types can inherit keys and attributes that are subtypes of each other
@@ -1294,7 +1294,7 @@ end
 
 @then("relation(contractor-employment) get playing roles contain:") do context
     res = _get_playing_roles_contain("contractor-employment", RelationType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @when("put relation type: parttime-locates") do context
@@ -1336,7 +1336,7 @@ end
 
 @then("relation(parttime-employment) get playing roles contain:") do context
     res = _get_playing_roles_contain("parttime-employment", RelationType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @when("relation(contractor-locates) set supertype: locates") do context

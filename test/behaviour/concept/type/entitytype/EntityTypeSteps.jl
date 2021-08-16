@@ -215,52 +215,52 @@ end
 
 @then("entity(man) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, EntityType, "man")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(woman) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, EntityType, "woman")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(person) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, EntityType, "person")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(cat) get supertypes contain:") do context
     res_contain = _supertypes_contain(context, EntityType, "cat")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(man) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, EntityType, "man")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(woman) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, EntityType, "woman")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(person) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, EntityType, "person")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(cat) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, EntityType, "cat")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(animal) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, EntityType, "animal")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 @then("entity(entity) get subtypes contain:") do context
     res_contain = _subtypes_contain(context, EntityType, "entity")
-    @expect all(res_contain) === true
+    @expect all(res_contain)
 end
 
 # Scenario: Entity types cannot subtype itself
@@ -275,7 +275,7 @@ end
 # Scenario: Entity types can have keys
 @then("entity(person) get owns key types contain:") do context
     res = _get_owns_contain(context, EntityType, "person", true)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Entity types can only commit keys if every instance owns a distinct key
@@ -361,7 +361,7 @@ end
 # Scenario: Entity types can have attributes
 @then("entity(person) get owns attribute types contain:") do context
     res = _get_owns_contain(context, EntityType, "person", false)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Entity types can unset owning attributes
@@ -430,7 +430,7 @@ end
 
 @then("entity(customer) get owns key types contain:") do context
     res = _get_owns_contain(context, EntityType, "customer", true)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 
@@ -462,17 +462,17 @@ end
 
 @then("entity(subscriber) get owns key types contain:") do context
     res = _get_owns_contain(context, EntityType, "subscriber", true)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("entity(customer) get owns attribute types contain:") do context
     res = _get_owns_contain(context, EntityType, "customer", false)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("entity(subscriber) get owns attribute types contain:") do context
     res = _get_owns_contain(context, EntityType, "subscriber", false)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Entity types can inherit keys and attributes that are subtypes of each other
@@ -801,17 +801,17 @@ end
 # Scenario: Entity types can play role types
 @then("entity(person) get playing roles contain:") do context
     res = _get_playing_roles_contain("person", EntityType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("relation(marriage) get role(husband) get players contain:") do context
     res = _get_players_contain("marriage","husband", context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("relation(marriage) get role(wife) get players contain:") do context
     res = _get_players_contain("marriage","wife", context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Entity types can unset playing role types
@@ -927,12 +927,12 @@ end
 
 @then("entity(customer) get playing roles contain:") do context
     res = _get_playing_roles_contain("customer", EntityType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @then("entity(animal) get playing roles contain:") do context
     res = _get_playing_roles_contain("animal", EntityType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Entity types can inherit playing role types that are subtypes of each other
@@ -970,7 +970,7 @@ end
 
 @then("entity(man) get playing roles contain:") do context
     res = _get_playing_roles_contain("man", EntityType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @when("put relation type: mothership") do context
@@ -997,7 +997,7 @@ end
 
 @then("entity(woman) get playing roles contain:") do context
     res = _get_playing_roles_contain("woman", EntityType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 # Scenario: Entity types can override inherited playing role types
@@ -1088,7 +1088,7 @@ end
 
 @then("relation(marriage) get playing roles contain:") do context
     res = _get_playing_roles_contain("marriage", RelationType, context)
-    @expect all(res) === true
+    @expect all(res)
 end
 
 @when("put relation type: organises") do context

@@ -28,7 +28,7 @@ end
 secures the equality of two types by comparing the two labels and the
 same type.
 """
-function ==(type1::AbstractType, type2::AbstractType)
+function Base.:(==)(type1::AbstractType, type2::AbstractType)
     if type1 === type2
         return true
     elseif typeof(type1) == typeof(type2) && type1.label == type2.label

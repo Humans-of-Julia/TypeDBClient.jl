@@ -240,7 +240,7 @@ end
     "marriage")
     res_marriage = g.get_instances(g.as_remote(type_marriage, context[:transaction]))
 
-    @expect isempty(res_marriage) === true
+    @expect isempty(res_marriage)
 end
 
 # Scenario: Relation with role players can be deleted

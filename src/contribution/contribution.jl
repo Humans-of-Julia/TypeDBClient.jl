@@ -25,7 +25,7 @@ function entity_set_owns(thing_type::Type{<:g.AbstractThingType},
          if overriden !== nothing
              overriden_attr = get(cm, AttributeType, overriden)
          else
-             overriden_attr = overriden
+             overriden_attr = nothing
          end
 
          @assert loc_entity !== nothing &&
@@ -35,14 +35,14 @@ function entity_set_owns(thing_type::Type{<:g.AbstractThingType},
          set_owns(rem_entitiy, loc_attribute, is_key, overriden_attr)
      catch ex
          if loc_entity !== nothing
-             @error loc_entity
+             @debug loc_entity
          else
-             @error "get entity_type not successfull. Please check your input"
+             @debug "get entity_type not successfull. Please check your input"
          end
-         if loc_entity !== nothing
-             @error loc_attribute
+         if loc_attribute !== nothing
+             @debug loc_attribute
          else
-             @error "get attribute not successfull. Please check your input"
+             @debug "get attribute not successfull. Please check your input"
          end
          rethrow(ex)
      end
@@ -55,7 +55,7 @@ function entity_set_owns(thing_type::Type{<:g.AbstractThingType},
             is_key = false,
             overriden::g.Optional{String} = nothing)
 
-     entity_set_owns(EntityType ,entity, attribute_type, transaction, is_key, overriden)
+     entity_set_owns(EntityType, entity, attribute_type, transaction, is_key, overriden)
  end
 
 end

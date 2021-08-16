@@ -114,7 +114,7 @@ function _treq(; kwargs...)
     )
 end
 
-function put_entity_type_req(label::Optional{String})
+function put_entity_type_req(label::String)
     return _treq(
         put_entity_type_req = Proto.ConceptManager_PutEntityType_Req(; label)
     )
@@ -402,11 +402,11 @@ function set_relates_req(
     label::Label, role_label::String, overridden_label::Optional{String})
 
     relation_type_set_relates_req = overridden_label !== nothing ?
-                                            Proto.RelationType_SetRelates_Req(;
-                                                label = role_label,
-                                                overridden_label)  :
-                                            Proto.RelationType_SetRelates_Req(;
-                                                label = role_label)
+                                        Proto.RelationType_SetRelates_Req(;
+                                            label = role_label,
+                                            overridden_label)  :
+                                        Proto.RelationType_SetRelates_Req(;
+                                            label = role_label)
 
     return _treq(label.name, label.scope; relation_type_set_relates_req)
 end

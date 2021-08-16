@@ -1,4 +1,6 @@
-using Base: concatenate_setindex!, @nexprs
+using Base: concatenate_setindex!
+
+g = TypeDBClient
 
 @given("put attribute type: username, with value type: string") do context
     _put_attribute_to_db(context, "username", g.Proto.AttributeType_ValueType.STRING)
@@ -169,17 +171,17 @@ end
 @then("entity \$a get attributes(email) as(string) contain: \$email") do context
     email_type = g.get(g.ConceptManager(context[:transaction]), AttributeType, "email")
     res_email = get_has(context[:transaction], context[:a], email_type)
-    @expect in(context[:email], res_email) === true
+    @expect in(context[:email], res_email)
 end
 
 @then("entity \$a get attributes contain: \$email") do context
     res_email = get_has(context[:transaction], context[:a])
-    @expect in(context[:email], res_email) === true
+    @expect in(context[:email], res_email)
 end
 
 @then("attribute \$email get owners contain: \$a") do context
     res_owns = get_owners(context[:transaction], context[:email])
-    @expect in(context[:a], res_owns) === true
+    @expect in(context[:a], res_owns)
 end
 
 @when("\$email = attribute(email) as(string) get: alice@email.com") do context

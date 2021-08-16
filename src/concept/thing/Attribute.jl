@@ -28,9 +28,11 @@ function Attribute(t::Proto.Thing)
     end
 end
 
-function get_owners(transaction::AbstractCoreTransaction,
-                    attribute::AbstractAttribute,
-                    thing_type::Optional{AbstractThingType} = nothing)
+function get_owners(
+    transaction::AbstractCoreTransaction,
+    attribute::AbstractAttribute,
+    thing_type::Optional{AbstractThingType} = nothing)
+
     iid = attribute.iid
     owner_req = thing_type === nothing ?
                                 ThingRequestBuilder.attribute_get_owners_req(iid) :
