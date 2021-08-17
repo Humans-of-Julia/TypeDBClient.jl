@@ -33,6 +33,11 @@ function insert(transaction::AbstractCoreTransaction, query::AbstractString, opt
     return reduce(vcat, map(ConceptMap, [entry.query_manager_res_part.insert_res_part.answers for entry in db_result]))
 end
 
+"""
+    delete(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
+To delete something without using certain functions you can use a TypeQL string put this as an argument to the
+delete function.
+"""
 function delete(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     execute(transaction, QueryManagerRequestBuilder.delete_req(query, options))
     return nothing

@@ -59,6 +59,10 @@ function set_label(remote::RemoteRule, new_label::String)
     return remote
 end
 
+"""
+    delete(remote::RemoteRule)
+To delete a type in the database pack the type with the transaction to a RemoteRule.
+"""
 function delete(remote::RemoteRule)
     execute(remote.transaction, RuleRequestBuilder.rule_delete_req(remote.rule.label))
 end

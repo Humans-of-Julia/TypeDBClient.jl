@@ -1,11 +1,8 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-"""
-    instantiate(p)
+# Create a suitable object according to the type specified in the ProtoBuf object `p`.
+# Return value will be a subtype of `AbstractType`.
 
-Create a suitable object according to the type specified in the ProtoBuf object `p`.
-Return value will be a subtype of `AbstractType`.
-"""
 function instantiate(t::Proto._Type)
     label = hasproperty(t, :scope) ? Label(t.scope, t.label) : Label(t.label)
     if t.encoding == Proto.Type_Encoding.ROLE_TYPE
@@ -23,11 +20,8 @@ function instantiate(t::Proto._Type)
     end
 end
 
-"""
-    ==(type1::AbstractType, type2::AbstractType)
-secures the equality of two types by comparing the two labels and the
-same type.
-"""
+# secures the equality of two types by comparing the two labels and the
+# same type.
 function Base.:(==)(type1::AbstractType, type2::AbstractType)
     if type1 === type2
         return true
@@ -38,11 +32,8 @@ function Base.:(==)(type1::AbstractType, type2::AbstractType)
     end
 end
 
-"""
-    encoding(t)
 
-Return the ProtoBuf encoding value for the given concept type `t`.
-"""
+# Return the ProtoBuf encoding value for the given concept type `t`.
 function encoding end
 
 encoding(t::AbstractEntityType) = Proto.Type_Encoding.ENTITY_TYPE

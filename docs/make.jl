@@ -21,7 +21,6 @@ makedocs(;
         "API Reference" => "api.md"
     ],
 )
-
 deploydocs(;
     repo="github.com/Humans-of-Julia/TypeDBClient.jl.git",
     devbranch="main",

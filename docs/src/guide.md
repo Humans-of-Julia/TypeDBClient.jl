@@ -8,7 +8,7 @@ CurrentModule = TypeDBClient
 
 ## Installation
 
-To use this client, you need a compatible TypeDB Server running. Visit the Compatibility Table 
+To use this client, you need a compatible TypeDB Server running. Visit the Compatibility Table
 
 This pkg is not yet registered on the JuliaHub. As of now you would need to install it directly from the GitHub repo.
 
@@ -20,18 +20,74 @@ Inside the Julia REPL, type ] to enter the Pkg REPL mode then run
 
 First make sure, the TypeDB server is running. It is described here in the [TypeDB Documentation](https://docs.vaticle.com/docs/running-typedb/install-and-run).
 
-In the Julia REPL or in your source run 
+In the Julia REPL or in your source run
 
 ` using TypeDBCLient`
 
-Instantiate a client and open a session.
+You have two choices:
 
+1. If you are only interested on working interactivly on wrangling some data interactivly you can use the more simplified API. An example for this is:
+```julia
+using TypeDBClient: dbconnect, open, read, write, match, insert, commit, create_database
+
+dbconnect("127.0.0.1") do client
+# The client section where all commands  with the client
+# are possible
+
+    # Here the creation of a database
+    create_database(client, "my-typedb")
+    # Open the session
+    open(client, "my-typedb") do session
+        # Open a write transaction
+        write(session) do transaction
+            # make a insert with a TypeQL string
+            insert(transaction, raw"insert $_ isa person;")
+            #committing the transaction.
+            commit(transaction)
+        end
+        # Open a read session
+        read(session) do transaction
+            # make a match request with a TypeQL string
+            answers = match(transaction, raw"match $p isa person;")
+        end
+    end
+end
 ```
+
+For working with data using TypeQL please refer to the syntax on [TypeQL Documentation](https://docs.vaticle.com/docs/query/overview)
+
+2. You want the full stack at your fingertips. Then you can use the following commands:
+```julia
 using TypeDBClient
 
-to be worked out yet..
-```
+# only for convencience reasons, you can write the full name if you want
+g = TypeDBClient
+#create a client
+client = g.CoreClient("127.0.0.1",1729)
 
+# create a database called typedb if the database isn't on the server
+g.create_database(client, "typedb")
+
+# Open a session to write in the schema section of the database.
+# Be careful if you work with a schema session. No more session are allowed
+# until you close this session. Closing a session is essentially. Don't forget this
+# at the end of your work
+session = g.CoreSession(client, "typedb" , g.Proto.Session_Type.SCHEMA, request_timout=Inf)
+
+# open a write transaction
+transaction = g.transaction(session, g.Proto.Transaction_Type.WRITE)
+
+# make a query in the database
+# The result of this query will be a vector of ConceptMap. From there you can access the
+# data as you want.
+results = g.match(transaction, raw"""match $x sub thing;""")
+
+# If you want work further in with the session, go ahead else close the session
+close(session)
+```
+If you want use the full potential of the client you should read the documentation
+of the API functions. There you will find all you need for working programmatically in the database.
+Otherwise it is even possible to get most of the time equally results using TypeQL.
 
 ```@autodocs
 Modules = [TypeDBClient]
