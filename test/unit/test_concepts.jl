@@ -1,4 +1,4 @@
-using Pretend: Pretend, apply
+using Pretend: Pretend, apply, @mockable
 using Test
 
 using TypeDBClient:
