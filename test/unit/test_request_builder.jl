@@ -30,8 +30,8 @@ let b = TypeDBClient.TransactionRequestBuilder
     let ts = [Proto.Transaction_Req()]
         @test b.client_msg(ts).reqs == ts
     end
-    let id = uuid4(), r = b.stream_req(id)
-        @test r.req_id == string(id)
+    let id = bytes(uuid4()), r = b.stream_req(id)
+        @test r.req_id == id
         @test hasproperty(r, :stream_req)
     end
     let id = [0x01], ty = Int32(0), options = no_option, ms = 0,
