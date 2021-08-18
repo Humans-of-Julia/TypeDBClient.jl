@@ -26,7 +26,7 @@ In the Julia REPL or in your source run
 
 You have two choices:
 
-1. If you are only interested on working interactivly on wrangling some data interactivly you can use the more simplified API. An example for this is:
+* If you are only interested on working interactivly on wrangling some data interactivly you can use the more simplified API. An example for this is:
 ```julia
 using TypeDBClient: dbconnect, open, read, write, match, insert, commit, create_database
 
@@ -56,7 +56,7 @@ end
 
 For working with data using TypeQL please refer to the syntax on [TypeQL Documentation](https://docs.vaticle.com/docs/query/overview)
 
-2. You want the full stack at your fingertips. Then you can use the following commands:
+* You want the full stack at your fingertips. Then you can use the following commands:
 ```julia
 using TypeDBClient
 
