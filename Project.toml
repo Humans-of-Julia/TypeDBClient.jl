@@ -16,6 +16,7 @@ gRPCClient = "aaca4a50-36af-4a1d-b878-4c443f2061ad"
 
 [compat]
 Behavior = "0.3"
+DataStructures = "0.18"
 Pretend = "1"
 julia = "1"
 
