@@ -2,7 +2,7 @@ module Contribution
 
 using ..TypeDBClient
 
-g = TypeDBClient
+const g = TypeDBClient
 
 export entity_set_owns
 

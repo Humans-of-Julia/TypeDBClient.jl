@@ -6,7 +6,7 @@ CurrentModule = TypeDBClient
 
 ## Introduction
 
-So, TypeDB itself provides various ways how to communicate (read from & write to) with the database.
+So, TypeDB itself provides various ways how to communicate (read from & write to) the database.
 
 There is the [Workbase] (https://docs.vaticle.com/docs/workbase/overview) the [TypeDB Console] (https://docs.vaticle.com/docs/console/console#what-is-the-typedb-console) and the different [Clients] (https://docs.vaticle.com/docs/client-api/overview) to be used in an application.
 
