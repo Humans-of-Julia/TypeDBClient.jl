@@ -61,7 +61,11 @@ function get_has(transaction::AbstractCoreTransaction,
         r.thing_res_part.thing_get_has_res_part.attributes for r in res_has)))
 end
 
-
+"""
+    delete(r::RemoteConcept{<:AbstractThing})
+To delete an Entity, Relation or Attribute this have to be packed with the transaction
+to a RemoteConcept. To accomplish this see the function as_remote.
+"""
 function delete(r::RemoteConcept{<:AbstractThing})
     del_req = ThingRequestBuilder.delete_req(r.concept.iid)
     execute(r.transaction, del_req)
