@@ -583,7 +583,7 @@ Feature: Connection Transaction
       """
       define person sub entity;
       """
-  @actual
+
   Scenario: commit in a read transaction throws
     When connection create database: typedb
     Given connection open schema session for database: typedb

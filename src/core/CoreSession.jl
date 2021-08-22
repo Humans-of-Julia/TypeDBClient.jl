@@ -7,7 +7,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     database::CoreDatabase
     sessionID::Bytes
     transactions::Dict{UUID,T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
-    type::Int
+    type::EnumType
     accessLock::ReentrantLock
     options::TypeDBOptions
     isOpen::Bool
@@ -87,8 +87,8 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
                 @debug "Time: $(Dates.now())"
 
                 if result.alive === false
-                    close(session)
-                    @info "$session is closed"
+                    close(session, false)
+                    @debug "$session is closed"
                 end
             catch ex
                 close(session)
@@ -116,7 +116,7 @@ function transaction(session::AbstractCoreSession, type::EnumType, options::Type
     end
 end
 
-function close(session::AbstractCoreSession)
+function close(session::AbstractCoreSession, session_alive::Bool=true)
     try
         lock(session.accessLock)
         if session.isOpen
@@ -126,9 +126,11 @@ function close(session::AbstractCoreSession)
             remove_session(session.client, session)
             safe_close(session.timer)
 
-            req = SessionRequestBuilder.close_req(session.sessionID)
-            stub = session.client.core_stub.blockingStub
-            Proto.session_close(stub, gRPCController(), req )
+            if session_alive
+                req = SessionRequestBuilder.close_req(session.sessionID)
+                stub = session.client.core_stub.blockingStub
+                Proto.session_close(stub, gRPCController(), req )
+            end
 
             session.isOpen = false
         end

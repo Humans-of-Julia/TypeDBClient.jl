@@ -10,7 +10,6 @@ end
 
 @then("session has database: typedb") do context
     @expect context[:session].database.name == "typedb"
-    delete_all_databases(context[:client])
 end
 
 @when("connection open sessions for databases:") do context
@@ -30,14 +29,13 @@ end
 @then("sessions are open: true") do context
     res_open = map(x->g.is_open(x), context[:sessions])
     @expect length(res_open) > 0
-    @expect all(res_open) === true
+    @expect all(res_open)
 end
 
 @then("sessions have databases:") do context
     dbs = [item.database for item in context[:sessions]]
     @expect dbs !== nothing
     @expect first(unique(typeof.(dbs))) == TypeDBClient.CoreDatabase
-    delete_all_databases(context[:client])
 end
 
 @when("connection open sessions in parallel for databases:") do context
@@ -58,13 +56,13 @@ end
 end
 
 @then("sessions in parallel are null: false") do context
-    @expect (context[:sessions] !== nothing && !isempty(context[:sessions])) === true
+    @expect (context[:sessions] !== nothing && !isempty(context[:sessions]))
 end
 
 @then("sessions in parallel are open: true") do context
     res_open = map(x->g.is_open(x), context[:sessions])
     @expect length(res_open) > 0
-    @expect all(res_open) === true
+    @expect all(res_open)
 end
 
 @then("sessions in parallel have databases:") do context
@@ -73,32 +71,17 @@ end
     for i in 1:length(dbnames)
         @expect sessions[i].database.name == dbnames[i]
     end
-    delete_all_databases(context[:client])
 end
 
 # Scenario: write schema in a data session throws
-@given("connection open data session for database: typedb") do context
-    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timout=Inf)
-    context[:session] = sess
-    trans = g.transaction(sess, g.Proto.Transaction_Type.WRITE)
-    context[:transaction] = trans
-end
-
 @then("graql define; throws exception containing \"session type does not allow\"") do context
     define_string = "define person sub entity;"
     try
         g.define(context[:transaction], define_string)
     catch ex
         res_comparisson = occursin("session type does not allow", string(ex.error_message))
-        @expect res_comparisson === true
+        @expect res_comparisson
     end
-    delete_all_databases(context[:client])
-end
-
-
-@given("connection open schema session for database: typedb") do context
-    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.SCHEMA, request_timout=Inf)
-    context[:session] = sess
 end
 
 @then("graql define") do context
@@ -112,7 +95,6 @@ end
         g.insert(context[:transaction], ins_string)
     catch ex
         res_comparisson = occursin("session type does not allow", string(ex.error_message))
-        @expect res_comparisson === true
+        @expect res_comparisson
     end
-    delete_all_databases(context[:client])
 end

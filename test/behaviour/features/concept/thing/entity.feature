@@ -227,4 +227,3 @@ Feature: Concept Entity
   Scenario: Entity can retrieve relations where it plays a role in
 
   Scenario: Entity can retrieve role types it plays
-

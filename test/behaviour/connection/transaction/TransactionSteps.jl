@@ -1,21 +1,28 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-@when("transaction commits") do context
-    commit_req = g.commit_req()
-    g.execute(context[:transaction], commit_req)
-end
-
+# @when("transaction commits") do context
+#     g.commit(context[:transaction])
+# end
+g = TypeDBClient
 
 @when("session opens transaction of type: read") do context
     transaction = g.transaction(context[:session], trans_read)
     @expect transaction !== nothing
     context[:transaction] = transaction
+    context[:cm] = ConceptManager(context[:transaction])
 end
 
 @when("session opens transaction of type: write") do context
-    transaction = g.transaction(context[:session], trans_write)
+
+    if haskey(context, :transaction)
+        context[:transaction] !== nothing && g.close(context[:transaction])
+    end
+
+    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
     @expect transaction !== nothing
     context[:transaction] = transaction
+    # only a convinience method to prevent paperwork
+    context[:cm] = ConceptManager(context[:transaction])
 end
 
 @then("session transaction is null: false") do context
@@ -27,24 +34,21 @@ end
     sess_trans = transactions(context)
     is_open = map(item->g.is_open(item),sess_trans)
     all_open = all(is_open)
-    @expect all_open === true
+    @expect all_open
 end
 
 @then("session transaction has type: read") do context
     is_open = g.is_open(context[:transaction])
-    @expect is_open === true
-    delete_all_databases(context[:client])
+    @expect is_open
 end
 
 @then("session transaction has type: write") do context
     transaction_write = context[:transaction].type
     @expect transaction_write == trans_write
-    delete_all_databases(context[:client])
 end
 
 @then("session transaction commits") do context
-    commit_req = g.TransactionRequestBuilder.commit_req()
-    g.execute(context[:transaction], commit_req)
+    g.commit(context[:transaction])
 end
 
 @then("session transaction commits; throws exception") do context
@@ -54,7 +58,6 @@ end
     catch ex
         @expect ex !== nothing
     end
-    delete_all_databases(context[:client])
 end
 
 # Scenario: one database, one session, re-committing transaction throws
@@ -84,7 +87,6 @@ end
             end
         end
     end
-    delete_all_databases(context[:client])
 end
 
 # Scenario: one database, one session, transaction close is idempotent
@@ -98,13 +100,12 @@ end
     for session in sessions(context)
         @expect isempty(values(session.transactions))
     end
-    delete_all_databases(context[:client])
 end
 
 @when("for each session, open transactions of type:") do context
     read = g.Proto.Transaction_Type.READ
     types_of_read = [row[1] for row in context.datatable]
-    sessions = sessions(context)
+    sessions = collect(values(context[:client].sessions))
     for session in sessions
         for type_of_read in types_of_read
             type_of_read == "read" && g.transaction(session,read)
@@ -123,19 +124,18 @@ end
     for session in sessions(context)
         transactions = collect(values(session.transactions))
         for transaction in transactions
-            @expect g.is_open(transaction) === true
+            @expect g.is_open(transaction)
         end
     end
 end
 
 @then("for each session, transactions have type:") do context
     types_of_read = [row[1] for row in context.datatable]
-    transactions = transactions(context)
+    transactions = collect(values(context[:session].transactions))
     for nr in 1:length(types_of_read)
         type_transaction = types_of_read[nr] == "read" ? trans_read : trans_write
         @expect transactions[nr].type == type_transaction
     end
-    delete_all_databases(context[:client])
 end
 
 @when("for each session, open transactions in parallel of type:") do context
@@ -144,10 +144,10 @@ end
         for nr in 1:length(trans_types)
             trans = trans_types[nr] == "read" ? g.transaction(session, trans_read) : g.transaction(session, trans_write)
             result = trans !== nothing
-            @expect result === true
+            @expect result
         end
         expectation = length(session.transactions) == length(trans_types)
-        @expect expectation === true
+        @expect expectation
     end
 end
 
@@ -161,7 +161,7 @@ end
 @then("for each session, transactions in parallel are open: true") do context
     for session in sessions(context)
         for trans in transactions(session)
-            @expect g.is_open(trans) === true
+            @expect g.is_open(trans)
         end
     end
 end
@@ -175,7 +175,6 @@ end
         res_trans_sess = group_count_items(sess_trans_type)
         @expect res_trans_types == res_trans_sess
     end
-    delete_all_databases(context[:client])
 end
 
 
@@ -185,44 +184,42 @@ end
         g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timout=Inf)
     end
     count_result = length(context[:client].sessions) == length(dbs)
-    @expect count_result === true
+    @expect count_result
 end
 
 @when("for each session, open transaction of type: read") do context
     for session in sessions(context)
         g.transaction(session, trans_read)
         test_trans = length(session.transactions) == 1
-        @expect test_trans === true
+        @expect test_trans
     end
 end
 
 @then("for each session, transaction is null: false") do context
     result_empty = map(x->!isempty(x.transactions) ,sessions(context))
     result_expect = all(result_empty)
-    @expect result_expect === true
+    @expect result_expect
 end
 
 @then("for each session, transaction is open: true") do context
     trans = transactions.(sessions(context))
     sess_trans = reduce(vcat, trans)
     result_expect = all(g.is_open.(sess_trans))
-    @expect result_expect === true
+    @expect result_expect
 end
 
 @then("for each session, transaction has type: read") do context
     trans = transactions.(sessions(context))
     sess_trans = reduce(vcat, trans)
     result_expect = all([trans.type == trans_read for trans in sess_trans])
-    @expect result_expect === true
-    delete_all_databases(context[:client])
+    @expect result_expect
 end
 
 @then("for each session, transaction has type: write") do context
     trans = transactions.(sessions(context))
     sess_trans = reduce(vcat, trans)
     result_expect = all([trans.type == trans_write for trans in sess_trans])
-    @expect result_expect === true
-    delete_all_databases(context[:client])
+    @expect result_expect
 end
 
 # Scenario: write in a read transaction throws
@@ -232,9 +229,8 @@ end
         g.define(context[:transaction], define_string)
     catch ex
         res_comparisson = occursin("schema writes when transaction type does not allow", string(ex.error_message))
-        @expect res_comparisson === true
+        @expect res_comparisson
     end
-    delete_all_databases(context[:client])
 end
 
 @then("transaction commits; throws exception") do context
@@ -243,5 +239,4 @@ end
     catch ex
         @expect typeof(ex) == g.TypeDBClientException
     end
-    delete_all_databases(context[:client])
 end

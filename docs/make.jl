@@ -5,6 +5,8 @@ using Documenter
 @info "Makeing documentation..."
 makedocs(;
     modules=[TypeDBClient],
+    clean = true,
+    checkdocs = :exports,
     authors="Humas-of-Julia",
     repo="https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/{commit}{path}#L{line}",
     sitename="TypeDBClient.jl",
@@ -21,7 +23,6 @@ makedocs(;
         "API Reference" => "api.md"
     ],
 )
-
 deploydocs(;
     repo="github.com/Humans-of-Julia/TypeDBClient.jl.git",
     devbranch="main",

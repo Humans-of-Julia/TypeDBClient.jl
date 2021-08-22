@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@actual
 Feature: Concept Relation Type and Role Type
 
   Background:
@@ -24,6 +25,8 @@ Feature: Concept Relation Type and Role Type
     Given connection create database: typedb
     Given connection open schema session for database: typedb
     Given session opens transaction of type: write
+
+
 
   Scenario: Relation and role types can be created
     When put relation type: marriage
@@ -50,6 +53,8 @@ Feature: Concept Relation Type and Role Type
       | marriage:husband |
       | marriage:wife    |
 
+
+
   Scenario: Relation and role types can be deleted
     When put relation type: marriage
     When relation(marriage) set relates role: spouse
@@ -58,7 +63,7 @@ Feature: Concept Relation Type and Role Type
     When relation(parentship) set relates role: child
     When relation(parentship) unset related role: parent
     Then relation(parentship) get related roles do not contain:
-      | parent |
+      | parentship:parent |
     Then relation(relation) get role(role) get subtypes do not contain:
       | parentship:parent |
     When transaction commits
@@ -70,7 +75,7 @@ Feature: Concept Relation Type and Role Type
       | parentship:child  |
     When relation(marriage) unset related role: spouse
     Then relation(marriage) get related roles do not contain:
-      | spouse |
+      | marriage:spouse |
     When relation(marriage) set relates role: husband
     When relation(marriage) set relates role: wife
     When transaction commits
@@ -92,6 +97,8 @@ Feature: Concept Relation Type and Role Type
       | marriage:husband  |
       | marriage:wife     |
 
+
+
   Scenario: Relation types that have instances cannot be deleted
     When put relation type: marriage
     When relation(marriage) set relates role: wife
@@ -109,6 +116,8 @@ Feature: Concept Relation Type and Role Type
     When connection open schema session for database: typedb
     When session opens transaction of type: write
     Then delete relation type: marriage; throws exception
+
+
 
   Scenario: Role types that have instances cannot be deleted
     When put relation type: marriage
@@ -131,6 +140,8 @@ Feature: Concept Relation Type and Role Type
     When session opens transaction of type: write
     Then relation(marriage) unset related role: husband
     Then transaction commits
+
+
 
   Scenario: Relation and role types can change labels
     When put relation type: parentship
@@ -170,6 +181,8 @@ Feature: Concept Relation Type and Role Type
     Then relation(employment) get label: employment
     Then relation(employment) get role(employee) get label: employee
     Then relation(employment) get role(employer) get label: employer
+
+
 
   Scenario: Relation and role types can be set to abstract
     When put relation type: marriage
@@ -396,12 +409,16 @@ Feature: Concept Relation Type and Role Type
       | fathership:father |
       | father-son:son    |
 
+
+
   Scenario: Relation types cannot subtype itself
     When put relation type: marriage
     When relation(marriage) set relates role: wife
     When transaction commits
     When session opens transaction of type: write
     Then relation(marriage) set supertype: marriage; throws exception
+
+
 
   Scenario: Relation types can inherit related role types
     When put relation type: parentship
@@ -430,6 +447,8 @@ Feature: Concept Relation Type and Role Type
       | mothership:mother |
       | parentship:child  |
 
+
+
   Scenario: Relation types can override inherited related role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
@@ -453,6 +472,8 @@ Feature: Concept Relation Type and Role Type
     Then relation(mothership) get related roles do not contain:
       | parentship:parent |
 
+
+
   Scenario: Relation types cannot redeclare inherited related role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
@@ -461,10 +482,14 @@ Feature: Concept Relation Type and Role Type
     When relation(fathership) set supertype: parentship
     Then relation(fathership) set relates role: parent; throws exception
 
+
+
   Scenario: Relation types cannot override declared related role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent
     Then relation(parentship) set relates role: father as parent; throws exception
+
+
 
   Scenario: Relation types can have keys
     When put attribute type: license, with value type: string
@@ -477,6 +502,8 @@ Feature: Concept Relation Type and Role Type
     When session opens transaction of type: read
     Then relation(marriage) get owns key types contain:
       | license |
+
+
 
   Scenario: Relation types can unset keys
     When put attribute type: license, with value type: string
@@ -495,6 +522,8 @@ Feature: Concept Relation Type and Role Type
       | license     |
       | certificate |
 
+
+
   Scenario: Relation types can have keys of all keyable attributes
     When put attribute type: is-permanent, with value type: boolean
     When put attribute type: contract-years, with value type: long
@@ -506,6 +535,8 @@ Feature: Concept Relation Type and Role Type
     When relation(employment) set owns key type: reference
     When relation(employment) set owns key type: start-date
 
+
+
   Scenario: Relation types cannot have keys of attributes that are not keyable
     When put attribute type: is-permanent, with value type: boolean
     When put relation type: employment
@@ -514,6 +545,8 @@ Feature: Concept Relation Type and Role Type
     When put attribute type: salary, with value type: double
     When put relation type: employment
     Then relation(employment) set owns key type: salary; throws exception
+
+
 
   Scenario: Relation types can have attributes
     When put attribute type: date, with value type: datetime
@@ -531,6 +564,8 @@ Feature: Concept Relation Type and Role Type
       | date     |
       | religion |
 
+
+
   Scenario: Relation types can unset attributes
     When put attribute type: date, with value type: datetime
     When put attribute type: religion, with value type: string
@@ -547,6 +582,8 @@ Feature: Concept Relation Type and Role Type
     Then relation(marriage) get owns attribute types do not contain:
       | date     |
       | religion |
+
+
 
   Scenario: Relation types can have keys and attributes
     When put attribute type: license, with value type: string
@@ -577,6 +614,7 @@ Feature: Concept Relation Type and Role Type
       | certificate |
       | date        |
       | religion    |
+
 
   Scenario: Relation types can inherit keys and attributes
     When put attribute type: employment-reference, with value type: string
@@ -648,6 +686,8 @@ Feature: Concept Relation Type and Role Type
       | employment-hours     |
       | contractor-hours     |
       | parttime-hours       |
+
+
 
   Scenario: Relation types can inherit keys and attributes that are subtypes of each other
     When put attribute type: employment-reference, with value type: string
@@ -730,6 +770,8 @@ Feature: Concept Relation Type and Role Type
       | employment-hours     |
       | contractor-hours     |
       | parttime-hours       |
+
+
 
   Scenario: Relation types can override inherited keys and attributes
     When put attribute type: employment-reference, with value type: string
@@ -816,6 +858,8 @@ Feature: Concept Relation Type and Role Type
       | employment-hours     |
       | contractor-hours     |
 
+
+
   Scenario: Relation types can override inherited attributes as keys
     When put attribute type: employment-reference, with value type: string
     When attribute(employment-reference) set abstract: true
@@ -850,6 +894,8 @@ Feature: Concept Relation Type and Role Type
     Then relation(contractor-employment) get owns attribute types do not contain:
       | employment-reference |
 
+
+
   Scenario: Relation types can redeclare keys as attributes
     When put attribute type: date, with value type: datetime
     When put attribute type: license, with value type: string
@@ -862,6 +908,8 @@ Feature: Concept Relation Type and Role Type
     When session opens transaction of type: write
     Then relation(marriage) set owns attribute type: license
 
+
+
   Scenario: Relation types can redeclare attributes as keys
     When put attribute type: date, with value type: datetime
     When put attribute type: license, with value type: string
@@ -873,6 +921,8 @@ Feature: Concept Relation Type and Role Type
     When transaction commits
     When session opens transaction of type: write
     When relation(marriage) set owns key type: license
+
+
 
   Scenario: Relation types cannot redeclare inherited keys and attributes
     When put attribute type: employment-reference, with value type: string
@@ -890,6 +940,8 @@ Feature: Concept Relation Type and Role Type
     When session opens transaction of type: write
     Then relation(contractor-employment) set owns attribute type: employment-hours; throws exception
 
+
+
   Scenario: Relation types cannot redeclare inherited key attribute types
     When put attribute type: employment-reference, with value type: string
     When attribute(employment-reference) set abstract: true
@@ -902,6 +954,8 @@ Feature: Concept Relation Type and Role Type
     When put relation type: parttime-employment
     When relation(parttime-employment) set supertype: contractor-employment
     Then relation(parttime-employment) set owns key type: employment-reference; throws exception
+
+
 
   Scenario: Relation types cannot redeclare overridden key attribute types
     When put attribute type: employment-reference, with value type: string
@@ -919,6 +973,8 @@ Feature: Concept Relation Type and Role Type
     When relation(parttime-employment) set supertype: contractor-employment
     Then relation(parttime-employment) set owns key type: contractor-reference; throws exception
 
+
+
   Scenario: Relation types cannot redeclare inherited owns attribute types
     When put attribute type: employment-hours, with value type: long
     When attribute(employment-hours) set abstract: true
@@ -931,6 +987,8 @@ Feature: Concept Relation Type and Role Type
     When put relation type: parttime-employment
     When relation(parttime-employment) set supertype: contractor-employment
     Then relation(parttime-employment) set owns attribute type: employment-hours; throws exception
+
+
 
   Scenario: Relation types cannot redeclare overridden owns attribute types
     When put attribute type: employment-hours, with value type: long
@@ -947,6 +1005,8 @@ Feature: Concept Relation Type and Role Type
     When put relation type: parttime-employment
     When relation(parttime-employment) set supertype: contractor-employment
     Then relation(parttime-employment) set owns attribute type: contractor-hours; throws exception
+
+
 
   Scenario: Relation types cannot override declared keys and attributes
     When put attribute type: reference, with value type: string
@@ -969,6 +1029,8 @@ Feature: Concept Relation Type and Role Type
     When session opens transaction of type: write
     Then relation(employment) set owns attribute type: max-hours as hours; throws exception
 
+
+
   Scenario: Relation types cannot override inherited keys as attributes
     When put attribute type: employment-reference, with value type: string
     When attribute(employment-reference) set abstract: true
@@ -982,6 +1044,8 @@ Feature: Concept Relation Type and Role Type
     When put relation type: contractor-employment
     When relation(contractor-employment) set supertype: employment
     Then relation(contractor-employment) set owns attribute type: contractor-reference as employment-reference; throws exception
+
+
 
   Scenario: Relation types cannot override inherited keys and attributes other than with their subtypes
     When put attribute type: employment-reference, with value type: string
@@ -1000,6 +1064,8 @@ Feature: Concept Relation Type and Role Type
     Then relation(contractor-employment) set owns key type: contractor-reference as employment-reference; throws exception
     When session opens transaction of type: write
     Then relation(contractor-employment) set owns attribute type: contractor-hours as employment-hours; throws exception
+
+
 
   Scenario: Relation types can play role types
     When put relation type: locates
@@ -1025,6 +1091,8 @@ Feature: Concept Relation Type and Role Type
     Then relation(marriage) get playing roles contain:
       | locates:located     |
       | organises:organised |
+
+
 
   Scenario: Relation types can unset playing role types
     When put relation type: locates
@@ -1052,6 +1120,8 @@ Feature: Concept Relation Type and Role Type
     Then relation(marriage) get playing roles do not contain:
       | locates:located     |
       | organises:organised |
+
+
 
   Scenario: Relation types can inherit playing role types
     When put relation type: locates
@@ -1093,6 +1163,8 @@ Feature: Concept Relation Type and Role Type
       | locates:located                       |
       | contractor-locates:contractor-located |
       | parttime-locates:parttime-located     |
+
+
 
   Scenario: Relation types can inherit playing role types that are subtypes of each other
     When put relation type: locates
@@ -1137,6 +1209,8 @@ Feature: Concept Relation Type and Role Type
       | contractor-locates:contractor-located |
       | parttime-locates:parttime-located     |
 
+
+
   Scenario: Relation types can override inherited playing role types
     When put relation type: locates
     When relation(locates) set relates role: locating
@@ -1176,6 +1250,8 @@ Feature: Concept Relation Type and Role Type
       | locates:located                       |
       | contractor-locates:contractor-located |
 
+
+
   Scenario: Relation types cannot redeclare inherited/overridden playing role types
     When put relation type: locates
     When relation(locates) set relates role: located
@@ -1196,6 +1272,8 @@ Feature: Concept Relation Type and Role Type
     When session opens transaction of type: write
     Then relation(parttime-employment) set plays role: contractor-locates:contractor-located; throws exception
 
+
+
   Scenario: Relation types cannot override declared playing role types
     When put relation type: locates
     When relation(locates) set relates role: locating
@@ -1209,6 +1287,7 @@ Feature: Concept Relation Type and Role Type
     When relation(employment) set relates role: employee
     When relation(employment) set plays role: locates:located
     Then relation(employment) set plays role: employment-locates:employment-located as locates:located; throws exception
+
 
   Scenario: Relation types cannot override inherited playing role types other than with their subtypes
     When put relation type: locates

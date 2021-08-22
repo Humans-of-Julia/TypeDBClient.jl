@@ -2,7 +2,7 @@
 
 function match(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result =  stream(transaction, QueryManagerRequestBuilder.match_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, map(ConceptMap, [entry.query_manager_res_part.match_res_part.answers for entry in db_result]))
 end
@@ -14,25 +14,30 @@ end
 
 function match_group(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result =  stream(transaction, QueryManagerRequestBuilder.match_group_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, [ConceptMapGroup(item.query_manager_res_part.match_group_res_part.answers) for item in db_result])
 end
 
 function match_group_aggregate(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result =  stream(transaction, QueryManagerRequestBuilder.match_group_aggregate_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, [NumericGroup(item.match_group_aggregate_res_part.answers) for item in db_result])
 end
 
 function insert(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result = stream(transaction, QueryManagerRequestBuilder.insert_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, map(ConceptMap, [entry.query_manager_res_part.insert_res_part.answers for entry in db_result]))
 end
 
+"""
+    delete(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
+To delete something without using certain functions you can use a TypeQL string put this as an argument to the
+delete function.
+"""
 function delete(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     execute(transaction, QueryManagerRequestBuilder.delete_req(query, options))
     return nothing
@@ -40,7 +45,7 @@ end
 
 function update(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
     db_result = stream(transaction, QueryManagerRequestBuilder.update_req(query, options))
-    db_result === nothing && return nothing
+    isempty(db_result) && return []
 
     return reduce(vcat, map(ConceptMap, [entry.query_manager_res_part.update_res_part.answers for entry in db_result]))
 end
@@ -61,6 +66,14 @@ function undefine(transaction::AbstractCoreTransaction, query::AbstractString, o
 end
 
 function commit(transaction::AbstractCoreTransaction)
-    execute(transaction, TransactionRequestBuilder.commit_req())
-    return nothing
+    !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
+    try
+        execute(transaction, TransactionRequestBuilder.commit_req())
+        safe_close(transaction)
+    catch ex
+        @info ex
+        return false
+    end
+
+    return true
 end

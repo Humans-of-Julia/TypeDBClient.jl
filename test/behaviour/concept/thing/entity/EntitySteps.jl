@@ -1,85 +1,218 @@
-# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
+using Base: concatenate_setindex!
 
-# 
-# package typedb.client.test.behaviour.concept.thing.entity;
-# 
-# import typedb.client.api.concept.thing.Attribute;
-# import typedb.client.api.concept.thing.Entity;
-# import typedb.client.common.Label;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# 
-# import java.time.LocalDateTime;
-# 
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.get;
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.put;
-# import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static typedb.client.test.behaviour.util.Util.assertThrows;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertTrue;
-# 
-# @SuppressWarnings("CheckReturnValue")
-# public class EntitySteps {
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance")
-#     public void entity_type_create_new_instance(String var, String typeLabel) {
-#         put(var, tx().concepts().getEntityType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @When("entity\\( ?{type_label} ?) create new instance; throws exception")
-#     public void entity_type_create_new_instance_throws_exception(String typeLabel) {
-#         assertThrows(() -> tx().concepts().getEntityType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
-#     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-#         Attribute.Long key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
-#         Entity entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-#         entity.asRemote(tx()).setHas(key);
-#         put(var, entity);
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
-#     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-#         Attribute.String key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
-#         Entity entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-#         entity.asRemote(tx()).setHas(key);
-#         put(var, entity);
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
-#     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-#         Attribute.DateTime key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
-#         Entity entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-#         entity.asRemote(tx()).setHas(key);
-#         put(var, entity);
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
-#     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
-#     public void entity_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
-#     public void entity_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @Then("entity\\( ?{type_label} ?) get instances contain: {var}")
-#     public void entity_type_get_instances_contain(String typeLabel, String var) {
-#         assertTrue(tx().concepts().getEntityType(typeLabel).asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("entity\\( ?{type_label} ?) get instances is empty")
-#     public void entity_type_get_instances_is_empty(String typeLabel) {
-#         assertEquals(0, tx().concepts().getEntityType(typeLabel).asRemote(tx()).getInstances().count());
-#     }
-# }
+g = TypeDBClient
+
+@given("put attribute type: username, with value type: string") do context
+    _put_attribute_to_db(context, "username", g.Proto.AttributeType_ValueType.STRING)
+end
+
+@given("entity(person) set owns key type: username") do context
+    g.con.entity_set_owns("person", "username", context[:transaction], true)
+end
+
+# Scenario: Entity can be created
+@when("\$a = entity(person) create new instance with key(username): alice") do context
+
+    username_type = g.get(context[:cm], AttributeType, "username")
+    username_alice = g.put(g.as_remote(username_type, context[:transaction]), "alice")
+
+    ent_type = g.get(context[:cm], EntityType, "person")
+    ent_instance = g.create(g.as_remote(ent_type, context[:transaction]))
+
+    g.set_has(context[:transaction], ent_instance, username_alice)
+
+    context[:a] = ent_instance
+end
+
+@then("entity \$a is null: false") do context
+    @expect context[:a] !== nothing
+end
+
+@then("entity \$a has type: person") do context
+    erg = context[:a]
+    @expect erg.type.label.name == "person"
+end
+
+@then("entity(person) get instances contain: \$a") do context
+    attr = g.get(context[:cm], EntityType, "person")
+    res = g.get_instances(g.as_remote(attr, context[:transaction]))
+    @expect in(context[:a], res)
+end
+
+@when("\$a = entity(person) get instance with key(username): alice") do context
+    attr_type = g.get(context[:cm], AttributeType, "username")
+    res_attr = g.get(g.as_remote(attr_type, context[:transaction]), "alice")
+    context[:a] = g.get_owners(context[:transaction], res_attr, nothing)[1]
+end
+
+# Scenario: Entity cannot be created when it misses a key
+@when("\$a = entity(person) create new instance") do context
+    ent_type = g.get(context[:cm], EntityType, "person")
+    context[:a] = g.create(g.as_remote(ent_type, context[:transaction]))
+end
+
+# Scenario: Entity can be deleted
+@when("delete entity: \$a") do context
+    g.delete(g.as_remote(context[:a], context[:transaction]))
+end
+
+@then("entity \$a is deleted: true") do context
+    res = g.is_deleted(g.as_remote(context[:a], context[:transaction]))
+    @expect res
+end
+
+@then("entity(person) get instances is empty") do context
+    attr = g.get(context[:cm], EntityType, "person")
+    res_ent = g.get_instances(g.as_remote(attr, context[:transaction]))
+    @expect isempty(res_ent)
+end
+
+# Scenario: Entity can have keys
+@when("\$alice = attribute(username) as(string) put: alice") do context
+    attr_type = g.get(context[:cm], AttributeType, "username")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), "alice")
+    context[:alice] = res
+end
+
+@when("entity \$a set has: \$alice") do context
+    set_has(context[:transaction], context[:a], context[:alice])
+end
+
+@then("entity \$a get attributes(username) as(string) contain: \$alice") do context
+    attr = get(ConceptManager(context[:transaction]), AttributeType, "username")
+    inst_usernames = get_has(context[:transaction], context[:a], attr)
+    @expect in(context[:alice], inst_usernames)
+end
+
+@then("entity \$a get keys contain: \$alice") do context
+    inst_keys = get_has(context[:transaction], context[:a] , nothing, nothing, true)
+    @expect in(context[:alice], inst_keys)
+end
+
+@then("attribute \$alice get owners contain: \$a") do context
+    owners = get_owners(context[:transaction], context[:alice])
+    @expect in(context[:a], owners)
+end
+
+@when("\$alice = attribute(username) as(string) get: alice") do context
+    attr = get(ConceptManager(context[:transaction]), AttributeType, "username")
+    res = g.get_instances(g.as_remote(attr, context[:transaction]))
+    context[:alice] = res[1]
+end
+
+# Scenario: Entity can unset keys
+@when("entity \$a unset has: \$alice") do context
+    g.unset_has(context[:transaction], context[:a], context[:alice])
+end
+
+@then("entity \$a get attributes(username) as(string) do not contain: \$alice") do context
+    attr = get(ConceptManager(context[:transaction]), AttributeType, "username")
+    inst_usernames = get_has(context[:transaction], context[:a], attr)
+    @expect !in(context[:alice], inst_usernames)
+end
+
+@then("entity \$a get keys do not contain: \$alice") do context
+    inst_keys = get_has(context[:transaction], context[:a] , nothing, nothing, true)
+    @expect !in(context[:alice], inst_keys)
+end
+
+@then("attribute \$alice get owners do not contain: \$a") do context
+    owners = get_owners(context[:transaction], context[:alice])
+    @expect !in(context[:a], owners)
+end
+
+# Scenario: Entity cannot have more than one key for a given key type
+@when("\$bob = attribute(username) as(string) put: bob") do context
+    attr_type = g.get(context[:cm], AttributeType, "username")
+    res = g.put(g.as_remote(attr_type, context[:transaction]), "bob")
+    context[:bob] = res
+end
+
+@then("entity \$a set has: \$bob; throws exception") do context
+    try
+        set_has(context[:transaction], context[:a], context[:bob])
+    catch ex
+        @expect ex !== nothing
+    end
+end
+
+@when("\$bob = attribute(username) as(string) get: bob") do context
+    attr = get(ConceptManager(context[:transaction]), AttributeType, "username")
+    inst_usernames = get_has(context[:transaction], context[:a], attr)
+    @expect !in(context[:bob], inst_usernames)
+end
+
+# Scenario: Entity cannot have a key that has been taken
+@when("\$b = entity(person) create new instance") do context
+    ent_type = g.get(context[:cm], EntityType, "person")
+    res = g.create(g.as_remote(ent_type, context[:transaction]))
+    context[:b] = res
+    @expect res !== nothing
+end
+
+@then("entity \$b set has: \$alice; throws exception") do context
+    try
+        g.set_has(context[:transaction], context[:b], context[:alice])
+    catch ex
+        @expect ex !== nothing
+    end
+end
+
+# Scenario: Entity can have attribute
+@when("\$email = attribute(email) as(string) put: alice@email.com") do context
+    attr = g.get(context[:cm], AttributeType, "email")
+    context[:email] = g.put(g.as_remote(attr, context[:transaction]), "alice@email.com")
+end
+
+@when("entity \$a set has: \$email") do context
+    set_has(context[:transaction], context[:a], context[:email])
+end
+
+@then("entity \$a get attributes(email) as(string) contain: \$email") do context
+    email_type = g.get(g.ConceptManager(context[:transaction]), AttributeType, "email")
+    res_email = get_has(context[:transaction], context[:a], email_type)
+    @expect in(context[:email], res_email)
+end
+
+@then("entity \$a get attributes contain: \$email") do context
+    res_email = get_has(context[:transaction], context[:a])
+    @expect in(context[:email], res_email)
+end
+
+@then("attribute \$email get owners contain: \$a") do context
+    res_owns = get_owners(context[:transaction], context[:email])
+    @expect in(context[:a], res_owns)
+end
+
+@when("\$email = attribute(email) as(string) get: alice@email.com") do context
+    @expect context[:email].value == "alice@email.com"
+end
+
+# Scenario: Entity can unset attribute
+@when("entity \$a unset has: \$email") do context
+    g.unset_has(context[:transaction], context[:a], context[:email])
+end
+
+@then("entity \$a get attributes(email) as(string) do not contain: \$email") do context
+    res_email = get_has(context[:transaction], context[:a])
+    @expect in(context[:email], res_email) === false
+end
+
+@then("entity \$a get attributes do not contain: \$email") do context
+    res_email = get_has(context[:transaction], context[:a])
+    @expect in(context[:email], res_email) === false
+end
+
+@then("attribute \$email get owners do not contain: \$a") do context
+    res_owns = get_owners(context[:transaction], context[:email])
+    @expect in(context[:a], res_owns) === false
+end
+
+# Scenario: Entity cannot be given an attribute after deletion
+@when("entity \$a set has: \$email; throws exception") do context
+    try
+        set_has(context[:transaction], context[:a], context[:email])
+    catch ex
+        @expect ex !== nothing
+    end
+end

@@ -1,14 +1,27 @@
+using Base: runtests
 
 using Behavior
 using Behavior.Gherkin
+using TypeDBClient
 
-rootpath = joinpath(@__DIR__, "test/behaviour")
-featurepath = joinpath(@__DIR__, "test/behaviour/features/connection")
-stepspath = joinpath(@__DIR__,"test/behaviour/connection")
-configpath = joinpath(@__DIR__,"test/behaviour/config/ConfigEnvironment.jl")
+g = TypeDBClient
+client = g.CoreClient("localhost",1729)
+
+rootpath = joinpath(@__DIR__,"behaviour")
+featurepath = joinpath(@__DIR__,"behaviour/features")
+stepspath = joinpath(@__DIR__,"behaviour")
+configpath = joinpath(@__DIR__,"behaviour/config/ConfigEnvironment.jl")
 
 p = ParseOptions(allow_any_step_order = true)
 
-runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="not @ignore-typedb-core")
+# runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="not @ignore-typedb-core")
 
-runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags="@actual")
+function run_tests(tag::String = "")
+    runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags=tag)
+    # runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath)
+end
+
+
+run_tests("not @ignore-typedb-core")
+# run_tests("@failure")
+# run_tests("@actual")

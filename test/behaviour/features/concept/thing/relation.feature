@@ -83,7 +83,7 @@ Feature: Concept Relation
     Then relation $m is null: false
     Then relation $m has type: marriage
     Then transaction commits; throws exception
-#
+
   Scenario: Role players can get relations
     When $m = relation(marriage) create new instance with key(license): m
     When $a = entity(person) create new instance with key(username): alice

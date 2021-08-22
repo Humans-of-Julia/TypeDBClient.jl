@@ -106,7 +106,7 @@ end
 # ---------------------------------------------------------------------------------
 module ConceptManagerRequestBuilder
 
-using ..TypeDBClient: Proto, EnumType, bytes
+using ..TypeDBClient: Proto, EnumType, bytes, Optional
 
 function _treq(; kwargs...)
     return Proto.Transaction_Req(
@@ -288,9 +288,9 @@ function unset_abstract_req(label::Label)
     )
 end
 
-function set_supertype_req(label::Label)
+function set_supertype_req(label::Label, super_type::Proto._Type)
     return _treq(label.name, label.scope;
-        type_set_supertype_req = Proto.Type_SetSupertype_Req()
+        type_set_supertype_req = Proto.Type_SetSupertype_Req(;_type = super_type)
     )
 end
 
@@ -302,19 +302,21 @@ end
 
 function set_plays_req(
     label::Label,
-    role_type::Proto.RoleType,
-    overridden_role_type::Optional{Proto.RoleType} = nothing
+    role_type::Proto._Type,
+    overridden_role_type::Optional{Proto._Type} = nothing
 )
+    thing_type_set_plays_req = Proto.ThingType_SetPlays_Req(;role = role_type)
+    if overridden_role_type !== nothing
+        thing_type_set_plays_req.overridden_role = overridden_role_type
+    end
+
     return _treq(label.name, label.scope;
-        thing_type_set_plays_req = Proto.ThingType_SetPlays_Req(
-            role = role_type,
-            overridden_role = overridden_role_type
-        )
+        thing_type_set_plays_req
     )
 end
 
 function unset_plays_req(
-    label::Label, role_type::Proto.RoleType
+    label::Label, role_type::Proto._Type
 )
     return _treq(label.name, label.scope;
         thing_type_unset_plays_req = Proto.ThingType_UnsetPlays_Req(
@@ -340,23 +342,17 @@ end
 function set_owns_req(
     label::Label,
     is_key::Bool,
-    attribute_type::Proto.AttributeType,
-    overridden_type::Optional{Proto.AttributeType} = nothing
+    attribute_type::Proto._Type,
+    overridden_type::Optional{Proto._Type} = nothing
 )
     # TODO this code can be simplified later (ProtoBuf PR#77)
     thing_type_set_owns_req = overridden_type === nothing ?
         Proto.ThingType_SetOwns_Req(; is_key, attribute_type) :
         Proto.ThingType_SetOwns_Req(; is_key, attribute_type, overridden_type)
     return _treq(label.name, label.scope; thing_type_set_owns_req)
-
-    # return _treq(label.name, label.scope;
-    #     thing_type_set_owns_req = Proto.ThingType_SetOwns_Req(;
-    #         is_key, attribute_type, overridden_type
-    #     )
-    # )
 end
 
-function unset_owns_req(label::Label, attribute_type::Proto.AttributeType)
+function unset_owns_req(label::Label, attribute_type::Proto._Type)
     return _treq(label.name, label.scope;
         thing_type_unset_owns_req = Proto.ThingType_UnsetOwns_Req(; attribute_type)
     )
@@ -396,28 +392,36 @@ function create_req(label::Label)
     )
 end
 
-function get_relates_req(label::Label, role_label::Optional{String})
+function get_relates_req(label::Label)
     return _treq(label.name, label.scope;
-        relation_type_get_relates_req = Proto.RelationType_GetRelates_Req(;
-            label = role_label
-        )
+        relation_type_get_relates_req = Proto.RelationType_GetRelates_Req()
     )
 end
 
 function set_relates_req(
-    label::Label, role_label::String, overridden_label::Optional{String}
-)
-    return _treq(label.name, label.scope;
-        relation_type_set_relates_req = Proto.RelationType_SetRelates_Req(;
-            label = role_label,
-            overridden_label
-        )
-    )
+    label::Label, role_label::String, overridden_label::Optional{String})
+
+    relation_type_set_relates_req = overridden_label !== nothing ?
+                                        Proto.RelationType_SetRelates_Req(;
+                                            label = role_label,
+                                            overridden_label)  :
+                                        Proto.RelationType_SetRelates_Req(;
+                                            label = role_label)
+
+    return _treq(label.name, label.scope; relation_type_set_relates_req)
 end
 
 function unset_relates_req(label::Label, role_label::Optional{String})
     return _treq(label.name, label.scope;
         relation_type_unset_relates_req = Proto.RelationType_UnsetRelates_Req(;
+            label = role_label
+        )
+    )
+end
+
+function relation_type_get_relates_for_role_label_req(label::Label, role_label::String)
+    return _treq(label.name, label.scope;
+            relation_type_get_relates_for_role_label_req = Proto.RelationType_GetRelatesForRoleLabel_Req(;
             label = role_label
         )
     )
@@ -466,7 +470,7 @@ end
 # ---------------------------------------------------------------------------------
 module ThingRequestBuilder
 
-using ..TypeDBClient: Proto, Label, Bytes, bytes
+using ..TypeDBClient: Proto, Label, Bytes, bytes, Optional
 
 proto_thing(iid::Bytes) = Proto.Thing(; iid)
 proto_thing(iid::String) = proto_thing(bytes(iid))
@@ -485,15 +489,15 @@ function is_inferred_req(iid::String)
     )
 end
 
-function get_has_req(iid::String, attribute_types::AbstractVector{Proto.Type})
+function get_has_req(iid::String, attribute_types::AbstractVector{Proto._Type})
     return _thing_req(iid;
         thing_get_has_req = Proto.Thing_GetHas_Req(; attribute_types)
     )
 end
 
-function get_has_req(iid::String, only_key::Bool)
+function get_has_req(iid::String, keys_only::Bool)
     return _thing_req(iid;
-        thing_get_has_req = Proto.Thing_GetHas_Req(; only_key)
+        thing_get_has_req = Proto.Thing_GetHas_Req(; keys_only)
     )
 end
 
@@ -515,9 +519,13 @@ function get_playing_req(iid::String)
     )
 end
 
-function get_relations_req(iid::String, role_types::AbstractVector{Proto._Type})
+function get_relations_req(iid::String, role_types::Optional{AbstractVector{Proto._Type}})
+    thing_get_relations_req = Proto.Thing_GetRelations_Req()
+    if role_types !== nothing
+        thing_get_relations_req.role_types = role_types
+    end
     return _thing_req(iid;
-        thing_get_relations_req = Proto.Thing_GetRelations_Req(; role_types)
+        thing_get_relations_req
     )
 end
 
@@ -527,12 +535,24 @@ function delete_req(iid::String)
     )
 end
 
+function attribute_get_owners_req(iid::String, thing_type::Proto._Type)
+    return _thing_req(iid;
+        attribute_get_owners_req = Proto.Attribute_GetOwners_Req(; thing_type)
+    )
+end
+
+function attribute_get_owners_req(iid::String)
+    return _thing_req(iid;
+        attribute_get_owners_req = Proto.Attribute_GetOwners_Req()
+    )
+end
+
 end
 
 # ---------------------------------------------------------------------------------
 module RelationRequestBuilder
 
-using ..TypeDBClient: Proto
+using ..TypeDBClient: Proto, Optional
 using ..ThingRequestBuilder: _thing_req
 
 function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
@@ -553,9 +573,14 @@ function remove_player_req(iid::String, role_type::Proto._Type, player::Proto.Th
     )
 end
 
-function get_players_req(iid::String, role_types::AbstractVector{Proto._Type})
+function get_players_req(iid::String, role_types::Optional{AbstractVector{Proto._Type}} = nothing)
+
+    relation_get_players_req = Proto.Relation_GetPlayers_Req()
+    if role_types !== nothing
+        relation_get_players_req.role_types = role_types
+    end
     return _thing_req(iid;
-        relation_get_players_req = Proto.Relation_GetPlayers_Req(; role_types)
+        relation_get_players_req
     )
 end
 

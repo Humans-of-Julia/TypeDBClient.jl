@@ -1,4 +1,4 @@
-using TypeDBClient: Label, scoped_name, RelationType, Remote
+using TypeDBClient: Label, scoped_name, RelationType
 using TypeDBClient.typedb.protocol: _Type
 using Test
 

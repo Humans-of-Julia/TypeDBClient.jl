@@ -15,7 +15,9 @@ mutable struct Explainable <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -54,7 +56,9 @@ mutable struct Explainables_Owned_OwnedEntry <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -93,7 +97,9 @@ mutable struct Explainables_RelationsEntry <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -132,7 +138,9 @@ mutable struct Explainables_AttributesEntry <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -171,7 +179,9 @@ mutable struct Explainables_Owned <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -208,7 +218,9 @@ mutable struct Explainables_OwnershipsEntry <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -247,7 +259,9 @@ mutable struct Explainables <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -288,7 +302,9 @@ mutable struct ConceptMap_MapEntry <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -327,7 +343,9 @@ mutable struct ConceptMap <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -366,7 +384,9 @@ mutable struct ConceptMapGroup <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -405,7 +425,9 @@ mutable struct Numeric <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end
@@ -448,7 +470,9 @@ mutable struct NumericGroup <: ProtoType
             fldname, fldval = nv
             fldtype = symdict[fldname].jtyp
             (fldname in keys(symdict)) || error(string(typeof(obj), " has no field with name ", fldname))
-            values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            if fldval !== nothing
+                values[fldname] = isa(fldval, fldtype) ? fldval : convert(fldtype, fldval)
+            end
         end
         obj
     end

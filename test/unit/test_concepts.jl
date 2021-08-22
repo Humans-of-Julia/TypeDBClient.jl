@@ -1,4 +1,4 @@
-using Pretend: Pretend, apply
+using Pretend: Pretend, apply, @mockable
 using Test
 
 using TypeDBClient:
@@ -8,9 +8,14 @@ using TypeDBClient:
     as_remote, create, execute, instantiate, proto, is_writable, is_keyable
 
 import TypeDBClient.typedb.protocol as Proto
+import TypeDBClient: execute
+
+# reduce the writing
+g = TypeDBClient
 
 # Turn on mocking framework
 Pretend.activate()
+@mockable execute(trans::AbstractCoreTransaction, request::Proto.ProtoType) = g.execute(trans, request)
 
 # Fake types
 struct FakeTransaction <: AbstractCoreTransaction end
@@ -91,32 +96,36 @@ end
 
     # Create relation type.
     # Use Pretend framework to mock the `execute` function.
-    let iid = [0x01], label = "a", root = true, encoding = Proto.Type_Encoding.RELATION_TYPE,
-        fake_execute = (request::Proto.Transaction_Req) ->
-            Proto.Type_Res(
-                relation_type_create_res = Proto.RelationType_Create_Res(
-                    relation = Proto.Thing(; iid,
-                        _type = Proto._Type(; label, root, encoding))))
-        apply(execute => fake_execute) do
-            relation_type = as_remote(RelationType(Label(label), root), FakeTransaction())
-            @test_nowarn create(relation_type)
-        end
-    end
+    label = "Relation"
+    iid = g.bytes(uuid4())
+    root = false
+    encoding = Proto.Type_Encoding.RELATION_TYPE
+
+    fake_execute = (trans::AbstractCoreTransaction , request::Proto.ProtoType) ->
+                    Proto.Transaction_Res(type_res = Proto.Type_Res(
+                        relation_type_create_res = Proto.RelationType_Create_Res(
+                            relation = Proto.Thing(; iid,
+                                _type = Proto._Type(; label, root, encoding)))))
+    apply(execute => fake_execute) do
+        relation_type = as_remote(RelationType(g.Label(label), root), FakeTransaction())
+        @test_nowarn create(relation_type)
+    end;
 end
 
 @testset "AttributeType" begin
-    let t = AttributeType("a", true, Proto.AttributeType_ValueType.BOOLEAN)
-        @test proto(t) == Proto.AttributeType_ValueType.BOOLEAN
+    let t = AttributeType(g.Label("a"), true, VALUE_TYPE.BOOLEAN)
+        @info proto(t)
+        @test proto(t) == Proto._Type(label="a", encoding=Proto.Type_Encoding.ATTRIBUTE_TYPE)
         @test is_writable(t) == true
         @test is_keyable(t) == false
     end
-    let t = AttributeType("a", true, Proto.AttributeType_ValueType.LONG)
-        @test proto(t) == Proto.AttributeType_ValueType.LONG
+    let t = AttributeType(g.Label("a"), true, VALUE_TYPE.LONG)
+        @test proto(t) == Proto._Type(label="a", encoding=Proto.Type_Encoding.ATTRIBUTE_TYPE)
         @test is_writable(t) == true
         @test is_keyable(t) == true
     end
-    let t = AttributeType("a", true, Proto.AttributeType_ValueType.OBJECT)
-        @test proto(t) == Proto.AttributeType_ValueType.OBJECT
+    let t = AttributeType(g.Label("a"), true, VALUE_TYPE.OBJECT)
+        @test proto(t) == Proto._Type(label="a", encoding=Proto.Type_Encoding.ATTRIBUTE_TYPE)
         @test is_writable(t) == false
         @test is_keyable(t) == false
     end

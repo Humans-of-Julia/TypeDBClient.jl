@@ -6,14 +6,12 @@ g = TypeDBClient
 @when("connection create database: alice") do context
     client = context[:client]
     db = g.create_database(client, "alice")
-    @expect db === true
+    @expect db
 end
 
 @then("connection has database: alice") do context
     result = g.contains_database(context[:client], "alice")
-    @expect result === true
-    #until beforescenario works for me :-) the following
-    delete_all_databases(context[:client])
+    @expect result
 end
 
 # Scenario: create many databases
@@ -23,7 +21,7 @@ end
     for db in db_names
         push!(all_db, g.create_database(context[:client], db[1]))
     end
-    @expect all(all_db) === true
+    @expect all(all_db)
 end
 
 @then("connection has databases:") do context
@@ -31,8 +29,6 @@ end
     server_dbs = [item.name for item in g.get_all_databases(context[:client])]
 
     @expect (Set(db_names) == Set(server_dbs))
-
-    delete_all_databases(context[:client])
 end
 
 # Scenario: create many databases in parallel
@@ -75,7 +71,7 @@ end
     @sync @async for db in db_names
         g.delete_database(context[:client], db)
     end
-    @expect isempty(g.get_all_databases(context[:client])) === true
+    @expect isempty(g.get_all_databases(context[:client]))
 end
 
 # Scenario: delete a database causes open sessions to fail
@@ -108,7 +104,7 @@ end
     try
         g.define(context[:transaction], define_string)
     catch ex
-       # @expect occursin("transaction has been closed", ex.message) === true
+       # @expect occursin("transaction has been closed", ex.message)
        @info ex
     end
 end
@@ -119,16 +115,5 @@ end
     catch ex
         @expect (typeof(ex) == g.TypeDBClientException)
         @expect occursin("The database typedb does not exist", string(ex))
-    end
-end
-
-##############  utility functions ########################
-function delete_all_databases(client::g.CoreClient)
-    for (_, session) in client.sessions
-        close(session)
-    end
-    all_db = g.get_all_databases(client)
-    for db in all_db
-        g.delete_database(client, db.name)
     end
 end

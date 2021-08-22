@@ -16,8 +16,8 @@
 #
 
 #noinspection CucumberUndefinedStep
-Feature: Concept Attribute
 
+Feature: Concept Attribute
   Background:
     Given connection has been opened
     Given connection does not have any database

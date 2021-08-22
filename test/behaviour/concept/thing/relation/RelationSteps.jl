@@ -1,150 +1,266 @@
-# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE 
+# This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
-# 
-# package typedb.client.test.behaviour.concept.thing.relation;
-# 
-# import typedb.client.api.concept.thing.Attribute;
-# import typedb.client.api.concept.thing.Relation;
-# import typedb.client.api.concept.thing.Thing;
-# import typedb.client.common.Label;
-# import io.cucumber.java.en.Then;
-# import io.cucumber.java.en.When;
-# 
-# import java.time.LocalDateTime;
-# import java.util.List;
-# import java.util.Map;
-# 
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.get;
-# import static typedb.client.test.behaviour.concept.thing.ThingSteps.put;
-# import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-# import static typedb.client.test.behaviour.util.Util.assertThrows;
-# import static org.junit.Assert.assertEquals;
-# import static org.junit.Assert.assertFalse;
-# import static org.junit.Assert.assertTrue;
-# 
-# @SuppressWarnings("CheckReturnValue")
-# public class RelationSteps {
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance")
-#     public void relation_type_create_new_instance(String var, String typeLabel) {
-#         put(var, tx().concepts().getRelationType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) create new instance; throws exception")
-#     public void relation_type_create_new_instance_throws_exception(String typeLabel) {
-#         assertThrows(() -> tx().concepts().getRelationType(typeLabel).asRemote(tx()).create());
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
-#     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-#         Attribute.Long key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
-#         Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-#         relation.asRemote(tx()).setHas(key);
-#         put(var, relation);
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
-#     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-#         Attribute.String key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
-#         Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-#         relation.asRemote(tx()).setHas(key);
-#         put(var, relation);
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
-#     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-#         Attribute.DateTime key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
-#         Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-#         relation.asRemote(tx()).setHas(key);
-#         put(var, relation);
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
-#     public void relation_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
-#     public void relation_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
-#     public void relation_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-#         put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
-#                 .filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) get instances contain: {var}")
-#     public void relation_type_get_instances_contain(String typeLabel, String var) {
-#         assertTrue(tx().concepts().getRelationType(typeLabel).asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) get instances do not contain: {var}")
-#     public void relation_type_get_instances_do_not_contain(String typeLabel, String var) {
-#         assertTrue(tx().concepts().getRelationType(typeLabel).asRemote(tx()).getInstances().noneMatch(i -> i.equals(get(var))));
-#     }
-# 
-#     @Then("relation\\( ?{type_label} ?) get instances is empty")
-#     public void relation_type_get_instances_is_empty(String typeLabel) {
-#         assertEquals(0, tx().concepts().getRelationType(typeLabel).asRemote(tx()).getInstances().count());
-#     }
-# 
-#     @When("relation {var} add player for role\\( ?{type_label} ?): {var}")
-#     public void relation_add_player_for_role(String var1, String roleTypeLabel, String var2) {
-#         get(var1).asRelation().asRemote(tx()).addPlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
-#     }
-# 
-#     @When("relation {var} add player for role\\( ?{type_label} ?): {var}; throws exception")
-#     public void relation_add_player_for_role_throws_exception(String var1, String roleTypeLabel, String var2) {
-#         assertThrows(() -> get(var1).asRelation().asRemote(tx()).addPlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2)));
-#     }
-# 
-#     @When("relation {var} remove player for role\\( ?{type_label} ?): {var}")
-#     public void relation_remove_player_for_role(String var1, String roleTypeLabel, String var2) {
-#         get(var1).asRelation().asRemote(tx()).removePlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
-#     }
-# 
-#     @Then("relation {var} get players contain:")
-#     public void relation_get_players_contain(String var, Map<String, String> players) {
-#         Relation relation = get(var).asRelation();
-#         players.forEach((rt, var2) -> assertTrue(relation.asRemote(tx()).getPlayersByRoleType().get(relation.getType().asRemote(tx()).getRelates(rt)).contains(get(var2.substring(1)))));
-#     }
-# 
-#     @Then("relation {var} get players do not contain:")
-#     public void relation_get_players_do_not_contain(String var, Map<String, String> players) {
-#         Relation relation = get(var).asRelation();
-#         players.forEach((rt, var2) -> {
-#             List<? extends Thing> p;
-#             if ((p = relation.asRemote(tx()).getPlayersByRoleType().get(relation.getType().asRemote(tx()).getRelates(rt))) != null) {
-#                 assertFalse(p.contains(get(var2.substring(1))));
-#             }
-#         });
-#     }
-# 
-#     @Then("relation {var} get players contain: {var}")
-#     public void relation_get_players_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx()).getPlayers().anyMatch(p -> p.equals(get(var2))));
-#     }
-# 
-#     @Then("relation {var} get players do not contain: {var}")
-#     public void relation_get_players_do_not_contain(String var1, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx()).getPlayers().noneMatch(p -> p.equals(get(var2))));
-#     }
-# 
-#     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
-#     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx())
-#                            .getPlayers(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel))
-#                            .anyMatch(p -> p.equals(get(var2))));
-#     }
-# 
-#     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
-#     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
-#         assertTrue(get(var1).asRelation().asRemote(tx())
-#                            .getPlayers(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel))
-#                            .noneMatch(p -> p.equals(get(var2))));
-#     }
-# }
+
+@given("put attribute type: license, with value type: string") do context
+    _put_attribute_to_db(context, "license", VALUE_TYPE.STRING)
+end
+
+@given("put attribute type: date, with value type: datetime") do context
+    _put_attribute_to_db(context, "date", VALUE_TYPE.DATETIME)
+end
+
+@given("put relation type: marriage") do context
+    res = g.put(ConceptManager(context[:transaction]), RelationType, "marriage")
+end
+
+@given("relation(marriage) set relates role: wife") do context
+    res = g.set_relates(context[:transaction],
+                    g.Label("","marriage"),
+                    "wife")
+end
+
+@given("relation(marriage) set relates role: husband") do context
+    g.set_relates(context[:transaction],
+                    g.Label("","marriage"),
+                    "husband")
+end
+
+@given("relation(marriage) set owns key type: license") do context
+    rel_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    lic_typ = g.get(ConceptManager(context[:transaction]), AttributeType, "license")
+    set_owns(g.as_remote(rel_type, context[:transaction]),
+                        lic_typ,
+                        true)
+end
+
+@given("relation(marriage) set owns attribute type: date") do context
+    rel_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    lic_typ = g.get(ConceptManager(context[:transaction]), AttributeType, "date")
+    set_owns(g.as_remote(rel_type, context[:transaction]),
+                        lic_typ,
+                        false)
+end
+
+@given("entity(person) set plays role: marriage:wife") do context
+    ent_pers = g.get(ConceptManager(context[:transaction]), EntityType, "person")
+    g.set_plays(g.as_remote(ent_pers, context[:transaction]), g.RoleType(g.Label("marriage", "wife"),false))
+end
+
+@given("entity(person) set plays role: marriage:husband") do context
+    ent_pers = g.get(ConceptManager(context[:transaction]), EntityType, "person")
+    g.set_plays(g.as_remote(ent_pers, context[:transaction]), g.RoleType(g.Label("marriage", "husband"),false))
+end
+
+@when("\$m = relation(marriage) create new instance with key(license): m") do context
+    attr = g.get(context[:cm], AttributeType, "license")
+    rel_license = g.put(g.as_remote(attr, context[:transaction]), "m")
+
+    mar_type = g.get(context[:cm], RelationType, "marriage")
+    context[:m] = g.create(g.as_remote(mar_type, context[:transaction]))
+    g.set_has(context[:transaction], context[:m], rel_license)
+end
+
+@then("relation \$m is null: false") do context
+    @expect context[:m] !== nothing
+end
+
+@then("relation \$m has type: marriage") do context
+    @expect context[:m].type.label.name == "marriage"
+end
+
+@then("relation(marriage) get instances contain: \$m") do context
+    rel_type = g.get(ConceptManager(context[:transaction]), RelationType, "marriage")
+    res_inst = g.get_instances(g.as_remote(rel_type, context[:transaction]))
+
+    @expect in(context[:m], res_inst)
+end
+
+@when("\$b = entity(person) create new instance with key(username): bob") do context
+    attr_user = g.get(context[:cm], AttributeType, "username")
+    user_bob = g.put(g.as_remote(attr_user, context[:transaction]), "bob")
+
+    type_pers = g.get(context[:cm], EntityType, "person")
+    person = g.create(g.as_remote(type_pers, context[:transaction]))
+
+    g.set_has(context[:transaction], person, user_bob)
+    context[:b] = person
+end
+
+@when("relation \$m add player for role(wife): \$a") do context
+    g.add_player(context[:transaction],
+                context[:m],
+                g.RoleType(g.Label("marriage","wife"),false),
+                context[:a])
+end
+
+@when("relation \$m add player for role(husband): \$b") do context
+    g.add_player(context[:transaction],
+                context[:m],
+                g.RoleType(g.Label(context[:m].type.label.name,"husband"),false),
+                context[:b])
+end
+
+@then("relation \$m get players for role(wife) contain: \$a") do context
+    roles = [g.RoleType(g.Label(context[:m].type.label.name, "wife"),false)]
+    res = g.get_players(context[:transaction],
+                context[:m],
+                roles)
+    @expect in(context[:a], res)
+end
+
+@then("relation \$m get players for role(husband) contain: \$b") do context
+    roles = [g.RoleType(g.Label("marriage","husband"),false)]
+    res = g.get_players(context[:transaction],
+                context[:m],
+                roles)
+    @expect in(context[:b], res)
+end
+
+@then("relation \$m get players contain: \$a") do context
+    res = g.get_players(context[:transaction], context[:m])
+    @expect in(context[:a], res)
+end
+
+@then("relation \$m get players contain: \$b") do context
+    res = g.get_players(context[:transaction], context[:m])
+    @expect in(context[:b], res)
+end
+
+@then("relation \$m get players contain:") do context
+    roles_inp = [db[1] for db in context.datatable]
+    entities = [db[2] for db in context.datatable]
+
+    context[Symbol("a")] = context[:a]
+
+    for i in 1:length(roles_inp)
+        roles = [g.RoleType(g.Label("marriage", roles_inp[i]),false)]
+        res = g.get_players(context[:transaction],
+                    context[:m],
+                    roles)
+        @expect in(context[Symbol(string(SubString(entities[i],2,2)))], res)
+    end
+end
+
+@when("\$m = relation(marriage) get instance with key(license): m") do context
+    attr_license  = g.get(context[:cm], AttributeType, "license")
+    license = g.get(as_remote(attr_license, context[:transaction]),"m")
+    res_owner = g.get_owners(context[:transaction], license)
+    context[:m] = isempty(res_owner) ? nothing : res_owner[1]
+end
+
+@when("\$b = entity(person) get instance with key(username): bob") do context
+    attr  = g.get(context[:cm], AttributeType, "username")
+    obj_attr = g.get(as_remote(attr, context[:transaction]),"bob")
+    res_owner = g.get_owners(context[:transaction], obj_attr)[1]
+    context[:b] = res_owner
+end
+
+# Scenario: Role players can get relations
+@then("entity \$a get relations(marriage:wife) do not contain: \$m") do context
+    rel_alice = g.get_relations(context[:transaction], context[:a])
+    @expect !in(context[:m], rel_alice)
+end
+
+@then("entity \$b get relations(marriage:husband) do not contain: \$m") do context
+    rel_bob= g.get_relations(context[:transaction], context[:b])
+    @expect !in(context[:m], rel_bob)
+end
+
+@then("entity \$a get relations(marriage:wife) contain: \$m") do context
+    rel_alice = g.get_relations(context[:transaction],
+                                context[:a],
+                                [g.RoleType(g.Label("marriage","wife"),false)])
+    @expect in(context[:m], rel_alice)
+end
+
+@then("entity \$b get relations(marriage:husband) contain: \$m") do context
+    rel_bob = g.get_relations(context[:transaction],
+                                context[:b],
+                                [g.RoleType(g.Label("marriage","husband"),false)])
+    @expect in(context[:m], rel_bob)
+end
+
+# Scenario: Role player can be unassigned from relation
+@when("relation \$m remove player for role(wife): \$a") do context
+    rem_req = g.remove_player(context[:transaction],
+                        context[:m],
+                        RoleType(g.Label("marriage","wife"),false),
+                        context[:a])
+end
+
+
+@then("relation \$m get players for role(wife) do not contain: \$a") do context
+    res = g.get_players(context[:transaction], context[:m])
+    @expect !in(context[:a], res)
+end
+
+@then("relation \$m get players do not contain:") do context
+    roles_inp = [db[1] for db in context.datatable]
+    entities = [db[2] for db in context.datatable]
+
+    context[Symbol("a")] = context[:a]
+
+    for i in 1:length(roles_inp)
+        roles = [g.RoleType(g.Label("marriage", roles_inp[i]),false)]
+        res = g.get_players(context[:transaction],
+                    context[:m],
+                    roles)
+        @expect !in(context[Symbol(string(SubString(entities[i],2,2)))], res)
+    end
+end
+
+# Scenario: Relation without role players get deleted
+@then("relation \$m is deleted: true") do context
+    res = g.is_deleted(g.as_remote(context[:m], context[:transaction]))
+    @expect res
+end
+
+@then("entity \$a get relations do not contain: \$m") do  context
+    rel_alice = g.get_relations(context[:transaction],
+                                context[:a])
+    @expect !in(context[:m], rel_alice)
+end
+
+@then("relation(marriage) get instances do not contain: \$m") do context
+    type_marriage = g.get(g.ConceptManager(context[:transaction]),
+                            g.RelationType,
+                            "marriage")
+
+    res_marriage = g.get_instances(g.as_remote(type_marriage, context[:transaction]))
+    @expect !in(context[:m], res_marriage)
+end
+
+@then("relation \$m is null: true") do context
+    @expect context[:m] === nothing
+end
+
+@then("relation(marriage) get instances is empty") do context
+    type_marriage = g.get(g.ConceptManager(context[:transaction]),
+    g.RelationType,
+    "marriage")
+    res_marriage = g.get_instances(g.as_remote(type_marriage, context[:transaction]))
+
+    @expect isempty(res_marriage)
+end
+
+# Scenario: Relation with role players can be deleted
+@when("delete relation: \$m") do context
+    g.delete(g.as_remote(context[:m], context[:transaction]))
+end
+
+@then("entity \$b get relations do not contain: \$m") do context
+   relations = g.get_relations(context[:transaction], context[:b])
+   @expect !in(context[:m], relations)
+end
+
+# Scenario: Relation cannot have roleplayers inserted after deletion
+@then("relation \$m add player for role(wife): \$a; throws exception") do context
+    try
+        g.add_player(context[:transaction],
+                context[:m],
+                g.RoleType(g.Label("marriage","wife"),false),
+                context[:res_entity][1].data["x"])
+    catch ex
+        @expect ex !== nothing
+    end
+end

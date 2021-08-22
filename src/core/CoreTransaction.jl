@@ -37,9 +37,12 @@ function CoreTransaction(session::CoreSession ,
     trans_id = uuid4()
     result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout, session)
 
+    # The following is only for warming up Transaction. If we didn't do this
+    # it could happen that a transaction reach a timeout.
+
     req_result = execute(result, open_req, false)
     kind_of_result = Proto.which_oneof(req_result, :res)
-    open_req_res = getproperty(req_result, kind_of_result)
+    getproperty(req_result, kind_of_result)
 
     return result
 end
@@ -58,13 +61,29 @@ end
 
 function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
     !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
-    result = single_request(transaction.bidirectional_stream, request, batch)
+
+    result = Union{Proto.Transaction_Res, Proto.Transaction_ResPart}[]
+    try
+        result = single_request(transaction.bidirectional_stream, request, batch)
+    catch ex
+        safe_close(transaction)
+        rethrow(ex)
+    end
+
     return result
 end
 
 function stream(transaction::T, request::R, batch::Bool = true) where {T<:AbstractCoreTransaction, R<:Proto.ProtoType}
     !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
-    result = stream_request(transaction.bidirectional_stream, request, batch)
+
+    result = Union{Proto.Transaction_Res, Proto.Transaction_ResPart}[]
+    try
+        result = stream_request(transaction.bidirectional_stream, request, batch)
+    catch ex
+        safe_close(transaction)
+        rethrow(ex)
+    end
+
     return result
 end
 

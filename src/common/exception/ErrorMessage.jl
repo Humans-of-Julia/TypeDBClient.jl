@@ -32,6 +32,7 @@ const ERROR_STRUCTS = (
     :CONCEPT_BAD_ENCODING=>:AbstractConceptError,
     :CONCEPT_BAD_VALUE_TYPE=>:AbstractConceptError,
     :CONCEPT_BAD_ATTRIBUTE_VALUE=>:AbstractConceptError,
+    :CONCEPT_GET_HAS_WITH_MULTIPLE_FILTERS=>:AbstractConceptError,
     :QUERY_VARIABLE_DOES_NOT_EXIST=>:AbstractQueryError,
     :QUERY_NO_EXPLANATION=>:AbstractQueryError,
     :QUERY_BAD_ANSWER_TYPE=>:AbstractQueryError,
@@ -84,6 +85,7 @@ const error_messages = Dict([
     CONCEPT_BAD_ENCODING=>(5,  "The encoding _error_item was not recognised."),
     CONCEPT_BAD_VALUE_TYPE=>(6,  "The value type _error_item was not recognised."),
     CONCEPT_BAD_ATTRIBUTE_VALUE=>(7,  "The attribute value _error_item was not recognised."),
+    CONCEPT_GET_HAS_WITH_MULTIPLE_FILTERS=>(8, "function get_has with more than one filter occurred, use one item or the vector"),
     # Query Error Section
     QUERY_VARIABLE_DOES_NOT_EXIST=>(1,  "The variable _error_item does not exist."),
     QUERY_NO_EXPLANATION=>(2,  "No explanation was found."),

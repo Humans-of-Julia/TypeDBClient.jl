@@ -59,21 +59,41 @@ function Base.get(cm::ConceptManager, ::Type{ThingType}, label::String)
     req = ConceptManagerRequestBuilder.get_thing_type_req(label)
     res = execute(cm, req)
     if which_oneof(res, :res) == :get_thing_type_res
-        return instantiate(res.get_thing_type_res.thing_type)
+        if hasproperty(res.get_thing_type_res, :thing_type)
+            return instantiate(res.get_thing_type_res.thing_type)
+        else
+            return nothing
+        end
     end
     return nothing
 end
 
-function Base.get(cm::ConceptManager, ::Type{<:AbstractThing}, iid::String)
-    req = ConceptManagerRequestBuilder.get_thing_req(iid)
-    res = execute(cm, req)
-    if which_oneof(res, :res) == :get_thing_res
-        return instantiate(res.get_thing_res.thing)
-    end
+function Base.get(cm::ConceptManager, iid::String)
+    res = get_proto_thing(cm, iid)
+    res !== nothing && return instantiate(res)
     return nothing
+end
+
+function Base.get(cm::ConceptManager, thing::AbstractThing)
+    return get(cm, thing.iid)
 end
 
 function execute(cm::ConceptManager, req::Proto.Transaction_Req)
-    result = execute(cm.transaction, req, false)
+    result = execute(cm.transaction, req)
     return result.concept_manager_res
+end
+
+# get_proto_thing is supposed to be a vehicle to get things in its proto form to get
+# a result for setting up set_has etc.
+function get_proto_thing(cm::ConceptManager, iid::String)
+    req = ConceptManagerRequestBuilder.get_thing_req(iid)
+    res = execute(cm, req)
+    if which_oneof(res, :res) == :get_thing_res
+        if hasproperty(res.get_thing_res, :thing)
+            return res.get_thing_res.thing
+        else
+            return nothing
+        end
+    end
+    return nothing
 end

@@ -38,7 +38,22 @@ let
     global as_date_time = _as_something(VALUE_TYPE.DATETIME)
 end
 
-proto(::AttributeType{V}) where {V} = V
+# For testing line below commented out FU
+# proto(::AttributeType{V}) where {V} = V
+
+# Porting note: Java client calls into RequstBuilder but it really
+# has nothing to to with requests... I think it's probably better
+# migrating the function here.
+function proto(t::AbstractAttributeType)
+    Proto._Type(
+        label = t.label.name,
+        encoding = encoding(t)
+    )
+    # return RoleTypeRequestBuilder.proto_role_type(t.label, encoding(t))
+end
+
+# function to get the value type out of a given AttributeType
+proto_value_type(type::AttributeType{V}) where {V} = V
 
 # TODO What is Object value type in Java? It needs to return `false` for that.
 is_writable(::AttributeType) = true
@@ -65,11 +80,9 @@ function get_subtypes(r::RemoteConcept{C,T}) where {
     res = execute(r.transaction, req)
     typs = res.type_res_part.type_get_subtypes_res_part.types
 
-    if is_root(concept) && proto(concept) !== VALUE_TYPE.OBJECT
-        return Iterators.filter(
-            t -> proto(t) == proto(concept) || label(t) == label(concept),
-            (instantiate(t) for t in typs)
-        )
+    if is_root(concept) && proto_value_type(concept) !== VALUE_TYPE.OBJECT
+        return filter(t -> proto(t) == proto(concept) || label(t) == label(concept),
+                        [instantiate(t) for t in typs])
     else
         return instantiate.(typs)
     end
@@ -110,7 +123,7 @@ proto_attribute_value(value::AbstractString) = Proto.Attribute_Value(; string = 
 # https://github.com/vaticle/typedb-client-java/blob/fb535f8c9494ec6ff93421e1a962510c6cb46139/concept/thing/AttributeImpl.java#L491
 function proto_attribute_value(value::DateTime)
     milliseconds_since_1970 = round(Int64, datetime2unix(value) * 1000)
-    return Proto.Attribute_Value(; datetime = milliseconds_since_1970)
+    return Proto.Attribute_Value(; date_time = milliseconds_since_1970)
 end
 
 function Base.get(r::RemoteConcept{C,T}, value) where {
