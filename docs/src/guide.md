@@ -92,3 +92,50 @@ Otherwise it is even possible to get most of the time equally results using Type
 ```@autodocs
 Modules = [TypeDBClient]
 ```
+
+## User API
+
+  * delete
+
+    There are some delete functions:
+    * database
+    ```@docs
+    delete_database(client::CoreClient, database_name::String)
+    ```
+
+    * type
+
+    ```julia
+    delete(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+    ```
+    Any type can be deleted with this function. Be aware that only types which have no instances
+    in the database can be deleted.
+
+* get_has
+    ```@docs
+    get_has(transaction::AbstractCoreTransaction,
+                thing::AbstractThing,
+                attribute_type::Optional{AttributeType} = nothing,
+                attribute_types::Optional{Vector{<:AbstractAttributeType}} = nothing,
+                keys_only = false)
+    ```
+
+* get_instances
+* get_owns
+* get_owners
+* get_plays
+* get_regex
+* get_rule
+* get_rules
+* get_subtypes
+* get_supertype
+* get_supertypes
+* set_abstract
+* set_has
+* set_label
+* set_owns
+* set_plays
+* set_regex
+* set_supertype
+* unset_abstract
+* unset_has
