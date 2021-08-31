@@ -13,7 +13,8 @@ mutable struct  CoreSession <: AbstractCoreSession
     isOpen::Bool
     networkLatencyMillis::Int
     timer::Optional{Controller}
-    request_timeout::Real
+    request_timeout::Real;
+    error_break_time::Real
 end
 
 Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
@@ -22,7 +23,8 @@ function CoreSession(client::T,
                      database::String,
                      type::Int32,
                      options::TypeDBOptions = TypeDBOptions();
-                     request_timout::Real=6) where {T<:AbstractCoreClient}
+                     request_timout::Real=Inf,
+                     error_time::Real = 5) where {T<:AbstractCoreClient}
     try
         #building open_request
         open_req = SessionRequestBuilder.open_req(
@@ -43,7 +45,18 @@ function CoreSession(client::T,
 
         t = Controller(true, 0.5)
 
-        result = CoreSession(client, database, session_id, transactions, type, ReentrantLock() ,options, is_open, networkLatencyMillis, t, request_timout)
+        result = CoreSession(client,
+                    database,
+                    session_id,
+                    transactions,
+                    type,
+                    ReentrantLock(),
+                    options,
+                    is_open,
+                    networkLatencyMillis,
+                    t,
+                    request_timout,
+                    error_time)
 
         # initialize the ongoing pulse request
         make_pulse_request(result, t)
@@ -100,59 +113,54 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
 end
 
 transaction(session::AbstractCoreSession, type::EnumType) = transaction(session, type, typedb_options_core())
-function transaction(session::AbstractCoreSession, type::EnumType, options::TypeDBOptions)
-    try
-        lock(session.accessLock)
+transaction(session::AbstractCoreSession, type::EnumType, blocking::Bool) = transaction(session, type, typedb_options_core(), blocking)
+function transaction(session::AbstractCoreSession,
+            type::EnumType,
+            options::TypeDBOptions,
+            blocking::Bool = true;
+            error_break_time::Real = session.error_break_time)
+
+    lock(session.accessLock) do
         if !session.isOpen
             throw(TypeDBClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionID)))
         end
 
-        transactionRPC = CoreTransaction(session, session.sessionID, type, options)
+        transactionRPC = CoreTransaction(session, session.sessionID, type, options; use_blocking_stub = blocking)
         session.transactions[transactionRPC.transaction_id] = transactionRPC
 
         return transactionRPC
-    finally
-       unlock(session.accessLock)
     end
 end
 
 function close(session::AbstractCoreSession, session_alive::Bool=true)
-    try
-        lock(session.accessLock)
-        if session.isOpen
-            for (_,trans) in session.transactions
-                safe_close(trans)
-            end
-            remove_session(session.client, session)
-            safe_close(session.timer)
 
-            if session_alive
-                req = SessionRequestBuilder.close_req(session.sessionID)
-                stub = session.client.core_stub.blockingStub
-                Proto.session_close(stub, gRPCController(), req )
-            end
+        lock(session.accessLock) do
+            if session.isOpen
+                for (_,trans) in session.transactions
+                    safe_close(trans)
+                end
+                remove_session(session.client, session)
+                safe_close(session.timer)
 
-            session.isOpen = false
+                if session_alive
+                    req = SessionRequestBuilder.close_req(session.sessionID)
+                    stub = session.client.core_stub.blockingStub
+                    Proto.session_close(stub, gRPCController(), req )
+                end
+
+                session.isOpen = false
+            end
         end
-    catch ex
-        if ex isa gRPCServiceCallException
-            @info "Session with id: $(session.sessionID) isn't open on the server"
-        else
-            @error TypeDBClientException("Unexpected error while closing session ID: $(session.sessionID)",ex)
-        end
-    finally
-        unlock(session.accessLock)
-    end
+
     return true
 end
 
 function Base.delete!(session::AbstractCoreSession, trans_id::UUID)
-    try
-        lock(session.accessLock)
-        delete!(session.transactions, trans_id)
-    finally
-        unlock(session.accessLock)
-    end
+
+        lock(session.accessLock) do
+            delete!(session.transactions, trans_id)
+        end
+
 end
 
 function is_open(session::AbstractCoreSession)

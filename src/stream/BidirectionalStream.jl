@@ -7,16 +7,18 @@ mutable struct  BidirectionalStream
     input_channel::Channel{Proto.Transaction_Client}
     output_channel::Channel{Proto.Transaction_Server}
     status::Task
+    error_break_time::Real
 end
 
 function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
                              output_channel::Channel{Proto.Transaction_Server},
-                             status::Task)
+                             status::Task;
+                             error_break_time::Real)
 
     dispatcher = Dispatcher(input_channel)
     res_collector = ResponseCollector(output_channel)
 
-    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel, status)
+    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel, status, error_break_time)
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::Proto.ProtoType)
@@ -42,6 +44,7 @@ function stream_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     return answer
 end
 
+# ToDo: Make the request timout determined by user at session level as a default and in the transaction level
 function _process_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
 
     res_channel = _open_result_channel(bidirect_stream, request, batch)
@@ -50,8 +53,8 @@ function _process_request(bidirect_stream::BidirectionalStream, request::Proto.T
 
     # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
     # dependent solutionresult = nothing
-    answer = nothing
-    contr = Controller(true,5)
+    answer = Vector{Transaction_Res_All}()
+    contr = Controller(true, bidirect_stream.error_break_time)
     @async sleeper(contr)
     while contr.running
         yield()
@@ -97,6 +100,7 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
+# TODO: Think about only use of take! Think about yielding not every time the loop comes back
 function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stream::BidirectionalStream)
     answers = Vector{Transaction_Res_All}()
     while isopen(res_channel)

@@ -8,6 +8,7 @@ struct CoreTransaction <: AbstractCoreTransaction
     session_id::Bytes
     request_timout::Real
     session::AbstractCoreSession
+    error_break_time::Real
 end
 
 function Base.show(io::IO, transaction::AbstractCoreTransaction)
@@ -20,7 +21,14 @@ function CoreTransaction(session::CoreSession ,
                         sessionId::Bytes,
                         type::EnumType,
                         options::TypeDBOptions;
-                        request_timout::Real=session.request_timeout)
+                        request_timout::Real=session.request_timeout,
+                        use_blocking_stub::Bool = true,
+                        error_break_time::Real = session.error_break_time)
+
+    function trans_return(res)
+        return res
+    end
+
     type = type
     options = options
     input_channel = Channel{Proto.Transaction_Client}(10)
@@ -28,14 +36,20 @@ function CoreTransaction(session::CoreSession ,
 
     grpc_controller = gRPCController(request_timeout=request_timout)
 
-    req_result, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
+    if use_blocking_stub
+        req_result, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
+    else
+        res = Proto.transaction(session.client.core_stub.asyncStub, grpc_controller, input_channel, trans_return)
+        wait(res)
+        req_result, status = fetch(res)
+    end
     output_channel = grpc_result_or_error(req_result, status, result->result)
 
     open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
 
-    bidirectionalStream = BidirectionalStream(input_channel, output_channel, status)
+    bidirectionalStream = BidirectionalStream(input_channel, output_channel, status, error_break_time = error_break_time)
     trans_id = uuid4()
-    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout, session)
+    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout, session, error_break_time)
 
     # The following is only for warming up Transaction. If we didn't do this
     # it could happen that a transaction reach a timeout.

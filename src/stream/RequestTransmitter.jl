@@ -14,6 +14,7 @@ end
 function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
     direct_dispatch_channel = Channel{Proto.ProtoType}(10)
     dispatch_channel = Channel{Proto.ProtoType}(10)
+
     disp_timer = batch_requests(dispatch_channel,input_channel)
     process_direct_requests(direct_dispatch_channel, input_channel)
 
@@ -34,7 +35,7 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
                 if isready(in_channel)
                     tmp_res = take!(in_channel)
                     client_res = TransactionRequestBuilder.client_msg([tmp_res])
-                    Threads.@spawn put!(out_channel,client_res)
+                    put!(out_channel,client_res)
                 end
             catch ex
                 @info "process_direct_requests shows an error"

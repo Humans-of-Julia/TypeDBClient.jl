@@ -53,4 +53,3 @@ function Base.write(
 )
     readwrite(f, session, typedb.protocol.Transaction_Type.WRITE, options)
 end
-

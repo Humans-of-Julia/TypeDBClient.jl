@@ -23,12 +23,11 @@ Attention! Don't put a new Id manually on the ResponsCollector. It wouldn't be t
 """
 function Base.push!(resp_collector::ResponseCollector, req_id::Bytes)
     res_channel = Channel{Transaction_Res_All}(10)
-    try
-        lock(resp_collector.access_lock)
+
+    lock(resp_collector.access_lock) do
         resp_collector.collectors[req_id] = res_channel
-    finally
-        unlock(resp_collector.access_lock)
     end
+
     return res_channel
 end
 
@@ -40,12 +39,10 @@ Attention! Don't remove a result_channel manually from the Dictionary.
 This will not be thread safe.
 """
 function Base.delete!(resp_collector::ResponseCollector, id::Bytes)
-    try
-        lock(resp_collector.access_lock)
+
+    lock(resp_collector.access_lock) do
         close(resp_collector.collectors[id])
         delete!(resp_collector.collectors, id)
-    finally
-        unlock(resp_collector.access_lock)
     end
 end
 
