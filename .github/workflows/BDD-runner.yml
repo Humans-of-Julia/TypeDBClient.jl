@@ -10,6 +10,6 @@ jobs:
     - id: foo
       uses: Humans-of-Julia/TypeDBRunner@0.1.2
       with:
-        who-to-greet: 'Mark Schulze'
+        who-to-greet: 'Mark Schulzee'
     - run: echo random-number ${{ steps.foo.outputs.random-number }}
       shell: bash
