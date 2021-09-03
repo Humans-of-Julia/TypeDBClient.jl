@@ -1,0 +1,15 @@
+name: TypeDBClient BDD runner
+on: [push]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A job to pull feature files, install Grakn, and execute the tests
+    steps:
+    - uses: actions/checkout@v2
+    - id: foo
+      uses: Humans-of-Julia/TypeDBRunner@0.1.2
+      with:
+        who-to-greet: 'Mark Schulze'
+    - run: echo random-number ${{ steps.foo.outputs.random-number }}
+      shell: bash
