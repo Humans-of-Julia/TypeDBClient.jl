@@ -7,6 +7,13 @@ jobs:
     name: A job to pull feature files, install Grakn, and execute the tests
     steps:
     - uses: actions/checkout@v2
+    - name: Install TypeDB Server
+      run: |
+        sudo apt install software-properties-common apt-transport-https
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 8F3DA4B5E9AEF44C
+        sudo add-apt-repository 'deb [ arch=all ] https://repo.vaticle.com/repository/apt/ trusty main'
+        sudo apt update
+        sudo apt install typedb-all
     - id: foo
       uses: Humans-of-Julia/TypeDBRunner@0.1.2
       with:
