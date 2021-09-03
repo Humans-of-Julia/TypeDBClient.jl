@@ -1,4 +1,4 @@
-name: TypeDBClient BDD runner
+name: BDD Runner
 on: [push]
 
 jobs:
@@ -14,6 +14,9 @@ jobs:
         sudo add-apt-repository 'deb [ arch=all ] https://repo.vaticle.com/repository/apt/ trusty main'
         sudo apt update
         sudo apt install typedb-all
+    - name: Run TypeDB Server
+      run: |
+        typedb server
     - id: foo
       uses: Humans-of-Julia/TypeDBRunner@0.1.2
       with:
