@@ -17,7 +17,7 @@ jobs:
         sudo apt install typedb-all
     - name: Run TypeDB Server
       run: |
-
+        typedb server &.
     - id: foo
       uses: Humans-of-Julia/TypeDBRunner@0.1.3
       with:
