@@ -1,5 +1,5 @@
 @given("connection open schema session for database: typedb") do context
-    typedb_session = TypeDBClient.CoreSession(client, "typedb" , TypeDBClient.typedb.protocol.Session_Type[:SCHEMA] , TypeDBClient.TypeDBOptions())
+    typedb_session = TypeDBClient.CoreSession(client, "typedb" , TypeDBClient.typedb.protocol.Session_Type[:SCHEMA] , TypeDBClient.TypeDBOptions(), request_timout = Inf)
     context[:session] = typedb_session
     # Menat to proof open sessions. During tests it shows sometimes that sessions wasn't closed properly
     haskey(context, :sessions) ? push!(context[:sessions], typedb_session) : context[:sessions] = [typedb_session]
