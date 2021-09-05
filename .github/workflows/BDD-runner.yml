@@ -2,7 +2,7 @@ name: BDD Runner
 on: [push]
 
 jobs:
-  TypeDBCLient.jl:
+  TypeDBClient:
     runs-on: ubuntu-latest
     name: BDD Runner hello_world_job
     steps:
