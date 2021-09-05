@@ -34,6 +34,9 @@ jobs:
           julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl")'
           julia -e 'println(pwd())'
           julia -e 'println(readdir())'
+          julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/main")'
+          julia -e 'println(pwd())'
+          julia -e 'println(readdir())'
         shell: bash
       - name: Show a random number
         run: echo random-number ${{ steps.foo.outputs.random-number }}
