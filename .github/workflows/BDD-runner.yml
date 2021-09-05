@@ -23,10 +23,11 @@ jobs:
           version: '1.6.2'
           arch: 'x64'
           show-versioninfo: 'true'
-      - name: Install TypeDBClient.jl
+      - name: Install TypeDBClient.jl & Behavior
         run: |
           julia -e 'println("Hello, World!")'
           julia -e 'using Pkg; Pkg.add(url="https://github.com/Humans-of-Julia/TypeDBClient.jl.git")'
+          julia -e 'using Pkg; Pkg.add("Behavior")'
         shell: bash          
       - name: Start BDD Runner
         run: |
