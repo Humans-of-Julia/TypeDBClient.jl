@@ -19,7 +19,7 @@ jobs:
       run: |
         sudo apt install snapd
         sudo snap install julia --classic
-        mount snap "julia"
+        sudo mount snap "julia"
         sudo snap install julia --classic
         julia
     - name: Run TypeDB Server
