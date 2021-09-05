@@ -32,7 +32,8 @@ jobs:
           julia -e 'println("Hello, World!")'
           julia -e 'using Pkg; Pkg.add(url="https://github.com/Humans-of-Julia/TypeDBClient.jl.git")'
           julia -e 'using Pkg; Pkg.add("Behavior")'
-          julia -e '~/features/TypeDBClient.jl/test/runner.jl'
+          julia -e cd('~/features/TypeDBClient.jl/test')
+          julia -e 'runner.jl'
         shell: bash
       - name: Show a random number
         run: echo random-number ${{ steps.foo.outputs.random-number }}
