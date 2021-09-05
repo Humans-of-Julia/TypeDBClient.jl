@@ -1,0 +1,38 @@
+name: BDD Runner
+on: [push]
+
+jobs:
+  TypeDBClient:
+    runs-on: ubuntu-latest
+    name: BDD Runner TypeDBClient.jl jobs
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: ''
+      - name: Install TypeDB Server
+        run: |
+          sudo apt-get update
+          sudo apt install software-properties-common apt-transport-https
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 8F3DA4B5E9AEF44C
+          sudo add-apt-repository 'deb [ arch=all ] https://repo.vaticle.com/repository/apt/ trusty main'
+          sudo apt update
+          sudo apt install typedb-all
+      - name: Run TypeDB Server
+        run: |
+          typedb server &
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: '1.6.2'
+          arch: 'x64'
+      - name: Install TypeDBClient.jl & Behavior.jl
+        run: |
+          julia -e 'println("Hello, World!")'
+          julia -e 'using Pkg; Pkg.add(url="https://github.com/Humans-of-Julia/TypeDBClient.jl.git")'
+          julia -e 'using Pkg; Pkg.add("Behavior")'
+        shell: bash          
+      - name: Start BDD Runner
+        run: |
+          julia -e 'println(pwd())'
+          julia -e 'println(readdir("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test"))'
+          julia -e 'include("test/runner.jl")'
+        shell: bash
