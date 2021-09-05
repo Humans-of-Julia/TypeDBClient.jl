@@ -23,11 +23,12 @@ jobs:
         typedb server &
     - name: Pulling our feature files
       run: |
-        ls -a
-        mkdir features
-        cd features 
+        mkdir ~/features
+        cd ~/features 
         git clone https://github.com/Humans-of-Julia/TypeDBClient.jl.git
+        cd ~/features/TypeDBCLient.jl
         ls
+        
     - id: foo
       uses: Humans-of-Julia/TypeDBRunner@0.1.3
       with:
