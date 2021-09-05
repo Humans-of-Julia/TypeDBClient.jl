@@ -32,7 +32,7 @@ jobs:
           julia -e 'println("Hello, World!")'
           julia -e 'using Pkg; Pkg.add(url="https://github.com/Humans-of-Julia/TypeDBClient.jl.git")'
           julia -e 'using Pkg; Pkg.add("Behavior")'
-          julia -e cd('~/features/TypeDBClient.jl/test')
+          julia -e cd '~/features/TypeDBClient.jl/test'
           julia -e 'runner.jl'
         shell: bash
       - name: Show a random number
