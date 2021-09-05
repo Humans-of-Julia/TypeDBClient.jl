@@ -4,7 +4,7 @@ on: [push]
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to pull feature files, install TypeDB, and execute the tests
+    name: BDD Runner hello_world_job
     steps:
       - uses: actions/checkout@v2
         with:
@@ -37,8 +37,8 @@ jobs:
           julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/main")'
           julia -e 'println(pwd())'
           julia -e 'println(readdir())'
-          julia -e 'println(isfile(homedir(/main/test/runner.jl)))'
+          julia -e 'println(isfile(homedir(main/test/runner.jl)))'
         shell: bash
       - name: Show a random number
-        run: echo random-number ${{ steps.foo.outputs.random-number }}
+        run: echo random-number 20
         shell: bash
