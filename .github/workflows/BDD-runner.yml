@@ -7,7 +7,6 @@ jobs:
     name: A job to pull feature files, install TypeDB, and execute the tests
     steps:
     - uses: actions/checkout@v2
-
     - name: Install Julia
       run: |
         mkdir ~/Downloads
@@ -17,7 +16,6 @@ jobs:
         sudo cp -r julia-1.6.2 /opt/
         sudo ln -s /opt/julia-1.6.2/bin/julia /usr/local/bin/julia
         julia
-
     - name: Run TypeDB Server
       run: |
         typedb server &
@@ -26,12 +24,6 @@ jobs:
         mkdir ~/features
         cd ~/features 
         git clone https://github.com/Humans-of-Julia/TypeDBClient.jl.git
-        cd ~/features/TypeDBCLient.jl
-        ls
-        
-    - id: foo
-      uses: Humans-of-Julia/TypeDBRunner@0.1.3
-      with:
-        who-to-greet: 'Mark Schulzee'
+        ls  
     - run: echo random-number ${{ steps.foo.outputs.random-number }}
       shell: bash
