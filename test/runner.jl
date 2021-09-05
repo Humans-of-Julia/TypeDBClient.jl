@@ -18,10 +18,13 @@ p = ParseOptions(allow_any_step_order = true)
 
 function run_tests(tag::String = "")
     runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags=tag)
-    # runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath)
 end
 
 
-run_tests("not @ignore-typedb-core")
-# run_tests("@failure")
-# run_tests("@actual")
+result = run_tests("not @ignore-typedb-core")
+
+if !result
+    throw("TestSuite failed. Please proof the results")
+else
+    @info "Well done!"
+end

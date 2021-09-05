@@ -14,6 +14,10 @@ end
 
 @given("connection does not have any database") do context
     all_dbs = g.get_all_databases(context[:client])
+    if !isempty(all_dbs)
+        delete_all_databases(context[:client])
+        all_dbs = g.get_all_databases(context[:client])
+    end
     @expect length(all_dbs) == 0
 end
 
