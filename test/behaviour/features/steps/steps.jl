@@ -28,6 +28,11 @@ end
     g.safe_close.(collect(values(context[:client].sessions)))
 end
 
+@beforescenario() do context, scenario
+    client = g.CoreClient("127.0.0.1",1729)
+    delete_all_databases(client)
+end
+
 @afterscenario() do context, scenario
   delete_all_databases(context[:client])
 end

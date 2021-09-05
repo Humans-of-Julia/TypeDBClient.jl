@@ -53,7 +53,6 @@ function CoreTransaction(session::CoreSession ,
 
     # The following is only for warming up Transaction. If we didn't do this
     # it could happen that a transaction reach a timeout.
-
     req_result = execute(result, open_req, false)
     kind_of_result = Proto.which_oneof(req_result, :res)
     getproperty(req_result, kind_of_result)

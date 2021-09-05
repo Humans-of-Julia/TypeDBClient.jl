@@ -2,6 +2,8 @@
 
 const PULSE_INTERVAL_MILLIS = 5000
 
+COUNT_OF_TRANSACTIONS = 0
+
 mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
