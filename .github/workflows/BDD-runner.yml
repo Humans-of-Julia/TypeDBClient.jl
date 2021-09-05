@@ -24,6 +24,8 @@ jobs:
         mkdir ~/features
         cd ~/features 
         git clone https://github.com/Humans-of-Julia/TypeDBClient.jl.git
+        ls
+        cd TypeDBClient.jl
         ls  
     - run: echo random-number ${{ steps.foo.outputs.random-number }}
       shell: bash
