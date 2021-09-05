@@ -7,7 +7,6 @@ jobs:
     name: A job to pull feature files, install TypeDB, and execute the tests
     steps:
       - uses: actions/checkout@v2
-
       - name: Run TypeDB Server
         run: |
           typedb server &
@@ -19,12 +18,6 @@ jobs:
           ls
           cd TypeDBClient.jl
           ls  
-      - name: Install Julia and run scripts
-        run: |
-          julia -e 'println("Hello, World!")'
-          julia -e 'using Pkg; Pkg.clone("git@github.com:Humans-of-Julia/TypeDBClient.jl.git")'
-          julia -e 'using Pkg; Pkg.add("Behavior")'
-        shell: bash
       - name: Show a random number
       - run: echo random-number ${{ steps.foo.outputs.random-number }}
         shell: bash
