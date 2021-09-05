@@ -23,7 +23,7 @@ jobs:
           version: '1.6.2'
           arch: 'x64'
           show-versioninfo: 'true'
-      - name: Install TypeDBClient.jl & Behavior
+      - name: Install TypeDBClient.jl & Behavior.jl
         run: |
           julia -e 'println("Hello, World!")'
           julia -e 'using Pkg; Pkg.add(url="https://github.com/Humans-of-Julia/TypeDBClient.jl.git")'
@@ -38,7 +38,7 @@ jobs:
           julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test")'
           julia -e 'println(pwd())'
           julia -e 'println(readdir("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test"))'
-          julia -e 'include("runner.jl")'
+          julia -e 'include("test/runner.jl")'
           julia -e 'run_tests'
         shell: bash
       - name: Show a random number
