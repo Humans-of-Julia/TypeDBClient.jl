@@ -7,6 +7,14 @@ jobs:
     name: A job to pull feature files, install TypeDB, and execute the tests
     steps:
       - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: '1.6.2'
+          arch: 'x64'
+          show-versioninfo: 'true'
+          outputs: ''
+          julia-version: ''
+          julia-bindir: ''
       - name: Run TypeDB Server
         run: |
           typedb server &
@@ -19,14 +27,6 @@ jobs:
           cd TypeDBClient.jl
           ls  
       - name: Install Julia and run scripts
-        uses: julia-actions/setup-julia@latest
-        with:
-          version: '1.6.2'
-          arch: 'x64'
-          show-versioninfo: 'true'
-          outputs: ''
-          julia-version: ''
-          julia-bindir: ''
         run: |
           julia -e 'println("Hello, World!")'
           julia -e 'using Pkg; Pkg.clone("git@github.com:Humans-of-Julia/TypeDBClient.jl.git")'
