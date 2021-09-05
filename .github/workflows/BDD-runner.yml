@@ -15,7 +15,6 @@ jobs:
         tar -xvzf julia-1.6.2-linux-x86_64.tar.gz
         sudo cp -r julia-1.6.2 /opt/
         sudo ln -s /opt/julia-1.6.2/bin/julia /usr/local/bin/julia
-        julia
     - name: Run TypeDB Server
       run: |
         typedb server &
@@ -27,5 +26,20 @@ jobs:
         ls
         cd TypeDBClient.jl
         ls  
+    - name: Install Julia and run scripts
+      uses: julia-actions/setup-julia@latest
+      with:
+        version: '1.6.2'
+        arch: 'x64'
+        show-versioninfo: 'true'
+        outputs: ''
+        julia-version: ''
+        julia-bindir: ''
+      run: |
+        julia -e 'println("Hello, World!")'
+        julia -e 'using Pkg; Pkg.clone("git@github.com:Humans-of-Julia/TypeDBClient.jl.git")'
+        julia -e 'using Pkg; Pkg.add("Behavior")'
+      shell: bash
+    - name: Show a random number
     - run: echo random-number ${{ steps.foo.outputs.random-number }}
       shell: bash
