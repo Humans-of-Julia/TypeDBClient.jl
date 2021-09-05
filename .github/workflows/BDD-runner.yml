@@ -8,16 +8,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          path: 
-
-      - name: Pulling our feature files
+          path: ''
+      - name: Install TypeDB Server
         run: |
-          mkdir ~/features
-          cd ~/features 
-          git clone https://github.com/Humans-of-Julia/TypeDBClient.jl.git
-          ls
-          cd TypeDBClient.jl
-          ls  
+          sudo apt-get update
+          sudo apt install software-properties-common apt-transport-https
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 8F3DA4B5E9AEF44C
+          sudo add-apt-repository 'deb [ arch=all ] https://repo.vaticle.com/repository/apt/ trusty main'
+          sudo apt update
+          sudo apt install typedb-all
+      - name: Run TypeDB Server
+        run: |
+          typedb server &
       - uses: julia-actions/setup-julia@latest
         with:
           version: '1.6.2'
