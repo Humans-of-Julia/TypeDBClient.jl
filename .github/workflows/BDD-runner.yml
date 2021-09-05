@@ -30,9 +30,9 @@ jobs:
         shell: bash          
       - name: Start BDD Runner
         run: |
-          julia -e pwd
+          julia -e 'println(pwd())'
           julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl")'
-          julia -e 'pwd()'
+          julia -e 'println(pwd())'
           julia -e 'readdir()'
         shell: bash
       - name: Show a random number
