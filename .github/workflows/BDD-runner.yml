@@ -2,13 +2,13 @@ name: BDD Runner
 on: [push]
 
 jobs:
-  hello_world_job:
+  TypeDBCLient.jl:
     runs-on: ubuntu-latest
     name: BDD Runner hello_world_job
     steps:
       - uses: actions/checkout@v2
         with:
-          path: main
+          path: 
 
       - name: Pulling our feature files
         run: |
