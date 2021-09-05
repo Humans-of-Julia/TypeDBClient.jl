@@ -27,7 +27,7 @@ jobs:
         cd TypeDBClient.jl
         ls  
     - name: Install Julia and run scripts
-      uses: julia-actions/setup-julia@latest
+    - uses: julia-actions/setup-julia@latest
       with:
         version: '1.6.2'
         arch: 'x64'
