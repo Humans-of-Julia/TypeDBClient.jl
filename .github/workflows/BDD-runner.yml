@@ -38,7 +38,7 @@ jobs:
           julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test")'
           julia -e 'println(pwd())'
           julia -e 'println(readdir("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test"))'
-          julia -e 'using TypeDBClient; using Behavior; runner.jl'
+          julia -e '/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test/runner.jl'
         shell: bash
       - name: Show a random number
         run: echo random-number 20
