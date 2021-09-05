@@ -37,6 +37,3 @@ jobs:
           julia -e 'println(readdir("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test"))'
           julia -e 'include("test/runner.jl")'
         shell: bash
-      - name: Show a random number
-        run: echo random-number 20
-        shell: bash
