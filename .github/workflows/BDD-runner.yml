@@ -7,6 +7,8 @@ jobs:
     name: A job to pull feature files, install TypeDB, and execute the tests
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: main
       - name: Run TypeDB Server
         run: |
           typedb server &
