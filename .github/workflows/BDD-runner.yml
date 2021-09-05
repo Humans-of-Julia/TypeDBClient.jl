@@ -19,5 +19,5 @@ jobs:
           cd TypeDBClient.jl
           ls  
       - name: Show a random number
-      - run: echo random-number ${{ steps.foo.outputs.random-number }}
+        run: echo random-number ${{ steps.foo.outputs.random-number }}
         shell: bash
