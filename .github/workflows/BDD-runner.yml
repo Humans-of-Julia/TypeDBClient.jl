@@ -4,7 +4,7 @@ on: [push]
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to pull feature files, install Grakn, and execute the tests
+    name: A job to pull feature files, install TypeDB, and execute the tests
     steps:
     - uses: actions/checkout@v2
     - name: Install TypeDB Server
@@ -17,11 +17,13 @@ jobs:
         sudo apt install typedb-all
     - name: Install Julia
       run: |
-        sudo apt install snapd
-        sudo snap install julia --classic
-        sudo mount snap "julia"
-        sudo snap install julia --classic
+        cd ~/Downloads
+        wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.2-linux-x86_64.tar.gz
+        tar -xvzf julia-1.6.2-linux-x86_64.tar.gz
+        sudo cp -r julia-1.6.2 /opt/
+        sudo ln -s /opt/julia-1.6.2/bin/julia /usr/local/bin/julia
         julia
+        
     - name: Run TypeDB Server
       run: |
         typedb server &
