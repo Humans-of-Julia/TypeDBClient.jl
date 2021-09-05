@@ -3,6 +3,7 @@
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Humans-of-Julia.github.io/TypeDBClient.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Humans-of-Julia.github.io/TypeDBClient.jl/dev)
 [![Build Status](https://github.com/Humans-of-Julia/TypeDBClient.jl/workflows/CI/badge.svg)](https://github.com/Humans-of-Julia/TypeDBClient.jl/actions)
+[![BDD](https://github.com/Humans-of-Julia/TypeDBClient.jl/actions/workflows/BDD-runner.yml/badge.svg?branch=main)](https://github.com/Humans-of-Julia/TypeDBClient.jl/actions/workflows/BDD-runner.yml)
 [![codecov](https://codecov.io/gh/Humans-of-Julia/TypeDBClient.jl/branch/main/graph/badge.svg?token=9SQ8WB8KVM)](https://codecov.io/gh/Humans-of-Julia/TypeDBClient.jl)
 
 This is a community approach to translate a given client interface to the knowledge graph database TypeDB, made by [Vaticle](https://vaticle.com/), into Julia Language.
