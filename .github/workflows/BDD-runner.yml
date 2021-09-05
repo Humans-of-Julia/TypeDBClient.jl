@@ -23,14 +23,13 @@ jobs:
           version: '1.6.2'
           arch: 'x64'
           show-versioninfo: 'true'
-          outputs: ''
-          julia-version: ''
-          julia-bindir: ''
-
-      - name: Install Julia and run scripts
+      - name: Install TypeDBClient.jl
         run: |
           julia -e 'println("Hello, World!")'
           julia -e 'using Pkg; Pkg.add(url="https://github.com/Humans-of-Julia/TypeDBClient.jl.git")'
+        shell: bash          
+      - name: Start BDD Runner
+        run: |
           julia -e 'pwd()'
           julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl")'
           julia -e 'pwd()'
