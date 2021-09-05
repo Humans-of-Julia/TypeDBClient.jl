@@ -24,7 +24,6 @@ jobs:
         with:
           version: '1.6.2'
           arch: 'x64'
-          show-versioninfo: 'true'
       - name: Install TypeDBClient.jl & Behavior.jl
         run: |
           julia -e 'println("Hello, World!")'
