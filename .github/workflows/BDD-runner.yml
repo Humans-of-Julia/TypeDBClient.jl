@@ -27,7 +27,7 @@ jobs:
           outputs: ''
           julia-version: ''
           julia-bindir: ''
-      - run: |
+        run: |
           julia -e 'println("Hello, World!")'
           julia -e 'using Pkg; Pkg.clone("git@github.com:Humans-of-Julia/TypeDBClient.jl.git")'
           julia -e 'using Pkg; Pkg.add("Behavior")'
