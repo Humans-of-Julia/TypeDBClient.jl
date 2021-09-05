@@ -4,7 +4,7 @@ on: [push]
 jobs:
   TypeDBClient:
     runs-on: ubuntu-latest
-    name: BDD Runner hello_world_job
+    name: BDD Runner TypeDBClient.jl jobs
     steps:
       - uses: actions/checkout@v2
         with:
@@ -36,8 +36,8 @@ jobs:
           julia -e 'println(readdir())'
           julia -e 'cd("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test")'
           julia -e 'println(pwd())'
-          julia -e 'println(readdir())'
-          julia -e 'println(isfile(homedir(test/runner.jl)))'
+          julia -e 'println(readdir("/home/runner/work/TypeDBClient.jl/TypeDBClient.jl/test"))'
+          julia -e 'using TypeDBClient; using Behavior; runner.jl'
         shell: bash
       - name: Show a random number
         run: echo random-number 20
