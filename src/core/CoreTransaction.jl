@@ -34,7 +34,7 @@ function CoreTransaction(session::CoreSession ,
     input_channel = Channel{Proto.Transaction_Client}(10)
     proto_options = copy_to_proto(options, Proto.Options)
 
-    grpc_controller = gRPCController(request_timeout=request_timout)
+    grpc_controller = gRPCController(request_timeout = request_timout)
 
     if use_blocking_stub
         req_result, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)

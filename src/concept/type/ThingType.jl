@@ -62,6 +62,12 @@ function get_subtypes(r::RemoteConcept{C,T}) where
     return instantiate.(typs)
 end
 
+"""
+    function get_instances(r::RemoteConcept{C,T}) where
+        {C <: AbstractThingType,T <: AbstractCoreTransaction}
+
+Here you can get all instances for a given Type. The has to be given as a RemoteConcept
+"""
 function get_instances(r::RemoteConcept{C,T}) where
     {C <: AbstractThingType,T <: AbstractCoreTransaction}
 
@@ -169,10 +175,10 @@ function set_label(r::RemoteConcept{C,T}, new_label_name::String) where
 end
 
 """
-    delete(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
-To delete a type in the database pack the type with the transaction to a RemoteConcept.
-Be aware that a type can only be deleted if no Entity, Attribute or Relation is in the
-database which is based on this type.
+        delete(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+    To delete a type in the database pack the type with the transaction to a RemoteConcept.
+    Be aware that a type can only be deleted if no Entity, Attribute or Relation is in the
+    database which is based on this type.
 """
 function delete(r::RemoteConcept{C,T}) where
     {C <: AbstractThingType,T <: AbstractCoreTransaction}

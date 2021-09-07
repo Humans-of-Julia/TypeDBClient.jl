@@ -95,32 +95,34 @@ Modules = [TypeDBClient]
 
 ## User API
 
-  * delete
+* delete
 
     There are some delete functions:
-    * database
-    ```@docs
-    delete_database(client::CoreClient, database_name::String)
-    ```
+  * database
 
-    * type
+    [`delete_database(client::CoreClient, database_name::String)`](@ref)
 
-    ```julia
-    delete(r::RemoteConcept{C,T}) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
-    ```
+  * type
+
+    [`delete(r::RemoteConcept{C,T}) where {C <:AbstractThingType, T <: AbstractCoreTransaction}`](@ref)
+
     Any type can be deleted with this function. Be aware that only types which have no instances
     in the database can be deleted.
 
+
 * get_has
-    ```@docs
-    get_has(transaction::AbstractCoreTransaction,
+
+    [`get_has(transaction::AbstractCoreTransaction,
                 thing::AbstractThing,
                 attribute_type::Optional{AttributeType} = nothing,
                 attribute_types::Optional{Vector{<:AbstractAttributeType}} = nothing,
-                keys_only = false)
-    ```
+                keys_only = false)`](@ref)
+
 
 * get_instances
+
+    [`get_instances(r::RemoteConcept{C,T}) where
+        {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
 * get_owns
 * get_owners
 * get_plays

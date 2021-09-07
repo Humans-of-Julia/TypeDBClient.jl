@@ -34,7 +34,9 @@ function create_database(client::AbstractCoreClient, name::String)
 end
 
 """
+
     delete_database(client::AbstractCoreClient, name::String)
+
 Delete the database for the given name without any question. Be carful. There is no
 recovery function within this call.
 """
