@@ -11,7 +11,7 @@ function ResponseCollector(transact_result_channel::Channel{Proto.Transaction_Se
     collectors = Dict{Bytes,Channel{Transaction_Res_All}}()
     access_lock = ReentrantLock()
     resp_col = ResponseCollector(collectors, transact_result_channel, access_lock)
-    @async response_worker(resp_col)
+    Threads.@spawn response_worker(resp_col)
     return resp_col
 end
 

@@ -62,3 +62,18 @@ function safe_close(source_to_close)
                 reason: $ex"
     end
 end
+
+function safe_close(channel::Channel)
+    res = @async begin
+                while isready(channel)
+                    yield()
+                    sleep(0.001)
+                end
+            end
+    wait(res)
+    close(channel)
+end
+
+function Base.close(inp::Vector{Timer})
+    close.(inp)
+end

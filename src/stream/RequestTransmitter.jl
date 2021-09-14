@@ -7,7 +7,7 @@ mutable struct Dispatcher
     input_channel::Channel{Proto.Transaction_Client}
     direct_dispatch_channel::Channel{Proto.ProtoType}
     dispatch_channel::Channel{Proto.ProtoType}
-    dispatch_timer::Optional{Timer}
+    dispatch_timer::Optional{Vector{Timer}}
 end
 
 
@@ -15,8 +15,14 @@ function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
     direct_dispatch_channel = Channel{Proto.ProtoType}(10)
     dispatch_channel = Channel{Proto.ProtoType}(10)
 
-    disp_timer = batch_requests(dispatch_channel,input_channel)
-    process_direct_requests(direct_dispatch_channel, input_channel)
+    disp_timer = Vector{Timer}()
+    for _ in 1:3
+        push!(disp_timer, batch_requests(dispatch_channel,input_channel))
+    end
+
+    for _ in 1:2
+        Threads.@spawn process_direct_requests(direct_dispatch_channel, input_channel)
+    end
 
     return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
@@ -26,24 +32,25 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
     This function process the incoming request directly to the server
 """
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
-    @async begin
-        while isopen(in_channel)
-            yield()
-            # if the grpc connection shows an error or is terminated for the channel
-            # the loop will exited
-            try
-                if isready(in_channel)
+
+    while isopen(in_channel)
+        yield()
+        # if the grpc connection shows an error or is terminated for the channel
+        # the loop will exited
+        tmp_res = nothing
+            if isready(in_channel)
+                try
                     tmp_res = take!(in_channel)
-                    client_res = TransactionRequestBuilder.client_msg([tmp_res])
-                    put!(out_channel,client_res)
-                end
-            catch ex
-                @info "process_direct_requests shows an error"
-            finally
+                 catch ex
+                    @info "take impossible"
+                    @info ex
+                 end
             end
-        end
-        @debug "process_direct_requests was closed"
-    end
+            if tmp_res !== nothing
+                client_res = TransactionRequestBuilder.client_msg([tmp_res])
+                put!(out_channel, client_res)
+            end
+    @debug "process_direct_requests was closed"
 end
 
 """

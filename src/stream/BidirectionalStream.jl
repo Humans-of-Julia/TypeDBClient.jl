@@ -49,7 +49,7 @@ function _process_request(bidirect_stream::BidirectionalStream, request::Proto.T
 
     res_channel = _open_result_channel(bidirect_stream, request, batch)
     # start a task to collect the results asynchronusly
-    result_task = @async collect_result(res_channel, bidirect_stream)
+    result_task = Threads.@spawn collect_result(res_channel, bidirect_stream)
 
     # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
     # dependent solutionresult = nothing
