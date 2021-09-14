@@ -50,6 +50,7 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
                 client_res = TransactionRequestBuilder.client_msg([tmp_res])
                 put!(out_channel, client_res)
             end
+    end
     @debug "process_direct_requests was closed"
 end
 
