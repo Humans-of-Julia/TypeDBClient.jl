@@ -49,18 +49,22 @@ end
 function response_worker(response_collector::ResponseCollector)
     resp_chan = response_collector.transact_result_channel
     collectors = response_collector.collectors
-    while isopen(resp_chan)
-        yield()
-        try
-            if isready(resp_chan)
-                req_result = take!(resp_chan)
-                tmp_result = _process_Transaction_Server(req_result)
-                put!(collectors[tmp_result.req_id], tmp_result)
-            end
-        catch ex
-            @info "response_worker shows an error \n
-            $ex"
-        end
+    # while isopen(resp_chan)
+    #     yield()
+    #     try
+    #         if isready(resp_chan)
+    #             req_result = take!(resp_chan)
+    #             tmp_result = _process_Transaction_Server(req_result)
+    #             put!(collectors[tmp_result.req_id], tmp_result)
+    #         end
+    #     catch ex
+    #         @info "response_worker shows an error \n
+    #         $ex"
+    #     end
+    # end
+    for req_result in resp_chan
+        tmp_result = _process_Transaction_Server(req_result)
+        put!(collectors[tmp_result.req_id], tmp_result)
     end
     @debug "response_collector is Done"
 end

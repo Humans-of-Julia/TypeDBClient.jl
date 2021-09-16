@@ -30,16 +30,9 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
     This function process the incoming request directly to the server
 """
 function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Channel{Proto.Transaction_Client})
-
-    while isopen(in_channel)
-        yield()
-        # if the grpc connection shows an error or is terminated for the channel
-        # the loop will exited
-        if isready(in_channel)
-            tmp_res = take!(in_channel)
-            client_res = TransactionRequestBuilder.client_msg([tmp_res])
-            put!(out_channel, client_res)
-        end
+    for tmp_res in in_channel
+        client_res = TransactionRequestBuilder.client_msg([tmp_res])
+        put!(out_channel, client_res)
     end
     @debug "process_direct_requests was closed"
 end
