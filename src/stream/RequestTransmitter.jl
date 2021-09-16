@@ -20,9 +20,7 @@ function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
         push!(disp_timer, batch_requests(dispatch_channel,input_channel))
     end
 
-    for _ in 1:2
-        Threads.@spawn process_direct_requests(direct_dispatch_channel, input_channel)
-    end
+    Threads.@spawn process_direct_requests(direct_dispatch_channel, input_channel)
 
     return Dispatcher(input_channel, direct_dispatch_channel, dispatch_channel,disp_timer)
 end
@@ -37,19 +35,11 @@ function process_direct_requests(in_channel::Channel{Proto.ProtoType}, out_chann
         yield()
         # if the grpc connection shows an error or is terminated for the channel
         # the loop will exited
-        tmp_res = nothing
-            if isready(in_channel)
-                try
-                    tmp_res = take!(in_channel)
-                 catch ex
-                    @info "take impossible"
-                    @info ex
-                 end
-            end
-            if tmp_res !== nothing
-                client_res = TransactionRequestBuilder.client_msg([tmp_res])
-                put!(out_channel, client_res)
-            end
+        if isready(in_channel)
+            tmp_res = take!(in_channel)
+            client_res = TransactionRequestBuilder.client_msg([tmp_res])
+            put!(out_channel, client_res)
+        end
     end
     @debug "process_direct_requests was closed"
 end
