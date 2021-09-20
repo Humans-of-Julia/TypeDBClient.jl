@@ -64,13 +64,15 @@ function safe_close(source_to_close)
 end
 
 function safe_close(channel::Channel)
-    res = @async begin
-                while isready(channel)
-                    yield()
-                    sleep(0.001)
-                end
-            end
-    wait(res)
+    if isready(channel)
+        @info "There is something wrong with the channel management. \n
+               Here an example what's in it:"
+        last_item = fetch(channel)
+        @info last_item
+        func_id = which_oneof(last_item, :res)
+        res = getproperty(last_item, func_id)
+        @info "kind of item: $res"
+    end
     close(channel)
 end
 
