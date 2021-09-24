@@ -67,12 +67,9 @@ end
 
 function commit(transaction::AbstractCoreTransaction)
     !is_open(transaction) && throw(TypeDBClientException(CLIENT_TRANSACTION_CLOSED))
-    @info "entered commit"
     try
         execute(transaction, TransactionRequestBuilder.commit_req())
-        @info "executed the commit transaction"
         safe_close(transaction)
-        @info "closed successfully the transaction"
     catch ex
         @info ex
         rethrow(ex)

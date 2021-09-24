@@ -49,7 +49,7 @@ function _process_request(bidirect_stream::BidirectionalStream, request::Proto.T
 
     res_channel = _open_result_channel(bidirect_stream, request, batch)
     # start a task to collect the results asynchronusly
-    result_task = Threads.@spawn collect_result(res_channel, bidirect_stream)
+    result_task = Threads.@spawn collect_result(res_channel, bidirect_stream, request.req_id)
 
     # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
     # dependent solutionresult = nothing
@@ -101,7 +101,7 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     the whole result set will be collected.
 """
 # TODO: Think about only use of take! Think about yielding not every time the loop comes back
-function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stream::BidirectionalStream)
+function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stream::BidirectionalStream, request_id::Bytes)
     answers = Vector{Transaction_Res_All}()
     while isopen(res_channel)
         yield()
@@ -110,7 +110,10 @@ function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stre
             req_push, loop_break = _is_stream_respart_done(tmp_result, bidirect_stream)
 
             req_push && push!(answers, tmp_result)
-            loop_break && break
+            if loop_break
+                delete!(bidirect_stream.resCollector, request_id)
+                break
+            end
         end
     end
     return answers
@@ -156,10 +159,19 @@ end
 
 
 function close(stream::BidirectionalStream)
-
-    safe_close(stream.input_channel)
-    safe_close(stream.output_channel)
     safe_close(stream.dispatcher)
+    task_to_close = @async begin
+        while true
+            yield()
+            isempty(stream.resCollector.collectors) && break
+            for (k,v) in stream.resCollector.collectors
+                if isready(v)
+                    delete!(stream.resCollector.collectors, k)
+                end
+            end
+        end
+    end
+    wait(task_to_close)
     safe_close(stream.resCollector)
     return true
 end

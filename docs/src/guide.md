@@ -112,11 +112,7 @@ Modules = [TypeDBClient]
 
 * get_has
 
-    [`get_has(transaction::AbstractCoreTransaction,
-                thing::AbstractThing,
-                attribute_type::Optional{AttributeType} = nothing,
-                attribute_types::Optional{Vector{<:AbstractAttributeType}} = nothing,
-                keys_only = false)`](@ref)
+    [`get_owns(r::RemoteConcept{C,T}, value_type::Optional{EnumType}=nothing,keys_only::Bool=false) where {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
 
 
 * get_instances
@@ -124,6 +120,13 @@ Modules = [TypeDBClient]
     [`get_instances(r::RemoteConcept{C,T}) where
         {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
 * get_owns
+
+    [`get_owns(
+        r::RemoteConcept{C,T},
+        value_type::Optional{EnumType}=nothing,
+        keys_only::Bool=false
+    ) where {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+
 * get_owners
 * get_plays
 * get_regex

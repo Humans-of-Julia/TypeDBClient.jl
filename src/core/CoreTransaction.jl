@@ -21,7 +21,7 @@ function CoreTransaction(session::CoreSession ,
                         sessionId::Bytes,
                         type::EnumType,
                         options::TypeDBOptions;
-                        request_timout::Real=session.request_timeout,
+                        request_timeout::Real=session.request_timeout,
                         use_blocking_stub::Bool = true,
                         error_break_time::Real = session.error_break_time)
 
@@ -31,10 +31,10 @@ function CoreTransaction(session::CoreSession ,
 
     type = type
     options = options
-    input_channel = Channel{Proto.Transaction_Client}(10)
+    input_channel = Channel{Proto.Transaction_Client}()
     proto_options = copy_to_proto(options, Proto.Options)
 
-    grpc_controller = gRPCController(request_timeout = request_timout)
+    grpc_controller = gRPCController(request_timeout = request_timeout)
 
     if use_blocking_stub
         req_result, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)

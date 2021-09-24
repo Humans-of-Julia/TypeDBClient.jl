@@ -25,7 +25,7 @@ will be collected.
 Attention! Don't put a new Id manually on the ResponsCollector. It wouldn't be thread safe
 """
 function Base.push!(resp_collector::ResponseCollector, req_id::Bytes)
-    res_channel = Channel{Transaction_Res_All}(10)
+    res_channel = Channel{Transaction_Res_All}()
 
     lock(resp_collector.access_lock) do
         resp_collector.collectors[req_id] = res_channel

@@ -145,6 +145,15 @@ function unset_owns(
     execute(r.transaction, req)
 end
 
+"""
+    get_owns(
+        r::RemoteConcept{C,T},
+        value_type::Optional{EnumType}=nothing,
+        keys_only::Bool=false
+    ) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+
+get_owns will give back all thingtypes which owns a given AttributeType
+"""
 function get_owns(
     r::RemoteConcept{C,T},
     value_type::Optional{EnumType}=nothing,
