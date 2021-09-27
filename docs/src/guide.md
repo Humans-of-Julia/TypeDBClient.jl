@@ -72,7 +72,7 @@ g.create_database(client, "typedb")
 # Be careful if you work with a schema session. No more session are allowed
 # until you close this session. Closing a session is essentially. Don't forget this
 # at the end of your work
-session = g.CoreSession(client, "typedb" , g.Proto.Session_Type.SCHEMA, request_timout=Inf)
+session = g.CoreSession(client, "typedb" , g.Proto.Session_Type.SCHEMA, request_timeout=Inf)
 
 # open a write transaction
 transaction = g.transaction(session, g.Proto.Transaction_Type.WRITE)
@@ -119,6 +119,7 @@ Modules = [TypeDBClient]
 
     [`get_instances(r::RemoteConcept{C,T}) where
         {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+
 * get_owns
 
     [`get_owns(
@@ -127,20 +128,105 @@ Modules = [TypeDBClient]
         keys_only::Bool=false
     ) where {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
 
+
 * get_owners
+
+    * Attribute
+
+    [`get_owners(transaction::AbstractCoreTransaction,
+        attribute::AbstractAttribute,
+        thing_type::Optional{AbstractThingType} = nothing)`](@ref)
+
+    * AttributeType
+
+    [`get_owners(r::RemoteConcept{C,T}, only_key = false) where {
+        C <: AbstractAttributeType, T <: AbstractCoreTransaction}`](@ref)
+
+
 * get_plays
+
+    [`get_plays(r::RemoteConcept{C,T}) where
+        {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+
+
 * get_regex
+
+    [`get_regex(r::RemoteConcept{C,T}) where {
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction}`](@ref)
+
+
 * get_rule
+
+    [`get_rule(log_mgr::AbstractLogicManager, label::String)`](@ref)
+
+
 * get_rules
+
+    [`get_rules(log_mgr::AbstractLogicManager)`](@ref)
+
+
 * get_subtypes
+
+    [`get_subtypes(r::RemoteConcept{C,T}) where
+    {C <: AbstractType,T <: AbstractCoreTransaction}`](@ref)
+
 * get_supertype
+
+    [`get_supertype(
+    r::RemoteConcept{C,T}) where {C <: AbstractType,T <: AbstractCoreTransaction}`](@ref)
+
 * get_supertypes
+
+    [`get_supertypes(r::RemoteConcept{C,T}) where
+    {C <: AbstractType,T <: AbstractCoreTransaction}`](@ref)
+
 * set_abstract
+
+    [`set_abstract(r::RemoteConcept{C,T}) where
+    {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+
 * set_has
+
+    [`set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)`](@ref)
+
 * set_label
+
+    [`set_label(r::RemoteConcept{C,T}, new_label_name::String) where
+    {C <: AbstractType,T <: AbstractCoreTransaction}`](@ref)
+
 * set_owns
+
+    [`set_owns(
+        r::RemoteConcept{C,T},
+        attribute_type::AbstractType,
+        is_key::Bool=false,
+        overriden_type::Optional{AbstractType}=nothing
+    ) where {C <: AbstractType,T <: AbstractCoreTransaction}`](@ref)
+
 * set_plays
+
+    [`function set_plays(
+        r::RemoteConcept{C,T},
+        role_type::AbstractRoleType,
+        overridden_role_type::Optional{AbstractRoleType}=nothing
+    ) where {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+
 * set_regex
+
+    [``set_regex(r::RemoteConcept{C,T}, regex::Optional{AbstractString}) where {
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction}](@ref)
+
 * set_supertype
+
+    [`set_supertype(r::RemoteConcept{C,T},
+                            super_type::AbstractThingType) where
+                            {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+
 * unset_abstract
+
+    [`unset_abstract(r::RemoteConcept{C,T}) where
+    {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+
 * unset_has
+
+    [`unset_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)`](@ref)

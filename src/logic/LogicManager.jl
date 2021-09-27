@@ -4,6 +4,11 @@ mutable struct LogicManager <: AbstractLogicManager
     transaction::AbstractCoreTransaction
 end
 
+"""
+    get_rule(log_mgr::AbstractLogicManager, label::String)
+
+The get_rule function will return the rule for the given label
+"""
 function get_rule(log_mgr::AbstractLogicManager, label::String)
     res = execute(log_mgr.transaction, LogicManagerRequestBuilder.get_rule_req(label))
     result = if which_oneof(res.logic_manager_res.get_rule_res, :res) == :rule
@@ -13,7 +18,11 @@ function get_rule(log_mgr::AbstractLogicManager, label::String)
              end
     return result
 end
+"""
+    get_rules(log_mgr::AbstractLogicManager)
 
+Here we get all rules in the schema exposed by the session.
+"""
 function get_rules(log_mgr::AbstractLogicManager)
     dbResult = stream(log_mgr.transaction, LogicManagerRequestBuilder.get_rules_req())
     answers = [res.logic_manager_res_part.get_rules_res_part.rules for res in dbResult]
@@ -22,6 +31,12 @@ function get_rules(log_mgr::AbstractLogicManager)
     return result
 end
 
+"""
+    put_rule(log_mgr::AbstractLogicManager, label::String, when::String, then::String)
+
+The function gives the possibility to formulate a rule and put it in the database. The when
+and then clauses will be written in TypeQL terms.
+"""
 function put_rule(log_mgr::AbstractLogicManager, label::String, when::String, then::String)
     res = execute(log_mgr.transaction, LogicManagerRequestBuilder.put_rule_req(label, when, then))
     result = Rule(res.logic_manager_res.get_rule_res.rule)

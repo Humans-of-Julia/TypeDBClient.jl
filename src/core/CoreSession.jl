@@ -25,7 +25,7 @@ function CoreSession(client::T,
                      database::String,
                      type::Int32,
                      options::TypeDBOptions = TypeDBOptions();
-                     request_timout::Real=Inf,
+                     request_timeout::Real=Inf,
                      error_time::Real = 5) where {T<:AbstractCoreClient}
     try
         #building open_request
@@ -57,7 +57,7 @@ function CoreSession(client::T,
                     is_open,
                     networkLatencyMillis,
                     t,
-                    request_timout,
+                    request_timeout,
                     error_time)
 
         # initialize the ongoing pulse request
@@ -115,7 +115,22 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
 end
 
 transaction(session::AbstractCoreSession, type::EnumType) = transaction(session, type, typedb_options_core())
-transaction(session::AbstractCoreSession, type::EnumType, blocking::Bool) = transaction(session, type, typedb_options_core(), blocking)
+transaction(session::AbstractCoreSession,
+    type::EnumType,
+    blocking::Bool) = transaction(session,
+                        type,
+                        typedb_options_core(),
+                        blocking)
+
+transaction(session::AbstractCoreSession,
+    type::EnumType,
+    blocking::Bool,
+    error_break_time::Real) = transaction(session,
+                                    type,
+                                    typedb_options_core(),
+                                    blocking,
+                                    error_break_time = error_break_time)
+
 function transaction(session::AbstractCoreSession,
             type::EnumType,
             options::TypeDBOptions,
@@ -127,7 +142,13 @@ function transaction(session::AbstractCoreSession,
             throw(TypeDBClientException(CLIENT_SESSION_CLOSED, bytes2hex(session.sessionID)))
         end
 
-        transactionRPC = CoreTransaction(session, session.sessionID, type, options; use_blocking_stub = blocking)
+        transactionRPC = CoreTransaction(session,
+                            session.sessionID,
+                            type,
+                            options,
+                            use_blocking_stub = blocking,
+                            error_break_time = error_break_time)
+
         session.transactions[transactionRPC.transaction_id] = transactionRPC
 
         return transactionRPC

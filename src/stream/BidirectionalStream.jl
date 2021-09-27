@@ -165,9 +165,7 @@ function close(stream::BidirectionalStream)
             yield()
             isempty(stream.resCollector.collectors) && break
             for (k,v) in stream.resCollector.collectors
-                if isready(v)
-                    delete!(stream.resCollector.collectors, k)
-                end
+                delete!(stream.resCollector.collectors, k)
             end
         end
     end

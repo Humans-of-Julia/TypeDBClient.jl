@@ -6,7 +6,7 @@
 end
 
 @given("connection open data session for database: typedb") do context
-    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timout=Inf)
+    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timeout=Inf)
     context[:session] = sess
     # Menat to proof open sessions. During tests it shows sometimes that sessions wasn't closed properly
     haskey(context, :sessions) ? push!(context[:sessions], sess) : context[:sessions] = [sess]

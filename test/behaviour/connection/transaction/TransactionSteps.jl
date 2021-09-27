@@ -181,7 +181,7 @@ end
 @given("connection open sessions for database:") do context
     dbs = [row[1] for row in context.datatable]
     for db in dbs
-        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timout=Inf)
+        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timeout=Inf)
     end
     count_result = length(context[:client].sessions) == length(dbs)
     @expect count_result

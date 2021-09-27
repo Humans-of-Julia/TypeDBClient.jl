@@ -6,7 +6,7 @@ struct CoreTransaction <: AbstractCoreTransaction
     bidirectional_stream::BidirectionalStream
     transaction_id::Optional{UUID}
     session_id::Bytes
-    request_timout::Real
+    request_timeout::Real
     session::AbstractCoreSession
     error_break_time::Real
 end
@@ -45,11 +45,11 @@ function CoreTransaction(session::CoreSession ,
     end
     output_channel = grpc_result_or_error(req_result, status, result->result)
 
-    open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
+    open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options, session.networkLatencyMillis)
 
     bidirectionalStream = BidirectionalStream(input_channel, output_channel, status, error_break_time = error_break_time)
     trans_id = uuid4()
-    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout, session, error_break_time)
+    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timeout, session, error_break_time)
 
     # The following is only for warming up Transaction. If we didn't do this
     # it could happen that a transaction reach a timeout.

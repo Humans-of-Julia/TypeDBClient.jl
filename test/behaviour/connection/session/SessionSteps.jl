@@ -16,7 +16,7 @@ end
     dbnames = [item[1] for item in context.datatable]
     sessions = g.CoreSession[]
     for name in dbnames
-        push!(sessions, g.CoreSession(context[:client], name, g.Proto.Session_Type.DATA, request_timout=Inf))
+        push!(sessions, g.CoreSession(context[:client], name, g.Proto.Session_Type.DATA, request_timeout=Inf))
     end
     context[:sessions] = sessions
     @expect length(dbnames) == length(sessions)
@@ -43,7 +43,7 @@ end
     sessions = g.CoreSession[]
     lock_add = ReentrantLock()
     @sync @async for db in dbnames
-        sess = g.CoreSession(context[:client], db, g.Proto.Session_Type.DATA, request_timout=Inf)
+        sess = g.CoreSession(context[:client], db, g.Proto.Session_Type.DATA, request_timeout=Inf)
         try
             lock(lock_add)
             push!(sessions, sess)
