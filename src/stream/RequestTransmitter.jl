@@ -57,7 +57,7 @@ function batch_requests(in_channel::Channel{Proto.ProtoType}, out_channel::Chann
                 end
             end
             if length(answers) > 0
-                put!(out_channel, TransactionRequestBuilder.client_msg(answers))
+                @async put!(out_channel, TransactionRequestBuilder.client_msg(answers))
             end
         catch ex
             throw(TypeDBClientException("batch_requests runner failure",ex))

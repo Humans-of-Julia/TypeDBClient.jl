@@ -12,6 +12,7 @@ g = TypeDBClient
     context[:cm] = ConceptManager(context[:transaction])
 end
 
+# When session opens transaction of type: write
 @when("session opens transaction of type: write") do context
 
     if haskey(context, :transaction)

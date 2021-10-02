@@ -32,7 +32,7 @@ function single_request(bidirect_stream::BidirectionalStream, request::T, batch:
 """
 function single_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
     answer = _process_request(bidirect_stream, request, batch)
-    return answer[1]
+    return isempty(answer) ? nothing : answer[1]
 end
 
 """
