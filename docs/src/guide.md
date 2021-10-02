@@ -4,11 +4,9 @@ CurrentModule = TypeDBClient
 
 # User Guide
 
-**This is just a preview yet**
-
 ## Installation
 
-To use this client, you need a compatible TypeDB Server running. Visit the Compatibility Table
+To use this client, you need a compatible TypeDB Server running. Visit the Compatibility Table (soon to be published)
 
 This pkg is not yet registered on the JuliaHub. As of now you would need to install it directly from the GitHub repo.
 
@@ -22,11 +20,11 @@ First make sure, the TypeDB server is running. It is described here in the [Type
 
 In the Julia REPL or in your source run
 
-` using TypeDBCLient`
+` using TypeDBClient`
 
 You have two choices:
 
-* If you are only interested on working interactivly on wrangling some data interactivly you can use the more simplified API. An example for this is:
+* If you are only interested in working interactivly, you can use the more simplified API. An example for this is:
 ```julia
 using TypeDBClient: dbconnect, open, read, write, match, insert, commit, create_database
 
@@ -54,7 +52,7 @@ dbconnect("127.0.0.1") do client
 end
 ```
 
-For working with data using TypeQL please refer to the syntax on [TypeQL Documentation](https://docs.vaticle.com/docs/query/overview)
+For working with data using TypeQL, please refer to the syntax on [TypeQL Documentation](https://docs.vaticle.com/docs/query/overview)
 
 * You want the full stack at your fingertips. Then you can use the following commands:
 ```julia
@@ -85,9 +83,9 @@ results = g.match(transaction, raw"""match $x sub thing;""")
 # If you want work further in with the session, go ahead else close the session
 close(session)
 ```
-If you want use the full potential of the client you should read the documentation
+If you want to use the full potential of the client you should read the documentation
 of the API functions. There you will find all you need for working programmatically in the database.
-Otherwise it is even possible to get most of the time equally results using TypeQL.
+Otherwise, it is even possible to get equal results using TypeQL.
 
 ```@autodocs
 Modules = [TypeDBClient]
