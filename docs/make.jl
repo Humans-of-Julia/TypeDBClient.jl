@@ -2,7 +2,7 @@ using TypeDBClient
 using Documenter
 
 
-@info "Makeing documentation..."
+@info "Making documentation..."
 makedocs(;
     modules=[TypeDBClient],
     clean = true,
