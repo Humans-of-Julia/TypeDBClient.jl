@@ -9,7 +9,7 @@ CurrentModule = TypeDBClient
 03.10.2021
 
 - more work on docs
-- -release preparations
+- release preparations
 
 ***
 27.09.2021
