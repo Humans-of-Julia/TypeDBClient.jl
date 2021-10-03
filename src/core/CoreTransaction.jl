@@ -79,7 +79,7 @@ function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTr
     try
         result = single_request(transaction.bidirectional_stream, request, batch)
     catch ex
-        safe_close(transaction)
+        close(transaction)
         rethrow(ex)
     end
 
@@ -93,7 +93,7 @@ function stream(transaction::T, request::R, batch::Bool = true) where {T<:Abstra
     try
         result = stream_request(transaction.bidirectional_stream, request, batch)
     catch ex
-        safe_close(transaction)
+        close(transaction)
         rethrow(ex)
     end
 
