@@ -15,7 +15,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     isOpen::Bool
     networkLatencyMillis::Int
     timer::Optional{Controller}
-    request_timeout::Real;
+    request_timeout::Real
     error_break_time::Real
 end
 
@@ -114,22 +114,22 @@ function make_pulse_request(session::AbstractCoreSession, controller::Controller
     end
 end
 
-transaction(session::AbstractCoreSession, type::EnumType) = transaction(session, type, typedb_options_core())
+
+transaction(session::AbstractCoreSession,
+            type::EnumType;
+            error_break_time::Real = session.error_break_time) =
+                transaction(session,
+                    type,
+                    typedb_options_core(),
+                    true,
+                    error_break_time = error_break_time)
+
 transaction(session::AbstractCoreSession,
     type::EnumType,
     blocking::Bool) = transaction(session,
                         type,
                         typedb_options_core(),
                         blocking)
-
-transaction(session::AbstractCoreSession,
-    type::EnumType,
-    blocking::Bool,
-    error_break_time::Real) = transaction(session,
-                                    type,
-                                    typedb_options_core(),
-                                    blocking,
-                                    error_break_time = error_break_time)
 
 function transaction(session::AbstractCoreSession,
             type::EnumType,

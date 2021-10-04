@@ -16,7 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
-@actual
+
 Feature: Concept Attribute Type
 
   Background:
@@ -275,7 +275,7 @@ Feature: Concept Attribute Type
       | real-name  |
       | first-name |
       | last-name  |
-@failure
+
   Scenario: Attribute types cannot subtype itself
     When put attribute type: is-open, with value type: boolean
     When put attribute type: age, with value type: long

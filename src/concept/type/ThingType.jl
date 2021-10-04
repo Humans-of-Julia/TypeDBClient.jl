@@ -70,8 +70,12 @@ function get_supertypes(r::RemoteConcept{C,T}) where
 
     req = TypeRequestBuilder.get_supertypes_req(r.concept.label)
     res = execute(r.transaction, req)
-    typs = res.type_res_part.type_get_supertypes_res_part.types
-    return instantiate.(typs)
+    if res !== nothing
+        typs = res.type_res_part.type_get_supertypes_res_part.types
+        return instantiate.(typs)
+    else
+        return []
+    end
 end
 
 
@@ -87,8 +91,12 @@ function get_subtypes(r::RemoteConcept{C,T}) where
 
     req = TypeRequestBuilder.get_subtypes_req(r.concept.label)
     res = execute(r.transaction, req)
-    typs = res.type_res_part.type_get_subtypes_res_part.types
-    return instantiate.(typs)
+    if res !== nothing
+        typs = res.type_res_part.type_get_subtypes_res_part.types
+        return instantiate.(typs)
+    else
+        return []
+    end
 end
 
 """

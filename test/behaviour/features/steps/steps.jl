@@ -34,6 +34,16 @@ end
 end
 
 @afterscenario() do context, scenario
+  if haskey(context, :transaction)
+    close(context[:transaction])
+    context[:transaction] = nothing
+  end
+
+  if haskey(context, :session)
+    close(context[:session])
+    context[:session] = nothing
+  end
+
   delete_all_databases(context[:client])
 end
 

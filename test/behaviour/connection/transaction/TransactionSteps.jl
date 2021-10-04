@@ -15,11 +15,20 @@ end
 # When session opens transaction of type: write
 @when("session opens transaction of type: write") do context
 
-    if haskey(context, :transaction)
-        context[:transaction] !== nothing && g.close(context[:transaction])
+    if haskey(context, :transaction) && context[:transaction] !== nothing
+        g.close(context[:transaction])
+        context[:transaction] = nothing
     end
 
-    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
+    if context[:session].type == g.Proto.Session_Type.SCHEMA
+        close(context[:session])
+        context[:session] = nothing
+        context[:session] = g.CoreSession(context[:client], "typedb",
+                                            g.Proto.Session_Type.SCHEMA,
+                                            request_timeout = Inf)
+    end
+
+    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE, error_break_time = 6)
     @expect transaction !== nothing
     context[:transaction] = transaction
     # only a convinience method to prevent paperwork
