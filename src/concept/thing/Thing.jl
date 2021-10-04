@@ -16,6 +16,11 @@ function instantiate(t::Proto.Thing)
     end
 end
 
+"""
+    set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
+
+For a given Thing the attribute will set as associated.
+"""
 function set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
     res_proto_attribute = get_proto_thing(ConceptManager(transaction), attribute.iid)
     has_req = ThingRequestBuilder.set_has_req(thing.iid, res_proto_attribute)
@@ -24,6 +29,11 @@ function set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, att
     return nothing
 end
 
+"""
+    unset_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
+
+Here an given attribute will be detached from a given thing
+"""
 function unset_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)
     res_proto_attribute = get_proto_thing(ConceptManager(transaction), attribute.iid)
     unset_has_req = ThingRequestBuilder.unset_has_req(thing.iid, res_proto_attribute)
@@ -32,6 +42,17 @@ function unset_has(transaction::AbstractCoreTransaction, thing::AbstractThing, a
     return nothing
 end
 
+"""
+    get_has(transaction::AbstractCoreTransaction,
+        thing::AbstractThing,
+        attribute_type::Optional{AttributeType} = nothing,
+        attribute_types::Optional{Vector{<:AbstractAttributeType}} = nothing,
+        keys_only = false)
+
+With this function it is possible to get attributes of an entity or a relation.
+Optional it is possible to restrict the type(s) of attributes which will retrieved from
+the database. You can decide between only one ore more than one type.
+"""
 function get_has(transaction::AbstractCoreTransaction,
                 thing::AbstractThing,
                 attribute_type::Optional{AttributeType} = nothing,

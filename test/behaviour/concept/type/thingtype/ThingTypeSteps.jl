@@ -27,16 +27,29 @@ function _supertypes_contain(context, abstract_type::Type{<:g.AbstractThingType}
     return res_array
 end
 
-function _supertypes_contain(context, ::Type{g.RoleType}, relation_name::String, role_name::String)
+function _supertypes_contain(context, ::Type{g.RoleType},
+    relation_name::String,
+    role_name::String;
+    print_role_types::Bool = false)
+
     db_roles = [_split_role(db[1])[1]=>_split_role(db[1])[2] for db in context.datatable]
     res = g.get(ConceptManager(context[:transaction]),
                 RelationType,
                 relation_name)
     role_play = g.relation_type_get_relates_for_role_label(g.as_remote(res, context[:transaction]), role_name)
     res_supertypes = g.get_supertypes(g.as_remote(role_play, context[:transaction]))
+
+    isempty(res_supertypes) && println("Supertypes of $relation_name - $role_name aren't there")
+
     res_array = Bool[]
+
+    print_role_types && @info "Supertypes:"
+    print_role_types && println.(res_supertypes)
+
+    print_role_types && @info "Table should be there"
     for i in 1:length(db_roles)
         super_role = RoleType(g.Label(db_roles[i].first, db_roles[i].second), false)
+        print_role_types && println(super_role)
         push!(res_array, in(super_role, res_supertypes))
     end
     return res_array
@@ -46,6 +59,9 @@ function _subtypes_contain(context, abstract_type::Type{<:g.AbstractThingType}, 
     sub_types = [db[1] for db in context.datatable]
     attr = g.get(ConceptManager(context[:transaction]), abstract_type, attr_name)
     res_types = g.get_subtypes(g.as_remote(attr, context[:transaction]))
+
+    isempty(res_types) && println("Subtypes of $attr_name isn't there")
+
     res_array = Bool[]
     for i in 1:length(sub_types)
         sub_type = g.get(context[:cm], abstract_type, sub_types[i])
@@ -75,6 +91,9 @@ function _get_owns_contain(context, abstract_type::Type{<:g.AbstractThingType}, 
     types_owns = g.get_owns(g.as_remote(attr, context[:transaction]),
                                 nothing,
                                 is_key)
+
+    isempty(types_owns) && println("Owner $owner owns no attribute as it should be")
+
     res_array = Bool[]
     for i in 1:length(key_types)
         key_type = g.get(ConceptManager(context[:transaction]),
@@ -87,9 +106,12 @@ function _get_owns_contain(context, abstract_type::Type{<:g.AbstractThingType}, 
 end
 
 
-function _get_players_contain(relation_name::String, role_name::String, context)
+function _get_players_contain(relation_name::String, role_name::String, context; should_contain::Bool = true)
     db = [db[1] for db in context.datatable]
     res = g.get_players(context[:transaction], g.Label(relation_name,role_name))
+
+    isempty(res) && should_contain && println("Relation $relation_name with Role $role_name haven't players")
+
     res_array = Bool[]
     for i in 1:length(db)
         entity = g.get(ConceptManager(context[:transaction]),
@@ -107,6 +129,9 @@ function _get_playing_roles_contain(player::String, player_type::Type{<:g.Abstra
                     player)
     res_array = Bool[]
     play_roles = g.get_plays(g.as_remote(attr, context[:transaction]))
+
+    isempty(play_roles) && println("played_roles of $player isn't there")
+
     for i in 1:length(db)
         role = RoleType(g.Label(db[i].first, db[i].second), false)
         push!(res_array, in(role, play_roles))

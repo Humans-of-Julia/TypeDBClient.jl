@@ -141,8 +141,6 @@ Feature: Concept Relation Type and Role Type
     Then relation(marriage) unset related role: husband
     Then transaction commits
 
-
-
   Scenario: Relation and role types can change labels
     When put relation type: parentship
     When relation(parentship) set relates role: parent
@@ -181,8 +179,6 @@ Feature: Concept Relation Type and Role Type
     Then relation(employment) get label: employment
     Then relation(employment) get role(employee) get label: employee
     Then relation(employment) get role(employer) get label: employer
-
-
 
   Scenario: Relation and role types can be set to abstract
     When put relation type: marriage
@@ -770,7 +766,6 @@ Feature: Concept Relation Type and Role Type
       | employment-hours     |
       | contractor-hours     |
       | parttime-hours       |
-
 
 
   Scenario: Relation types can override inherited keys and attributes

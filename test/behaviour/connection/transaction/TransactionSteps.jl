@@ -12,13 +12,23 @@ g = TypeDBClient
     context[:cm] = ConceptManager(context[:transaction])
 end
 
+# When session opens transaction of type: write
 @when("session opens transaction of type: write") do context
 
-    if haskey(context, :transaction)
-        context[:transaction] !== nothing && g.close(context[:transaction])
+    if haskey(context, :transaction) && context[:transaction] !== nothing
+        g.close(context[:transaction])
+        context[:transaction] = nothing
     end
 
-    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
+    if context[:session].type == g.Proto.Session_Type.SCHEMA
+        close(context[:session])
+        context[:session] = nothing
+        context[:session] = g.CoreSession(context[:client], "typedb",
+                                            g.Proto.Session_Type.SCHEMA,
+                                            request_timeout = Inf)
+    end
+
+    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE, error_break_time = 6)
     @expect transaction !== nothing
     context[:transaction] = transaction
     # only a convinience method to prevent paperwork
@@ -181,7 +191,7 @@ end
 @given("connection open sessions for database:") do context
     dbs = [row[1] for row in context.datatable]
     for db in dbs
-        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timout=Inf)
+        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timeout=Inf)
     end
     count_result = length(context[:client].sessions) == length(dbs)
     @expect count_result

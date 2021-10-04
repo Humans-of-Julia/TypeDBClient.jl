@@ -6,7 +6,7 @@
 end
 
 @given("connection open data session for database: typedb") do context
-    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timout=Inf)
+    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timeout=Inf)
     context[:session] = sess
     # Menat to proof open sessions. During tests it shows sometimes that sessions wasn't closed properly
     haskey(context, :sessions) ? push!(context[:sessions], sess) : context[:sessions] = [sess]
@@ -28,7 +28,22 @@ end
     g.safe_close.(collect(values(context[:client].sessions)))
 end
 
+@beforescenario() do context, scenario
+    client = g.CoreClient("127.0.0.1",1729)
+    delete_all_databases(client)
+end
+
 @afterscenario() do context, scenario
+  if haskey(context, :transaction)
+    close(context[:transaction])
+    context[:transaction] = nothing
+  end
+
+  if haskey(context, :session)
+    close(context[:session])
+    context[:session] = nothing
+  end
+
   delete_all_databases(context[:client])
 end
 

@@ -11,7 +11,10 @@ function ResponseCollector(transact_result_channel::Channel{Proto.Transaction_Se
     collectors = Dict{Bytes,Channel{Transaction_Res_All}}()
     access_lock = ReentrantLock()
     resp_col = ResponseCollector(collectors, transact_result_channel, access_lock)
-    @async response_worker(resp_col)
+    for _ in 1:3
+        Threads.@spawn response_worker(resp_col)
+    end
+
     return resp_col
 end
 
@@ -22,13 +25,12 @@ will be collected.
 Attention! Don't put a new Id manually on the ResponsCollector. It wouldn't be thread safe
 """
 function Base.push!(resp_collector::ResponseCollector, req_id::Bytes)
-    res_channel = Channel{Transaction_Res_All}(10)
-    try
-        lock(resp_collector.access_lock)
+    res_channel = Channel{Transaction_Res_All}()
+
+    lock(resp_collector.access_lock) do
         resp_collector.collectors[req_id] = res_channel
-    finally
-        unlock(resp_collector.access_lock)
     end
+
     return res_channel
 end
 
@@ -40,30 +42,19 @@ Attention! Don't remove a result_channel manually from the Dictionary.
 This will not be thread safe.
 """
 function Base.delete!(resp_collector::ResponseCollector, id::Bytes)
-    try
-        lock(resp_collector.access_lock)
+
+    lock(resp_collector.access_lock) do
         close(resp_collector.collectors[id])
         delete!(resp_collector.collectors, id)
-    finally
-        unlock(resp_collector.access_lock)
     end
 end
 
 function response_worker(response_collector::ResponseCollector)
     resp_chan = response_collector.transact_result_channel
     collectors = response_collector.collectors
-    while isopen(resp_chan)
-        yield()
-        try
-            if isready(resp_chan)
-                req_result = take!(resp_chan)
-                tmp_result = _process_Transaction_Server(req_result)
-                put!(collectors[tmp_result.req_id], tmp_result)
-            end
-        catch ex
-            @info "response_worker shows an error \n
-            $ex"
-        end
+    for req_result in resp_chan
+        tmp_result = _process_Transaction_Server(req_result)
+        put!(collectors[tmp_result.req_id], tmp_result)
     end
     @debug "response_collector is Done"
 end

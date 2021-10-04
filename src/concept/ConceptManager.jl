@@ -80,7 +80,7 @@ end
 
 function execute(cm::ConceptManager, req::Proto.Transaction_Req)
     result = execute(cm.transaction, req)
-    return result.concept_manager_res
+    return result !== nothing ? result.concept_manager_res : result
 end
 
 # get_proto_thing is supposed to be a vehicle to get things in its proto form to get

@@ -33,6 +33,13 @@ function create_database(client::AbstractCoreClient, name::String)
     return grpc_result_or_error(req_result, status, result->true)
 end
 
+"""
+
+    delete_database(client::AbstractCoreClient, name::String)
+
+Delete the database for the given name without any question. Be carful. There is no
+recovery function within this call.
+"""
 function delete_database(client::AbstractCoreClient, name::String)
     database = get_database(client, name)
     db = DatabaseRequestBuilder

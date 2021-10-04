@@ -28,6 +28,13 @@ function Attribute(t::Proto.Thing)
     end
 end
 
+"""
+    get_owners(transaction::AbstractCoreTransaction,
+        attribute::AbstractAttribute,
+        thing_type::Optional{AbstractThingType} = nothing)
+
+gives back all things has this attribute
+"""
 function get_owners(
     transaction::AbstractCoreTransaction,
     attribute::AbstractAttribute,

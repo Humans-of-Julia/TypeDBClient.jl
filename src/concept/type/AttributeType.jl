@@ -88,30 +88,55 @@ function get_subtypes(r::RemoteConcept{C,T}) where {
     end
 end
 
+"""
+    get_owners(r::RemoteConcept{C,T}, only_key = false) where {
+        C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+
+Returns all ThingTypes which owns the given AttributeType
+"""
 function get_owners(r::RemoteConcept{C,T}, only_key = false) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction
-}
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+
     req = AttributeTypeRequestBuilder.get_owners_req(r.concept.label, only_key)
     res = stream(r.transaction, req)
     return instantiate.(collect(Iterators.flatten(
         r.type_res_part.attribute_type_get_owners_res_part.owners for r in res)))
 end
 
+"""
+    get_regex(r::RemoteConcept{C,T}) where {
+        C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+
+For AttributeTypes with the value type String it is possible to set a regex pattern
+to proof the incoming string to fulfill the pattern. Otherwise the insert will fail.
+The function wil give back a regex string if set. The regex string follows the conventions
+of the Java programming language.
+"""
 function get_regex(r::RemoteConcept{C,T}) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction
-}
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+
     req = AttributeTypeRequestBuilder.get_regex_req(r.concept.label)
     res = execute(r.transaction, req)
     regex = res.type_res.attribute_type_get_regex_res.regex
     return isempty(regex) ? nothing : regex
 end
 
+
+"""
+    set_regex(r::RemoteConcept{C,T}, regex::Optional{AbstractString}) where {
+        C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+
+For AttributeTypes with the value type String it is possible to set a regex pattern
+to proof the incoming string to fulfill the pattern. Otherwise the insert will fail.
+The function wil set a regex string to a given attribute. The regex string follows the
+conventionsmof the Java programming language.
+"""
 function set_regex(r::RemoteConcept{C,T}, regex::Optional{AbstractString}) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction
-}
+    C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+
     regex_str = regex === nothing ? "" : regex
     req = AttributeTypeRequestBuilder.set_regex_req(r.concept.label, regex_str)
-    res = execute(r.transaction, req)
+    return execute(r.transaction, req)
 end
 
 proto_attribute_value(value::Bool) = Proto.Attribute_Value(; boolean = value)

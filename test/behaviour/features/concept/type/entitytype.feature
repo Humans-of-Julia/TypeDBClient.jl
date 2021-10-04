@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@actual
 Feature: Concept Entity Type
 
   Background:
