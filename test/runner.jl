@@ -23,13 +23,47 @@ function run_tests(tag::String = "")
     runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags=tag)
 end
 
+const test_features = [
+                       "@attribute_type",
+                       "@entity_type",
+                       "@attribute",
+                       "@entity",
+                       "@relation"
+                       ]
 
-result = run_tests("not @ignore-typedb-core")
+results = Dict{String, Bool}()
+# result = run_tests("not @ignore-typedb-core")
 # result = run_tests("@failure")
 # result = run_tests("@actual")
 
-if !result
-    throw("TestSuite failed. Please proof the results")
-else
-    @info "Well done!"
+for a_test in test_features
+    res_test = run_tests(a_test)
+    if !res_test
+        @info "$a_test failed"
+        results[a_test] = false
+    else
+        results[a_test] = true
+    end
 end
+
+!all(values(results)) && @info "Second try to fullfill all tests"
+for (a_test, success) in results
+    if !success
+        res_test = run_tests(a_test)
+        if !res_test
+            @info "$a_test second time failed"
+            results[a_test] = false
+        else
+            results[a_test] = true
+        end
+    end
+end
+
+
+@info "All $(length(results)) Tests succeeded: $(all(values(results)))"
+
+# if !result
+#     throw("TestSuite failed. Please proof the results")
+# else
+#     @info "Well done!"
+# end

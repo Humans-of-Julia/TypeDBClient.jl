@@ -5,9 +5,9 @@ module DatabaseManagerRequestBuilder
 
 using ..TypeDBClient: Proto
 
-create_req(name::String) = Proto.CoreDatabaseManager_Create_Req(; name)
+create_req(name::AbstractString) = Proto.CoreDatabaseManager_Create_Req(; name)
 
-contains_req(name::String) = Proto.CoreDatabaseManager_Contains_Req(; name)
+contains_req(name::AbstractString) = Proto.CoreDatabaseManager_Contains_Req(; name)
 
 all_req() = Proto.CoreDatabaseManager_All_Req()
 
@@ -18,9 +18,9 @@ module DatabaseRequestBuilder
 
 using ..TypeDBClient: Proto
 
-schema_req(name::String) = Proto.CoreDatabase_Schema_Req(; name)
+schema_req(name::AbstractString) = Proto.CoreDatabase_Schema_Req(; name)
 
-delete_req(name::String) = Proto.CoreDatabase_Delete_Req(; name)
+delete_req(name::AbstractString) = Proto.CoreDatabase_Delete_Req(; name)
 
 end
 
@@ -29,7 +29,7 @@ module SessionRequestBuilder
 
 using ..TypeDBClient: Proto, EnumType, Bytes
 
-function open_req(database::String, _type::EnumType, options::Proto.Options)
+function open_req(database::AbstractString, _type::EnumType, options::Proto.Options)
     return Proto.Session_Open_Req(; database, _type, options)
 end
 
@@ -93,7 +93,7 @@ for (f, t) in (
     func = Symbol("$f")
     type = Symbol("QueryManager_$t")
     @eval begin
-        function $func(query::String, options::Proto.Options = Proto.Options())
+        function $func(query::AbstractString, options::Proto.Options = Proto.Options())
             $f = Proto.$type(; query)
             query_manager_req = Proto.QueryManager_Req(; $f, options)
             return Proto.Transaction_Req(; query_manager_req)
@@ -114,32 +114,32 @@ function _treq(; kwargs...)
     )
 end
 
-function put_entity_type_req(label::String)
+function put_entity_type_req(label::AbstractString)
     return _treq(
         put_entity_type_req = Proto.ConceptManager_PutEntityType_Req(; label)
     )
 end
 
-function put_relation_type_req(label::String)
+function put_relation_type_req(label::AbstractString)
     return _treq(
         put_relation_type_req = Proto.ConceptManager_PutRelationType_Req(; label)
     )
 end
 
-function put_attribute_type_req(label::String, value_type::EnumType)
+function put_attribute_type_req(label::AbstractString, value_type::EnumType)
     return _treq(
         put_attribute_type_req =
             Proto.ConceptManager_PutAttributeType_Req(; label, value_type)
     )
 end
 
-function get_thing_type_req(label::String)
+function get_thing_type_req(label::AbstractString)
     return _treq(
         get_thing_type_req = Proto.ConceptManager_GetThingType_Req(; label)
     )
 end
 
-function get_thing_req(iid::String)
+function get_thing_req(iid::AbstractString)
     return _treq(
         get_thing_req = Proto.ConceptManager_GetThing_Req(; iid = bytes(iid))
     )
@@ -160,13 +160,13 @@ function _treq(; kwargs...)
     )
 end
 
-function put_rule_req(label::String, when::String, then::String)
+function put_rule_req(label::AbstractString, when::AbstractString, then::AbstractString)
     return _treq(
         put_rule_req = Proto.LogicManager_PutRule_Req(; label, when, then)
     )
 end
 
-function get_rule_req(label::String)
+function get_rule_req(label::AbstractString)
     return _treq(
         get_rule_req = Proto.LogicManager_GetRule_Req(; label)
     )
@@ -198,7 +198,7 @@ function is_abstract_req(label::Label)
     )
 end
 
-function set_label_req(label::Label, new_label::String)
+function set_label_req(label::Label, new_label::AbstractString)
     return _treq(label.name, label.scope;
         type_set_label_req = Proto.Type_SetLabel_Req(
             label = new_label
@@ -399,7 +399,7 @@ function get_relates_req(label::Label)
 end
 
 function set_relates_req(
-    label::Label, role_label::String, overridden_label::Optional{String})
+    label::Label, role_label::AbstractString, overridden_label::Optional{String})
 
     relation_type_set_relates_req = overridden_label !== nothing ?
                                         Proto.RelationType_SetRelates_Req(;
@@ -419,7 +419,7 @@ function unset_relates_req(label::Label, role_label::Optional{String})
     )
 end
 
-function relation_type_get_relates_for_role_label_req(label::Label, role_label::String)
+function relation_type_get_relates_for_role_label_req(label::Label, role_label::AbstractString)
     return _treq(label.name, label.scope;
             relation_type_get_relates_for_role_label_req = Proto.RelationType_GetRelatesForRoleLabel_Req(;
             label = role_label
@@ -473,9 +473,9 @@ module ThingRequestBuilder
 using ..TypeDBClient: Proto, Label, Bytes, bytes, Optional
 
 proto_thing(iid::Bytes) = Proto.Thing(; iid)
-proto_thing(iid::String) = proto_thing(bytes(iid))
+proto_thing(iid::AbstractString) = proto_thing(bytes(iid))
 
-function _thing_req(iid::String; kwargs...)
+function _thing_req(iid::AbstractString; kwargs...)
     return Proto.Transaction_Req(
         thing_req = Proto.Thing_Req(
             ; iid = bytes(iid), kwargs...
@@ -483,43 +483,43 @@ function _thing_req(iid::String; kwargs...)
     )
 end
 
-function is_inferred_req(iid::String)
+function is_inferred_req(iid::AbstractString)
     return _thing_req(iid;
         thing_is_inferred_req = Proto.Thing_IsInferred_Req()
     )
 end
 
-function get_has_req(iid::String, attribute_types::AbstractVector{Proto._Type})
+function get_has_req(iid::AbstractString, attribute_types::AbstractVector{Proto._Type})
     return _thing_req(iid;
         thing_get_has_req = Proto.Thing_GetHas_Req(; attribute_types)
     )
 end
 
-function get_has_req(iid::String, keys_only::Bool)
+function get_has_req(iid::AbstractString, keys_only::Bool)
     return _thing_req(iid;
         thing_get_has_req = Proto.Thing_GetHas_Req(; keys_only)
     )
 end
 
-function set_has_req(iid::String, attribute::Proto.Thing)
+function set_has_req(iid::AbstractString, attribute::Proto.Thing)
     return _thing_req(iid;
         thing_set_has_req = Proto.Thing_SetHas_Req(; attribute)
     )
 end
 
-function unset_has_req(iid::String, attribute::Proto.Thing)
+function unset_has_req(iid::AbstractString, attribute::Proto.Thing)
     return _thing_req(iid;
         thing_unset_has_req = Proto.Thing_UnsetHas_Req(; attribute)
     )
 end
 
-function get_playing_req(iid::String)
+function get_playing_req(iid::AbstractString)
     return _thing_req(iid;
         thing_get_playing_req = Proto.Thing_GetPlaying_Req()
     )
 end
 
-function get_relations_req(iid::String, role_types::Optional{AbstractVector{Proto._Type}})
+function get_relations_req(iid::AbstractString, role_types::Optional{AbstractVector{Proto._Type}})
     thing_get_relations_req = Proto.Thing_GetRelations_Req()
     if role_types !== nothing
         thing_get_relations_req.role_types = role_types
@@ -529,19 +529,19 @@ function get_relations_req(iid::String, role_types::Optional{AbstractVector{Prot
     )
 end
 
-function delete_req(iid::String)
+function delete_req(iid::AbstractString)
     return _thing_req(iid;
         thing_delete_req = Proto.Thing_Delete_Req()
     )
 end
 
-function attribute_get_owners_req(iid::String, thing_type::Proto._Type)
+function attribute_get_owners_req(iid::AbstractString, thing_type::Proto._Type)
     return _thing_req(iid;
         attribute_get_owners_req = Proto.Attribute_GetOwners_Req(; thing_type)
     )
 end
 
-function attribute_get_owners_req(iid::String)
+function attribute_get_owners_req(iid::AbstractString)
     return _thing_req(iid;
         attribute_get_owners_req = Proto.Attribute_GetOwners_Req()
     )
@@ -555,7 +555,7 @@ module RelationRequestBuilder
 using ..TypeDBClient: Proto, Optional
 using ..ThingRequestBuilder: _thing_req
 
-function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
+function add_player_req(iid::AbstractString, role_type::Proto._Type, player::Proto.Thing)
     return _thing_req(iid;
         relation_add_player_req = Proto.Relation_AddPlayer_Req(;
             role_type,
@@ -564,7 +564,7 @@ function add_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing
     )
 end
 
-function remove_player_req(iid::String, role_type::Proto._Type, player::Proto.Thing)
+function remove_player_req(iid::AbstractString, role_type::Proto._Type, player::Proto.Thing)
     return _thing_req(iid;
         relation_remove_player_req = Proto.Relation_RemovePlayer_Req(;
             role_type,
@@ -573,7 +573,7 @@ function remove_player_req(iid::String, role_type::Proto._Type, player::Proto.Th
     )
 end
 
-function get_players_req(iid::String, role_types::Optional{AbstractVector{Proto._Type}} = nothing)
+function get_players_req(iid::AbstractString, role_types::Optional{AbstractVector{Proto._Type}} = nothing)
 
     relation_get_players_req = Proto.Relation_GetPlayers_Req()
     if role_types !== nothing
@@ -584,13 +584,13 @@ function get_players_req(iid::String, role_types::Optional{AbstractVector{Proto.
     )
 end
 
-function get_players_by_role_type_req(iid::String)
+function get_players_by_role_type_req(iid::AbstractString)
     return _thing_req(iid;
         relation_get_players_by_role_type_req = Proto.Relation_GetPlayersByRoleType_Req()
     )
 end
 
-function get_relating_req(iid::String)
+function get_relating_req(iid::AbstractString)
     return _thing_req(iid;
         relation_get_players_req = Proto.Relation_GetRelating_Req()
     )
@@ -605,7 +605,7 @@ using ..TypeDBClient: Proto, Optional
 using ..ThingRequestBuilder: _thing_req
 using TimeZones: ZonedDateTime
 
-function get_owners_req(iid::String, owner_type::Optional{Proto._Type})
+function get_owners_req(iid::AbstractString, owner_type::Optional{Proto._Type})
     return _thing_req(iid;
         relation_get_owners_req = Proto.Relation_GetOwners_Req(),
         thing_type = owner_type
@@ -615,7 +615,7 @@ end
 proto_boolean_attribute_value(value::Bool) = Proto.Attribute_Value(; boolean = value)
 proto_long_attribute_value(value::Int64) = Proto.Attribute_Value(; long = value)
 proto_double_attribute_value(value::Float64) = Proto.Attribute_Value(; double = value)
-proto_string_attribute_value(value::String) = Proto.Attribute_Value(; string = value)
+proto_string_attribute_value(value::AbstractString) = Proto.Attribute_Value(; string = value)
 
 function proto_date_time_attribute_value(value::ZonedDateTime)
     epoch_millis = value.utc_datetime.instant
@@ -629,7 +629,7 @@ module RuleRequestBuilder
 
 using ..TypeDBClient: Proto
 
-function set_label_req(current_label::String, new_label::String)
+function set_label_req(current_label::AbstractString, new_label::AbstractString)
     return Proto.Transaction_Req(
         rule_req = Proto.Rule_Req(
             label = current_label,
@@ -640,7 +640,7 @@ function set_label_req(current_label::String, new_label::String)
     )
 end
 
-function delete_req(label::String)
+function delete_req(label::AbstractString)
     return Proto.Transaction_Req(
         rule_req = Proto.Rule_Req(
             rule_delete_req = Proto.Rule_Delete_Req()

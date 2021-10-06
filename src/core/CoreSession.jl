@@ -22,7 +22,7 @@ end
 Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
 
 function CoreSession(client::T,
-                     database::String,
+                     database::AbstractString,
                      type::Int32,
                      options::TypeDBOptions = TypeDBOptions();
                      request_timeout::Real=Inf,

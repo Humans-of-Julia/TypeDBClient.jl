@@ -16,7 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
-
+@attribute
 Feature: Concept Attribute
   Background:
     Given connection has been opened

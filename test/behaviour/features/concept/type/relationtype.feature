@@ -16,7 +16,6 @@
 #
 
 #noinspection CucumberUndefinedStep
-
 Feature: Concept Relation Type and Role Type
 
   Background:
@@ -230,7 +229,7 @@ Feature: Concept Relation Type and Role Type
     When put relation type: connection
     When relation(connection) set abstract: true
     Then transaction commits
-
+@failure
   Scenario: Relation and role types can be subtypes of other relation and role types
     When put relation type: parentship
     When relation(parentship) set relates role: parent

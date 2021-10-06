@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@relation
 Feature: Concept Relation
 
   Background:

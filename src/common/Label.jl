@@ -3,7 +3,7 @@
 # Porting note: no need to store `hash` as we can just use the standard hash function
 struct Label
     scope::Optional{String}
-    name::String
+    name::AbstractString
 end
 
 Label(name::AbstractString) = Label(nothing, name)

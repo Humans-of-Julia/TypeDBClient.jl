@@ -257,14 +257,14 @@ function get_plays(r::RemoteConcept{C,T}) where
 end
 
 """
-    set_label(r::RemoteConcept{C,T}, new_label_name::String) where
+    set_label(r::RemoteConcept{C,T}, new_label_name::AbstractString) where
         {C <: AbstractType,T <: AbstractCoreTransaction}
 
 With this function we are able to set the label for a given Type. This gives us the
 chance to rename a given type. But be prepared, this is only allowed if the type is
 not instantiated by inserted data.
 """
-function set_label(r::RemoteConcept{C,T}, new_label_name::String) where
+function set_label(r::RemoteConcept{C,T}, new_label_name::AbstractString) where
     {C <: AbstractType,T <: AbstractCoreTransaction}
 
     set_label_req = TypeRequestBuilder.set_label_req(r.concept.label, new_label_name)

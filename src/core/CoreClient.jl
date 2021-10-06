@@ -2,7 +2,7 @@
 
 mutable struct CoreClient <: AbstractCoreClient
     channel::gRPCClient.gRPCChannel
-    address::String
+    address::AbstractString
     port::Int
     core_stub::Core_TypeDBStub
     databaseMgr::CoreDatabaseManager
@@ -13,7 +13,7 @@ function Base.show(io::IO, core_client::CoreClient)
     print(io, "CoreClient(address: $(core_client.address):$(core_client.port))")
 end
 
-function CoreClient(address::String, port::Int = 1729)
+function CoreClient(address::AbstractString, port::Int = 1729)
     channel = gRPCChannel(address * ":" * string(port))
     stub = Core_TypeDBStub(channel)
     databaseMgr = CoreDatabaseManager()

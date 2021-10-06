@@ -16,7 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
-
+@attribute_type
 Feature: Concept Attribute Type
 
   Background:
