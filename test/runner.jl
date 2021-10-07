@@ -24,17 +24,17 @@ function run_tests(tag::String = "")
 end
 
 const test_features = [
-                       "@attribute_type",
-                       "@entity_type",
-                       "@attribute",
-                       "@entity",
-                       "@relation",
-                       "@relation_type",
-                       "@thing_type",
-                       "@database",
-                       "@session",
-                       "@transaction"
-                       ]
+    "@database",
+    "@session",
+    "@transaction",
+    "@attribute_type",
+    "@entity_type",
+    "@attribute",
+    "@entity",
+    "@relation",
+    "@relation_type",
+    "@thing_type"
+    ]
 
 results = Dict{String, Bool}()
 # result = run_tests("not @ignore-typedb-core")
