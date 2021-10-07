@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@relation_type
 Feature: Concept Relation Type and Role Type
 
   Background:
