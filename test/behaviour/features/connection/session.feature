@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@session
 Feature: Connection Session
 
   Background:

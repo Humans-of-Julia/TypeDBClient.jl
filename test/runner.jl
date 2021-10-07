@@ -30,7 +30,10 @@ const test_features = [
                        "@entity",
                        "@relation",
                        "@relation_type",
-                       "@thing_type"
+                       "@thing_type",
+                       "@database",
+                       "@session",
+                       "@transaction"
                        ]
 
 results = Dict{String, Bool}()
