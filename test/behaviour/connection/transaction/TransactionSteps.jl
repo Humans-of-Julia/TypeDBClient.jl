@@ -6,9 +6,23 @@
 g = TypeDBClient
 
 @when("session opens transaction of type: read") do context
-    transaction = g.transaction(context[:session], trans_read)
+    if haskey(context, :transaction) && context[:transaction] !== nothing
+        g.close(context[:transaction])
+        context[:transaction] = nothing
+    end
+
+    if context[:session].type == g.Proto.Session_Type.SCHEMA
+        close(context[:session])
+        context[:session] = nothing
+        context[:session] = g.CoreSession(context[:client], "typedb",
+                                            g.Proto.Session_Type.SCHEMA,
+                                            request_timeout = Inf)
+    end
+
+    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.READ, error_break_time = 6)
     @expect transaction !== nothing
     context[:transaction] = transaction
+    # only a convinience method to prevent paperwork
     context[:cm] = ConceptManager(context[:transaction])
 end
 

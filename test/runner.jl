@@ -29,7 +29,8 @@ const test_features = [
                        "@attribute",
                        "@entity",
                        "@relation",
-                       "@relation_type"
+                       "@relation_type",
+                       "@thing_type"
                        ]
 
 results = Dict{String, Bool}()
