@@ -37,12 +37,14 @@ end
   end
 
   delete_all_databases(context[:client])
+  close(context[:client])
   context[:client] = nothing
 end
 
 @afterall() do
     client = g.CoreClient("127.0.0.1",1729)
     delete_all_databases(client)
+    close(client)
 end
 
 @beforeall() do
