@@ -100,20 +100,14 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
-# TODO: Think about only use of take! Think about yielding not every time the loop comes back
 function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stream::BidirectionalStream, request_id::Bytes)
     answers = Vector{Transaction_Res_All}()
-    while isopen(res_channel)
-        yield()
-        if isready(res_channel)
-            tmp_result = take!(res_channel)
-            req_push, loop_break = _is_stream_respart_done(tmp_result, bidirect_stream)
-
-            req_push && push!(answers, tmp_result)
-            if loop_break
-                delete!(bidirect_stream.resCollector, request_id)
-                break
-            end
+    for tmp_result in res_channel
+        req_push, loop_break = _is_stream_respart_done(tmp_result, bidirect_stream)
+        req_push && push!(answers, tmp_result)
+        if loop_break
+            delete!(bidirect_stream.resCollector, request_id)
+            break
         end
     end
     return answers
