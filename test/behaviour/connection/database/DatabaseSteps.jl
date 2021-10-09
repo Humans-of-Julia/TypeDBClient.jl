@@ -95,7 +95,7 @@ end
     try
         transaction(context[:session], g.Proto.Transaction_Type.WRITE)
     catch ex
-        @info "if a database isn't there a transaction can't be open"
+        @expect ex !== nothing
     end
 end
 
@@ -104,8 +104,7 @@ end
     try
         g.define(context[:transaction], define_string)
     catch ex
-       # @expect occursin("transaction has been closed", ex.message)
-       @info ex
+        @expect ex !== nothing
     end
 end
 
