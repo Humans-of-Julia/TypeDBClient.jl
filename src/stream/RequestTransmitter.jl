@@ -3,6 +3,8 @@
 const BATCH_WINDOW_SMALL_MILLIS = 1
 const BATCH_WINDOW_LARGE_MILLIS = 3
 
+const DISPATCHER_THREADS = 3
+
 mutable struct Dispatcher
     input_channel::Channel{Proto.Transaction_Client}
     direct_dispatch_channel::Channel{Proto.ProtoType}
@@ -16,7 +18,7 @@ function Dispatcher(input_channel::Channel{Proto.Transaction_Client})
     dispatch_channel = Channel{Proto.ProtoType}(10)
 
     disp_timer = Vector{Timer}()
-    for _ in 1:3
+    for _ in 1:DISPATCHER_THREADS
         push!(disp_timer, batch_requests(dispatch_channel,input_channel))
     end
 

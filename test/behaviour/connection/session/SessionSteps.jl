@@ -9,7 +9,7 @@ end
 end
 
 @then("session has database: typedb") do context
-    @expect context[:session].database.name == "typedb"
+    @expect context[:session].database.name == context[:db_name]
 end
 
 @when("connection open sessions for databases:") do context

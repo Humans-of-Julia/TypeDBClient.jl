@@ -5,7 +5,14 @@
 # end
 g = TypeDBClient
 
-@when("session opens transaction of type: read") do context
+function transaction_read_write(context; write = false)
+
+    if write
+        read_write = g.Proto.Transaction_Type.WRITE
+    else
+        read_write = g.Proto.Transaction_Type.READ
+    end
+
     if haskey(context, :transaction) && context[:transaction] !== nothing
         g.close(context[:transaction])
         context[:transaction] = nothing
@@ -14,39 +21,27 @@ g = TypeDBClient
     if context[:session].type == g.Proto.Session_Type.SCHEMA
         close(context[:session])
         context[:session] = nothing
-        context[:session] = g.CoreSession(context[:client], "typedb",
+        context[:session] = g.CoreSession(context[:client], context[:db_name],
                                             g.Proto.Session_Type.SCHEMA,
                                             request_timeout = Inf)
     end
 
-    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.READ, error_break_time = 6)
+    transaction = g.transaction(context[:session], read_write , error_break_time = 6)
     @expect transaction !== nothing
     context[:transaction] = transaction
     # only a convinience method to prevent paperwork
     context[:cm] = ConceptManager(context[:transaction])
+
+    return nothing
+end
+
+@when("session opens transaction of type: read") do context
+    transaction_read_write(context, write = false)
 end
 
 # When session opens transaction of type: write
 @when("session opens transaction of type: write") do context
-
-    if haskey(context, :transaction) && context[:transaction] !== nothing
-        g.close(context[:transaction])
-        context[:transaction] = nothing
-    end
-
-    if context[:session].type == g.Proto.Session_Type.SCHEMA
-        close(context[:session])
-        context[:session] = nothing
-        context[:session] = g.CoreSession(context[:client], "typedb",
-                                            g.Proto.Session_Type.SCHEMA,
-                                            request_timeout = Inf)
-    end
-
-    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE, error_break_time = 6)
-    @expect transaction !== nothing
-    context[:transaction] = transaction
-    # only a convinience method to prevent paperwork
-    context[:cm] = ConceptManager(context[:transaction])
+    transaction_read_write(context, write = true)
 end
 
 @then("session transaction is null: false") do context

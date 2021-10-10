@@ -5,7 +5,7 @@
 end
 
 @given("connection open data session for database: typedb") do context
-    sess = g.CoreSession(context[:client], "typedb", g.Proto.Session_Type.DATA, request_timeout=Inf)
+    sess = g.CoreSession(context[:client], context[:db_name], g.Proto.Session_Type.DATA, request_timeout=Inf)
     context[:session] = sess
     @expect context[:session] !== nothing
 end

@@ -2,8 +2,6 @@
 
 const PULSE_INTERVAL_MILLIS = 5000
 
-COUNT_OF_TRANSACTIONS = 0
-
 mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
@@ -15,8 +13,8 @@ mutable struct  CoreSession <: AbstractCoreSession
     isOpen::Bool
     networkLatencyMillis::Int
     timer::Optional{Controller}
-    request_timeout::Real
-    error_break_time::Real
+    request_timeout::Float64
+    error_break_time::Float64
 end
 
 Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
@@ -25,8 +23,8 @@ function CoreSession(client::T,
                      database::AbstractString,
                      type::Int32,
                      options::TypeDBOptions = TypeDBOptions();
-                     request_timeout::Real=Inf,
-                     error_time::Real = 5) where {T<:AbstractCoreClient}
+                     request_timeout::Float64=Inf,
+                     error_time::Float64 = 5.0) where {T<:AbstractCoreClient}
     try
         #building open_request
         open_req = SessionRequestBuilder.open_req(

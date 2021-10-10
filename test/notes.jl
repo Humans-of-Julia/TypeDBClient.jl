@@ -2,8 +2,7 @@ using TypeDBClient
 g = TypeDBClient
 
 client = g.CoreClient("127.0.0.1",1729)
-# g.create_database(client, "typedb")
-sess = g.CoreSession(client, "typedb", g.Proto.Session_Type.SCHEMA, request_timeout = Inf)
+sess = g.CoreSession(client, context[:db_name], g.Proto.Session_Type.SCHEMA, request_timeout = Inf)
 trans = g.transaction(sess, g.Proto.Transaction_Type.WRITE)
 
 g.put(g.ConceptManager(trans), AttributeType, "is-alive", VALUE_TYPE.BOOLEAN )

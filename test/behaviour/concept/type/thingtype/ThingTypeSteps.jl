@@ -30,7 +30,7 @@ end
 function _supertypes_contain(context, ::Type{g.RoleType},
     relation_name::String,
     role_name::String;
-    print_role_types::Bool = false)
+    debug::Bool = false)
 
     db_roles = [_split_role(db[1])[1]=>_split_role(db[1])[2] for db in context.datatable]
     res = g.get(ConceptManager(context[:transaction]),
@@ -43,13 +43,13 @@ function _supertypes_contain(context, ::Type{g.RoleType},
 
     res_array = Bool[]
 
-    print_role_types && @info "Supertypes:"
-    print_role_types && println.(res_supertypes)
+    debug && @info "Supertypes:"
+    debug && println.(res_supertypes)
 
-    print_role_types && @info "Table should be there"
+    debug && @info "Table should be there"
     for i in 1:length(db_roles)
         super_role = RoleType(g.Label(db_roles[i].first, db_roles[i].second), false)
-        print_role_types && println(super_role)
+        debug && println(super_role)
         push!(res_array, in(super_role, res_supertypes))
     end
     return res_array

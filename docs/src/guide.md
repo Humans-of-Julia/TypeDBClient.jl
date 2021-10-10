@@ -36,15 +36,15 @@ using TypeDBClient: dbconnect, open, read, write, match, insert, commit, create_
 # Connecting the client to TypeDB
 dbconnect("127.0.0.1") do client
 
-    # Creation of a database
+    # Create a database
     create_database(client, "my-typedb")
-    # Opening the session
+    # Opening a session
     open(client, "my-typedb") do session
         # Open a write transaction
         write(session) do transaction
-            # Make a insert with a TypeQL string
+            # Insert a record using TypeQL
             insert(transaction, raw"insert $_ isa person;")
-            # Committing the transaction.
+            # Commit the transaction
             commit(transaction)
         end
         # Open a read session

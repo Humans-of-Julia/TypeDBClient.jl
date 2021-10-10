@@ -12,16 +12,16 @@ There is the [Workbase] (https://docs.vaticle.com/docs/workbase/overview) the [T
 
 There are clients for the following languages: Java, Node.js and Python.
 
-This is the new community driven Julia client.
+This is the community driven Julia client.
 
 ## Workflow guidance & roadmap
 
 Our reference client is the [Java version](https://docs.vaticle.com/docs/client-api/java).
 
-The roadmap for TypeDBClient.jl (01.10.2021):
+The roadmap for TypeDBClient.jl (2021.10.01):
 
 - completing the client with the cluster functionality (commercial product by Vaticle)
-- improving speed 
+- improving speed
 - making multithreading possible and threadsafe
 
 The roadmap for TypeDBClient.jl (24.01.2021):

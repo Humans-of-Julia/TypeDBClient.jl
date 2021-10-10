@@ -491,7 +491,7 @@ end
 end
 
 @then("relation(fathership) get role(child) get supertypes contain:") do context
-    res_contain = _supertypes_contain(context, RoleType, "fathership", "child", print_role_types = true)
+    res_contain = _supertypes_contain(context, RoleType, "fathership", "child")
     @expect all(res_contain)
 end
 

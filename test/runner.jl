@@ -23,55 +23,12 @@ function run_tests(tag::String = "")
     runspec(rootpath; featurepath = featurepath, stepspath = stepspath,  parseoptions=p, execenvpath = configpath, tags=tag)
 end
 
-# const test_features = [
-#     # "@database",
-#     # "@session",
-#     "@transaction, not @ignore-typedb-core"
-#     # ,
-#     # "@attribute_type",
-#     # "@entity_type",
-#     # "@attribute",
-#     # "@entity",
-#     # "@relation",
-#     # "@relation_type",
-#     # "@thing_type"
-#     ]
-
-# results = Dict{String, Bool}()
 results = run_tests("not @ignore-typedb-core")
 # results = run_tests("@failure")
 # results = run_tests("@actual")
 
-# for a_test in test_features
-#     res_test = run_tests(a_test)
-#     if !res_test
-#         @info "$a_test failed"
-#         results[a_test] = false
-#     else
-#         results[a_test] = true
-#     end
-# end
-
-# !all(values(results)) && @info "Second try to fullfill all tests"
-# for (a_test, success) in results
-#     if !success
-#         res_test = run_tests(a_test)
-#         if !res_test
-#             @info "$a_test second time failed"
-#             results[a_test] = false
-#         else
-#             results[a_test] = true
-#         end
-#     end
-# end
-
-
-# @info "All $(length(results)) Tests succeeded: $(all(values(results)))"
-
-
-
 if !all(values(results))
-    throw("TestSuite failed. Please proof the results")
+    throw("TestSuite failed. Please review the results")
 else
-    @info "Well done!"
+    @info "All tests passed. Well done! 😄 "
 end

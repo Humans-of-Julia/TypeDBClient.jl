@@ -77,18 +77,19 @@ end
 # Scenario: delete a database causes open sessions to fail
 @when("connection create database: typedb") do context
     g.create_database(context[:client], "typedb")
+    context[:db_name] = "typedb"
 end
 
 @when("connection open session for database: typedb") do context
-    context[:session] = g.CoreSession(context[:client], "typedb" , g.Proto.Session_Type.DATA, request_timeout=Inf)
+    context[:session] = g.CoreSession(context[:client], context[:db_name] , g.Proto.Session_Type.DATA, request_timeout=Inf)
 end
 
 @when("connection delete database: typedb") do context
-    g.delete_database(context[:client], "typedb")
+    g.delete_database(context[:client], context[:db_name])
 end
 
 @then("connection does not have database: typedb") do context
-    @expect g.contains_database(context[:client], "typedb") === false
+    @expect g.contains_database(context[:client], context[:db_name]) === false
 end
 
 @then("session open transaction of type; throws exception: write") do context
