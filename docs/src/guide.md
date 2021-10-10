@@ -1,26 +1,31 @@
 ```@meta
 CurrentModule = TypeDBClient
 ```
-
 # User Guide
 
 ## Installation
 
-To use this client, you need a compatible TypeDB Server running. Visit the Compatibility Table (soon to be published)
+To use this client, you need a compatible TypeDB Server running.
+You can find install instructions in the [TypeDB Documentation](https://docs.vaticle.com/docs/running-typedb/install-and-run).
 
-This pkg is not yet registered on the JuliaHub. As of now you would need to install it directly from the GitHub repo.
+## Compatibility table:
+
+| TypeDBClient.jl | TypeDB | TypeDB Cluster | Julia |
+|:--------------:|:-----------:|:------------:|:------------:|
+| 0.1.0 | 2.4      |     -     | >=1.6
 
 Inside the Julia REPL, type ] to enter the Pkg REPL mode then run
 
-`pkg> dev https://github.com/Humans-of-Julia/TypeDBClient.jl`
+`pkg> add TypeDBClient`
 
 ## Quickstart
 
-First make sure, the TypeDB server is running. It is described here in the [TypeDB Documentation](https://docs.vaticle.com/docs/running-typedb/install-and-run).
+First make sure, the TypeDB server is running.
+See [Start the TypeDB Server](https://docs.vaticle.com/docs/running-typedb/install-and-run#start-the-typedb-server) section.
 
-In the Julia REPL or in your source run
+In the Julia REPL or in your source code run:
 
-` using TypeDBClient`
+`using TypeDBClient`
 
 You have two choices:
 
@@ -28,24 +33,23 @@ You have two choices:
 ```julia
 using TypeDBClient: dbconnect, open, read, write, match, insert, commit, create_database
 
+# Connecting the client to TypeDB
 dbconnect("127.0.0.1") do client
-# The client section where all commands  with the client
-# are possible
 
-    # Here the creation of a database
+    # Creation of a database
     create_database(client, "my-typedb")
-    # Open the session
+    # Opening the session
     open(client, "my-typedb") do session
         # Open a write transaction
         write(session) do transaction
-            # make a insert with a TypeQL string
+            # Make a insert with a TypeQL string
             insert(transaction, raw"insert $_ isa person;")
-            #committing the transaction.
+            # Committing the transaction.
             commit(transaction)
         end
         # Open a read session
         read(session) do transaction
-            # make a match request with a TypeQL string
+            # Make a match request with a TypeQL string
             answers = match(transaction, raw"match $p isa person;")
         end
     end
@@ -54,33 +58,35 @@ end
 
 For working with data using TypeQL, please refer to the syntax on [TypeQL Documentation](https://docs.vaticle.com/docs/query/overview)
 
-* You want the full stack at your fingertips. Then you can use the following commands:
+* If you want the full stack at your fingertips, then you can use the following commands:
+
 ```julia
 using TypeDBClient
 
-# only for convencience reasons, you can write the full name if you want
+# Only for convencience reasons, you can write the full name if you want
 g = TypeDBClient
-#create a client
+
+# Create a client
 client = g.CoreClient("127.0.0.1",1729)
 
-# create a database called typedb if the database isn't on the server
+# Create a database called typedb if the database isn't already created by you previously.
 g.create_database(client, "typedb")
 
-# Open a session to write in the schema section of the database.
-# Be careful if you work with a schema session. No more session are allowed
-# until you close this session. Closing a session is essentially. Don't forget this
-# at the end of your work
+#= Open a session to write in the schema section of the database.
+Be careful if you work with a schema session. No more sessions are allowed
+until you close this session. Closing a session is mandatory. Don't forget this
+at the end of your work.=#
 session = g.CoreSession(client, "typedb" , g.Proto.Session_Type.SCHEMA, request_timeout=Inf)
 
-# open a write transaction
+# Open a write transaction
 transaction = g.transaction(session, g.Proto.Transaction_Type.WRITE)
 
-# make a query in the database
-# The result of this query will be a vector of ConceptMap. From there you can access the
-# data as you want.
+#= Make a query in the database
+The result of this query will be a vector of ConceptMap.
+From there you can access the data as you want.=#
 results = g.match(transaction, raw"""match $x sub thing;""")
 
-# If you want work further in with the session, go ahead else close the session
+# If you want to work further in the session, go ahead, else close the session.
 close(session)
 ```
 If you want to use the full potential of the client you should read the documentation
