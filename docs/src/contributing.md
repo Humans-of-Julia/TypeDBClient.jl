@@ -18,7 +18,7 @@ This is the community driven Julia client.
 
 Our reference client is the [Java version](https://docs.vaticle.com/docs/client-api/java).
 
-The roadmap for TypeDBClient.jl (2021.10.01):
+The roadmap for TypeDBClient.jl (2021-10-01):
 
 - completing the client with the cluster functionality (commercial product by Vaticle)
 - improving speed
