@@ -10,12 +10,21 @@ using Dates
 g = TypeDBClient
 
 # Utility functions
-function _attribute_subtypes(context, attribute_label_name, value_type::g.EnumType, contain::Bool)
+function _attribute_subtypes(context, attribute_label_name, value_type::g.EnumType, contain::Bool; debug::Bool= false)
     types_inp = [db[1] for db in context.datatable]
     result_bools = Bool[]
 
     attr = g.get(ConceptManager(context[:transaction]), AttributeType, attribute_label_name)
     sub_types = g.get_subtypes(g.as_remote(attr, context[:transaction]))
+
+    # Print out subtypes if needed
+    if debug
+        @info "Subtypes:"
+        println.(sub_types)
+        @info "should be:"
+        println.(types_inp)
+    end
+
     res = filter(x->g.proto_value_type(x) == value_type ||
                     g.proto_value_type(x) == VALUE_TYPE.OBJECT, sub_types)
 
@@ -678,7 +687,7 @@ end
 
 # Scenario: Attribute type root can get attribute types of a specific value class
 @then("attribute(attribute) as(boolean) get subtypes contain:") do context
-    res = _attribute_subtypes(context, "attribute", VALUE_TYPE.BOOLEAN, true)
+    res = _attribute_subtypes(context, "attribute", VALUE_TYPE.BOOLEAN, true, debug = true)
     @expect length(context.datatable) == length(res)
     @expect all(res)
 end
