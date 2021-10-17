@@ -1,7 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct Attribute{S, T} <: AbstractAttribute
-    iid::AbstractString
+    iid::String
     type::AttributeType{S}
     value::T
 end

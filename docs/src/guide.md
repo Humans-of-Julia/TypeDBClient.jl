@@ -23,7 +23,7 @@ Inside the Julia REPL, type ] to enter the Pkg REPL mode then run
 First make sure, the TypeDB server is running.
 See [Start the TypeDB Server](https://docs.vaticle.com/docs/running-typedb/install-and-run#start-the-typedb-server) section.
 
-In the Julia REPL or in your source code run:
+In the Julia REPL or in your source code:
 
 `using TypeDBClient`
 
@@ -63,19 +63,21 @@ For working with data using TypeQL, please refer to the syntax on [TypeQL Docume
 ```julia
 using TypeDBClient
 
-# Only for convencience reasons, you can write the full name if you want
+# Only for convenience reasons, you can write the full name if you want
 g = TypeDBClient
 
 # Create a client
 client = g.CoreClient("127.0.0.1",1729)
 
-# Create a database called typedb if the database isn't already created by you previously.
+# Create a database called typedb if the database wasn't already created by you previously.
 g.create_database(client, "typedb")
 
-#= Open a session to write in the schema section of the database.
-Be careful if you work with a schema session. No more sessions are allowed
-until you close this session. Closing a session is mandatory. Don't forget this
-at the end of your work.=#
+#=
+    Open a session to write in the schema section of the database.
+    Be careful if you work with a schema session. No more sessions are allowed
+    until you close this session. Closing a session is mandatory. Don't forget this
+    at the end of your work.
+=#
 session = g.CoreSession(client, "typedb" , g.Proto.Session_Type.SCHEMA, request_timeout=Inf)
 
 # Open a write transaction
@@ -84,7 +86,7 @@ transaction = g.transaction(session, g.Proto.Transaction_Type.WRITE)
 #= Make a query in the database
 The result of this query will be a vector of ConceptMap.
 From there you can access the data as you want.=#
-results = g.match(transaction, raw"""match $x sub thing;""")
+results = g.match(transaction, "match \$x sub thing;")
 
 # If you want to work further in the session, go ahead, else close the session.
 close(session)

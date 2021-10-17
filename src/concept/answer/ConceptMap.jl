@@ -5,7 +5,7 @@ struct ConceptMap
 end
 
 struct Explainable
-    conjunction::AbstractString
+    conjunction::String
     explainable_id::Int64
 end
 

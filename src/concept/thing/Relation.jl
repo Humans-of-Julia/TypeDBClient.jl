@@ -1,7 +1,7 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
 
 struct Relation <: AbstractRelation
-    iid::AbstractString
+    iid::String
     type::RelationType
 end
 

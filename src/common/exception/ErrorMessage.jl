@@ -47,10 +47,10 @@ const ERROR_STRUCTS = (
 # building the error structs according the Pairs above with some meta programming
 for (T,A) in ERROR_STRUCTS
     @eval mutable struct $T <: $A
-        code_prefix::AbstractString
+        code_prefix::String
         code_number::Int
-        message_prefix::AbstractString
-        message_body::AbstractString
+        message_prefix::String
+        message_body::String
     end
 end
 

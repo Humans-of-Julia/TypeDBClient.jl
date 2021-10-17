@@ -89,13 +89,11 @@ function get_subtypes(r::RemoteConcept{C,T}) where {
 end
 
 """
-    get_owners(r::RemoteConcept{C,T}, only_key = false) where {
-        C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+    get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTransaction}
 
 Returns all ThingTypes which owns the given AttributeType
 """
-function get_owners(r::RemoteConcept{C,T}, only_key = false) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+function get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTransaction}, only_key = false)
 
     req = AttributeTypeRequestBuilder.get_owners_req(r.concept.label, only_key)
     res = stream(r.transaction, req)
@@ -112,8 +110,8 @@ to proof the incoming string to fulfill the pattern. Otherwise the insert will f
 The function wil give back a regex string if set. The regex string follows the conventions
 of the Java programming language.
 """
-function get_regex(r::RemoteConcept{C,T}) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+function get_regex(r::RemoteConcept{<: AbstractAttributeType
+                        , <: AbstractCoreTransaction})
 
     req = AttributeTypeRequestBuilder.get_regex_req(r.concept.label)
     res = execute(r.transaction, req)

@@ -35,9 +35,8 @@ label(t::AbstractThingType) = t.label
 Here we have the chance to set a given ThingType as the supertype of an other Thingtype.
 Mixing of diffent root types eg. AttributeType with EntityType is not allowed.
 """
-function set_supertype(r::RemoteConcept{C,T},
-                        super_type::AbstractThingType) where
-                        {C <: AbstractThingType,T <: AbstractCoreTransaction}
+function set_supertype(r::RemoteConcept{<: AbstractThingType,<: AbstractCoreTransaction},
+                        super_type::AbstractThingType)
 
     req = ThingTypeRequestBuilder.set_supertype_req(r.concept.label, proto(super_type))
     execute(r.transaction, req)
@@ -51,7 +50,7 @@ Returns one step upwards in the chain of types and returns the direct supertype 
 given type.
 """
 function get_supertype(
-    r::RemoteConcept{C,T}) where {C <: AbstractType,T <: AbstractCoreTransaction}
+    r::RemoteConcept{C,T}) where {C <:AbstractType, T <:AbstractCoreTransaction}
 
     req = TypeRequestBuilder.get_supertype_req(r.concept.label)
     res = execute(r.transaction, req)
@@ -86,9 +85,7 @@ end
 get_subtypes returns all subtypes for a given type. A specialzation of this function
 is made for AttributeType.
 """
-function get_subtypes(r::RemoteConcept{C,T}) where
-    {C <: AbstractType,T <: AbstractCoreTransaction}
-
+function get_subtypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})
     req = TypeRequestBuilder.get_subtypes_req(r.concept.label)
     res = execute(r.transaction, req)
     if res !== nothing

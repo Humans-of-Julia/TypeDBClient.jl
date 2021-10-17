@@ -6,8 +6,6 @@ Or if you like to watch a Video, showing how to work with the client in a Notebo
 
 https://youtu.be/liNnm1nShCg?t=1262
 
-Have Fun and feel free to ask questions in our comminity channel on Discord!
-
 However, if you like to watch a Video, showing how to work with the client in a Notebook, you can watch this recording:
 
 [A TypeDB Client Interface in Julia | TypeDBClient.jl](https://youtu.be/liNnm1nShCg?t=1262)

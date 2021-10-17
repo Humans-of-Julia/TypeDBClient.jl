@@ -399,7 +399,7 @@ function get_relates_req(label::Label)
 end
 
 function set_relates_req(
-    label::Label, role_label::AbstractString, overridden_label::Optional{String})
+    label::Label, role_label::AbstractString, overridden_label::Optional{<:AbstractString})
 
     relation_type_set_relates_req = overridden_label !== nothing ?
                                         Proto.RelationType_SetRelates_Req(;
@@ -519,7 +519,7 @@ function get_playing_req(iid::AbstractString)
     )
 end
 
-function get_relations_req(iid::AbstractString, role_types::Optional{AbstractVector{Proto._Type}})
+function get_relations_req(iid::AbstractString, role_types::Optional{<:AbstractVector{Proto._Type}})
     thing_get_relations_req = Proto.Thing_GetRelations_Req()
     if role_types !== nothing
         thing_get_relations_req.role_types = role_types
