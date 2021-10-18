@@ -33,6 +33,7 @@ function create_database(client::AbstractCoreClient, name::AbstractString)
     return grpc_result_or_error(req_result, status, result->true)
 end
 
+
 """
     delete_database(client::AbstractCoreClient, name::AbstractString)
 
