@@ -72,9 +72,8 @@ is_keyable(::AttributeType{VALUE_TYPE.LONG}) = true
 #   get_instances
 
 # Technically, we can reuse the logic from ThingType. Maybe refactor soon.
-function get_subtypes(r::RemoteConcept{C,T}) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction
-}
+function get_subtypes(r::RemoteConcept{<: AbstractAttributeType, <: AbstractCoreTransaction})
+
     concept = r.concept
     req = TypeRequestBuilder.get_subtypes_req(label(concept))
     res = execute(r.transaction, req)
@@ -89,7 +88,7 @@ function get_subtypes(r::RemoteConcept{C,T}) where {
 end
 
 """
-    get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTransaction}
+    get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTransaction}, only_key = false)
 
 Returns all ThingTypes which owns the given AttributeType
 """
@@ -121,16 +120,16 @@ end
 
 
 """
-    set_regex(r::RemoteConcept{C,T}, regex::Optional{AbstractString}) where {
-        C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+    set_regex(r::RemoteConcept{<:AbstractAttributeType, <:AbstractCoreTransaction},
+        regex::Optional{AbstractString})
 
 For AttributeTypes with the value type String it is possible to set a regex pattern
 to proof the incoming string to fulfill the pattern. Otherwise the insert will fail.
 The function wil set a regex string to a given attribute. The regex string follows the
 conventionsmof the Java programming language.
 """
-function set_regex(r::RemoteConcept{C,T}, regex::Optional{AbstractString}) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+function set_regex(r::RemoteConcept{<:AbstractAttributeType, <:AbstractCoreTransaction},
+    regex::Optional{AbstractString})
 
     regex_str = regex === nothing ? "" : regex
     req = AttributeTypeRequestBuilder.set_regex_req(r.concept.label, regex_str)
