@@ -5,6 +5,14 @@ struct ThingType <: AbstractThingType
     is_root::Bool
 end
 
+Instanciate_Types = Union{<:AbstractAttribute,
+                            <:AbstractRelation,
+                            <:AbstractEntity,
+                            <:AbstractThingType,
+                            <:AbstractEntityType,
+                            <:AbstractAttributeType,
+                            <:AbstractRelationType}
+
 # Porting note: Java client calls into RequestBuilder but it really
 # has nothing to to with requests... I think it's probably better
 # migrating the function here.
@@ -67,7 +75,7 @@ function get_supertypes(r::RemoteConcept{<:AbstractType})
         typs = res.type_res_part.type_get_supertypes_res_part.types
         return instantiate.(typs)
     else
-        return []
+        return Instanciate_Types[]
     end
 end
 

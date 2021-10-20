@@ -124,7 +124,7 @@ end
 For AttributeTypes with the value type String it is possible to set a regex pattern
 to check the incoming string matches the pattern, otherwise the insert will fail.
 The function will set a regex string to a given attribute. The regex string follows the
-conventionsmof the Java programming language.
+conventions of the Java programming language.
 """
 function set_regex(r::RemoteConcept{<:AbstractAttributeType}, regex::Optional{AbstractString})
 

@@ -12,8 +12,8 @@ end
 
 function set_relates(transaction::AbstractCoreTransaction,
                     label::Label,
-                    role_label::Optional{AbstractString},
-                    overridden_label::Optional{String} = nothing)
+                    role_label::AbstractString,
+                    overridden_label::Optional{<:AbstractString} = nothing)
 
     relates_req = RelationTypeRequestBuilder.set_relates_req(label,
                                     role_label,

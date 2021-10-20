@@ -167,7 +167,7 @@ Modules = [TypeDBClient]
 
 * get_rule
 
-    [`get_rule(log_mgr::AbstractLogicManager, label::String)`](@ref)
+    [`get_rule(log_mgr::AbstractLogicManager, label::AbstractString)`](@ref)
 
 
 * get_rules
