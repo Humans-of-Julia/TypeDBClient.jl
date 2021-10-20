@@ -12,8 +12,8 @@ end
 
 function set_relates(transaction::AbstractCoreTransaction,
                     label::Label,
-                    role_label::String,
-                    overridden_label::Optional{String} = nothing)
+                    role_label::AbstractString,
+                    overridden_label::Optional{<:AbstractString} = nothing)
 
     relates_req = RelationTypeRequestBuilder.set_relates_req(label,
                                     role_label,
@@ -30,7 +30,7 @@ function get_relates(r::RemoteConcept{RelationType})
         r.type_res_part.relation_type_get_relates_res_part.roles for r in res)))
 end
 
-function relation_type_get_relates_for_role_label(r::RemoteConcept{RelationType}, for_role::String)
+function relation_type_get_relates_for_role_label(r::RemoteConcept{RelationType}, for_role::AbstractString)
     role_req = RelationTypeRequestBuilder.relation_type_get_relates_for_role_label_req(r.concept.label,for_role)
     res = execute(r.transaction, role_req)
 

@@ -23,7 +23,7 @@ function match_group_aggregate(transaction::AbstractCoreTransaction, query::Abst
     db_result =  stream(transaction, QueryManagerRequestBuilder.match_group_aggregate_req(query, options))
     isempty(db_result) && return []
 
-    return reduce(vcat, [NumericGroup(item.match_group_aggregate_res_part.answers) for item in db_result])
+    return reduce(vcat, [NumericGroup(item.query_manager_res_part.match_group_aggregate_res_part.answers) for item in db_result])
 end
 
 function insert(transaction::AbstractCoreTransaction, query::AbstractString, options = Proto.Options())
@@ -72,7 +72,7 @@ function commit(transaction::AbstractCoreTransaction)
         safe_close(transaction)
     catch ex
         @info ex
-        return false
+        rethrow(ex)
     end
 
     return true

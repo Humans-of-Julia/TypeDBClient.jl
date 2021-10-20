@@ -6,8 +6,9 @@ struct CoreTransaction <: AbstractCoreTransaction
     bidirectional_stream::BidirectionalStream
     transaction_id::Optional{UUID}
     session_id::Bytes
-    request_timout::Real
+    request_timeout::Real
     session::AbstractCoreSession
+    error_break_time::Real
 end
 
 function Base.show(io::IO, transaction::AbstractCoreTransaction)
@@ -20,26 +21,38 @@ function CoreTransaction(session::CoreSession ,
                         sessionId::Bytes,
                         type::EnumType,
                         options::TypeDBOptions;
-                        request_timout::Real=session.request_timeout)
+                        request_timeout::Real=session.request_timeout,
+                        use_blocking_stub::Bool = true,
+                        error_break_time::Real = session.error_break_time)
+
+    function trans_return(res)
+        return res
+    end
+
     type = type
     options = options
-    input_channel = Channel{Proto.Transaction_Client}(10)
+    input_channel = Channel{Proto.Transaction_Client}()
     proto_options = copy_to_proto(options, Proto.Options)
 
-    grpc_controller = gRPCController(request_timeout=request_timout)
+    grpc_controller = gRPCController(request_timeout = request_timeout)
 
-    req_result, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
+    if use_blocking_stub
+        req_result, status = Proto.transaction(session.client.core_stub.blockingStub, grpc_controller, input_channel)
+    else
+        res = Proto.transaction(session.client.core_stub.asyncStub, grpc_controller, input_channel, trans_return)
+        wait(res)
+        req_result, status = fetch(res)
+    end
     output_channel = grpc_result_or_error(req_result, status, result->result)
 
-    open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options,session.networkLatencyMillis)
+    open_req = TransactionRequestBuilder.open_req(session.sessionID, type, proto_options, session.networkLatencyMillis)
 
-    bidirectionalStream = BidirectionalStream(input_channel, output_channel, status)
+    bidirectionalStream = BidirectionalStream(input_channel, output_channel, status, error_break_time = error_break_time)
     trans_id = uuid4()
-    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timout, session)
+    result = CoreTransaction(type, options, bidirectionalStream, trans_id, sessionId, request_timeout, session, error_break_time)
 
     # The following is only for warming up Transaction. If we didn't do this
     # it could happen that a transaction reach a timeout.
-
     req_result = execute(result, open_req, false)
     kind_of_result = Proto.which_oneof(req_result, :res)
     getproperty(req_result, kind_of_result)
@@ -66,7 +79,7 @@ function query(transaction::T, request::R, batch::Bool) where {T<:AbstractCoreTr
     try
         result = single_request(transaction.bidirectional_stream, request, batch)
     catch ex
-        safe_close(transaction)
+        close(transaction)
         rethrow(ex)
     end
 
@@ -80,7 +93,7 @@ function stream(transaction::T, request::R, batch::Bool = true) where {T<:Abstra
     try
         result = stream_request(transaction.bidirectional_stream, request, batch)
     catch ex
-        safe_close(transaction)
+        close(transaction)
         rethrow(ex)
     end
 

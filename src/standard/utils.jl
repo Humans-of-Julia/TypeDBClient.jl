@@ -20,7 +20,7 @@ Convert `x` to `Vector{UInt8}`.
 """
 bytes(x::UUID) = collect(reinterpret(UInt8, [hton(x.value)]))
 
-function bytes(s::String)
+function bytes(s::AbstractString)
     chunks = (s[i:i+1] for i in 1:2:length(s)-1)  # 2-char chunks
     return parse.(UInt8, chunks; base = 16)
 end
@@ -61,4 +61,21 @@ function safe_close(source_to_close)
         @error "closing $source_to_close failed. \n
                 reason: $ex"
     end
+end
+
+function safe_close(channel::Channel)
+    if isready(channel)
+        @info "There is something wrong with the channel management. \n
+               Here an example what's in it:"
+        last_item = fetch(channel)
+        @info last_item
+        func_id = which_oneof(last_item, :res)
+        res = getproperty(last_item, func_id)
+        @info "kind of item: $res"
+    end
+    close(channel)
+end
+
+function Base.close(inp::Vector{Timer})
+    close.(inp)
 end

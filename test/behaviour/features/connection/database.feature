@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@database
 Feature: Connection Database
 
   Background:

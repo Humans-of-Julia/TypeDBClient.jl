@@ -7,16 +7,18 @@ mutable struct  BidirectionalStream
     input_channel::Channel{Proto.Transaction_Client}
     output_channel::Channel{Proto.Transaction_Server}
     status::Task
+    error_break_time::Real
 end
 
 function BidirectionalStream(input_channel::Channel{Proto.Transaction_Client},
                              output_channel::Channel{Proto.Transaction_Server},
-                             status::Task)
+                             status::Task;
+                             error_break_time::Real)
 
     dispatcher = Dispatcher(input_channel)
     res_collector = ResponseCollector(output_channel)
 
-    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel, status)
+    return BidirectionalStream(res_collector, dispatcher, Threads.Atomic{Bool}(true),input_channel, output_channel, status, error_break_time)
 end
 
 function single_request(bidirect_stream::BidirectionalStream, request::Proto.ProtoType)
@@ -30,7 +32,7 @@ function single_request(bidirect_stream::BidirectionalStream, request::T, batch:
 """
 function single_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
     answer = _process_request(bidirect_stream, request, batch)
-    return answer[1]
+    return isempty(answer) ? nothing : answer[1]
 end
 
 """
@@ -42,16 +44,17 @@ function stream_request(bidirect_stream::BidirectionalStream, request::Proto.Tra
     return answer
 end
 
+# ToDo: Make the request timout determined by user at session level as a default and in the transaction level
 function _process_request(bidirect_stream::BidirectionalStream, request::Proto.Transaction_Req, batch::Bool)
 
     res_channel = _open_result_channel(bidirect_stream, request, batch)
     # start a task to collect the results asynchronusly
-    result_task = @async collect_result(res_channel, bidirect_stream)
+    result_task = Threads.@spawn collect_result(res_channel, bidirect_stream, request.req_id)
 
     # until solving the absent possibility to detect grpc errors in the gRPCClient a pure time
     # dependent solutionresult = nothing
-    answer = nothing
-    contr = Controller(true,5)
+    answer = Vector{Transaction_Res_All}()
+    contr = Controller(true, bidirect_stream.error_break_time)
     @async sleeper(contr)
     while contr.running
         yield()
@@ -97,16 +100,14 @@ function collect_result(res_channel::Channel{T}) where {T<:ProtoProtoType}
     The function will be called for each single request. She works until
     the whole result set will be collected.
 """
-function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stream::BidirectionalStream)
+function collect_result(res_channel::Channel{Transaction_Res_All}, bidirect_stream::BidirectionalStream, request_id::Bytes)
     answers = Vector{Transaction_Res_All}()
-    while isopen(res_channel)
-        yield()
-        if isready(res_channel)
-            tmp_result = take!(res_channel)
-            req_push, loop_break = _is_stream_respart_done(tmp_result, bidirect_stream)
-
-            req_push && push!(answers, tmp_result)
-            loop_break && break
+    for tmp_result in res_channel
+        req_push, loop_break = _is_stream_respart_done(tmp_result, bidirect_stream)
+        req_push && push!(answers, tmp_result)
+        if loop_break
+            delete!(bidirect_stream.resCollector, request_id)
+            break
         end
     end
     return answers
@@ -152,10 +153,17 @@ end
 
 
 function close(stream::BidirectionalStream)
-
-    safe_close(stream.input_channel)
-    safe_close(stream.output_channel)
     safe_close(stream.dispatcher)
+    task_to_close = @async begin
+        while true
+            yield()
+            isempty(stream.resCollector.collectors) && break
+            for (k,_) in stream.resCollector.collectors
+                delete!(stream.resCollector.collectors, k)
+            end
+        end
+    end
+    wait(task_to_close)
     safe_close(stream.resCollector)
     return true
 end

@@ -16,6 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
+@thing_type @failure
 Feature: Concept Thing Type
 
   Background:

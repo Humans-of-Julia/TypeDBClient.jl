@@ -53,7 +53,7 @@ is_remote(rule::Rule) = false
 is_remote(rule::RemoteRule) = true
 
 
-function set_label(remote::RemoteRule, new_label::String)
+function set_label(remote::RemoteRule, new_label::AbstractString)
     dbResult = execute(remote.rule.transaction, RuleRequestBuilder.rule_set_label_req(remote.label, new_label))
     remote.rule.label = new_label
     return remote

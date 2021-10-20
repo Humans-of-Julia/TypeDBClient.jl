@@ -830,7 +830,7 @@ end
 end
 
 @then("relation(marriage) get role(husband) get players do not contain:") do context
-    res = _get_players_contain("marriage","husband", context)
+    res = _get_players_contain("marriage","husband", context, should_contain = false)
     @expect all(res) === false
 end
 

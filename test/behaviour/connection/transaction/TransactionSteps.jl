@@ -5,24 +5,43 @@
 # end
 g = TypeDBClient
 
-@when("session opens transaction of type: read") do context
-    transaction = g.transaction(context[:session], trans_read)
-    @expect transaction !== nothing
-    context[:transaction] = transaction
-    context[:cm] = ConceptManager(context[:transaction])
-end
+function transaction_read_write(context; write = false)
 
-@when("session opens transaction of type: write") do context
-
-    if haskey(context, :transaction)
-        context[:transaction] !== nothing && g.close(context[:transaction])
+    if write
+        read_write = g.Proto.Transaction_Type.WRITE
+    else
+        read_write = g.Proto.Transaction_Type.READ
     end
 
-    transaction = g.transaction(context[:session], g.Proto.Transaction_Type.WRITE)
+    if haskey(context, :transaction) && context[:transaction] !== nothing
+        g.close(context[:transaction])
+        context[:transaction] = nothing
+    end
+
+    if context[:session].type == g.Proto.Session_Type.SCHEMA
+        close(context[:session])
+        context[:session] = nothing
+        context[:session] = g.CoreSession(context[:client], context[:db_name],
+                                            g.Proto.Session_Type.SCHEMA,
+                                            request_timeout = Inf)
+    end
+
+    transaction = g.transaction(context[:session], read_write , error_break_time = 6)
     @expect transaction !== nothing
     context[:transaction] = transaction
     # only a convinience method to prevent paperwork
     context[:cm] = ConceptManager(context[:transaction])
+
+    return nothing
+end
+
+@when("session opens transaction of type: read") do context
+    transaction_read_write(context, write = false)
+end
+
+# When session opens transaction of type: write
+@when("session opens transaction of type: write") do context
+    transaction_read_write(context, write = true)
 end
 
 @then("session transaction is null: false") do context
@@ -181,7 +200,7 @@ end
 @given("connection open sessions for database:") do context
     dbs = [row[1] for row in context.datatable]
     for db in dbs
-        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timout=Inf)
+        g.CoreSession(context[:client], db , g.Proto.Session_Type.DATA, request_timeout=Inf)
     end
     count_result = length(context[:client].sessions) == length(dbs)
     @expect count_result

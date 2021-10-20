@@ -4,7 +4,7 @@ mutable struct CoreDatabaseManager <: AbstractCoreDatabaseManager
 
 end
 
-function get_database(client::AbstractCoreClient, name::String)::CoreDatabase
+function get_database(client::AbstractCoreClient, name::AbstractString)::CoreDatabase
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     if contains_database(client, name)
         return CoreDatabase(name)
@@ -13,7 +13,7 @@ function get_database(client::AbstractCoreClient, name::String)::CoreDatabase
     end
 end
 
-function contains_database(client::AbstractCoreClient, name::String)
+function contains_database(client::AbstractCoreClient, name::AbstractString)
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     db = DatabaseManagerRequestBuilder
     req_result, status = Proto.databases_contains(client.core_stub.blockingStub, gRPCController() , db.contains_req(name))
@@ -26,14 +26,21 @@ function get_all_databases(client::AbstractCoreClient)::Vector{CoreDatabase}
     return grpc_result_or_error(req_result, status, result -> [CoreDatabase(db_name) for db_name in result.names])
 end
 
-function create_database(client::AbstractCoreClient, name::String)
+function create_database(client::AbstractCoreClient, name::AbstractString)
     isempty(name) && throw(TypeDBClientException(CLIENT_MISSING_DB_NAME))
     db = DatabaseManagerRequestBuilder
     req_result, status =  Proto.databases_create(client.core_stub.blockingStub, gRPCController(), db.create_req(name))
     return grpc_result_or_error(req_result, status, result->true)
 end
 
-function delete_database(client::AbstractCoreClient, name::String)
+
+"""
+    delete_database(client::AbstractCoreClient, name::AbstractString)
+
+Delete the database for the given name without any question. Be carful. There is no
+recovery function within this call.
+"""
+function delete_database(client::AbstractCoreClient, name::AbstractString)
     database = get_database(client, name)
     db = DatabaseRequestBuilder
     req_result, status =  Proto.database_delete(client.core_stub.blockingStub, gRPCController(), db.delete_req(database.name))

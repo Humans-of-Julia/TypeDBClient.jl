@@ -41,7 +41,7 @@ end
 
 concepts(cm::ConceptMap) = values(cm.data)
 
-Base.getindex(cm::ConceptMap, key::String) = cm.data[key]
+Base.getindex(cm::ConceptMap, key::AbstractString) = cm.data[key]
 
 function Base.show(io::IO, cm::ConceptMap)
     num_entries = length(cm.data)

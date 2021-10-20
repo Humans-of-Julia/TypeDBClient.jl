@@ -48,9 +48,9 @@ end
 
 Wrapper type that encapsulates a concept and transaction.
 """
-struct RemoteConcept{D <: AbstractConcept, T <: AbstractCoreTransaction}
+struct RemoteConcept{D <: AbstractConcept}
     concept::D
-    transaction::T
+    transaction::AbstractCoreTransaction
 end
 
 """
@@ -59,8 +59,8 @@ end
 Create a `Remote`(@ref) object for a concept `x` with a
 transaction `t`.
 """
-function as_remote(x::D, t::T) where {
-    D<: AbstractConcept, T <: AbstractCoreTransaction
+function as_remote(x::D, t::AbstractCoreTransaction) where {
+    D<: AbstractConcept
 }
-    return RemoteConcept{D, T}(x, t)
+    return RemoteConcept{D}(x, t)
 end

@@ -7,11 +7,11 @@ const g = TypeDBClient
 export entity_set_owns
 
 function entity_set_owns(thing_type::Type{<:g.AbstractThingType},
-                entity::String,
-                attribute_type::String,
+                entity::AbstractString,
+                attribute_type::AbstractString,
                 transaction::g.AbstractCoreTransaction,
                 is_key = false,
-                overriden::g.Optional{String} = nothing)
+                overriden::g.Optional{<:AbstractString} = nothing)
 
     cm = ConceptManager(transaction)
     loc_entity = nothing
@@ -49,8 +49,8 @@ function entity_set_owns(thing_type::Type{<:g.AbstractThingType},
      return nothing
  end
 
- function entity_set_owns(entity::String,
-            attribute_type::String,
+ function entity_set_owns(entity::AbstractString,
+            attribute_type::AbstractString,
             transaction,
             is_key = false,
             overriden::g.Optional{String} = nothing)
