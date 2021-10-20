@@ -2,7 +2,7 @@
 
 For a quick example based introduction, you can refer to the folder examples and check out the files there.
 
-However, if you like to watch a Video, showing how to work with the client in a Notebook, you can watch this recording:
+However, if you would like to watch a video, showing how to work with the client in a Notebook, you can watch this recording:
 
 [A TypeDB Client Interface in Julia | TypeDBClient.jl](https://youtu.be/liNnm1nShCg?t=1262)
 

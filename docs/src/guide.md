@@ -20,7 +20,7 @@ Inside the Julia REPL, type ] to enter the Pkg REPL mode then run
 
 ## Quickstart
 
-First make sure, the TypeDB server is running.
+First make sure the TypeDB server is running.
 See [Start the TypeDB Server](https://docs.vaticle.com/docs/running-typedb/install-and-run#start-the-typedb-server) section.
 
 In the Julia REPL or in your source code:
@@ -106,6 +106,7 @@ Modules = [TypeDBClient]
 * delete
 
     There are some delete functions:
+
   * database
 
     [`delete_database(client::AbstractCoreClient, name::AbstractString)`](@ref)
@@ -131,7 +132,6 @@ Modules = [TypeDBClient]
 
     [`get_instances(r::RemoteConcept{<:AbstractThingType})`](@ref)
 
-
 * get_owns
 
     [`get_owns(
@@ -139,7 +139,6 @@ Modules = [TypeDBClient]
         value_type::Optional{EnumType}=nothing,
         keys_only::Bool=false
     )`](@ref)
-
 
 * get_owners
 
@@ -163,7 +162,6 @@ Modules = [TypeDBClient]
 * get_regex
 
     [`get_regex(r::RemoteConcept{<:AbstractAttributeType})`](@ref)
-
 
 * get_rule
 
@@ -194,7 +192,6 @@ Modules = [TypeDBClient]
 
     [`set_abstract(r::RemoteConcept{<:AbstractThingType})`](@ref)
 
-
 * set_has
 
     [`set_has(transaction::AbstractCoreTransaction, thing::AbstractThing, attribute::Attribute)`](@ref)
@@ -204,7 +201,6 @@ Modules = [TypeDBClient]
 
     [`set_label(r::RemoteConcept{<:AbstractType},
     new_label_name::AbstractString)`](@ref)
-
 
 * set_owns
 
