@@ -34,7 +34,7 @@ label(t::AbstractThingType) = t.label
 Here we have the chance to set a given ThingType as the supertype of an other Thingtype.
 Mixing of diffent root types eg. AttributeType with EntityType is not allowed.
 """
-function set_supertype(r::RemoteConcept{<: AbstractThingType,<: AbstractCoreTransaction},
+function set_supertype(r::RemoteConcept{<:AbstractThingType},
                         super_type::AbstractThingType)
 
     req = ThingTypeRequestBuilder.set_supertype_req(r.concept.label, proto(super_type))

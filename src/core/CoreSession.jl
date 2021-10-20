@@ -6,7 +6,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
     sessionID::Bytes
-    transactions::Dict{UUID,T} where {T<:Union{Nothing}}
+    transactions::Dict{UUID,T} where {T<:Optional{<:AbstractCoreTransaction}}
     type::EnumType
     accessLock::ReentrantLock
     options::TypeDBOptions

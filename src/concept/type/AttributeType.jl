@@ -72,7 +72,7 @@ is_keyable(::AttributeType{VALUE_TYPE.LONG}) = true
 #   get_instances
 
 # Technically, we can reuse the logic from ThingType. Maybe refactor soon.
-function get_subtypes(r::RemoteConcept{<: AbstractAttributeType, <: AbstractCoreTransaction})
+function get_subtypes(r::RemoteConcept{<: AbstractAttributeType})
 
     concept = r.concept
     req = TypeRequestBuilder.get_subtypes_req(label(concept))
