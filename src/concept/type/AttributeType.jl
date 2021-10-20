@@ -88,11 +88,11 @@ function get_subtypes(r::RemoteConcept{<: AbstractAttributeType, <: AbstractCore
 end
 
 """
-    get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTransaction}, only_key = false)
+    get_owners(r::RemoteConcept{<: AbstractAttributeType}, only_key = false)
 
 Returns all ThingTypes which owns the given AttributeType
 """
-function get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTransaction}, only_key = false)
+function get_owners(r::RemoteConcept{<: AbstractAttributeType}, only_key = false)
 
     req = AttributeTypeRequestBuilder.get_owners_req(r.concept.label, only_key)
     res = stream(r.transaction, req)
@@ -101,16 +101,14 @@ function get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTra
 end
 
 """
-    get_regex(r::RemoteConcept{C,T}) where {
-        C <: AbstractAttributeType, T <: AbstractCoreTransaction}
+    get_regex(r::RemoteConcept{<:AbstractAttributeType})
 
 For AttributeTypes with the value type String it is possible to set a regex pattern
 to proof the incoming string to fulfill the pattern. Otherwise the insert will fail.
 The function wil give back a regex string if set. The regex string follows the conventions
 of the Java programming language.
 """
-function get_regex(r::RemoteConcept{<: AbstractAttributeType
-                        , <: AbstractCoreTransaction})
+function get_regex(r::RemoteConcept{<:AbstractAttributeType})
 
     req = AttributeTypeRequestBuilder.get_regex_req(r.concept.label)
     res = execute(r.transaction, req)
@@ -120,16 +118,15 @@ end
 
 
 """
-    set_regex(r::RemoteConcept{<:AbstractAttributeType, <:AbstractCoreTransaction},
+    set_regex(r::RemoteConcept{<:AbstractAttributeType},
         regex::Optional{AbstractString})
 
 For AttributeTypes with the value type String it is possible to set a regex pattern
-to proof the incoming string to fulfill the pattern. Otherwise the insert will fail.
-The function wil set a regex string to a given attribute. The regex string follows the
+to check the incoming string matches the pattern, otherwise the insert will fail.
+The function will set a regex string to a given attribute. The regex string follows the
 conventionsmof the Java programming language.
 """
-function set_regex(r::RemoteConcept{<:AbstractAttributeType, <:AbstractCoreTransaction},
-    regex::Optional{AbstractString})
+function set_regex(r::RemoteConcept{<:AbstractAttributeType}, regex::Optional{AbstractString})
 
     regex_str = regex === nothing ? "" : regex
     req = AttributeTypeRequestBuilder.set_regex_req(r.concept.label, regex_str)
@@ -148,9 +145,7 @@ function proto_attribute_value(value::DateTime)
     return Proto.Attribute_Value(; date_time = milliseconds_since_1970)
 end
 
-function Base.get(r::RemoteConcept{C,T}, value) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction
-}
+function Base.get(r::RemoteConcept{<:AbstractAttributeType}, value)
     req = AttributeTypeRequestBuilder.get_req(r.concept.label, proto_attribute_value(value))
     res = execute(r.transaction, req)
     if hasproperty(res.type_res.attribute_type_get_res, :attribute)
@@ -160,9 +155,7 @@ function Base.get(r::RemoteConcept{C,T}, value) where {
     end
 end
 
-function put(r::RemoteConcept{C,T}, value) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction
-}
+function put(r::RemoteConcept{<: AbstractAttributeType}, value)
     req = AttributeTypeRequestBuilder.put_req(r.concept.label, proto_attribute_value(value))
     res = execute(r.transaction, req)
     return Attribute(res.type_res.attribute_type_put_res.attribute)

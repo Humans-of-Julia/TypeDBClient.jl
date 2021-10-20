@@ -42,12 +42,12 @@ function set_supertype(r::RemoteConcept{<: AbstractThingType,<: AbstractCoreTran
 end
 
 """
-    get_supertype(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})
+    get_supertype(r::RemoteConcept{<:AbstractType})
 
 Returns one step upwards in the chain of types and returns the direct supertype of a
 given type.
 """
-function get_supertype(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})
+function get_supertype(r::RemoteConcept{<:AbstractType})
     req = TypeRequestBuilder.get_supertype_req(r.concept.label)
     res = execute(r.transaction, req)
     typ = res.type_res.type_get_supertype_res._type
@@ -55,11 +55,11 @@ function get_supertype(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransactio
 end
 
 """
-    get_supertypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})
+    get_supertypes(r::RemoteConcept{<:AbstractType})
 
 Here all supertypes in the chain upwards from the given type will be returned.
 """
-function get_supertypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})
+function get_supertypes(r::RemoteConcept{<:AbstractType})
 
     req = TypeRequestBuilder.get_supertypes_req(r.concept.label)
     res = execute(r.transaction, req)
@@ -73,12 +73,12 @@ end
 
 
 """
-    get_subtypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})
+    get_subtypes(r::RemoteConcept{<:AbstractType})
 
 get_subtypes returns all subtypes for a given type. A specialzation of this function
 is made for AttributeType.
 """
-function get_subtypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})
+function get_subtypes(r::RemoteConcept{<:AbstractType})
     req = TypeRequestBuilder.get_subtypes_req(r.concept.label)
     res = execute(r.transaction, req)
     if res !== nothing
@@ -90,11 +90,11 @@ function get_subtypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction
 end
 
 """
-    get_instances(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+    get_instances(r::RemoteConcept{<:AbstractThingType})
 
 Here you can get all instances for a given Type. The has to be given as a RemoteConcept
 """
-function get_instances(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+function get_instances(r::RemoteConcept{<:AbstractThingType})
 
     req = ThingTypeRequestBuilder.get_instances_req(r.concept.label)
     res = stream(r.transaction, req)
@@ -103,30 +103,29 @@ function get_instances(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTrans
 end
 
 """
-    set_abstract(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+    set_abstract(r::RemoteConcept{<:AbstractThingType})
 
 In the chain of fine grained functions in the concept section here we can determine
 a given ThingType is abstract.
 """
-function set_abstract(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+function set_abstract(r::RemoteConcept{<:AbstractThingType})
     req = ThingTypeRequestBuilder.set_abstract_req(r.concept.label)
     execute(r.transaction, req)
 end
 
 """
-    unset_abstract(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+    unset_abstract(r::RemoteConcept{<:AbstractThingType})
 
 With this function it is possible to change an ThingType from abstact to normal behavior
 which means that the given ThingType can be instanceated.
 """
-function unset_abstract(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+function unset_abstract(r::RemoteConcept{<:AbstractThingType})
 
     req = ThingTypeRequestBuilder.unset_abstract_req(r.concept.label)
     execute(r.transaction, req)
 end
 
-function is_abstract(r::RemoteConcept{C,T}) where
-    {C <: AbstractType,T <: AbstractCoreTransaction}
+function is_abstract(r::RemoteConcept{<:AbstractType})
 
     req = TypeRequestBuilder.is_abstract_req(r.concept.label)
     res = execute(r.transaction, req)
@@ -135,7 +134,7 @@ end
 
 """
     set_plays(
-        r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction},
+        r::RemoteConcept{<:AbstractThingType},
         role_type::AbstractRoleType,
         overridden_role_type::Optional{AbstractRoleType}=nothing
     )
@@ -145,7 +144,7 @@ set a new RoleType instead of the old. Be cautious, this is only allowed for not
 types.
 """
 function set_plays(
-    r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction},
+    r::RemoteConcept{<:AbstractThingType},
     role_type::AbstractRoleType,
     overridden_role_type::Optional{AbstractRoleType}=nothing
 )
@@ -157,16 +156,14 @@ function set_plays(
     execute(r.transaction, req)
 end
 
-function unset_plays(r::RemoteConcept{C,T},
-    role_type::AbstractRoleType
-) where {C <: AbstractThingType,T <: AbstractCoreTransaction}
+function unset_plays(r::RemoteConcept{<:AbstractThingType}, role_type::AbstractRoleType)
     unset_req = ThingTypeRequestBuilder.unset_plays_req(r.concept.label, proto(role_type))
     execute(r.transaction, unset_req)
 end
 
 """
     set_owns(
-        r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction},
+        r::RemoteConcept{<:AbstractType},
         attribute_type::AbstractType,
         is_key::Bool=false,
         overriden_type::Optional{AbstractType}=nothing
@@ -179,7 +176,7 @@ E.g. person entity has a unique email as an attribute. So it is not possible to 
 entities with the same email address.
 """
 function set_owns(
-    r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction},
+    r::RemoteConcept{<:AbstractType},
     attribute_type::AbstractType,
     is_key::Bool=false,
     overriden_type::Optional{AbstractType}=nothing
@@ -194,7 +191,7 @@ function set_owns(
 end
 
 function unset_owns(
-    r::RemoteConcept{<: AbstractType, <:AbstractCoreTransaction},
+    r::RemoteConcept{<: AbstractType},
     attribute_type::AbstractType)
     req = ThingTypeRequestBuilder.unset_owns_req(
         r.concept.label,
@@ -205,7 +202,7 @@ end
 
 """
     get_owns(
-        r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction},
+        r::RemoteConcept{<:AbstractThingType},
         value_type::Optional{EnumType}=nothing,
         keys_only::Bool=false
     )
@@ -213,7 +210,7 @@ end
 get_owns will give back all thingtypes which owns a given AttributeType
 """
 function get_owns(
-    r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction},
+    r::RemoteConcept{<:AbstractThingType},
     value_type::Optional{EnumType}=nothing,
     keys_only::Bool=false
 )
@@ -224,14 +221,11 @@ function get_owns(
 end
 
 """
-    get_plays(r::RemoteConcept{C,T}) where
-        {C <: AbstractThingType,T <: AbstractCoreTransaction}
+    get_plays(r::RemoteConcept{<: AbstractThingType})
 
 Returns which roles are played by the given ThingType
 """
-function get_plays(r::RemoteConcept{C,T}) where
-    {C <: AbstractThingType,T <: AbstractCoreTransaction}
-
+function get_plays(r::RemoteConcept{<:AbstractThingType})
     req = ThingTypeRequestBuilder.get_plays_req(r.concept.label)
     res = stream(r.transaction, req)
     return instantiate.(collect(Iterators.flatten(
@@ -239,14 +233,14 @@ function get_plays(r::RemoteConcept{C,T}) where
 end
 
 """
-    set_label(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction},
+    set_label(r::RemoteConcept{<:AbstractType},
         new_label_name::AbstractString)
 
 With this function we are able to set the label for a given Type. This gives us the
 chance to rename a given type. But be prepared, this is only allowed if the type is
 not instantiated by inserted data.
 """
-function set_label(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction},
+function set_label(r::RemoteConcept{<:AbstractType},
     new_label_name::AbstractString)
 
     set_label_req = TypeRequestBuilder.set_label_req(r.concept.label, new_label_name)
@@ -256,12 +250,12 @@ function set_label(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction},
 end
 
 """
-    delete(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+    delete(r::RemoteConcept{<:AbstractThingType})
 To delete a type in the database pack the type with the transaction to a RemoteConcept.
 Be aware that a type can only be deleted if no Entity, Attribute or Relation is in the
 database which is based on this type.
 """
-function delete(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})
+function delete(r::RemoteConcept{<:AbstractThingType})
     del_req = TypeRequestBuilder.delete_req(r.concept.label)
     execute(r.transaction, del_req)
 end

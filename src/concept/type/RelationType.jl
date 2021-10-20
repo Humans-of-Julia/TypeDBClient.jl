@@ -12,7 +12,7 @@ end
 
 function set_relates(transaction::AbstractCoreTransaction,
                     label::Label,
-                    role_label::AbstractString,
+                    role_label::Optional{AbstractString},
                     overridden_label::Optional{String} = nothing)
 
     relates_req = RelationTypeRequestBuilder.set_relates_req(label,

@@ -11,7 +11,7 @@ function entity_set_owns(thing_type::Type{<:g.AbstractThingType},
                 attribute_type::AbstractString,
                 transaction::g.AbstractCoreTransaction,
                 is_key = false,
-                overriden::g.Optional{String} = nothing)
+                overriden::g.Optional{<:AbstractString} = nothing)
 
     cm = ConceptManager(transaction)
     loc_entity = nothing

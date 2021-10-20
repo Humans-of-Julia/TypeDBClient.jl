@@ -3,9 +3,9 @@
 abstract type AbstractRule end
 
 struct Rule <: AbstractRule
-    label::AbstractString
-    when::AbstractString
-    then::AbstractString
+    label::String
+    when::String
+    then::String
 end
 
 function Rule(rule::Proto.Rule)

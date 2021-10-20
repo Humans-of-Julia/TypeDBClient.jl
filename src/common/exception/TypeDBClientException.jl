@@ -55,7 +55,7 @@ function TypeDBClientException(err::gRPCServiceCallException, parameters...)
     return TypeDBClientException(def_err, isempty(parameters) ? Tuple{}() : parameters, nothing, nothing)
 end
 
-function TypeDBClientException(message::AbstractString, cause::T) where {T<:Exception}
+function TypeDBClientException(message::AbstractString, cause::Exception)
     err = _build_error_messages(GENERAL_UNKOWN_ERROR)
     return TypeDBClientException(err,nothing,message,cause)
 end

@@ -6,7 +6,7 @@ mutable struct  CoreSession <: AbstractCoreSession
     client::CoreClient
     database::CoreDatabase
     sessionID::Bytes
-    transactions::Dict{UUID,T} where {T<:Union{Nothing,<:AbstractCoreTransaction}}
+    transactions::Dict{UUID,T} where {T<:Union{Nothing}}
     type::EnumType
     accessLock::ReentrantLock
     options::TypeDBOptions
@@ -17,14 +17,14 @@ mutable struct  CoreSession <: AbstractCoreSession
     error_break_time::Float64
 end
 
-Base.show(io::IO, session::T) where {T<:AbstractCoreSession} = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
+Base.show(io::IO, session::AbstractCoreSession) = print(io, "Session(ID: $(bytes2hex(session.sessionID)))")
 
-function CoreSession(client::T,
+function CoreSession(client::AbstractCoreClient,
                      database::AbstractString,
                      type::Int32,
                      options::TypeDBOptions = TypeDBOptions();
                      request_timeout::Float64=Inf,
-                     error_time::Float64 = 5.0) where {T<:AbstractCoreClient}
+                     error_time::Float64 = 5.0)
     try
         #building open_request
         open_req = SessionRequestBuilder.open_req(

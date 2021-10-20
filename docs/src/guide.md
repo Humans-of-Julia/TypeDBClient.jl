@@ -83,9 +83,11 @@ session = g.CoreSession(client, "typedb" , g.Proto.Session_Type.SCHEMA, request_
 # Open a write transaction
 transaction = g.transaction(session, g.Proto.Transaction_Type.WRITE)
 
-#= Make a query in the database
-The result of this query will be a vector of ConceptMap.
-From there you can access the data as you want.=#
+#=
+    Make a query in the database
+    The result of this query will be a vector of ConceptMap.
+    From there you can access the data as you want.
+=#
 results = g.match(transaction, "match \$x sub thing;")
 
 # If you want to work further in the session, go ahead, else close the session.
@@ -127,13 +129,13 @@ Modules = [TypeDBClient]
 
 * get_instances
 
-    [`get_instances(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})`](@ref)
+    [`get_instances(r::RemoteConcept{<:AbstractThingType})`](@ref)
 
 
 * get_owns
 
     [`get_owns(
-        r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction},
+        r::RemoteConcept{<:AbstractThingType},
         value_type::Optional{EnumType}=nothing,
         keys_only::Bool=false
     )`](@ref)
@@ -149,20 +151,18 @@ Modules = [TypeDBClient]
 
     * AttributeType
 
-    [`get_owners(r::RemoteConcept{<: AbstractAttributeType, <:AbstractCoreTransaction}, only_key = false)`](@ref)
+    [`get_owners(r::RemoteConcept{<: AbstractAttributeType}, only_key = false)`](@ref)
 
 
 * get_plays
 
-    [`get_plays(r::RemoteConcept{C,T}) where
-        {C <: AbstractThingType,T <: AbstractCoreTransaction}`](@ref)
+    [`get_plays(r::RemoteConcept{<: AbstractThingType})`](@ref)
 
 
 
 * get_regex
 
-    [`get_regex(r::RemoteConcept{C,T}) where {
-    C <: AbstractAttributeType, T <: AbstractCoreTransaction}`](@ref)
+    [`get_regex(r::RemoteConcept{<:AbstractAttributeType})`](@ref)
 
 
 * get_rule
@@ -177,22 +177,22 @@ Modules = [TypeDBClient]
 
 * get_subtypes
 
-    [`get_subtypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})`](@ref)
+    [`get_subtypes(r::RemoteConcept{<:AbstractType})`](@ref)
 
 
 * get_supertype
 
-    [`get_supertype(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})`](@ref)
+    [`get_supertype(r::RemoteConcept{<:AbstractType})`](@ref)
 
 
 * get_supertypes
 
-    [` get_supertypes(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction})`](@ref)
+    [` get_supertypes(r::RemoteConcept{<:AbstractType})`](@ref)
 
 
 * set_abstract
 
-    [`set_abstract(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})`](@ref)
+    [`set_abstract(r::RemoteConcept{<:AbstractThingType})`](@ref)
 
 
 * set_has
@@ -202,14 +202,14 @@ Modules = [TypeDBClient]
 
 * set_label
 
-    [`set_label(r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction},
+    [`set_label(r::RemoteConcept{<:AbstractType},
     new_label_name::AbstractString)`](@ref)
 
 
 * set_owns
 
     [`set_owns(
-            r::RemoteConcept{<:AbstractType, <:AbstractCoreTransaction},
+            r::RemoteConcept{<:AbstractType},
             attribute_type::AbstractType,
             is_key::Bool=false,
             overriden_type::Optional{AbstractType}=nothing
@@ -219,7 +219,7 @@ Modules = [TypeDBClient]
 * set_plays
 
     [`set_plays(
-        r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction},
+        r::RemoteConcept{<:AbstractThingType},
         role_type::AbstractRoleType,
         overridden_role_type::Optional{AbstractRoleType}=nothing
     )`](@ref)
@@ -227,7 +227,7 @@ Modules = [TypeDBClient]
 
 * set_regex
 
-    [`set_regex(r::RemoteConcept{<:AbstractAttributeType, <:AbstractCoreTransaction},
+    [`set_regex(r::RemoteConcept{<:AbstractAttributeType},
     regex::Optional{AbstractString})`](@ref)
 
 
@@ -239,7 +239,7 @@ Modules = [TypeDBClient]
 
 * unset_abstract
 
-    [`unset_abstract(r::RemoteConcept{<:AbstractThingType, <:AbstractCoreTransaction})`](@ref)
+    [`unset_abstract(r::RemoteConcept{<:AbstractThingType})`](@ref)
 
 
 * unset_has
