@@ -16,7 +16,7 @@
 #
 
 #noinspection CucumberUndefinedStep
-@database
+@database @actual
 Feature: Connection Database
 
   Background:
@@ -29,21 +29,6 @@ Feature: Connection Database
 
   Scenario: create many databases
     When connection create databases:
-      | alice   |
-      | bob     |
-      | charlie |
-      | dylan   |
-      | eve     |
-      | frank   |
-
-    Then  connection has databases:
-      | alice   |
-      | bob     |
-      | charlie |
-      | dylan   |
-      | eve     |
-      | frank   |
-
 
   Scenario: create many databases in parallel
     When  connection create databases in parallel:

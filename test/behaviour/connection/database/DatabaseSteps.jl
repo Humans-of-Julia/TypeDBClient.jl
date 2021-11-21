@@ -1,16 +1,17 @@
 # This file is a part of TypeDBClient.  License is MIT: https://github.com/Humans-of-Julia/TypeDBClient.jl/blob/main/LICENSE
-g = TypeDBClient
+using TypeDBClient: CoreSession, Proto, TypeDBClientException
+using TypeDBClient: contains_database, create_database, define, delete_database, get_all_databases
 
 
 # Scenario: create one database
 @when("connection create database: alice") do context
     client = context[:client]
-    db = g.create_database(client, "alice")
+    db = create_database(client, "alice")
     @expect db
 end
 
 @then("connection has database: alice") do context
-    result = g.contains_database(context[:client], "alice")
+    result = contains_database(context[:client], "alice")
     @expect result
 end
 
@@ -19,14 +20,14 @@ end
     db_names = context.datatable
     all_db = Bool[]
     for db in db_names
-        push!(all_db, g.create_database(context[:client], db[1]))
+        push!(all_db, create_database(context[:client], db[1]))
     end
     @expect all(all_db)
 end
 
 @then("connection has databases:") do context
     db_names = [db[1] for db in context.datatable]
-    server_dbs = [item.name for item in g.get_all_databases(context[:client])]
+    server_dbs = [item.name for item in get_all_databases(context[:client])]
 
     @expect (Set(db_names) == Set(server_dbs))
 end
@@ -35,24 +36,24 @@ end
 @when("connection create databases in parallel:") do context
     db_names = context.datatable
     @sync @async for db in db_names
-        g.create_database(context[:client], db[1])
+        create_database(context[:client], db[1])
     end
 end
 
 # Scenario: delete one database
 @when("connection delete database: alice") do context
-    g.delete_database(context[:client],"alice")
+    delete_database(context[:client],"alice")
 end
 
 @then("connection does not have database: alice") do context
-    @expect g.contains_database(context[:client], "alice") == false
+    @expect contains_database(context[:client], "alice") == false
 end
 
 # Scenario: connection can delete many databases
 @when("connection delete databases:") do context
     db_names = [db[1] for db in context.datatable]
     for db in db_names
-        g.delete_database(context[:client], db)
+        delete_database(context[:client], db)
     end
 end
 
@@ -60,7 +61,7 @@ end
     db_names = [db[1] for db in context.datatable]
     db_there = Bool[]
     for db in db_names
-        push!(db_there, g.contains_database(context[:client], db))
+        push!(db_there, contains_database(context[:client], db))
     end
     @expect all(db_there) !== true
 end
@@ -69,32 +70,32 @@ end
 @when("connection delete databases in parallel:") do context
     db_names = [db[1] for db in context.datatable]
     @sync @async for db in db_names
-        g.delete_database(context[:client], db)
+        delete_database(context[:client], db)
     end
-    @expect isempty(g.get_all_databases(context[:client]))
+    @expect isempty(get_all_databases(context[:client]))
 end
 
 # Scenario: delete a database causes open sessions to fail
 @when("connection create database: typedb") do context
-    g.create_database(context[:client], "typedb")
+    create_database(context[:client], "typedb")
     context[:db_name] = "typedb"
 end
 
 @when("connection open session for database: typedb") do context
-    context[:session] = g.CoreSession(context[:client], context[:db_name] , g.Proto.Session_Type.DATA, request_timeout=Inf)
+    context[:session] = CoreSession(context[:client], context[:db_name] , Proto.Session_Type.DATA, request_timeout=Inf)
 end
 
 @when("connection delete database: typedb") do context
-    g.delete_database(context[:client], context[:db_name])
+    delete_database(context[:client], context[:db_name])
 end
 
 @then("connection does not have database: typedb") do context
-    @expect g.contains_database(context[:client], context[:db_name]) === false
+    @expect contains_database(context[:client], context[:db_name]) === false
 end
 
 @then("session open transaction of type; throws exception: write") do context
     try
-        transaction(context[:session], g.Proto.Transaction_Type.WRITE)
+        transaction(context[:session], Proto.Transaction_Type.WRITE)
     catch ex
         @expect ex !== nothing
     end
@@ -103,7 +104,7 @@ end
 @then("graql define; throws exception containing \"transaction has been closed\"") do context
     define_string = "define person sub entity;"
     try
-        g.define(context[:transaction], define_string)
+        define(context[:transaction], define_string)
     catch ex
         @expect ex !== nothing
     end
@@ -111,9 +112,9 @@ end
 
 @then("connection delete database; throws exception: typedb") do context
     try
-        g.delete_database(context[:client], "typedb")
+        delete_database(context[:client], "typedb")
     catch ex
-        @expect (typeof(ex) == g.TypeDBClientException)
+        @expect (typeof(ex) == TypeDBClientException)
         @expect occursin("The database typedb does not exist", string(ex))
     end
 end
