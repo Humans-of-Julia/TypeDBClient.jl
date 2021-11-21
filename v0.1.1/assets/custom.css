@@ -1,0 +1,15 @@
+#documenter .docs-sidebar .docs-package-name {
+    flex-shrink: 0;
+    font-size: 2.0rem;
+    font-weight: 570;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0.5rem 0;
+    font-family: "Khmer MN";
+}
+
+#documenter .docs-sidebar .docs-logo>img {
+    max-height: 10rem;
+    margin: auto;
+}
