@@ -25,7 +25,7 @@ end
 
 results = run_tests("not @ignore-typedb-core")
 # results = run_tests("@failure")
-# results = run_tests("@actual")
+# results = run_tests("@actual, not @ignore-typedb-core")
 
 if !all(values(results))
     throw("TestSuite failed. Please review the results")

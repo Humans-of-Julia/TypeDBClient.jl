@@ -92,7 +92,7 @@ include("logic/Explanation.jl")
 include("logic/LogicManager.jl")
 
 #api section
-include("api/TypeDBOptions.jl")
+include("standard/TypeDBOptions.jl")
 
 #stream section
 include("stream/RequestTransmitter.jl")
