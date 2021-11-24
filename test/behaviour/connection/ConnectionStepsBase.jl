@@ -14,26 +14,7 @@ g = TypeDBClient
 end
 
 @given("connection does not have any database") do context
-    dbs_not_to_be = [ "alice",
-                        "bob",
-                        "charlie",
-                        "dylan",
-                        "eve",
-                        "frank",
-                        "typedb"]
-
-    all_dbs = g.get_all_databases(context[:client])
-    dbs_not_allowed = []
-    if !isempty(all_dbs)
-        db_in_system = [x.name for x in all_dbs]
-        dbs_to_delete = intersect(dbs_not_to_be, db_in_system)
-        for db in dbs_to_delete
-            delete_database(context[:client], db)
-        end
-        all_dbs = g.get_all_databases(context[:client])
-        dbs_not_allowed = intersect([x.name for x in all_dbs], dbs_not_to_be)
-    end
-    @expect length(dbs_not_allowed) == 0
+    @expect delete_all_databases(context[:client])
 end
 
 sessions(context) = collect(values(context[:client].sessions))

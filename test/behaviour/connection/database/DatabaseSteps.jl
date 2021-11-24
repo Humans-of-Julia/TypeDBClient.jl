@@ -28,8 +28,9 @@ end
 @then("connection has databases:") do context
     db_names = [db[1] for db in context.datatable]
     server_dbs = [item.name for item in get_all_databases(context[:client])]
+    res_dbs = intersect(db_names, server_dbs)
 
-    @expect (Set(db_names) == Set(server_dbs))
+    @expect (Set(res_dbs) == Set(db_names))
 end
 
 # Scenario: create many databases in parallel
@@ -72,7 +73,8 @@ end
     @sync @async for db in db_names
         delete_database(context[:client], db)
     end
-    @expect isempty(get_all_databases(context[:client]))
+    all_dbs = [x.name for x in get_all_databases(context[:client])]
+    @expect all([!in(x, all_dbs) for x in db_names])
 end
 
 # Scenario: delete a database causes open sessions to fail
