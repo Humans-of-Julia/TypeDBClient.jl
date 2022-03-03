@@ -1,4 +1,4 @@
-# TypeDB Client for Julia (INCUBATING)
+# TypeDB Client for Julia
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Humans-of-Julia.github.io/TypeDBClient.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Humans-of-Julia.github.io/TypeDBClient.jl/dev)
@@ -16,8 +16,8 @@ Please review the user guide or if you'd like to help building this check the co
 
 Read up here: https://vaticle.com/
 
-> TypeDB is the knowledge graph engine to organise complex networks of data and making it queryable, by performing knowledge engineering. Rooted in Knowledge Representation and Automated Reasoning, TypeDB provides the 
-> knowledge foundation for cognitive and intelligent (e.g. AI) systems, by providing an intelligent language for modelling, transactions and analytics. Being a distributed database, TypeDB is designed to scale over a 
+> TypeDB is the knowledge graph engine to organise complex networks of data and making it queryable, by performing knowledge engineering. Rooted in Knowledge Representation and Automated Reasoning, TypeDB provides the
+> knowledge foundation for cognitive and intelligent (e.g. AI) systems, by providing an intelligent language for modelling, transactions and analytics. Being a distributed database, TypeDB is designed to scale over a
 > network of computers through partitioning and replication.
 
 ## Announcements
