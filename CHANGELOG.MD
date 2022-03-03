@@ -23,5 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.1.0](https://github.com/Humans-of-Julia/TypeDBClient.jl) - DATE
 
-We first introduce this `CHANGELOG` after release `v0.1.0`, so please refer to the GitHub release
-notes for this and earlier releases.
+## [v0.1.1](https://github.com/Humans-of-Julia/TypeDBClient.jl)
+
+- removed some precompiling statements for compatibility reasons of Julia 1.7.2
