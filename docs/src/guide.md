@@ -12,7 +12,8 @@ You can find install instructions in the [TypeDB Documentation](https://docs.vat
 
 | TypeDBClient.jl | TypeDB | TypeDB Cluster | Julia |
 |:--------------:|:-----------:|:------------:|:------------:|
-| 0.1.0 | 2.4      |     -     | >=1.6
+| 0.1.0 | 2.4         |     -     | >=1.6
+| 0.1.1 | 2.5, 2.6    |     -     | >=1.6
 
 Inside the Julia REPL, type ] to enter the Pkg REPL mode then run
 
