@@ -1,7 +1,7 @@
 name = "TypeDBClient"
 uuid = "7ffdda62-db04-4838-9798-febd00f3125c"
 authors = ["Humans of Julia"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Behavior = "7a129280-419d-58e9-81ef-4f6801251892"
